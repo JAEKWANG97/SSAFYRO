@@ -20,7 +20,7 @@ export default function Navbar() {
         </div>
         {/* 회원 메뉴 */}
         <div className="flex-auto text-end font-semibold">
-          <a href="">로그인</a>
+          <a href="/account/login">로그인</a>
         </div>
       </nav>
     </>
