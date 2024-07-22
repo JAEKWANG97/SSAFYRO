@@ -5,11 +5,7 @@ export default function Navbar() {
         {/* 로고 자리 */}
         <div className="flex-auto text-start">
           <a className="font-extrabold" href="/">
-            <img
-              className="h-[24px] inline pr-2"
-              src="../../public/SSAFYRO.png"
-              alt=""
-            />
+            <img className="h-[24px] inline pr-2" src="/SSAFYRO.png" alt="" />
             SSAFYRO
           </a>
         </div>
