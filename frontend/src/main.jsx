@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 
 // import components
 import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 
 // style sheet
 import "./index.css";
@@ -46,7 +47,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Navbar />
-    <RouterProvider router={router} />
+    <div className="relative min-h-dvh">
+      <Navbar />
+      <RouterProvider router={router} />
+      <Footer />
+    </div>
   </React.StrictMode>
 );
