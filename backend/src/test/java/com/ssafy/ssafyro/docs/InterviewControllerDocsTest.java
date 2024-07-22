@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
+import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerRequest;
 import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("면접시작 API")
     @Test
-    void test() throws Exception {
+    void startInterview() throws Exception {
         StartRequest startRequest = new StartRequest("roomId");
 
         given(interviewService.startInterview(any()))
@@ -61,6 +62,38 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("응답"),
                                 fieldWithPath("response.recruitStatus").type(JsonFieldType.STRING)
                                         .description("수정된 현재상태"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )
+                ));
+    }
+
+    @DisplayName("면접 질문, 답변 저장 API")
+    @Test
+    void saveQuestionAnswer() throws Exception {
+        QuestionAnswerRequest request = new QuestionAnswerRequest("자신의 강점이 뭐라고 생각하시나요?", "포기할 줄 모르는 자세입니다.");
+
+        mockMvc.perform(
+                        post("/api/v1/interview/question-answer")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("interview-question-answer-save",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("question").type(JsonFieldType.STRING)
+                                        .description("면접 질문"),
+                                fieldWithPath("answer").type(JsonFieldType.STRING)
+                                        .description("면접 답변")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.NULL)
+                                        .description("응답"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
