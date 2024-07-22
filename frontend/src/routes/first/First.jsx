@@ -11,11 +11,11 @@ export default function First() {
 
   return (
     <>
-      <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="mb-4 border-b border-gray-200 ">
         <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
           <li className="me-2" role="presentation">
             <button
-              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'essay' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}`}
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'essay' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300 '}`}
               id="essay-tab"
               data-tabs-target="#essay"
               type="button"
@@ -29,7 +29,7 @@ export default function First() {
           </li>
           <li className="me-2" role="presentation">
             <button
-              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'sw' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}`}
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'sw' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300 '}`}
               id="sw-tab"
               data-tabs-target="#sw"
               type="button"
@@ -45,12 +45,12 @@ export default function First() {
       </div>
       <div id="default-tab-content">
         {activeTab === 'essay' && (
-          <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="essay" role="tabpanel" aria-labelledby="essay-tab">
+          <div className="p-4 rounded-lg bg-gray-50 " id="essay" role="tabpanel" aria-labelledby="essay-tab">
             <Essay />
           </div>
         )}
         {activeTab === 'sw' && (
-          <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="sw" role="tabpanel" aria-labelledby="sw-tab">
+          <div className="p-4 rounded-lg bg-gray-50 " id="sw" role="tabpanel" aria-labelledby="sw-tab">
             <Test />
           </div>
         )}
