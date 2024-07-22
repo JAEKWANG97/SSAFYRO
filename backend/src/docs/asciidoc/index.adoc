@@ -1,0 +1,15 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= SSAFYRO REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[openVidu-API]]
+== openVidu API
+
+include::api/openvidu/openvidu-token-create.adoc[]
