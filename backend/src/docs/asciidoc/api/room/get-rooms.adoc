@@ -1,0 +1,12 @@
+[[get-rooms]]
+=== 방 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/get-rooms/http-request.adoc[]
+include::{snippets}/get-rooms/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-rooms/http-response.adoc[]
+include::{snippets}/get-rooms/response-fields.adoc[]

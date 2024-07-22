@@ -13,3 +13,8 @@ endif::[]
 == openVidu API
 
 include::api/openvidu/openvidu-token-create.adoc[]
+
+[[room-API]]
+== room-API
+
+include::api/room/get-rooms.adoc[]
