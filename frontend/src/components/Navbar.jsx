@@ -11,7 +11,7 @@ export default function Navbar() {
         </div>
         {/* 메뉴 자리 */}
         <div className="flex-auto text-center font-semibold">
-          <a className="mx-3" href="">
+          <a className="mx-3" href="/first">
             1차
           </a>
           <a className="mx-3" href="/second/guide/personality">
