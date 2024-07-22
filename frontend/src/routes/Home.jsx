@@ -1,7 +1,8 @@
 export default function Home() {
     return (
         <>
-            <h1>홈페이지임</h1>
+            <img src="/public/main/main_character.png" alt="Main Character" />
+            <img src="/public/main/interview.png" alt="Interview" />
         </>
     );
 }
