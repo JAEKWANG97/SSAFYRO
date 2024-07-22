@@ -1,3 +1,6 @@
+import GuestContents from "./components/GuestContents";
+import MemberContents from "./components/MemberContents";
+
 export default function Home() {
     return (
         <>
