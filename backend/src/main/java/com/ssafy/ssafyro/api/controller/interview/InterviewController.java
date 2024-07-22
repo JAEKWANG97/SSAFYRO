@@ -19,10 +19,6 @@ public class InterviewController {
 
     @PostMapping("/api/v1/interview/start")
     public ApiResult<StartResponse> startInterview(@RequestBody StartRequest startRequest) {
-        interviewService.startInterview(startRequest);
-
-        return success(
-                new StartResponse("interview start success!")
-        );
+        return success(new StartResponse(interviewService.startInterview(startRequest)));
     }
 }

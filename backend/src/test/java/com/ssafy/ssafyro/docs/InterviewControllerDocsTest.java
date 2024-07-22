@@ -1,5 +1,7 @@
 package com.ssafy.ssafyro.docs;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -16,6 +18,7 @@ import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -33,6 +36,9 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @Test
     void test() throws Exception {
         StartRequest startRequest = new StartRequest("roomId");
+
+        given(interviewService.startInterview(any()))
+                .willReturn("모집완료");
 
         mockMvc.perform(
                         post("/api/v1/interview/start")
@@ -53,8 +59,8 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.message").type(JsonFieldType.STRING)
-                                        .description("성공 여부 메시지"),
+                                fieldWithPath("response.recruitStatus").type(JsonFieldType.STRING)
+                                        .description("수정된 현재상태"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
