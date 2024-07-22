@@ -6,7 +6,7 @@ export default function Navbar() {
         <div className="flex-auto text-start">
           <a className="font-extrabold" href="/">
             <img
-              className="h-full inline"
+              className="h-[24px] inline pr-2"
               src="../../public/SSAFYRO.png"
               alt=""
             />
@@ -14,7 +14,7 @@ export default function Navbar() {
           </a>
         </div>
         {/* 메뉴 자리 */}
-        <div className="flex-auto text-center">
+        <div className="flex-auto text-center font-semibold">
           <a className="mx-3" href="">
             1차
           </a>
@@ -23,7 +23,7 @@ export default function Navbar() {
           </a>
         </div>
         {/* 회원 메뉴 */}
-        <div className="flex-auto text-end">
+        <div className="flex-auto text-end font-semibold">
           <a href="">로그인</a>
         </div>
       </nav>
