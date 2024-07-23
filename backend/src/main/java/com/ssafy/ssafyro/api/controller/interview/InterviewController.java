@@ -41,6 +41,7 @@ public class InterviewController {
     @PostMapping("/api/v1/interview/question-result")
     public ApiResult<Void> saveQuestionResult(
             @RequestBody QuestionResultRequest questionAnswerRequest) {
+        interviewService.saveQuestionResult(questionAnswerRequest.toServiceRequest());
         return success(null);
     }
 
