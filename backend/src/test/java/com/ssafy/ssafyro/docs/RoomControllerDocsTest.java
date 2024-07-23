@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.room.RoomController;
 import com.ssafy.ssafyro.api.controller.room.dto.RoomCreateRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.RoomEnterRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -104,6 +105,33 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("방 이름"),
                                 fieldWithPath("capacity").type(JsonFieldType.NUMBER)
                                         .description("방 수용 인원")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                        .description("응답"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )));
+    }
+
+    @DisplayName("방을 입장합니다.")
+    @Test
+    void enterRoom() throws Exception {
+        RoomEnterRequest roomEnterRequest = new RoomEnterRequest(1);
+
+        // when
+        mockMvc.perform(post("/api/v1/rooms/{roomId}/enter", 1)
+                        .content(objectMapper.writeValueAsString(roomEnterRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("enter-room",
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 ID")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
