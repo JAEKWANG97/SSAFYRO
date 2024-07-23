@@ -1,0 +1,12 @@
+[[openvidu-token-create]]
+=== PT 면접 기사 및 질문 조회
+
+==== HTTP Request
+
+include::{snippets}/article-question-show/http-request.adoc[]
+include::{snippets}/article-question-show/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/article-question-show/http-response.adoc[]
+include::{snippets}/article-question-show/response-fields.adoc[]
