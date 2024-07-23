@@ -10,7 +10,8 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex items-center py-8 px-6 text-lg bg-white shadow-md">
+      <nav className="flex items-center py-8 px-20
+       text-lg bg-white shadow-md">
         {/* 로고 자리 */}
         <div className="flex-shrink-0">
           <a className="font-extrabold text-3xl" href="/">
@@ -22,7 +23,7 @@ export default function Navbar() {
         {/* 메뉴 자리 */}
         <div className="flex-grow text-center relative">
           <div className="relative inline-block group">
-            <a className="mx-3 font-semibold hover:text-[#90CCF0]" href="/first">
+            <a className="mx-8 font-semibold hover:text-[#90CCF0]" href="/first">
               1차 전형 준비
             </a>
             <div className="absolute hidden group-hover:block bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-0 group-hover:opacity-100 group-hover:translate-y-1">
@@ -66,7 +67,7 @@ export default function Navbar() {
         <div className="flex-shrink-0 text-end">
           {isLogin ? (
             <>
-              <a className="mx-3 font-semibold hover:text-[#90CCF0]" href={`/account/profile/${userId}`}>프로필</a>
+              <a className="mx-8 font-semibold hover:text-[#90CCF0]" href={`/account/profile/${userId}`}>프로필</a>
               <button className="mx-3 font-semibold hover:text-[#90CCF0]">로그아웃</button>
             </>
           ) : (
