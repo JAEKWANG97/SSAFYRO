@@ -1,5 +1,6 @@
-import GuestContents from "./components/GuestContents";
-import MemberContents from "./components/MemberContents";
+// import GuestContents from "./routes/components/GuestContents";
+// import MemberContents from "./routes/components/MemberContents";
+
 
 export default function Home() {
     return (

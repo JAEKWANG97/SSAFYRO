@@ -1,4 +1,7 @@
+
 export default function Navbar() {
+ // userId는 로그인된 사용자를 구분하는 변수로 할당될 예정
+  const userId = 1
   return (
     <>
       <nav className="flex py-3 px-4 text-lg">
@@ -21,6 +24,9 @@ export default function Navbar() {
         {/* 회원 메뉴 */}
         <div className="flex-auto text-end font-semibold">
           <a href="/account/login">로그인</a>
+        </div>
+        <div className="flex-auto text-end font-semibold">
+          <a href={`/account/profile/${userId}`}>프로필</a>
         </div>
       </nav>
     </>
