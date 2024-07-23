@@ -124,7 +124,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                 .userId("userId")
                 .question("자신의 강점이 뭐라고 생각하시나요?")
                 .answer("포기할 줄 모르는 자세입니다.")
-                .pronunciation_score(3)
+                .pronunciationScore(3)
                 .happy(0.9)
                 .disgust(0.01)
                 .sad(0.01)
@@ -153,7 +153,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("면접 질문"),
                                 fieldWithPath("answer").type(JsonFieldType.STRING)
                                         .description("면접 답변"),
-                                fieldWithPath("pronunciation_score").type(JsonFieldType.NUMBER)
+                                fieldWithPath("pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
                                 fieldWithPath("happy").type(JsonFieldType.NUMBER)
                                         .description("행복 점수"),
