@@ -11,11 +11,14 @@ import Footer from "./components/Footer.jsx";
 import "./index.css";
 
 // router
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider} from "react-router-dom";
 // import routes
 import Home from "./routes/Home.jsx";
 
 import Login from "./routes/accounts/Login.jsx";
+import Profile from "./routes/accounts/Profile.jsx";
+import Personality_feedback from "./routes/accounts/Personality_feedback.jsx";
+import Pt_feedback from "./routes/accounts/Pt_feedback.jsx";
 
 import First from "./routes/first/First.jsx";
 
@@ -35,8 +38,26 @@ const router = createBrowserRouter([
   },
   {
     path: "account/",
-    children: [{ path: "login", element: <Login /> }],
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "profile/:userId",  children: [
+        {
+          path: "",
+          element: <Profile />,
+        },
+        {
+          path: "personality_feedback",
+          element: <Personality_feedback />,
+        },
+        {
+          path: "pt_feedback",
+          element: <Pt_feedback />,
+        },
+      ],}
+    ]
+      ,
   },
+
   {
     path: "first/",
     element: <First />,
