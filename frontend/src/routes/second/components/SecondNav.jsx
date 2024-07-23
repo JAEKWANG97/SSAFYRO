@@ -1,3 +1,5 @@
+// SecondNav.jsx
+
 export default function SecondNav() {
   return (
     <>
@@ -5,7 +7,7 @@ export default function SecondNav() {
         <a className="mx-3" href="/second/guide/personality">
           면접가이드
         </a>
-        <a className="mx-3" href="">
+        <a className="mx-3" href="/second/interview">
           면접 연습
         </a>
       </nav>
