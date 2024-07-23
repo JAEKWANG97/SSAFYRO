@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-export default function Personality_feedback() {
+export default function PersonalityFeedback() {
   const params = useParams();
 
   return (

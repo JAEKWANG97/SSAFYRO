@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-export default function Pt_feedback() {
+export default function PtFeedback() {
   const params = useParams();
 
   return (
