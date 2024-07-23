@@ -4,7 +4,6 @@
 ==== HTTP Request
 
 include::{snippets}/get-rooms/http-request.adoc[]
-include::{snippets}/get-rooms/request-fields.adoc[]
 
 ==== HTTP Response
 
