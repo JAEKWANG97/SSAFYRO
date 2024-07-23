@@ -29,7 +29,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         // when
         mockMvc.perform(get("/api/v1/rooms")
                         .param("roomType", "PT")
-                        .param("participantsNumber", "3"))
+                        .param("capacity", "3"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("get-rooms",
@@ -45,4 +45,37 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("에러")
                         )));
     }
+
+    @DisplayName("특정 ID로 방 정보를 가져온다.")
+    @Test
+    void getRoomByIdTest() throws Exception {
+        // when
+
+        int roomId = 1;
+
+        mockMvc.perform(get("/api/v1/rooms/{id}",roomId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-rooms-by-id",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                        .description("응답"),
+                                fieldWithPath("response.id").type(JsonFieldType.NUMBER)
+                                        .description("방 ID"),
+                                fieldWithPath("response.title").type(JsonFieldType.STRING)
+                                        .description("방 제목"),
+                                fieldWithPath("response.description").type(JsonFieldType.STRING)
+                                        .description("방 설명"),
+                                fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                        .description("방 이름"),
+                                fieldWithPath("response.capacity").type(JsonFieldType.NUMBER)
+                                        .description("방 수용 인원"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )));
+    }
+
 }
