@@ -6,6 +6,7 @@ import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
+
 import com.ssafy.ssafyro.api.service.RoomService;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
@@ -41,8 +42,8 @@ public class RoomController {
     }
 
     @PostMapping("/api/v1/rooms/enter")
-    public ApiResult<RoomEnterResponse> enterRoom(@PathVariable int id, @RequestBody RoomEnterRequest request) {
-        return success(roomService.enterRoom(request.toServiceReaquest(id)));
+    public ApiResult<RoomEnterResponse> enterRoom(@RequestBody RoomEnterRequest request) {
+        return success(roomService.enterRoom(request.toServiceReaquest()));
     }
 
 }

@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RoomService {
+
+    public RoomListResponse getRoomList(RoomListServiceRequest request) {
+        return new RoomListResponse(List.of());
+    }
+
     public RoomResponse getRoomById(int id) {
-        return new RoomResponse();
+        return new RoomResponse(id, "title", "description", "type", 1);
     }
 
     public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
         return new RoomCreateResponse();
     }
 
-
-    public RoomListResponse getRoomList(RoomListServiceRequest request) {
-        return new RoomListResponse(List.of());
-    }
-
-    public RoomEnterResponse enterRoom(int id, RoomEnterServiceRequest request) {
+    public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {
         return new RoomEnterResponse();
     }
 }
