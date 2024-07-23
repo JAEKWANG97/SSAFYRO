@@ -1,4 +1,4 @@
-[[openvidu-token-create]]
+[[interview-score-save]]
 === 면접 평가표 저장
 
 ==== HTTP Request

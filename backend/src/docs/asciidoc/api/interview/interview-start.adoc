@@ -1,4 +1,4 @@
-[[openvidu-token-create]]
+[[interview-start]]
 === 면접 시작 요청
 
 ==== HTTP Request
