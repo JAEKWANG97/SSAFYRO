@@ -1,9 +1,16 @@
 export default function GuideIT() {
   return (
     <>
-      <div className="text-center">
-        IT 정보 내용 <br />
-        콘텐츠 어떻게 넣지
+      <SecondNav />
+      <GuideNav />
+      <div className="text-center pt-4 px-4">
+        <h1 className="py-3 font-semibold text-xl">IT 트렌드</h1>
+        <p className="text-start">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut,
+          nostrum. Nesciunt mollitia quidem consequuntur. Perferendis iste in
+          fugiat rem nam voluptates, est molestias, voluptas odit, eos quis
+          saepe omnis ipsam?
+        </p>
       </div>
     </>
   );

@@ -14,8 +14,11 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import routes
 import Home from "./routes/Home.jsx";
-import Second from "./routes/second/Second.jsx";
-import Guide from "./routes/second/guide/Guide.jsx";
+
+import Login from "./routes/accounts/Login.jsx";
+
+import First from "./routes/first/First.jsx";
+
 import GuidePersonality from "./routes/second/guide/GuidePersonality.jsx";
 import GuidePT from "./routes/second/guide/GuidePT.jsx";
 import GuideIT from "./routes/second/guide/GuideIT.jsx";
@@ -31,8 +34,15 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/second",
-    element: <Second />,
+    path: "account/",
+    children: [{ path: "login", element: <Login /> }],
+  },
+  {
+    path: "first/",
+    element: <First />,
+  },
+  {
+    path: "second/",
     children: [
       {
         path: "guide",
@@ -78,9 +88,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <div className="relative min-h-dvh">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <RouterProvider router={router} />
+      <div className="flex-grow">
+        <RouterProvider router={router} />
+      </div>
       <Footer />
     </div>
   </React.StrictMode>

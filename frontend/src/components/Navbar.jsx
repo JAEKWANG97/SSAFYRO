@@ -5,17 +5,13 @@ export default function Navbar() {
         {/* 로고 자리 */}
         <div className="flex-auto text-start">
           <a className="font-extrabold" href="/">
-            <img
-              className="h-full inline"
-              src="../../public/SSAFYRO.png"
-              alt=""
-            />
+            <img className="h-[24px] inline pr-2" src="/SSAFYRO.png" alt="" />
             SSAFYRO
           </a>
         </div>
         {/* 메뉴 자리 */}
-        <div className="flex-auto text-center">
-          <a className="mx-3" href="">
+        <div className="flex-auto text-center font-semibold">
+          <a className="mx-3" href="/first">
             1차
           </a>
           <a className="mx-3" href="/second/guide/personality">
@@ -23,8 +19,8 @@ export default function Navbar() {
           </a>
         </div>
         {/* 회원 메뉴 */}
-        <div className="flex-auto text-end">
-          <a href="">로그인</a>
+        <div className="flex-auto text-end font-semibold">
+          <a href="/account/login">로그인</a>
         </div>
       </nav>
     </>
