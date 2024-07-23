@@ -1,0 +1,12 @@
+[[openvidu-token-create]]
+=== 면접 평가표 저장
+
+==== HTTP Request
+
+include::{snippets}/interview-score-save/http-request.adoc[]
+include::{snippets}/interview-score-save//request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/interview-score-save//http-response.adoc[]
+include::{snippets}/interview-score-save//response-fields.adoc[]
