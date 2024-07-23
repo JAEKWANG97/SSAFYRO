@@ -13,58 +13,59 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.controller.interview.InterviewController;
-import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
-import com.ssafy.ssafyro.api.service.interview.InterviewService;
+import com.ssafy.ssafyro.api.controller.interview.InterviewRedisController;
+import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerRequest;
+import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerResponse;
+import com.ssafy.ssafyro.api.service.interview.InterviewRedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-public class InterviewControllerDocsTest extends RestDocsSupport {
+public class InterviewRedisControllerDocsTest extends RestDocsSupport {
 
-    private final InterviewService interviewService = Mockito.mock(InterviewService.class);
+    private final InterviewRedisService interviewRedisService = Mockito.mock(InterviewRedisService.class);
 
     @Override
     protected Object initController() {
-        return new InterviewController(interviewService);
+        return new InterviewRedisController(interviewRedisService);
     }
 
-    @DisplayName("면접시작 API")
+    @DisplayName("면접 질문, 답변 저장 API")
     @Test
-    void startInterview() throws Exception {
-        StartRequest startRequest = new StartRequest("roomId");
+    void saveQuestionAnswer() throws Exception {
+        QuestionAnswerRequest request = new QuestionAnswerRequest("자신의 강점이 뭐라고 생각하시나요?", "포기할 줄 모르는 자세입니다.");
 
-        given(interviewService.startInterview(any()))
-                .willReturn("모집완료");
+        given(interviewRedisService.saveQuestionAnswer(any(QuestionAnswerRequest.class)))
+                .willReturn(new QuestionAnswerResponse(request.question(), request.answer()));
 
         mockMvc.perform(
-                        post("/api/v1/interview/start")
-                                .content(objectMapper.writeValueAsString(startRequest))
+                        post("/api/v1/interview/question-answer")
+                                .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("interview-start",
+                .andDo(document("interview-question-answer-save",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("roomId").type(JsonFieldType.STRING)
-                                        .description("방 고유 아이디")
+                                fieldWithPath("question").type(JsonFieldType.STRING)
+                                        .description("면접 질문"),
+                                fieldWithPath("answer").type(JsonFieldType.STRING)
+                                        .description("면접 답변")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
-                                fieldWithPath("response").type(JsonFieldType.OBJECT)
-                                        .description("응답"),
-                                fieldWithPath("response.recruitStatus").type(JsonFieldType.STRING)
-                                        .description("수정된 현재상태"),
+                                fieldWithPath("response.question").type(JsonFieldType.STRING)
+                                        .description("저장된 질문"),
+                                fieldWithPath("response.answer").type(JsonFieldType.STRING)
+                                        .description("저장된 답변"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
                 ));
     }
-
-
 }
