@@ -11,6 +11,7 @@ import com.ssafy.ssafyro.api.controller.interview.dto.StartResponse;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ public class InterviewController {
 
     private final InterviewService interviewService;
 
-    @PostMapping("/api/v1/interview/start")
+    @PatchMapping("/api/v1/interview/start")
     public ApiResult<StartResponse> startInterview(@RequestBody StartRequest startRequest) {
         return success(
                 new StartResponse(interviewService.startInterview(startRequest))
