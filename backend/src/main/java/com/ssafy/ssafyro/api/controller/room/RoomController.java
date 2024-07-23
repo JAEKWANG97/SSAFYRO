@@ -3,14 +3,15 @@ package com.ssafy.ssafyro.api.controller.room;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomCreateRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomCreateResponse;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomEnterRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomEnterResponse;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomListRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomListResponse;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomResponse;
-import java.util.List;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
+import com.ssafy.ssafyro.api.service.RoomService;
+import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,26 +20,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class RoomController {
+
+    private final RoomService roomService;
 
     @GetMapping("/api/v1/rooms")
     public ApiResult<RoomListResponse> getRooms(@ModelAttribute RoomListRequest request) {
-        return success(new RoomListResponse(List.of()));
+        return success(roomService.getRoomList(request.toServiceRequest()));
     }
 
     @GetMapping("/api/v1/rooms/{id}")
     public ApiResult<RoomResponse> getRoomById(@PathVariable int id) {
-        return success(new RoomResponse(1, "title", "description", "type", 3));
+        return success(roomService.getRoomById(id));
     }
 
     @PostMapping("/api/v1/rooms")
     public ApiResult<RoomCreateResponse> createRoom(@RequestBody RoomCreateRequest request) {
-        return success(new RoomCreateResponse());
+        return success(roomService.createRoom(request.toServiceRequest()));
     }
 
-    @PostMapping("/api/v1/rooms/{id}/enter")
+    @PostMapping("/api/v1/rooms/enter")
     public ApiResult<RoomEnterResponse> enterRoom(@PathVariable int id, @RequestBody RoomEnterRequest request) {
-        return success(new RoomEnterResponse());
+        return success(roomService.enterRoom(request.toServiceReaquest(id)));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.docs;
 
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -12,8 +13,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.room.RoomController;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomCreateRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.RoomEnterRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
+import com.ssafy.ssafyro.api.service.RoomService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,9 +25,11 @@ import org.springframework.restdocs.payload.JsonFieldType;
 @WebMvcTest(RoomController.class)
 public class RoomControllerDocsTest extends RestDocsSupport {
 
+    private final RoomService roomService = mock(RoomService.class);
+
     @Override
     protected Object initController() {
-        return new RoomController();
+        return new RoomController(roomService);
     }
 
     @DisplayName("room의 상태가 모두 null인 경우 모든 방을 보여준다.")
@@ -61,6 +65,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andDo(document("get-room-by-id",
                         preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER)
+                                        .description("방 ID")
+                        ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
