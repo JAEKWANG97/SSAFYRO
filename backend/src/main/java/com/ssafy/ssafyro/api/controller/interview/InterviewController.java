@@ -4,6 +4,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerRequest;
+import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerResponse;
 import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
 import com.ssafy.ssafyro.api.controller.interview.dto.StartResponse;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
@@ -26,7 +27,10 @@ public class InterviewController {
     }
 
     @PostMapping("/api/v1/interview/question-answer")
-    public ApiResult<Void> saveQuestionAnswer(@RequestBody QuestionAnswerRequest questionAnswerRequest) {
-        return success(null);
+    public ApiResult<QuestionAnswerResponse> saveQuestionAnswer(
+            @RequestBody QuestionAnswerRequest questionAnswerRequest) {
+        return success(
+                interviewService.saveQuestionAnswer(questionAnswerRequest)
+        );
     }
 }

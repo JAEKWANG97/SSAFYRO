@@ -15,11 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerRequest;
+import com.ssafy.ssafyro.api.controller.interview.dto.QuestionAnswerResponse;
 import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -73,6 +73,9 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     void saveQuestionAnswer() throws Exception {
         QuestionAnswerRequest request = new QuestionAnswerRequest("자신의 강점이 뭐라고 생각하시나요?", "포기할 줄 모르는 자세입니다.");
 
+        given(interviewService.saveQuestionAnswer(any(QuestionAnswerRequest.class)))
+                .willReturn(new QuestionAnswerResponse(request.question(), request.answer()));
+
         mockMvc.perform(
                         post("/api/v1/interview/question-answer")
                                 .content(objectMapper.writeValueAsString(request))
@@ -92,8 +95,10 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
-                                fieldWithPath("response").type(JsonFieldType.NULL)
-                                        .description("응답"),
+                                fieldWithPath("response.question").type(JsonFieldType.STRING)
+                                        .description("저장된 질문"),
+                                fieldWithPath("response.answer").type(JsonFieldType.STRING)
+                                        .description("저장된 답변"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
