@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.api.controller.interview;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
+import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
@@ -45,6 +46,11 @@ public class InterviewController {
 
     @PostMapping("/api/v1/interview/score")
     public ApiResult<Void> saveScore(@RequestBody ScoreRequest scoreRequest) {
+        return success(null);
+    }
+
+    @PostMapping("/api/v1/interview/finish")
+    public ApiResult<Void> finishInterview(@RequestBody FinishRequest finishRequest) {
         return success(null);
     }
 }
