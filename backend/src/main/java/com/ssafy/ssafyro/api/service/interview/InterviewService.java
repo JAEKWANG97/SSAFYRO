@@ -1,6 +1,8 @@
 package com.ssafy.ssafyro.api.service.interview;
 
+import com.ssafy.ssafyro.api.controller.interview.dto.ArticleResponse;
 import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,4 +12,7 @@ public class InterviewService {
         return "";
     }
 
+    public ArticleResponse showArticle(String roomId) {
+        return new ArticleResponse("", List.of());
+    }
 }
