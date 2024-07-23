@@ -27,6 +27,7 @@ import CreateRoom from "./routes/second/interview/CreateRoom.jsx";
 import Room from "./routes/second/interview/Room.jsx";
 import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx"; // PT 컴포넌트 추가
+import Survey from "./components/Survey.jsx";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: "/second/interview/room/:roomid/pt",
         element: <PT />,
+      },
+      {
+        path: "/second/interview/room/:roomid/pt/survey",
+        element: <Survey />,
       },
     ],
   },
