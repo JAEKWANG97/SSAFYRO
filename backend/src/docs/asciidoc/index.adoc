@@ -18,4 +18,5 @@ include::api/openvidu/openvidu-token-create.adoc[]
 == room-API
 
 include::api/room/get-rooms.adoc[]
-include::api/room/get-rooms-by-id.adoc[]
+include::api/room/get-room-by-id.adoc[]
+include::api/room/create-room.adoc[]
