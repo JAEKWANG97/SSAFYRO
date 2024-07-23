@@ -1,18 +1,22 @@
 package com.ssafy.ssafyro.docs;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.room.RoomController;
+import com.ssafy.ssafyro.api.controller.room.dto.RoomCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(RoomController.class)
@@ -53,10 +57,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         int roomId = 1;
 
-        mockMvc.perform(get("/api/v1/rooms/{id}",roomId))
+        mockMvc.perform(get("/api/v1/rooms/{id}", roomId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("get-rooms-by-id",
+                .andDo(document("get-room-by-id",
                         preprocessResponse(prettyPrint()),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
@@ -69,10 +73,43 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("방 제목"),
                                 fieldWithPath("response.description").type(JsonFieldType.STRING)
                                         .description("방 설명"),
-                                fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                fieldWithPath("response.type").type(JsonFieldType.STRING)
                                         .description("방 이름"),
                                 fieldWithPath("response.capacity").type(JsonFieldType.NUMBER)
                                         .description("방 수용 인원"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )));
+    }
+
+    @DisplayName("방을 생성합니다.")
+    @Test
+    void createRoom() throws Exception {
+        RoomCreateRequest roomCreateRequest = new RoomCreateRequest("title", "description", "type", 3);
+
+        // when
+        mockMvc.perform(post("/api/v1/rooms")
+                        .content(objectMapper.writeValueAsString(roomCreateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("create-room",
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING)
+                                        .description("방 제목"),
+                                fieldWithPath("description").type(JsonFieldType.STRING)
+                                        .description("방 설명"),
+                                fieldWithPath("type").type(JsonFieldType.STRING)
+                                        .description("방 이름"),
+                                fieldWithPath("capacity").type(JsonFieldType.NUMBER)
+                                        .description("방 수용 인원")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                        .description("응답"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )));
