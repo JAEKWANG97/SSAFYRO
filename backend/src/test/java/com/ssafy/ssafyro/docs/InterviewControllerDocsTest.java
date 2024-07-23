@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
+import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
@@ -202,6 +203,36 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("면접자 고유 Id (점수받는 대상자)"),
                                 fieldWithPath("score").type(JsonFieldType.NUMBER)
                                         .description("평가 점수")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.NULL)
+                                        .description("응답"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )
+                ));
+    }
+
+    @DisplayName("면접 종료 API")
+    @Test
+    void finishInterview() throws Exception {
+        FinishRequest request = new FinishRequest("roomId");
+
+        mockMvc.perform(
+                        post("/api/v1/interview/finish")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("interview-finish",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("roomId").type(JsonFieldType.STRING)
+                                        .description("방 고유 Id")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
