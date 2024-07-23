@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.controller.interview.dto;
+package com.ssafy.ssafyro.api.service.interview.response;
 
 import java.util.List;
 

@@ -12,16 +12,18 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
-import com.ssafy.ssafyro.api.controller.interview.dto.ArticleResponse;
-import com.ssafy.ssafyro.api.controller.interview.dto.QuestionResultRequest;
-import com.ssafy.ssafyro.api.controller.interview.dto.ScoreRequest;
-import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
+import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
+import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,10 +46,10 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
         StartRequest startRequest = new StartRequest("roomId");
 
         given(interviewService.startInterview(any()))
-                .willReturn("모집완료");
+                .willReturn(new StartResponse("모집완료"));
 
         mockMvc.perform(
-                        post("/api/v1/interview/start")
+                        patch("/api/v1/interview/start")
                                 .content(objectMapper.writeValueAsString(startRequest))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )

@@ -3,12 +3,12 @@ package com.ssafy.ssafyro.api.controller.interview;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
-import com.ssafy.ssafyro.api.controller.interview.dto.ArticleResponse;
-import com.ssafy.ssafyro.api.controller.interview.dto.QuestionResultRequest;
-import com.ssafy.ssafyro.api.controller.interview.dto.ScoreRequest;
-import com.ssafy.ssafyro.api.controller.interview.dto.StartRequest;
-import com.ssafy.ssafyro.api.controller.interview.dto.StartResponse;
+import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
+import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
+import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,7 +26,7 @@ public class InterviewController {
     @PatchMapping("/api/v1/interview/start")
     public ApiResult<StartResponse> startInterview(@RequestBody StartRequest startRequest) {
         return success(
-                new StartResponse(interviewService.startInterview(startRequest))
+                interviewService.startInterview(startRequest)
         );
     }
 
