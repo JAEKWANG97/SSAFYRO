@@ -1,4 +1,5 @@
-// GuidePersonality.jsx
+import SecondNav from "../components/SecondNav.jsx";
+import GuideNav from "./components/GuideNav.jsx";
 
 export default function GuidePersonality() {
   return (

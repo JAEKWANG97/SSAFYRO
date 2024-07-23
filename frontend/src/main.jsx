@@ -46,7 +46,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "guide",
-        element: <Guide />,
         children: [
           {
             path: "personality",
@@ -68,22 +67,22 @@ const router = createBrowserRouter([
       },
       {
         path: "/second/interview/createroom",
-        element: <CreateRoom />
+        element: <CreateRoom />,
       },
       {
         path: "/second/interview/room/:roomid",
-        element: <Room />
+        element: <Room />,
       },
       {
         path: "/second/interview/room/:roomid/pt_ready",
-        element: <PTReady />
+        element: <PTReady />,
       },
       {
         path: "/second/interview/room/:roomid/pt",
-        element: <PT />
-      }
-    ]
-  }
+        element: <PT />,
+      },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
