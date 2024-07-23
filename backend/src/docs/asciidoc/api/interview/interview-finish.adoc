@@ -1,0 +1,12 @@
+[[openvidu-token-create]]
+=== 면접 종료 요청
+
+==== HTTP Request
+
+include::{snippets}/interview-finish/http-request.adoc[]
+include::{snippets}/interview-finish/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/interview-finish/http-response.adoc[]
+include::{snippets}/interview-finish/response-fields.adoc[]
