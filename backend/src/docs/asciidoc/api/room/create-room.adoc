@@ -1,0 +1,12 @@
+[[create-room]]
+=== 방 생성
+
+==== HTTP Request
+
+include::{snippets}/create-room/http-request.adoc[]
+include::{snippets}/create-room/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-room/http-response.adoc[]
+include::{snippets}/create-room/response-fields.adoc[]

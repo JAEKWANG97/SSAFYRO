@@ -14,6 +14,14 @@ endif::[]
 
 include::api/openvidu/openvidu-token-create.adoc[]
 
+[[room-API]]
+== room-API
+
+include::api/room/get-rooms.adoc[]
+include::api/room/get-room-by-id.adoc[]
+include::api/room/create-room.adoc[]
+include::api/room/enter-room.adoc[]
+
 [[interview-API]]
 == 면접 API
 
