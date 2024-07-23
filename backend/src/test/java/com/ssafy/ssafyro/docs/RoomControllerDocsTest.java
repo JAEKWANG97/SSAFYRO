@@ -31,7 +31,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     @DisplayName("room의 상태가 모두 null인 경우 모든 방을 보여준다.")
     @Test
     void getAllRoomsTest() throws Exception {
-        // when
+
         mockMvc.perform(get("/api/v1/rooms")
                         .param("roomType", "PT")
                         .param("capacity", "3"))
@@ -54,8 +54,6 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     @DisplayName("특정 ID로 방 정보를 가져온다.")
     @Test
     void getRoomByIdTest() throws Exception {
-        // when
-
         int roomId = 1;
 
         mockMvc.perform(get("/api/v1/rooms/{id}", roomId))
@@ -88,7 +86,6 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void createRoom() throws Exception {
         RoomCreateRequest roomCreateRequest = new RoomCreateRequest("title", "description", "type", 3);
 
-        // when
         mockMvc.perform(post("/api/v1/rooms")
                         .content(objectMapper.writeValueAsString(roomCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -121,7 +118,6 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void enterRoom() throws Exception {
         RoomEnterRequest roomEnterRequest = new RoomEnterRequest(1);
 
-        // when
         mockMvc.perform(post("/api/v1/rooms/{roomId}/enter", 1)
                         .content(objectMapper.writeValueAsString(roomEnterRequest))
                         .contentType(MediaType.APPLICATION_JSON))
