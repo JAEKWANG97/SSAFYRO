@@ -109,7 +109,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("응답"),
                                 fieldWithPath("response.title").type(JsonFieldType.STRING)
                                         .description("기사 제목"),
-                                fieldWithPath("response.article").type(JsonFieldType.STRING)
+                                fieldWithPath("response.content").type(JsonFieldType.STRING)
                                         .description("기사 내용"),
                                 fieldWithPath("response.question").type(JsonFieldType.ARRAY)
                                         .description("기사에 대한 질문"),
