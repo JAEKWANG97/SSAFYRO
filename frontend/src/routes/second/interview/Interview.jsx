@@ -28,7 +28,7 @@ export default function Interview() {
                             <a href="#" className="px-4 py-2 text-gray-600">면접연습하기</a>
                         </nav>
                     </div> */}
-          <h1>모의 면접 방 목록</h1>
+          <h1 className="hidden">모의 면접 방 목록</h1>
           <div className="flex">
             {/* 검색 필터 */}
             <div className="w-1/4 p-4 bg-white shadow rounded">
@@ -67,14 +67,14 @@ export default function Interview() {
             </div>
 
             {/* 방 목록 */}
-            <div className="w-3/4 p-4">
+            <div className="w-3/4 px-4">
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-white shadow rounded p-4">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm bg-green-200 text-green-800 py-1 px-2 rounded">
+                    <span className="text-sm bg-green-100 text-green-800 text-xs font-medium me-2 py-1 px-2 rounded border border-green-400">
                       모집중
                     </span>
-                    <span className="text-sm bg-purple-200 text-purple-800 py-1 px-2 rounded">
+                    <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium me-2 py-1 px-2 rounded border border-purple-400">
                       PT
                     </span>
                   </div>
