@@ -1,12 +1,9 @@
 package com.ssafy.ssafyro.domain.Interview;
 
 import jakarta.persistence.Id;
-import java.util.UUID;
 import lombok.Builder;
-import lombok.Data;
 import org.springframework.data.redis.core.RedisHash;
 
-@Data
 @RedisHash(value = "interview", timeToLive = 600)
 public class Interview {
 
@@ -29,7 +26,6 @@ public class Interview {
     private Interview(String roomId, String userId, String question, String answer, int pronunciationScore,
                       double happy,
                       double disgust, double sad, double surprise, double fear, double angry, double neutral) {
-        this.id = UUID.randomUUID().toString();
         this.roomId = roomId;
         this.userId = userId;
         this.question = question;
