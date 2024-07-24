@@ -5,7 +5,7 @@ import lombok.Builder;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash(value = "interview", timeToLive = 600)
-public class Interview {
+public class InterviewRedis {
 
     @Id
     private String id;
@@ -23,9 +23,9 @@ public class Interview {
     private double neutral;
 
     @Builder
-    private Interview(String roomId, String userId, String question, String answer, int pronunciationScore,
-                      double happy,
-                      double disgust, double sad, double surprise, double fear, double angry, double neutral) {
+    private InterviewRedis(String roomId, String userId, String question, String answer, int pronunciationScore,
+                           double happy,
+                           double disgust, double sad, double surprise, double fear, double angry, double neutral) {
         this.roomId = roomId;
         this.userId = userId;
         this.question = question;
