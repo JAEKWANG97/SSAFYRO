@@ -51,9 +51,9 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex items-center py-8 px-20 text-lg bg-white shadow-md">
+      <nav className="flex items-center py-8 px-40 text-lg bg-white shadow-md">
         {/* 로고 자리 */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 min-w-[200px]">
           <a className="font-extrabold text-3xl" href="/">
             <img className="h-[25px] inline pr-4" src="/SSAFYRO.png" alt="SSAFYRO 로고" />
             SSAFYRO
@@ -61,10 +61,10 @@ export default function Navbar() {
         </div>
 
         {/* 메뉴 자리 */}
-        <div className="flex-grow text-center relative">
+        <div className="flex-grow text-center relative flex justify-center">
           <div className="relative inline-block mx-8" ref={dropdown1Ref}>
             <a
-              className="font-semibold hover:text-[#90CCF0] cursor-pointer"
+              className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
               onClick={toggleDropdown1}
             >
               1차 전형 준비
@@ -97,7 +97,7 @@ export default function Navbar() {
           
           <div className="relative inline-block mx-3" ref={dropdown2Ref}>
             <a
-              className="font-semibold hover:text-[#90CCF0] cursor-pointer"
+              className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
               onClick={toggleDropdown2}
             >
               2차 전형 준비
@@ -118,14 +118,14 @@ export default function Navbar() {
         </div>
 
         {/* 회원 메뉴 */}
-        <div className="flex-shrink-0 text-end">
+        <div className="flex-shrink-0 min-w-[200px] text-end">
           {isLogin ? (
             <>
-              <a className="mx-8 font-semibold hover:text-[#90CCF0]" href={`/account/profile/${userId}`}>프로필</a>
+              <a className="mx-8 font-semibold hover:text-[#90CCF0] whitespace-nowrap" href={`/account/profile/${userId}`}>프로필</a>
               <button className="mx-3 font-semibold hover:text-[#90CCF0]" onClick={loginTrigger}>로그아웃</button>
             </>
           ) : (
-            <a className="mx-3 font-semibold hover:text-[#90CCF0]" href="/account/login">로그인</a>
+            <a className="mx-3 font-semibold hover:text-[#90CCF0] whitespace-nowrap" href="/account/login">로그인</a>
           )}
         </div>
       </nav>
