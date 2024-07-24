@@ -21,7 +21,7 @@ public class InterviewService {
     }
 
     public ArticleResponse showArticle(String roomId) {
-        return new ArticleResponse("", List.of());
+        return new ArticleResponse("", "", List.of());
     }
 
     public void saveQuestionResult(QuestionResultServiceRequest request) {
