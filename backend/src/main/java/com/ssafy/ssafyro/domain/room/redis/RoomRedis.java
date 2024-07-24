@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.domain.room;
+package com.ssafy.ssafyro.domain.room.redis;
 
 import org.springframework.data.redis.core.RedisHash;
 
@@ -11,7 +11,7 @@ public class RoomRedis {
 
     private String description;
 
-    private RoomType RoomType;
+    private com.ssafy.ssafyro.domain.room.RoomType RoomType;
 
     private int capacity;
 }
