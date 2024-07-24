@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
@@ -122,7 +122,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 질문, 답변 저장 API")
     @Test
     void saveQuestionResult() throws Exception {
-        QuestionResultRequest request = QuestionResultRequest.builder()
+        QnAResultRequest request = QnAResultRequest.builder()
                 .roomId("roomId")
                 .userId("userId")
                 .question("자신의 강점이 뭐라고 생각하시나요?")
@@ -138,7 +138,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                 .build();
 
         mockMvc.perform(
-                        post("/api/v1/interview/question-result")
+                        post("/api/v1/interview/question-answer-result")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
