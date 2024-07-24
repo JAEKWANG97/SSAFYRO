@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
@@ -84,6 +84,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
         given(interviewService.showArticle(any()))
                 .willReturn(
                         new ArticleResponse(
+                                "기사 제목",
                                 " 트럼프가 총에 맞았지만 엄청난 운으로 살아남았다. 투명 트럼프가 울부짖었다. 크아아아앙. 투명 트럼프는 존나 강해서 미국 대통령 선거를 씹어먹었다.\n",
                                 List.of("다음 기사를 읽고 현재 불편 사항을 개선할 서비스를 제안하시오.",
                                         "알아서 잘 수행하시오.")
@@ -106,7 +107,9 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.article").type(JsonFieldType.STRING)
+                                fieldWithPath("response.title").type(JsonFieldType.STRING)
+                                        .description("기사 제목"),
+                                fieldWithPath("response.content").type(JsonFieldType.STRING)
                                         .description("기사 내용"),
                                 fieldWithPath("response.question").type(JsonFieldType.ARRAY)
                                         .description("기사에 대한 질문"),
@@ -119,12 +122,12 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 질문, 답변 저장 API")
     @Test
     void saveQuestionResult() throws Exception {
-        QuestionResultRequest request = QuestionResultRequest.builder()
+        QnAResultRequest request = QnAResultRequest.builder()
                 .roomId("roomId")
                 .userId("userId")
                 .question("자신의 강점이 뭐라고 생각하시나요?")
                 .answer("포기할 줄 모르는 자세입니다.")
-                .pronunciation_score(3)
+                .pronunciationScore(3)
                 .happy(0.9)
                 .disgust(0.01)
                 .sad(0.01)
@@ -135,7 +138,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                 .build();
 
         mockMvc.perform(
-                        post("/api/v1/interview/question-result")
+                        post("/api/v1/interview/question-answer-result")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -153,7 +156,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("면접 질문"),
                                 fieldWithPath("answer").type(JsonFieldType.STRING)
                                         .description("면접 답변"),
-                                fieldWithPath("pronunciation_score").type(JsonFieldType.NUMBER)
+                                fieldWithPath("pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
                                 fieldWithPath("happy").type(JsonFieldType.NUMBER)
                                         .description("행복 점수"),

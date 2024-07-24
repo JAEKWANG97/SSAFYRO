@@ -4,7 +4,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.QuestionResultRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
@@ -38,9 +38,10 @@ public class InterviewController {
         );
     }
 
-    @PostMapping("/api/v1/interview/question-result")
-    public ApiResult<Void> saveQuestionResult(
-            @RequestBody QuestionResultRequest questionAnswerRequest) {
+    @PostMapping("/api/v1/interview/question-answer-result")
+    public ApiResult<Void> saveQnAResult(
+            @RequestBody QnAResultRequest request) {
+        interviewService.saveQnAResult(request.toServiceRequest());
         return success(null);
     }
 
