@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class InterviewingRepositoryTest extends IntegrationTestSupport {
+class InterviewingRedisRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
-    private InterviewRepository interviewRepository;
+    private InterviewRedisRepository interviewRedisRepository;
 
     @DisplayName("면접 질문 답변 후 표정, 억양, 질문, 답변에 대한 내용을 Redis 에 저장한다.")
     @Test
@@ -22,10 +22,10 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
         //given
         double personOrderNumber = 1.0;
         String userId = "user";
-        Interview interview = createInterview(personOrderNumber, userId);
+        InterviewRedis interview = createInterview(personOrderNumber, userId);
 
         //when
-        Interview saved = interviewRepository.save(interview);
+        InterviewRedis saved = interviewRedisRepository.save(interview);
 
         //then
         assertThat(saved)
@@ -44,12 +44,12 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
         //given
         double personOrderNumber = 1.0;
         String userId = "user";
-        Interview interviewing1 = createInterview(personOrderNumber, userId);
-        Interview interviewing2 = createInterview(++personOrderNumber, userId);
-        Interview interviewing3 = createInterview(++personOrderNumber, userId);
+        InterviewRedis interviewing1 = createInterview(personOrderNumber, userId);
+        InterviewRedis interviewing2 = createInterview(++personOrderNumber, userId);
+        InterviewRedis interviewing3 = createInterview(++personOrderNumber, userId);
 
         //when
-        Iterable<Interview> result = interviewRepository.saveAll(
+        Iterable<InterviewRedis> result = interviewRedisRepository.saveAll(
                 List.of(interviewing1, interviewing2, interviewing3));
 
         //then
@@ -67,12 +67,12 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
     void saveQnA3() {
         //given
         double personOrderNumber = 1.0;
-        Interview interviewing1 = createInterview(personOrderNumber, "user1");
-        Interview interviewing2 = createInterview(++personOrderNumber, "user1");
-        Interview interviewing3 = createInterview(++personOrderNumber, "user2");
+        InterviewRedis interviewing1 = createInterview(personOrderNumber, "user1");
+        InterviewRedis interviewing2 = createInterview(++personOrderNumber, "user1");
+        InterviewRedis interviewing3 = createInterview(++personOrderNumber, "user2");
 
         //when
-        Iterable<Interview> result = interviewRepository.saveAll(
+        Iterable<InterviewRedis> result = interviewRedisRepository.saveAll(
                 List.of(interviewing1, interviewing2, interviewing3));
 
         //then
@@ -85,8 +85,8 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    private Interview createInterview(double personOrderNumber, String userId) {
-        return Interview.builder()
+    private InterviewRedis createInterview(double personOrderNumber, String userId) {
+        return InterviewRedis.builder()
                 .roomId("room")
                 .userId(userId)
                 .question("question" + personOrderNumber)

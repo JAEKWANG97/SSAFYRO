@@ -4,8 +4,8 @@ import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
-import com.ssafy.ssafyro.domain.Interview.Interview;
-import com.ssafy.ssafyro.domain.Interview.InterviewRepository;
+import com.ssafy.ssafyro.domain.Interview.InterviewRedis;
+import com.ssafy.ssafyro.domain.Interview.InterviewRedisRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class InterviewService {
 
-    private final InterviewRepository interviewRepository;
+    private final InterviewRedisRepository interviewRepository;
 
     public StartResponse startInterview(StartRequest startRequest) {
         return new StartResponse("모집완료");
@@ -25,7 +25,7 @@ public class InterviewService {
     }
 
     public void saveQnAResult(QnAResultServiceRequest request) {
-        Interview interview = request.toEntity();
+        InterviewRedis interview = request.toEntity();
         interviewRepository.save(interview);
     }
 
