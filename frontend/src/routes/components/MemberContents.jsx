@@ -2,12 +2,15 @@ export default function MemberContents() {
   return (
     <div
       className="container mx-auto mt-16 overflow-hidden max-w-6xl"
-      style={{ minWidth: "1100px" }}
+      // style={{ minWidth: "1100px" }}
     >
       <div className="flex">
         <div
-          className="w-2/3 h-[375px] mr-16 rounded-xl p-8 flex items-center relative justify-center"
-          style={{ background: 'linear-gradient(to right, rgba(56, 189, 248, 0.5), rgba(67, 56, 202, 0.3))' }}
+          className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center relative justify-center"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(56, 189, 248, 0.5), rgba(67, 56, 202, 0.3))",
+          }}
         >
           <div>
             <img src="/public/main/main_characters.png" alt="Main Character" />
@@ -19,9 +22,12 @@ export default function MemberContents() {
         </div>
 
         <div
-          className="w-1/3 h-[375px] rounded-xl"
+          className="w-1/3 h-[375px] rounded-xl bg-purple-200"
           // style={{ backgroundColor: "rgba(249, 255, 215, 0.5)" }}
-          style={{ background: 'linear-gradient(to right, rgba(67, 56, 202, 0.3), rgba(231, 226, 253, 0.5))' }}
+          // style={{
+          //   background:
+          //     "linear-gradient(to right, rgba(67, 56, 202, 0.3), rgba(231, 226, 253, 0.5))",
+          // }}
         >
           <div className="flex items-center justify-center w-full mt-8 mb-6">
             <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200">
@@ -37,12 +43,12 @@ export default function MemberContents() {
               UserName 님의 합격 지수
             </h2>
             <p className="font-bold">
-              <span className="text-3xl text-blue-500">Score</span>{" "}
+              <span className="text-3xl text-cyan-600">Score</span>{" "}
               <span className="text-xl text-gray-800">점</span>
             </p>
           </div>
           <div className="w-full flex justify-center mt-4">
-            <button className="text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">
+            <button className="mx-4 text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-neutral-500/25 border-2 border-white hover:bg-gradient-to-r hover:from-purple-400/50 hover:to-pink-400/50">
               마이페이지 바로가기
             </button>
             {/* <button className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 font-bold px-4 py-3 rounded-xl w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">
