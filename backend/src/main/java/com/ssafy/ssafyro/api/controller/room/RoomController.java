@@ -43,7 +43,7 @@ public class RoomController {
 
     @PostMapping("/api/v1/rooms/enter")
     public ApiResult<RoomEnterResponse> enterRoom(@RequestBody RoomEnterRequest request) {
-        return success(roomService.enterRoom(request.toServiceReaquest()));
+        return success(roomService.enterRoom(request.toServiceRequest()));
     }
 
 }
