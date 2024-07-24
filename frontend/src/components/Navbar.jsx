@@ -51,10 +51,10 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex items-center py-8 px-40 text-lg bg-white shadow-md">
+      <nav className="flex items-center py-8 px-64 text-lg bg-white shadow-md">
         {/* 로고 자리 */}
         <div className="flex-shrink-0 min-w-[200px]">
-          <a className="font-extrabold text-3xl" href="/">
+          <a className="font-extrabold text-2xl" href="/">
             <img className="h-[25px] inline pr-4" src="/SSAFYRO.png" alt="SSAFYRO 로고" />
             SSAFYRO
           </a>

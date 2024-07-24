@@ -12,7 +12,7 @@ export default function First() {
 
   return (
     <>
-      <div className="mb-4 border-b border-gray-200">
+      <div className="mb-4 border-b border-gray-300">
         <ul
           className="flex flex-wrap -mb-px text-sm font-medium text-center"
           id="default-tab"
@@ -21,9 +21,9 @@ export default function First() {
         >
           <li className="me-2" role="presentation">
             <button
-              className={`inline-block p-4 border-b-2 rounded-t-lg ${
+              className={`inline-block p-4 border-b-2 rounded-t-lg font-bold ${
                 activeTab === 'essay'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-[#90CCF0] text-[#90CCF0]'
                   : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'
               }`}
               id="essay-tab"
@@ -39,9 +39,9 @@ export default function First() {
           </li>
           <li className="me-2" role="presentation">
             <button
-              className={`inline-block p-4 border-b-2 rounded-t-lg ${
+              className={`inline-block p-4 border-b-2 rounded-t-lg font-bold ${
                 activeTab === 'sw'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-[#90CCF0] text-[#90CCF0]'
                   : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'
               }`}
               id="sw-tab"
