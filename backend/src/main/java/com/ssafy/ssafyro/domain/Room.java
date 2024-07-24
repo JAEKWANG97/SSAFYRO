@@ -5,8 +5,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash("User")
-@Table(name = "rooms")
+@RedisHash(value = "room")
 public class Room {
 
     private Long id;
