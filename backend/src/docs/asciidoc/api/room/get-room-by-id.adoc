@@ -1,0 +1,11 @@
+[[get-room-by-id]]
+=== 방 상세 조회
+
+==== HTTP Request
+
+include::{snippets}/get-room-by-id/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-room-by-id/http-response.adoc[]
+include::{snippets}/get-room-by-id/response-fields.adoc[]
