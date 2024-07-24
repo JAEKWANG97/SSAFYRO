@@ -14,18 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 class InterviewingRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
-    private InterviewingRepository interviewingRepository;
+    private InterviewRepository interviewRepository;
 
     @DisplayName("면접 질문 답변 후 표정, 억양, 질문, 답변에 대한 내용을 Redis 에 저장한다.")
     @Test
-    void saveQuestionResult() {
+    void saveQnAResult() {
         //given
         double personOrderNumber = 1.0;
         String userId = "user";
-        Interview interviewing = createInterviewing(personOrderNumber, userId);
+        Interview interview = createInterview(personOrderNumber, userId);
 
         //when
-        Interview saved = interviewingRepository.save(interviewing);
+        Interview saved = interviewRepository.save(interview);
 
         //then
         assertThat(saved)
@@ -40,16 +40,16 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("면접 질문 답변 저장 시, 한 사람에게 여러 질문이 저장될 수 있다.")
     @Test
-    void saveQuestionResult2() {
+    void saveQnA2() {
         //given
         double personOrderNumber = 1.0;
         String userId = "user";
-        Interview interviewing1 = createInterviewing(personOrderNumber, userId);
-        Interview interviewing2 = createInterviewing(++personOrderNumber, userId);
-        Interview interviewing3 = createInterviewing(++personOrderNumber, userId);
+        Interview interviewing1 = createInterview(personOrderNumber, userId);
+        Interview interviewing2 = createInterview(++personOrderNumber, userId);
+        Interview interviewing3 = createInterview(++personOrderNumber, userId);
 
         //when
-        Iterable<Interview> result = interviewingRepository.saveAll(
+        Iterable<Interview> result = interviewRepository.saveAll(
                 List.of(interviewing1, interviewing2, interviewing3));
 
         //then
@@ -64,15 +64,15 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("면접 질문 답변 저장 시, 여러 사람에게 여러 질문이 저장될 수 있다.")
     @Test
-    void saveQuestionResult3() {
+    void saveQnA3() {
         //given
         double personOrderNumber = 1.0;
-        Interview interviewing1 = createInterviewing(personOrderNumber, "user1");
-        Interview interviewing2 = createInterviewing(++personOrderNumber, "user1");
-        Interview interviewing3 = createInterviewing(++personOrderNumber, "user2");
+        Interview interviewing1 = createInterview(personOrderNumber, "user1");
+        Interview interviewing2 = createInterview(++personOrderNumber, "user1");
+        Interview interviewing3 = createInterview(++personOrderNumber, "user2");
 
         //when
-        Iterable<Interview> result = interviewingRepository.saveAll(
+        Iterable<Interview> result = interviewRepository.saveAll(
                 List.of(interviewing1, interviewing2, interviewing3));
 
         //then
@@ -85,7 +85,7 @@ class InterviewingRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    private Interview createInterviewing(double personOrderNumber, String userId) {
+    private Interview createInterview(double personOrderNumber, String userId) {
         return Interview.builder()
                 .roomId("room")
                 .userId(userId)
