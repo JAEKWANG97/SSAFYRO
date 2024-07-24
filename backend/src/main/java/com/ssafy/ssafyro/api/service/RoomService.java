@@ -7,7 +7,7 @@ import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.api.service.room.response.RoomResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +18,8 @@ public class RoomService {
         return new RoomListResponse(List.of());
     }
 
-    public RoomResponse getRoomById(int id) {
-        return new RoomResponse(id, "title", "description", "type", 1);
+    public RoomDetailResponse getRoomById(int id) {
+        return new RoomDetailResponse(id, "title", "description", "type", 1);
     }
 
     public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
