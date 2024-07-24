@@ -34,18 +34,19 @@ export default function Interview() {
             <div className="w-1/4 p-4 bg-white shadow rounded">
               <div className="mb-4">
                 <label className="block mb-2">면접 종류 선택</label>
-                <select className="w-full border p-2 rounded">
+                <select className="w-full border p-2 rounded bg-gray-50">
                   <option>전체</option>
-                  <option>면접 종류 1</option>
-                  <option>면접 종류 2</option>
+                  <option>인성 면접</option>
+                  <option>PT 면접</option>
                 </select>
               </div>
               <div className="mb-4">
                 <label className="block mb-2">참여 인원 선택</label>
-                <select className="w-full border p-2 rounded">
+                <select className="w-full border p-2 rounded bg-gray-50">
                   <option>전체</option>
                   <option>1명</option>
                   <option>2명</option>
+                  <option>3명</option>
                 </select>
               </div>
               <div className="mb-4">
@@ -78,13 +79,22 @@ export default function Interview() {
                       PT
                     </span>
                   </div>
-                  <p className="text-gray-700">전공자 PT 준비방</p>
+                  <p className="text-gray-700 font-semibold">
+                    전공자 PT 준비방
+                  </p>
                   <p className="text-gray-500 text-sm">
                     열심히 모의 면접 해서 붙어봅시다!
                   </p>
                   <div className="mt-4 flex justify-between items-center">
-                    <span className="text-sm text-gray-600">1/3</span>
-                    <button className="bg-blue-600 text-white py-1 px-2 rounded">
+                    <div>
+                      <img
+                        className="w-[24px] inline me-2"
+                        src="/Interview/group.png"
+                        alt=""
+                      />
+                      <span className="text-sm text-gray-600">1 / 3</span>
+                    </div>
+                    <button className="bg-blue-600 text-white me-2 py-1 px-2 rounded w-[60px]">
                       참여
                     </button>
                   </div>
