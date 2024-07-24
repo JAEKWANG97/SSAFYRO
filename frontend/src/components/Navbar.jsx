@@ -1,7 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import useFirstStore from "../stores/FirstStore";
 
 export default function Navbar() {
-  const userId = 1;
+  const setActiveTab = useFirstStore((state) => state.setActiveTab);
+  
+  const userId = 1; // 임의로 지정
   const [isLogin, setIsLogin] = useState(false); // 로그인을 관리하는 상태
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
   const [dropdown2Open, setDropdown2Open] = useState(false); // 드롭다운 2 상태
@@ -39,6 +42,13 @@ export default function Navbar() {
     };
   }, []);
 
+  const handleNavClick = (tab) => {
+    setActiveTab(tab);
+    if (window.location.pathname !== "/first") {
+      window.location.href = "/first";
+    }
+  };
+
   return (
     <>
       <nav className="flex items-center py-8 px-20 text-lg bg-white shadow-md">
@@ -63,10 +73,22 @@ export default function Navbar() {
               <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]">
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
-                    <a href="/first" className="block px-6 py-3 hover:bg-gray-100">에세이</a>
+                    <a
+                      href="#"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick('essay')}
+                    >
+                      에세이
+                    </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-6 py-3 hover:bg-gray-100">SW적성진단</a>
+                    <a
+                      href="#"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick('sw')}
+                    >
+                      SW 적성진단
+                    </a>
                   </li>
                 </ul>
               </div>
