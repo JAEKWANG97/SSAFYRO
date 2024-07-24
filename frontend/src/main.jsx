@@ -6,7 +6,6 @@ import ReactDOM from "react-dom/client";
 // import components
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
-
 // style sheet
 import "./index.css";
 
