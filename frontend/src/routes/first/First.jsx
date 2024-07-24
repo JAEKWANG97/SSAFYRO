@@ -12,7 +12,7 @@ export default function First() {
 
   return (
     <>
-      <div className="mb-4 border-b border-gray-300">
+      <div className="mb-4 border-b border-gray-200">
         <ul
           className="flex flex-wrap -mb-px text-sm font-medium text-center"
           id="default-tab"
