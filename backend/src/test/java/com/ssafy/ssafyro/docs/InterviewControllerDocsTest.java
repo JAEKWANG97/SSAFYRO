@@ -84,6 +84,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
         given(interviewService.showArticle(any()))
                 .willReturn(
                         new ArticleResponse(
+                                "기사 제목",
                                 " 트럼프가 총에 맞았지만 엄청난 운으로 살아남았다. 투명 트럼프가 울부짖었다. 크아아아앙. 투명 트럼프는 존나 강해서 미국 대통령 선거를 씹어먹었다.\n",
                                 List.of("다음 기사를 읽고 현재 불편 사항을 개선할 서비스를 제안하시오.",
                                         "알아서 잘 수행하시오.")
@@ -106,6 +107,8 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
+                                fieldWithPath("response.title").type(JsonFieldType.STRING)
+                                        .description("기사 제목"),
                                 fieldWithPath("response.article").type(JsonFieldType.STRING)
                                         .description("기사 내용"),
                                 fieldWithPath("response.question").type(JsonFieldType.ARRAY)
