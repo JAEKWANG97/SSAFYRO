@@ -1,12 +1,9 @@
-package com.ssafy.ssafyro.domain;
+package com.ssafy.ssafyro.domain.room;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash(value = "room")
-public class Room {
+public class RoomRedis {
 
     private Long id;
 

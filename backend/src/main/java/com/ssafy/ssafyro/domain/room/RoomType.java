@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.domain;
+package com.ssafy.ssafyro.domain.room;
 
 
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RoomStatus {
-    WAIT("대기"),
-    ING("진행중"),
-    END("종료");
+public enum RoomType {
+
+    INTERVIEW("인성"),
+    PRESENTATION("PT");
 
     private final String text;
 }
