@@ -17,8 +17,8 @@ import Home from "./routes/Home.jsx";
 
 import Login from "./routes/accounts/Login.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
-import Personality_feedback from "./routes/accounts/Personality_feedback.jsx";
-import Pt_feedback from "./routes/accounts/Pt_feedback.jsx";
+import PersonalityFeedback from "./routes/accounts/PersonalityFeedback.jsx";
+import PtFeedback from "./routes/accounts/PtFeedback.jsx";
 
 import First from "./routes/first/First.jsx";
 
@@ -48,11 +48,11 @@ const router = createBrowserRouter([
         },
         {
           path: "personality_feedback",
-          element: <Personality_feedback />,
+          element: <PersonalityFeedback />,
         },
         {
           path: "pt_feedback",
-          element: <Pt_feedback />,
+          element: <PtFeedback />,
         },
       ],}
     ]
