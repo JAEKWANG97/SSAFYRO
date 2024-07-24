@@ -22,7 +22,7 @@ import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.api.service.room.response.RoomResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void getAllRoomsTest() throws Exception {
 
         RoomListResponse roomListResponse = new RoomListResponse(
-                List.of(new RoomResponse(1, "title", "description", "PT", 3)));
+                List.of(new RoomDetailResponse(1, "title", "description", "PT", 3)));
 
         given(roomService.getRoomList(any(RoomListServiceRequest.class)))
                 .willReturn(roomListResponse);
@@ -88,10 +88,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void getRoomByIdTest() throws Exception {
         int roomId = 1;
 
-        RoomResponse roomResponse = new RoomResponse(1, "Conference Room", "A spacious conference room", "Meeting", 10);
+        RoomDetailResponse roomDetailResponse = new RoomDetailResponse(1, "Conference Room", "A spacious conference room", "Meeting", 10);
 
         given(roomService.getRoomById(roomId))
-                .willReturn(roomResponse);
+                .willReturn(roomDetailResponse);
 
         mockMvc.perform(
                         get("/api/v1/rooms/{id}", roomId)
