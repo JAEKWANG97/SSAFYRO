@@ -11,7 +11,7 @@ import com.ssafy.ssafyro.api.service.RoomService;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.api.service.room.response.RoomResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,7 +32,7 @@ public class RoomController {
     }
 
     @GetMapping("/api/v1/rooms/{id}")
-    public ApiResult<RoomResponse> getRoomById(@PathVariable int id) {
+    public ApiResult<RoomDetailResponse> getRoomById(@PathVariable int id) {
         return success(roomService.getRoomById(id));
     }
 
