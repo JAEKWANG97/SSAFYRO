@@ -14,7 +14,6 @@ public class Room {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
     private RoomType RoomType;
 
     private int capacity;
