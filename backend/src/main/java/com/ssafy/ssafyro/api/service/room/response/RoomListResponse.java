@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.controller.room.dto;
+package com.ssafy.ssafyro.api.service.room.response;
 
 import java.util.List;
 
