@@ -1,7 +1,10 @@
+import React from "react";
+import GuestContents from "./components/GuestContents.jsx";
+import MemberContents from "./components/MemberContents.jsx";
+
 export default function Home() {
-    return (
-        <>
-            <h1>홈페이지임</h1>
-        </>
-    );
+  return (
+    <GuestContents />
+    // <MemberContents />
+  );
 }
