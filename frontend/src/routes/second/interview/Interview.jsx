@@ -43,6 +43,20 @@ export default function Interview() {
       title: "PT 면접 연습방",
       description: "PT 면접 연습방입니다.",
       type: "PT",
+      capacity: 2,
+    },
+    {
+      id: 3,
+      title: "면접 연습 하실분",
+      description: "아무나 환영",
+      type: "PT",
+      capacity: 3,
+    },
+    {
+      id: 4,
+      title: "비전공자도 할 수 있다",
+      description: "PT 면접 같이 연습하실 분",
+      type: "PT",
       capacity: 3,
     },
   ];
