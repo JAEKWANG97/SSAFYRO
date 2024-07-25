@@ -26,13 +26,11 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
-import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
+import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
@@ -52,10 +50,22 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void getAllRoomsTest() throws Exception {
 
         RoomListResponse roomListResponse = RoomListResponse.of(
-                List.of(RoomRedis.builder().title("Conference Room").description("A spacious conference room")
+                List.of(RoomRedis.builder()
+                                .id(1L).
+                                title("Conference Room")
+                                .description("A spacious conference room")
+                                .status(RoomStatus.WAIT)
+                                .participantCount(3)
+                                .userList(List.of(1L, 2L, 3L))
                                 .type(RoomType.PRESENTATION)
-                                .capacity(10).build(),
-                        RoomRedis.builder().title("Meeting Room").description("A cozy meeting room")
+                                .capacity(3).build(),
+                        RoomRedis.builder()
+                                .id(2L)
+                                .title("Meeting Room")
+                                .description("A cozy meeting room")
+                                .status(RoomStatus.WAIT)
+                                .participantCount(3)
+                                .userList(List.of(1L, 2L, 3L))
                                 .type(RoomType.PRESENTATION)
                                 .capacity(3).build()));
 
@@ -87,6 +97,12 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("방 타입"),
                                 fieldWithPath("response.rooms[].capacity").type(JsonFieldType.NUMBER)
                                         .description("방 수용 인원"),
+                                fieldWithPath("response.rooms[].status").type(JsonFieldType.STRING)
+                                        .description("방 상태"),
+                                fieldWithPath("response.rooms[].participantCount").type(JsonFieldType.NUMBER)
+                                        .description("방 참가자 수"),
+                                fieldWithPath("response.rooms[].userList").type(JsonFieldType.ARRAY)
+                                        .description("방 참가자 목록"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )));
@@ -95,35 +111,42 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     @DisplayName("특정 ID로 방 정보를 가져온다.")
     @Test
     void getRoomByIdTest() throws Exception {
-        int roomId = 1;
+        int requestRoomId = 1;
 
-        RoomDetailResponse roomDetailResponse = RoomDetailResponse.of(
-                RoomRedis.builder().title("Conference Room").description("A spacious conference room")
+        given(roomService.getRoomById(any(Long.class)))
+                .willReturn(RoomDetailResponse.of(RoomRedis.builder()
+                        .title("title")
+                        .description("description")
                         .type(RoomType.PRESENTATION)
-                        .capacity(10).build());
-
-        given(roomService.getRoomById(roomId))
-                .willReturn(roomDetailResponse);
+                        .status(RoomStatus.WAIT)
+                        .capacity(3)
+                        .participantCount(1)
+                        .userList(List.of(1L))
+                        .build())
+                );
 
         mockMvc.perform(
-                        get("/api/v1/rooms/{id}", roomId)
+                        get("/api/v1/rooms/{id}", requestRoomId)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("get-room-by-id",
-                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.id").type(JsonFieldType.NUMBER)
-                                        .description("방 ID"),
                                 fieldWithPath("response.title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
                                 fieldWithPath("response.description").type(JsonFieldType.STRING)
                                         .description("방 설명"),
+                                fieldWithPath("response.status").type(JsonFieldType.STRING)
+                                        .description("방 상태"),
+                                fieldWithPath("response.participantCount").type(JsonFieldType.NUMBER)
+                                        .description("방 참가자 수"),
+                                fieldWithPath("response.userList").type(JsonFieldType.ARRAY)
+                                        .description("방 참가자 목록"),
                                 fieldWithPath("response.type").type(JsonFieldType.STRING)
                                         .description("방 타입"),
                                 fieldWithPath("response.capacity").type(JsonFieldType.NUMBER)
