@@ -7,6 +7,7 @@ import { rooms } from "./data";
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const navigate = useNavigate();
+  const currentUser = { userId: 'LGG', name: 'Jun' }; // 현재 로그인한 사용자 정보
 
   useEffect(() => {
     // 데이터 로딩
@@ -14,7 +15,13 @@ export default function Interview() {
   }, []);
 
   const handleJoinRoom = (roomId) => {
-    navigate(`/second/interview/room/${roomId}`);
+    const roomIndex = roomList.findIndex((room) => room.roomId === roomId)
+    if (roomIndex !== -1 && roomList[roomIndex].status === 'open') {
+      const updateRooms = [...roomList]
+      updateRooms[roomIndex].participants.push(currentUser)
+      setRoomList(updateRooms)
+      navigate(`/second/interview/room/${roomId}`);
+    }
   };
 
   return (
