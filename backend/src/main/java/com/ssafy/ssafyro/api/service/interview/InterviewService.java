@@ -8,6 +8,7 @@ import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class InterviewService {
         try {
             String interviewJson = objectMapper.writeValueAsString(interview);
             redisTemplate.opsForList().rightPush(redisKey, interviewJson);
+            redisTemplate.expire(redisKey, 600, TimeUnit.SECONDS);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
