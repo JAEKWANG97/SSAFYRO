@@ -1,4 +1,10 @@
 package com.ssafy.ssafyro.api.service.room.response;
 
-public record RoomDetailResponse(int id, String title, String description, String type, int capacity) {
+import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
+
+public record RoomDetailResponse(RoomRedis room) {
+
+    public static RoomDetailResponse of(RoomRedis room) {
+        return new RoomDetailResponse(room);
+    }
 }

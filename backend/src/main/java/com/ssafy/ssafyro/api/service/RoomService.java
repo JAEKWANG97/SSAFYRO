@@ -8,22 +8,32 @@ import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RoomService {
 
+    private final RoomRedisRepository roomRedisRepository;
+
     public RoomListResponse getRoomList(RoomListServiceRequest request) {
+
         return new RoomListResponse(List.of());
     }
 
     public RoomDetailResponse getRoomById(int id) {
-        return new RoomDetailResponse(id, "title", "description", "type", 1);
+        RoomRedis room = roomRedisRepository.findById((long) id).orElse(null);
+        return RoomDetailResponse.of(room);
     }
 
     public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
-        return new RoomCreateResponse();
+        RoomRedis room = roomRedisRepository.save(request.toEntity());
+        return RoomCreateResponse.of(room.getId());
     }
 
     public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {

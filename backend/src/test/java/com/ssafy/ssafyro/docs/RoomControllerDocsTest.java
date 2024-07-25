@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -18,11 +19,15 @@ import com.ssafy.ssafyro.api.controller.room.RoomController;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.service.RoomService;
+import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
+import com.ssafy.ssafyro.domain.room.RoomType;
+import com.ssafy.ssafyro.domain.room.entity.Room;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,12 +36,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-@WebMvcTest(RoomController.class)
+
 public class RoomControllerDocsTest extends RestDocsSupport {
 
 
-    @MockBean
-    private RoomService roomService;
+    private final RoomService roomService = mock(RoomService.class);
 
     @Override
     protected Object initController() {
@@ -47,8 +51,13 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     @Test
     void getAllRoomsTest() throws Exception {
 
-        RoomListResponse roomListResponse = new RoomListResponse(
-                List.of(new RoomDetailResponse(1, "title", "description", "PT", 3)));
+        RoomListResponse roomListResponse = RoomListResponse.of(
+                List.of(RoomRedis.builder().title("Conference Room").description("A spacious conference room")
+                                .type(RoomType.PRESENTATION)
+                                .capacity(10).build(),
+                        RoomRedis.builder().title("Meeting Room").description("A cozy meeting room")
+                                .type(RoomType.PRESENTATION)
+                                .capacity(3).build()));
 
         given(roomService.getRoomList(any(RoomListServiceRequest.class)))
                 .willReturn(roomListResponse);
@@ -88,7 +97,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void getRoomByIdTest() throws Exception {
         int roomId = 1;
 
-        RoomDetailResponse roomDetailResponse = new RoomDetailResponse(1, "Conference Room", "A spacious conference room", "Meeting", 10);
+        RoomDetailResponse roomDetailResponse = RoomDetailResponse.of(
+                RoomRedis.builder().title("Conference Room").description("A spacious conference room")
+                        .type(RoomType.PRESENTATION)
+                        .capacity(10).build());
 
         given(roomService.getRoomById(roomId))
                 .willReturn(roomDetailResponse);
@@ -124,11 +136,19 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     @DisplayName("방을 생성합니다.")
     @Test
     void createRoom() throws Exception {
-        RoomCreateRequest roomCreateRequest = new RoomCreateRequest("title", "description", "type", 3);
-        RoomCreateResponse roomCreateResponse = new RoomCreateResponse();
+        Long RoomId = 1L;
+        Long userId = 1L;
 
-        given(roomService.createRoom(any()))
-                .willReturn(roomCreateResponse);
+        RoomCreateRequest roomCreateRequest = new RoomCreateRequest(
+                userId,
+                "title",
+                "description",
+                "type",
+                3
+        );
+
+        given(roomService.createRoom(any(RoomCreateServiceRequest.class)))
+                .willReturn(RoomCreateResponse.of(RoomId));
 
         mockMvc.perform(post("/api/v1/rooms")
                         .content(objectMapper.writeValueAsString(roomCreateRequest))
@@ -139,6 +159,8 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 ID"),
                                 fieldWithPath("title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
                                 fieldWithPath("description").type(JsonFieldType.STRING)
@@ -153,6 +175,8 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
+                                fieldWithPath("response.roomId").type(JsonFieldType.NUMBER)
+                                        .description("방 ID"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )));
