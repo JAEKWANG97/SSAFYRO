@@ -1,0 +1,12 @@
+[[enter-room]]
+=== 방 입장
+
+==== HTTP Request
+
+include::{snippets}/enter-room/http-request.adoc[]
+include::{snippets}/enter-room/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/enter-room/http-response.adoc[]
+include::{snippets}/enter-room/response-fields.adoc[]

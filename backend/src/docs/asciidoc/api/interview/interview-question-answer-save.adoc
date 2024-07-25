@@ -1,0 +1,12 @@
+[[interview-question-answer-save]]
+=== 면접 질문, 대답 저장
+
+==== HTTP Request
+
+include::{snippets}/interview-question-answer-save/http-request.adoc[]
+include::{snippets}/interview-question-answer-save/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/interview-question-answer-save/http-response.adoc[]
+include::{snippets}/interview-question-answer-save/response-fields.adoc[]
