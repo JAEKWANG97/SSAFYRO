@@ -4,7 +4,7 @@ import MemberContents from "./components/MemberContents.jsx";
 
 export default function Home() {
   return (
-    // <GuestContents />
-    <MemberContents />
+    <GuestContents />
+    // <MemberContents />
   );
 }
