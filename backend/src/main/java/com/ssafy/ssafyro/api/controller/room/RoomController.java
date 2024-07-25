@@ -13,6 +13,7 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,7 @@ public class RoomController {
     }
 
     @GetMapping("/api/v1/rooms/{id}")
-    public ApiResult<RoomDetailResponse> getRoomById(@PathVariable int id) {
+    public ApiResult<RoomDetailResponse> getRoomById(@PathVariable Long id) {
         return success(roomService.getRoomById(id));
     }
 

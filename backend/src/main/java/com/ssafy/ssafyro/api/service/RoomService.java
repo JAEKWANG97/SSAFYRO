@@ -10,9 +10,12 @@ import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
+import com.ssafy.ssafyro.error.NotFoundException;
+import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,10 +29,12 @@ public class RoomService {
         return new RoomListResponse(List.of());
     }
 
-    public RoomDetailResponse getRoomById(int id) {
-        RoomRedis room = roomRedisRepository.findById((long) id).orElse(null);
-        return RoomDetailResponse.of(room);
+    public RoomDetailResponse getRoomById(Long id)  {
+        return roomRedisRepository.findById(id)
+                .map(RoomDetailResponse::of)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
+
 
     public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
         RoomRedis room = roomRedisRepository.save(request.toEntity());

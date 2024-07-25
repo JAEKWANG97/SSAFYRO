@@ -3,13 +3,13 @@ package com.ssafy.ssafyro.error;
 import static com.ssafy.ssafyro.api.ApiUtils.error;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
+import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +30,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class GeneralExceptionHandler {
 
     private final MessageSource messageSource;
+
+    // Room 관련 예외 처리
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<?> handleRoomNotFoundException(RoomNotFoundException e) {
+        return newResponse(e, HttpStatus.NOT_FOUND);
+    }
 
     private ResponseEntity<ApiResult<?>> newResponse(Throwable throwable, HttpStatus status) {
         return newResponse(throwable.getMessage(), status);

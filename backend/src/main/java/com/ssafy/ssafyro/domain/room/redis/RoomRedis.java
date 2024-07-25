@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
+import jakarta.persistence.GeneratedValue;
 import java.util.List;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -11,10 +12,9 @@ import lombok.Builder;
 
 
 @RedisHash(value = "room")
+@Getter
 public class RoomRedis {
 
-
-    @Getter
     @Id
     private Long id;
 
@@ -27,8 +27,9 @@ public class RoomRedis {
     private final List<Long> userList;
 
     @Builder
-    private RoomRedis(String title, String description, RoomType type, RoomStatus status,
+    private RoomRedis(Long id, String title, String description, RoomType type, RoomStatus status,
                       int capacity, int participantCount, List<Long> userList) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.type = type;
