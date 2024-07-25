@@ -1,5 +1,6 @@
 // Interview.jsx
-
+import axios from "axios";
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export default function Interview() {
@@ -7,6 +8,45 @@ export default function Interview() {
   const onClickButton = () => {
     navigate("createroom");
   };
+
+  // 방 목록 불러오기
+  // const [rooms, setRooms] = useState([]);
+
+  // const getRooms = async () => {
+  //   let filter = {
+  //     type: "all",
+  //     capacity: "all",
+  //   };
+
+  //   const response = await axios
+  //     .get("http://localhost:8000/api/rooms/")
+  //     .then((response) => {
+  //       setRooms(response.rooms);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert("방 목록을 불러오는데 실패했습니다.");
+  //     });
+  // };
+
+  // 더미 데이터로 테스트
+  const rooms = [
+    {
+      id: 1,
+      title: "인성 면접 연습방",
+      description: "인성 면접 연습방입니다.",
+      type: "인성",
+      capacity: 3,
+    },
+    {
+      id: 2,
+      title: "PT 면접 연습방",
+      description: "PT 면접 연습방입니다.",
+      type: "PT",
+      capacity: 3,
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* <header className="bg-blue-100 p-4">
@@ -70,6 +110,48 @@ export default function Interview() {
             {/* 방 목록 */}
             <div className="w-3/4 px-4">
               <div className="grid grid-cols-3 gap-4">
+                {/* 방 목록 생성 */}
+                {rooms.map((room) => (
+                  <>
+                    {/* 각 면접방 간이 정보 블록 */}
+                    <div className="bg-white shadow rounded p-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm bg-green-100 text-green-800 text-xs font-medium me-2 py-1 px-2 rounded border border-green-400">
+                          {/* 모집 중, 모집하고 있지 않음을 파악할 추가 조건이 필요한가? 그냥 인원 수가 꽉차거나 이미 진행 중인가? */}
+                          모집중
+                        </span>
+                        <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium me-2 py-1 px-2 rounded border border-purple-400">
+                          {room.type}
+                        </span>
+                      </div>
+                      <p className="text-gray-700 font-semibold">
+                        {room.title}
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        {room.description}
+                      </p>
+
+                      {/* 참여 버튼과 인원수 */}
+                      <div className="mt-4 flex justify-between items-center">
+                        <div>
+                          <img
+                            className="w-[24px] inline me-2"
+                            src="/Interview/group.png"
+                            alt=""
+                          />
+                          <span className="text-sm text-gray-600">
+                            1 / {room.capacity}
+                          </span>
+                        </div>
+
+                        {/* room.id 인 면접방으로 참여하게 되는 버튼 */}
+                        <button className="bg-blue-600 text-white me-2 py-1 px-2 rounded w-[60px]">
+                          참여
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ))}
                 <div className="bg-white shadow rounded p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm bg-green-100 text-green-800 text-xs font-medium me-2 py-1 px-2 rounded border border-green-400">
