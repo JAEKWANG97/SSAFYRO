@@ -1,12 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function PT() {
+  const { roomid } = useParams();
+
   const navigate = useNavigate();
 
   const handleEndInterview = () => {
     navigate('/second/interview');
   };
+
+  const handleStartSurvey = () => {
+    navigate(`/second/interview/room/${roomid}/pt/survey`)
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -48,7 +54,7 @@ export default function PT() {
             </svg>
             음소거
           </button>
-          <button className="bg-gray-200 px-4 py-2 rounded flex items-center">
+          <button onClick={handleStartSurvey} className="bg-gray-200 px-4 py-2 rounded flex items-center">
             <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4h16v16H4z"></path>
             </svg>

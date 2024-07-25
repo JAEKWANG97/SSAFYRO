@@ -2,16 +2,10 @@ export default function GuestContents() {
   return (
     <div
       className="container mx-auto mt-16 overflow-hidden max-w-6xl"
-      style={{ minWidth: "1100px" }}
+      // style={{ minWidth: "1100px" }}
     >
       <div className="flex">
-        <div
-          className="w-2/3 h-[375px] mr-16 rounded-xl p-8 flex items-center relative justify-center"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(56, 189, 248, 0.5), rgba(67, 56, 202, 0.3))",
-          }}
-        >
+        <div className="w-2/3 h-[375px] mr-10 rounded-xl bg-blue-100 p-8 flex items-center bg-gradient-to-r from-sky-500 to-indigo-500 relative justify-center">
           <div>
             <img src="/public/main/main_characters.png" alt="Main Character" />
           </div>
@@ -49,7 +43,7 @@ export default function GuestContents() {
               원활한 서비스 이용을 위해 로그인해 주세요.
             </h5>
           </div>
-          <button className="relative text-white mt-4 px-4 py-3 rounded-xl flex items-center justify-center w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">
+          <button className="relative text-white mt-4 mx-4 px-4 py-3 rounded-xl flex items-center justify-center w-[268px] bg-[#2090FF] hover:bg-[#1A78D6]">
             로그인
             <svg
               xmlns="http://www.w3.org/2000/svg"

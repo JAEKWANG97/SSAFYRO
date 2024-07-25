@@ -9,7 +9,7 @@ export default function Room() {
   }
 
   function startInterviewHandler() {
-    navigate(`/second/interview/${roomid}/pt_ready`); // 수정된 부분
+    navigate(`/second/interview/room/${roomid}/pt_ready`); // 수정된 부분
   }
 
   return (
