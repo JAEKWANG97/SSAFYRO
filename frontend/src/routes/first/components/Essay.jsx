@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../../../components/Button';
 
 export default function Essay() {
   const [selected, setSelected] = useState('major');
