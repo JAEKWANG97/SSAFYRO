@@ -1,67 +1,7 @@
-import ServiceContents from "./ServiceContents";
-
-export default function MemberContents() {
+export default function ServiceContents() {
   return (
-    <div
-      className="container mx-auto mt-16 overflow-hidden max-w-6xl"
-      // style={{ minWidth: "1100px" }}
-    >
+    <>
       <div className="flex">
-        <div
-          className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center relative justify-center"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(56, 189, 248, 0.5), rgba(67, 56, 202, 0.3))",
-          }}
-        >
-          <div>
-            <img src="/public/main/main_characters.png" alt="Main Character" />
-          </div>
-          <div className="absolute bottom-6 right-6 text-white drop-shadow-sm">
-            <h1 className="text-3xl font-bold">SSAFY로 가는 지름길, 싸피로</h1>
-            <p>지금, SSAFY 입과 준비를 SSAFYRO에서 시작하세요.</p>
-          </div>
-        </div>
-
-        <div
-          className="w-1/3 h-[375px] rounded-xl bg-purple-200"
-          // style={{ backgroundColor: "rgba(249, 255, 215, 0.5)" }}
-          // style={{
-          //   background:
-          //     "linear-gradient(to right, rgba(67, 56, 202, 0.3), rgba(231, 226, 253, 0.5))",
-          // }}
-        >
-          <div className="flex items-center justify-center w-full mt-8 mb-6">
-            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200">
-              <img
-                src="/public/main/drawing.jpg"
-                alt="Main Character"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <div className="text-center mt-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              UserName 님의 합격 지수
-            </h2>
-            <p className="font-bold">
-              <span className="text-3xl text-cyan-600">Score</span>{" "}
-              <span className="text-xl text-gray-800">점</span>
-            </p>
-          </div>
-          <div className="w-full flex justify-center mt-4">
-            <button className="mx-4 text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-neutral-500/25 border-2 border-white hover:bg-gradient-to-r hover:from-purple-400/50 hover:to-pink-400/50">
-              마이페이지 바로가기
-            </button>
-            {/* <button className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 font-bold px-4 py-3 rounded-xl w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">
-              마이페이지 바로가기
-            </button> */}
-          </div>
-        </div>
-      </div>
-      
-      <ServiceContents />
-      {/* <div className="flex">
         <button
           className="w-1/2 h-[250px] mr-10 rounded-xl mt-10 relative p-6 text-left flex"
           style={{ backgroundColor: "rgba(198, 234, 246, 0.5)" }}
@@ -82,7 +22,7 @@ export default function MemberContents() {
               </svg>
             </div>
             <h2 className="text-xl font-bold mb-1">
-              SSAFY 전형 맟춤 에세이 첨삭 기능! <br />
+              AI 기반 에세이 첨삭 기능! <br />
               어려운 자소서, 이제는 쉽게!
             </h2>
             <p className="text-sm text-gray-600">
@@ -102,7 +42,7 @@ export default function MemberContents() {
         >
           <div>
             <div className="flex items-center mb-2">
-              <span className="text-sm font-bold mr-1">CT & 코딩테스트</span>
+              <span className="text-sm font-bold mr-1">SW 적성진단</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -116,11 +56,11 @@ export default function MemberContents() {
               </svg>
             </div>
             <h2 className="text-xl font-bold mb-1">
-              내용 <br />
-              내용
+              SSAFY 맞춤 SW 적성진단!  <br />
+              CT & 코딩테스트 완전 정복!
             </h2>
             <p className="text-sm text-gray-600">
-              AI 기반 추천 문제로 합격률 UP!{" "}
+              적성진단 대비 추천 문제로 합격률 UP!{" "}
             </p>
           </div>
           <img
@@ -137,7 +77,7 @@ export default function MemberContents() {
       >
         <div>
           <div className="flex items-center mb-2">
-            <span className="text-sm font-bold mr-1">PT & 인성면접</span>
+            <span className="text-sm font-bold mr-1">인터뷰</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1em"
@@ -151,11 +91,11 @@ export default function MemberContents() {
             </svg>
           </div>
           <h2 className="text-xl font-bold mb-1">
-            내용 <br />
-            내용
+            비대면 AI 면접 서비스!<br />
+             인성면접, PT 면접 대비를 한번에!
           </h2>
           <p className="text-sm text-gray-600">
-            AI 기반 추천 문제로 합격률 UP!{" "}
+            혼자서 or 다른 사람들과 이곳에서 함께 준비해보세요!{" "}
           </p>
         </div>
         <img
@@ -163,7 +103,7 @@ export default function MemberContents() {
           alt="Interview"
           className="h-4/5 w-auto object-contain absolute bottom-8 right-10"
         />
-      </button> */}
-    </div>
+      </button>
+    </>
   );
 }

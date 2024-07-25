@@ -1,3 +1,5 @@
+import ServiceContents from "./ServiceContents";
+
 export default function GuestContents() {
   return (
     <div
@@ -60,12 +62,9 @@ export default function GuestContents() {
           </button>
         </div>
       </div>
-
-      <div className="flex">
-        <button
-          className="w-1/2 h-[250px] mr-10 rounded-xl mt-10 relative p-6 text-left flex"
-          style={{ backgroundColor: "rgba(198, 234, 246, 0.5)" }}
-        >
+      <ServiceContents />
+      {/* <div className="flex">
+        <button className="w-1/2 h-[250px] mr-10 rounded-xl mt-10 relative p-6 text-left flex" style={{ backgroundColor: "rgba(198, 234, 246, 0.5)" }}>
           <div>
             <div className="flex items-center mb-2">
               <span className="text-sm font-bold mr-1">에세이</span>
@@ -115,13 +114,8 @@ export default function GuestContents() {
                 ></path>
               </svg>
             </div>
-            <h2 className="text-xl font-bold mb-1">
-              내용 <br />
-              내용
-            </h2>
-            <p className="text-sm text-gray-600">
-              AI 기반 추천 문제로 합격률 UP!{" "}
-            </p>
+            <h2 className="text-xl font-bold mb-1">내용 <br />내용</h2>
+            <p className="text-sm text-gray-600">AI 기반 추천 문제로 합격률 UP! </p>
           </div>
           <img
             src="/public/main/3d_coding.png"
@@ -158,12 +152,8 @@ export default function GuestContents() {
             AI 기반 추천 문제로 합격률 UP!{" "}
           </p>
         </div>
-        <img
-          src="/public/main/3d_interview.png"
-          alt="Interview"
-          className="h-4/5 w-auto object-contain absolute bottom-8 right-10"
-        />
-      </button>
+        <img src="/public/main/3d_interview.png" alt="Interview" className="h-4/5 w-auto object-contain absolute bottom-8 right-10"/>
+      </button> */}
     </div>
   );
 }
