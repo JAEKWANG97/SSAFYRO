@@ -60,7 +60,7 @@ export default function First() {
       <div id="default-tab-content">
         {activeTab === 'essay' && (
           <div
-            className="p-4 rounded-lg bg-gray-50"
+            className="p-4 rounded-lg"
             id="essay"
             role="tabpanel"
             aria-labelledby="essay-tab"
@@ -70,7 +70,7 @@ export default function First() {
         )}
         {activeTab === 'sw' && (
           <div
-            className="p-4 rounded-lg bg-gray-50"
+            className="p-4 rounded-lg"
             id="sw"
             role="tabpanel"
             aria-labelledby="sw-tab"

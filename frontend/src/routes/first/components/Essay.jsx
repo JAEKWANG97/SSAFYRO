@@ -65,7 +65,7 @@ export default function Essay() {
       <div className="py-5">
         <div className={`flex ${showCorrection ? 'flex-row space-x-4' : 'flex-col'}`}>
           <textarea
-            className="block p-4 w-full h-64 resize-none text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
+            className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
             placeholder="여기에 작성해주세요."
             spellCheck="false"
             autoCorrect="off"
@@ -74,7 +74,7 @@ export default function Essay() {
 
           {showCorrection && (
             <div
-              className="block p-4 w-full h-64 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+              className="block p-4 w-full h-64 text-sm text-gray-900 rounded-lg border border-gray-300"
             >첨삭 내용</div>
           )}
         </div>
