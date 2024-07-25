@@ -123,7 +123,6 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @Test
     void saveQuestionResult() throws Exception {
         QnAResultRequest request = QnAResultRequest.builder()
-                .roomId("roomId")
                 .userId("userId")
                 .question("자신의 강점이 뭐라고 생각하시나요?")
                 .answer("포기할 줄 모르는 자세입니다.")
@@ -148,8 +147,6 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("roomId").type(JsonFieldType.STRING)
-                                        .description("방 고유 Id"),
                                 fieldWithPath("userId").type(JsonFieldType.STRING)
                                         .description("면접자 고유 Id"),
                                 fieldWithPath("question").type(JsonFieldType.STRING)

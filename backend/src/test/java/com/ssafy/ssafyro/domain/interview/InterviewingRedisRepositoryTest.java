@@ -1,10 +1,12 @@
-package com.ssafy.ssafyro.domain.Interview;
+package com.ssafy.ssafyro.domain.interview;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
+import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,11 @@ class InterviewingRedisRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private InterviewRedisRepository interviewRedisRepository;
+
+    @AfterEach
+    void tearDown() {
+        interviewRedisRepository.deleteAll();
+    }
 
     @DisplayName("면접 질문 답변 후 표정, 억양, 질문, 답변에 대한 내용을 Redis 에 저장한다.")
     @Test
@@ -29,10 +36,10 @@ class InterviewingRedisRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(saved)
-                .extracting("roomId", "userId", "question", "answer",
+                .extracting("userId", "question", "answer",
                         "pronunciationScore", "happy", "disgust", "sad",
                         "surprise", "fear", "angry", "neutral")
-                .contains("room", userId, "question" + personOrderNumber,
+                .contains(userId, "question" + personOrderNumber,
                         "answer" + personOrderNumber,
                         (int) personOrderNumber, personOrderNumber, personOrderNumber, personOrderNumber,
                         personOrderNumber, personOrderNumber, personOrderNumber, personOrderNumber);
@@ -85,9 +92,51 @@ class InterviewingRedisRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("key 값인 userId 로 저장된 redis 의 정보를 가져온다.")
+    @Test
+    void findByUserId() {
+        //given
+        String id = "userId";
+        InterviewRedis interview = createInterview(1.0, id);
+        InterviewRedis saved = interviewRedisRepository.save(interview);
+
+        //when
+        List<InterviewRedis> interviewRedis = interviewRedisRepository.findByUserId(id).orElse(new ArrayList<>());
+
+        //then
+        assertThat(interviewRedis).hasSize(1)
+                .extracting("userId", "question", "answer", "happy")
+                .containsExactlyInAnyOrder(
+                        tuple(id, "question1.0", "answer1.0", 1.0)
+                );
+    }
+
+    @DisplayName("하나의 key 에 List 전체를 저장합니다.")
+    @Test
+    void saveAllTest() {
+        //given
+        double personOrderNumber = 1.0;
+        String userId = "user7605";
+        InterviewRedis interviewing1 = createInterview(personOrderNumber, userId);
+        InterviewRedis interviewing2 = createInterview(++personOrderNumber, userId);
+        InterviewRedis interviewing3 = createInterview(++personOrderNumber, userId);
+        interviewRedisRepository.saveAll(userId, List.of(interviewing1, interviewing2, interviewing3));
+
+        //when
+        List<InterviewRedis> interviewRedis = interviewRedisRepository.findByUserId(userId).orElse(new ArrayList<>());
+
+        //then
+        assertThat(interviewRedis).hasSize(3)
+                .extracting("userId", "question", "answer", "happy")
+                .containsExactlyInAnyOrder(
+                        tuple(userId, "question1.0", "answer1.0", 1.0),
+                        tuple(userId, "question2.0", "answer2.0", 2.0),
+                        tuple(userId, "question3.0", "answer3.0", 3.0)
+                );
+    }
+
     private InterviewRedis createInterview(double personOrderNumber, String userId) {
         return InterviewRedis.builder()
-                .roomId("room")
                 .userId(userId)
                 .question("question" + personOrderNumber)
                 .answer("answer" + personOrderNumber)
