@@ -67,7 +67,8 @@ export default function First() {
             aria-labelledby="essay-tab"
             style={{
               background: 'rgba(144, 204, 240, 0.25)', 
-              marginBottom: '20px' // 추가된 여백
+              marginBottom: '20px' 
+
             }}
           >
             <Essay />
@@ -75,12 +76,14 @@ export default function First() {
         )}
         {activeTab === 'sw' && (
           <div
-            className="p-4 rounded-lg bg-[#90CCF0]"
+            className="p-4 rounded-lg"
             id="sw"
             role="tabpanel"
             aria-labelledby="sw-tab"
             style={{
-              marginBottom: '20px' // 추가된 여백
+              background: 'rgba(144, 204, 240, 0.25)', 
+              marginBottom: '20px' 
+
             }}
           >
             <Test />
