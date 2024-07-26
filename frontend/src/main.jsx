@@ -39,8 +39,18 @@ const AppLayout = () => {
     "/second/interview/room/:roomid/pt/survey",
   ];
 
+  const hideFooterRoutes = [
+    "/second/interview/room",
+    "/second/interview/room/:roomid/pt",
+    "/second/interview/room/:roomid/pt/survey",
+  ];
+
   // Check if the current path matches any of the routes where the Navbar should be hidden
   const shouldHideNavbar = hideNavbarRoutes.some((route) => 
+    location.pathname.startsWith(route)
+  );
+
+  const shouldHideFooter = hideFooterRoutes.some((route) => 
     location.pathname.startsWith(route)
   );
 
@@ -50,7 +60,7 @@ const AppLayout = () => {
       <div className="flex-grow px-64">
         <Outlet />
       </div>
-      <Footer />
+      {!shouldHideNavbar && <Footer />}
     </div>
   );
 };

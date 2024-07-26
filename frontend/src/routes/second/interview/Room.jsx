@@ -72,7 +72,8 @@ export default function Room() {
             <div className="flex h-[50%] mt-5 p-4">
               <div
                 className="w-4/5 border border-gray-300 rounded-lg p-5 flex items-center justify-evenly"
-                style={{ backgroundColor: "rgba(200, 200, 200, 0.2)" }}
+                // style={{ backgroundColor: "rgba(200, 200, 200, 0.2)" }}
+                style={{ backgroundColor: "rgba(174, 174, 174, 0.11)" }}
               >
                 {room.participants.map((participant, index) => (
                   <div
