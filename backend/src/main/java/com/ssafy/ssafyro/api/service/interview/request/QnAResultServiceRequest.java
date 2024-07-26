@@ -4,7 +4,7 @@ import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import lombok.Builder;
 
 @Builder
-public record QnAResultServiceRequest(String userId,
+public record QnAResultServiceRequest(Long userId,
                                       String question,
                                       String answer,
                                       int pronunciationScore,
