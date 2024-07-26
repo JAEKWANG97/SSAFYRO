@@ -7,10 +7,10 @@ import ReactDOM from "react-dom/client";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 // style sheet
-import "./index.css"; 
+import "./index.css";
 
 // router
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
 // import routes
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
@@ -28,11 +28,11 @@ import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
 
-// Custom layout component for conditional Navbar rendering
+// Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
 
-  // Define routes where the Navbar should be hidden
+  // Define routes where the Navbar and Footer should be hidden
   const hideNavbarRoutes = [
     "/second/interview/room",
     "/second/interview/room/:roomid/pt",
@@ -45,7 +45,7 @@ const AppLayout = () => {
     "/second/interview/room/:roomid/pt/survey",
   ];
 
-  // Check if the current path matches any of the routes where the Navbar should be hidden
+  // Check if the current path matches any of the routes where the Navbar or Footer should be hidden
   const shouldHideNavbar = hideNavbarRoutes.some((route) => 
     location.pathname.startsWith(route)
   );
@@ -60,7 +60,7 @@ const AppLayout = () => {
       <div className="flex-grow px-64">
         <Outlet />
       </div>
-      {!shouldHideNavbar && <Footer />}
+      {!shouldHideFooter && <Footer />}
     </div>
   );
 };
@@ -68,37 +68,7 @@ const AppLayout = () => {
 // Define the router with AppLayout as the root layout component
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "account/",
-    children: [
-      { path: "login", element: <Login /> },
-      { path: "profile/:userId", children: [
-        {
-          path: "",
-          element: <Profile />,
-        },
-        {
-          path: "personality_feedback",
-          element: <PersonalityFeedback />,
-        },
-        {
-          path: "pt_feedback",
-          element: <PtFeedback />,
-        },
-      ],}
-    ]
-      ,
-  },
-
-  {
-    path: "first/",
-    element: <First />,
-  },
-  {
-    path: "second/",
+    element: <AppLayout />,
     children: [
       { path: "/", element: <Home /> },
       {
@@ -138,15 +108,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <div className="flex-grow px-64"
-      style={{
-        background: 'rgba(249, 250, 255, 1)'
-      }}>
-        <RouterProvider router={router} />
-      </div>
-      <Footer />
-    </div>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
