@@ -1,9 +1,8 @@
-// src/stores/SecondStore.js
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 const useSecondStore = create((set) => ({
-  activeTab: 'guide',
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  secondActiveTab: 'guide',
+  setSecondActiveTab: (tab) => set({ secondActiveTab: tab }),
 }));
 
 export default useSecondStore;
