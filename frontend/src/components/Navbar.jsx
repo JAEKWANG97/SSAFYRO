@@ -56,7 +56,7 @@ export default function Navbar() {
         className="container mx-auto overflow-hidden max-w-6xl"
         style={{ minWidth: "1100px" }}
       > */}
-        <nav className="flex items-center py-8 text-lg bg-white shadow-md">
+        <nav className="flex items-center py-8 px-64 text-lg bg-white shadow-md">
           {/* 로고 자리 */}
           <div className="flex-shrink-0 min-w-[200px]">
             <a className="font-extrabold text-2xl" href="/">
