@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record QnAResultRequest(@NotEmpty Long userId,
+public record QnAResultRequest(@NotNull Long userId,
                                @NotEmpty String question,
                                @NotEmpty String answer,
                                @NotNull int pronunciationScore,
