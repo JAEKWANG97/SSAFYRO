@@ -1,8 +1,7 @@
 // Interview.jsx
-
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { rooms } from "./data";
+import axios from "axios";
+import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
@@ -23,6 +22,58 @@ export default function Interview() {
       navigate(`/second/interview/room/${roomId}`);
     }
   };
+
+  // 방 목록 불러오기
+  // const [rooms, setRooms] = useState([]);
+
+  // const getRooms = async () => {
+  //   let filter = {
+  //     type: "all",
+  //     capacity: "all",
+  //   };
+
+  //   const response = await axios
+  //     .get("http://localhost:8000/api/rooms/")
+  //     .then((response) => {
+  //       setRooms(response.rooms);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert("방 목록을 불러오는데 실패했습니다.");
+  //     });
+  // };
+
+  // 더미 데이터로 테스트
+  const rooms = [
+    {
+      id: 1,
+      title: "인성 면접 연습방",
+      description: "인성 면접 연습방입니다.",
+      type: "인성",
+      capacity: 3,
+    },
+    {
+      id: 2,
+      title: "PT 면접 연습방",
+      description: "PT 면접 연습방입니다.",
+      type: "PT",
+      capacity: 2,
+    },
+    {
+      id: 3,
+      title: "면접 연습 하실분",
+      description: "아무나 환영",
+      type: "PT",
+      capacity: 3,
+    },
+    {
+      id: 4,
+      title: "비전공자도 할 수 있다",
+      description: "PT 면접 같이 연습하실 분",
+      type: "PT",
+      capacity: 3,
+    },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -68,47 +119,71 @@ export default function Interview() {
             </div>
             <div className="w-3/4 px-4">
               <div className="grid grid-cols-3 gap-4">
-                {roomList.map((room) => (
-                  <div
-                    key={room.roomId}
-                    className="bg-white shadow rounded p-4"
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <span
-                        className={`text-sm bg-${
-                          room.status === "open" ? "green" : "red"
-                        }-100 text-${
-                          room.status === "open" ? "green" : "red"
-                        }-800 text-xs font-medium py-1 px-2 rounded border border-${
-                          room.status === "open" ? "green" : "red"
-                        }-400`}
-                      >
-                        {room.status === "open" ? "모집중" : "마감"}
-                      </span>
-                      <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
-                        {room.type}
-                      </span>
-                    </div>
-                    <p className="text-gray-700 font-semibold">{room.title}</p>
-                    <p className="text-gray-500 text-sm">{room.description}</p>
-                    <div className="mt-4 flex justify-between items-center">
-                      <div>
-                        <img
-                          className="w-[24px] inline mr-2"
-                          src="/Interview/group.png"
-                          alt="group icon"
-                        />
-                        <span className="text-sm text-gray-600">
-                          {room.participants.length} / {room.maxParticipants}
+                {/* 방 목록 생성 */}
+                {rooms.map((room) => (
+                  <>
+                    {/* 각 면접방 간이 정보 블록 */}
+                    <div className="bg-white shadow rounded p-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm bg-green-100 text-green-800 text-xs font-medium me-2 py-1 px-2 rounded border border-green-400">
+                          {/* 모집 중, 모집하고 있지 않음을 파악할 추가 조건이 필요한가? 그냥 인원 수가 꽉차거나 이미 진행 중인가? */}
+                          모집중
+                        </span>
+                        <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium me-2 py-1 px-2 rounded border border-purple-400">
+                          {room.type}
                         </span>
                       </div>
-                      <button
-                        onClick={() => handleJoinRoom(room.roomId)}
-                        className="bg-blue-600 text-white mr-2 py-1 px-2 rounded w-[60px]"
-                        disabled={room.status !== "open"}
-                      >
-                        참여
-                      </button>
+                      <p className="text-gray-700 font-semibold">
+                        {room.title}
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        {room.description}
+                      </p>
+
+                      {/* 참여 버튼과 인원수 */}
+                      <div className="mt-4 flex justify-between items-center">
+                        <div>
+                          <img
+                            className="w-[24px] inline me-2"
+                            src="/Interview/group.png"
+                            alt=""
+                          />
+                          <span className="text-sm text-gray-600">
+                            1 / {room.capacity}
+                          </span>
+                        </div>
+
+                        {/* room.id 인 면접방으로 참여하게 되는 버튼 */}
+                        <button className="bg-blue-600 text-white me-2 py-1 px-2 rounded w-[60px]">
+                          참여
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ))}
+                <div className="bg-white shadow rounded p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm bg-green-100 text-green-800 text-xs font-medium me-2 py-1 px-2 rounded border border-green-400">
+                      모집중
+                    </span>
+                    <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium me-2 py-1 px-2 rounded border border-purple-400">
+                      PT
+                    </span>
+                  </div>
+                  <p className="text-gray-700 font-semibold">
+                    전공자 PT 준비방
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    열심히 모의 면접 해서 붙어봅시다!
+                  </p>
+                  <div className="mt-4 flex justify-between items-center">
+                    <div>
+                      <img
+                        className="w-[24px] inline me-2"
+                        src="/Interview/group.png"
+                        alt=""
+                      />
+                      <span className="text-sm text-gray-600">1 / 3</span>
                     </div>
                   </div>
                 ))}

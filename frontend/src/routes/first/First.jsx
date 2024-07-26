@@ -1,3 +1,4 @@
+// First.jsx
 import Essay from './components/Essay';
 import Test from './components/Test';
 import useFirstStore from '../../stores/FirstStore';
@@ -12,9 +13,9 @@ export default function First() {
 
   return (
     <>
-      <div className="mb-4 border-b border-gray-200">
+      <div className="mb-6 border-b border-gray-200">
         <ul
-          className="flex flex-wrap -mb-px text-sm font-medium text-center"
+          className="flex flex-wrap text-sm font-medium text-center "
           id="default-tab"
           data-tabs-toggle="#default-tab-content"
           role="tablist"
@@ -64,6 +65,11 @@ export default function First() {
             id="essay"
             role="tabpanel"
             aria-labelledby="essay-tab"
+            style={{
+              background: 'rgba(144, 204, 240, 0.25)', 
+              marginBottom: '20px' 
+
+            }}
           >
             <Essay />
           </div>
@@ -74,6 +80,11 @@ export default function First() {
             id="sw"
             role="tabpanel"
             aria-labelledby="sw-tab"
+            style={{
+              background: 'rgba(144, 204, 240, 0.25)', 
+              marginBottom: '20px' 
+
+            }}
           >
             <Test />
           </div>

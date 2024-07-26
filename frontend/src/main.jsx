@@ -7,10 +7,10 @@ import ReactDOM from "react-dom/client";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 // style sheet
-import "./index.css";
+import "./index.css"; 
 
 // router
-import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import routes
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
@@ -68,7 +68,37 @@ const AppLayout = () => {
 // Define the router with AppLayout as the root layout component
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "account/",
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "profile/:userId", children: [
+        {
+          path: "",
+          element: <Profile />,
+        },
+        {
+          path: "personality_feedback",
+          element: <PersonalityFeedback />,
+        },
+        {
+          path: "pt_feedback",
+          element: <PtFeedback />,
+        },
+      ],}
+    ]
+      ,
+  },
+
+  {
+    path: "first/",
+    element: <First />,
+  },
+  {
+    path: "second/",
     children: [
       { path: "/", element: <Home /> },
       {
@@ -108,6 +138,15 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <div className="flex-grow px-64"
+      style={{
+        background: 'rgba(249, 250, 255, 1)'
+      }}>
+        <RouterProvider router={router} />
+      </div>
+      <Footer />
+    </div>
   </React.StrictMode>
 );
