@@ -6,9 +6,17 @@ export default function Room() {
   const navigate = useNavigate();
   const room = rooms.find((room) => room.roomId === roomid);
 
+  const currentUser = { userId: 'LGG', name: 'Jun'}
+
   if (!room) return <div>방을 찾을 수 없습니다.</div>;
 
   function navigateHandler() {
+    const participantIndex = room.participants.findIndex(
+      (participant) => participant.userId === currentUser.userId
+    )
+    if (participantIndex !== -1) {
+      room.participants.splice(participantIndex, 1)
+    }
     navigate("/second/interview");
   }
 
@@ -23,15 +31,34 @@ export default function Room() {
         style={{ minWidth: "1100px" }}
       >
         <div className="w-full h-[80vh] border border-black mx-auto mt-5 p-6">
-          <div className="flex justify-between items-center">
-            <h1 className="font-extrabold text-2xl">{room.title}</h1>
-            <div className="flex items-center justify-center flex-grow">
-              <img
+          {/* <div className="flex justify-between items-center">
+            <img
                 className="h-[25px] inline pr-4"
                 src="/SSAFYRO.png"
                 alt="SSAFYRO 로고"
               />
               <p className="font-extrabold text-2xl">SSAFYRO</p>
+            <div className="flex items-center justify-center flex-grow">
+              <h1 className="font-extrabold text-2xl">{room.title}</h1>
+            </div>
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+              onClick={navigateHandler}
+            >
+              나가기
+            </button>
+          </div> */}
+          <div className="flex justify-between items-center">
+            <div className="flex">
+            <img
+                className="h-[25px] inline pr-4"
+                src="/SSAFYRO.png"
+                alt="SSAFYRO 로고"
+              />
+              <p className="font-extrabold text-2xl">SSAFYRO</p>
+            </div>
+            <div className="items-center">
+              <h1 className="font-extrabold text-2xl">{room.title}</h1>
             </div>
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
@@ -50,7 +77,7 @@ export default function Room() {
                 {room.participants.map((participant, index) => (
                   <div
                     key={index}
-                    className="w-[25%] h-[80%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
+                    className="w-[25%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                   >
                     <img
                       src="/main/user.png"
@@ -60,15 +87,15 @@ export default function Room() {
                     <span className="text-sm text-gray-600">{participant.userId}</span>
                   </div>
                 ))}
-                {room.participants.length < room.maxParticipants && (
-                  <div className="w-[25%] h-[80%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5">
+                {Array(room.maxParticipants - room.participants.length).fill().map((_, index) => (
+                  <div key={index} className="w-[25%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5">
                     <span className="text-2xl text-gray-400">X</span>
                   </div>
-                )}
+                ))}
               </div>
               <div className="w-1/5 p-5">면접 팁 나오는 칸</div>
             </div>
-            <div className="flex h-[45%] p-4">
+            <div className="flex h-[42%] p-4">
               <div className="w-4/5 border border-gray-300 rounded-lg p-5">
                 {/* 새로운 박스 내용 */}
                 새로운 박스 내용

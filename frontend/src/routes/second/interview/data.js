@@ -41,7 +41,7 @@ export const users = [
       participants: [
         { userId: 'user3', name: 'Charlie' },
       ],
-      maxParticipants: 4,
+      maxParticipants: 3,
       status: 'open',
     },
     {
