@@ -1,13 +1,15 @@
 // SecondNav.jsx
 import useSecondStore from "../../../stores/SecondStore";
+import GuidePersonality from "../guide/GuidePersonality";
+import Interview from '../interview/Interview'
 
 export default function SecondNav() {
-  const activeTab = useSecondStore((state) => state.activeTab);
-  const setActiveTab = useSecondStore((state) => state.setActiveTab);
+  // const activeTab = useSecondStore((state) => state.activeTab);
+  // const setActiveTab = useSecondStore((state) => state.setActiveTab);
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  // const handleTabClick = (tab) => {
+  //   setActiveTab(tab);
+  // };
 
   return (
     <>

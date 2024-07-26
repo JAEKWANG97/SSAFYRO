@@ -4,9 +4,23 @@ import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export default function Interview() {
+  const [roomList, setRoomList] = useState([]);
   const navigate = useNavigate();
-  const onClickButton = () => {
-    navigate("createroom");
+  const currentUser = { userId: 'LGG', name: 'Jun' }; // 현재 로그인한 사용자 정보
+
+  useEffect(() => {
+    // 데이터 로딩
+    setRoomList(rooms);
+  }, []);
+
+  const handleJoinRoom = (roomId) => {
+    const roomIndex = roomList.findIndex((room) => room.roomId === roomId)
+    if (roomIndex !== -1 && roomList[roomIndex].status === 'open') {
+      const updateRooms = [...roomList]
+      updateRooms[roomIndex].participants.push(currentUser)
+      setRoomList(updateRooms)
+      navigate(`/second/interview/room/${roomId}`);
+    }
   };
 
   // 방 목록 불러오기
@@ -63,26 +77,9 @@ export default function Interview() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* <header className="bg-blue-100 p-4">
-                <div className="container mx-auto flex justify-between items-center">
-                    <div className="text-xl font-bold">SSAFYRO</div>
-                    <nav>
-                        <a href="#" className="mx-2">1차 전형 준비</a>
-                        <a href="#" className="mx-2">2차 전형 준비</a>
-                        <a href="#" className="mx-2">로그인</a>
-                    </nav>
-                </div>
-            </header> */}
-
-      <main className="flex-grow bg-gray-100 p-6">
+      <main className="flex-grow p-6">
         <div className="container mx-auto">
-          {/* <div className="border-b mb-4">
-                        <nav className="flex">
-                            <a href="#" className="px-4 py-2 text-blue-600 border-b-2 border-blue-600">면접가이드</a>
-                            <a href="#" className="px-4 py-2 text-gray-600">면접연습하기</a>
-                        </nav>
-                    </div> */}
-          <h1 className="hidden">모의 면접 방 목록</h1>
+          <h1 className="text-3xl font-bold">모의 면접 방 목록</h1>
           <div className="flex">
             {/* 검색 필터 */}
             <div className="w-1/4 p-4 bg-white shadow rounded">
@@ -120,8 +117,6 @@ export default function Interview() {
                 검색하기
               </button>
             </div>
-
-            {/* 방 목록 */}
             <div className="w-3/4 px-4">
               <div className="grid grid-cols-3 gap-4">
                 {/* 방 목록 생성 */}
@@ -190,15 +185,10 @@ export default function Interview() {
                       />
                       <span className="text-sm text-gray-600">1 / 3</span>
                     </div>
-                    <button className="bg-blue-600 text-white me-2 py-1 px-2 rounded w-[60px]">
-                      참여
-                    </button>
                   </div>
-                </div>
-                {/* 추가 방 */}
-                {/* <Link to="createroom" className="bg-white shadow rounded p-4 flex items-center justify-center text-gray-400">+ 방 생성</Link> */}
+                ))}
                 <button
-                  onClick={onClickButton}
+                  onClick={() => navigate("/second/interview/createroom")}
                   className="bg-white shadow rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
                 >
                   + 방 생성
@@ -208,9 +198,8 @@ export default function Interview() {
           </div>
         </div>
       </main>
-
       <footer className="bg-gray-200 p-4">
-        <div className="container mx-auto text-center">{/* 푸터 콘텐츠 */}</div>
+        <div className="container mx-auto text-center">푸터 콘텐츠</div>
       </footer>
     </div>
   );
