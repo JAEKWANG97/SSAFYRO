@@ -30,25 +30,8 @@ export default function Room() {
         className="w-9/10 mt-16 overflow-hidden"
         style={{ minWidth: "1100px" }}
       >
-        <div className="w-full h-[80vh] border border-black mx-auto mt-5 p-6">
-          {/* <div className="flex justify-between items-center">
-            <img
-                className="h-[25px] inline pr-4"
-                src="/SSAFYRO.png"
-                alt="SSAFYRO 로고"
-              />
-              <p className="font-extrabold text-2xl">SSAFYRO</p>
-            <div className="flex items-center justify-center flex-grow">
-              <h1 className="font-extrabold text-2xl">{room.title}</h1>
-            </div>
-            <button
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-              onClick={navigateHandler}
-            >
-              나가기
-            </button>
-          </div> */}
-          <div className="flex justify-between items-center">
+        <div className="w-full h-[80vh] border border-black mx-auto mt-5 p-6 rounded-xl">
+          <div className="flex justify-between items-center mb-2">
             <div className="flex">
             <img
                 className="h-[25px] inline pr-4"
@@ -68,36 +51,40 @@ export default function Room() {
             </button>
           </div>
 
-          <div className="h-full">
-            <div className="flex h-[50%] mt-5 p-4">
+          <div className="h-[95%] border rounded-xl" 
+          style={{ backgroundColor: "rgba(249, 250, 255, 1)", borderColor: "rgba(249, 250, 255, 1)" }}
+          >
+            <div className="flex h-[50%] p-4">
               <div
-                className="w-4/5 border border-gray-300 rounded-lg p-5 flex items-center justify-evenly"
+                className="w-[70%] rounded-lg p-1 flex items-center justify-between"
                 // style={{ backgroundColor: "rgba(200, 200, 200, 0.2)" }}
-                style={{ backgroundColor: "rgba(174, 174, 174, 0.11)" }}
+                // style={{ backgroundColor: "rgba(174, 174, 174, 0.11)" }}
               >
                 {room.participants.map((participant, index) => (
                   <div
                     key={index}
-                    className="w-[25%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
+                    className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                   >
                     <img
-                      src="/main/user.png"
+                      src="/main/users.png"
                       alt="User"
-                      className="h-2/3 object-contain"
+                      className="h-2/3 object-contain rounded-full"
                     />
-                    <span className="text-sm text-gray-600">{participant.userId}</span>
+                    <span className="text-sm font-bold mt-2">{participant.userId}</span>
                   </div>
                 ))}
                 {Array(room.maxParticipants - room.participants.length).fill().map((_, index) => (
-                  <div key={index} className="w-[25%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5">
+                  <div key={index} className="w-[33%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5">
                     <span className="text-2xl text-gray-400">X</span>
                   </div>
                 ))}
               </div>
-              <div className="w-1/5 p-5">면접 팁 나오는 칸</div>
+              <div className="w-[30%] p-5 mt-2 bg-white shadow-md rounded-xl ml-3" >면접 팁 나오는 칸</div>
             </div>
             <div className="flex h-[42%] p-4">
-              <div className="w-4/5 border border-gray-300 rounded-lg p-5">
+              <div className="w-[70%] rounded-lg p-5 bg-white shadow-md mr-3">
+              <h1 className="font-bold">Chat</h1>
+              <hr />
                 {/* 새로운 박스 내용 */}
                 새로운 박스 내용
               </div>
