@@ -11,6 +11,7 @@ export default function Essay() {
 
   return (
     <>
+
       <div className='flex border-b pb-4 items-center'>
         <p className="text-3xl font-bold pr-4">에세이</p>
         <Ismajor/>
@@ -22,7 +23,7 @@ export default function Essay() {
         </button>
       </div>
   
-      <div className="border-t border-gray-300">
+      <div className="border-t border-gray-300 bg-white">
         {selected === 'major' && (
           <div className="py-5 flex justify-center border-b border-gray-300">
             <h2>전공자 질문 (500자 내외/ 최대 600자 까지)</h2>
@@ -36,10 +37,10 @@ export default function Essay() {
         )}
       </div>
 
-      <div className="py-5">
+      <div className="py-2">
         <div className={`flex ${showCorrection ? 'flex-row space-x-4' : 'flex-col'}`}>
           <textarea
-            className="block p-4 w-full h-64 resize-none text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
+            className="block p-4 w-full h-64 resize-none border border-gray-300 text-sm text-gray-900 rounded-lg"
             placeholder="여기에 작성해주세요."
             spellCheck="false"
             autoCorrect="off"
@@ -59,10 +60,9 @@ export default function Essay() {
           >
             저장
           </button>
-
-         
         </div>
       </div>
+
     </>
   );
 }
