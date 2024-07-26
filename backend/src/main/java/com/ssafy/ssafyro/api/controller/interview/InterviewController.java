@@ -39,8 +39,7 @@ public class InterviewController {
     }
 
     @PostMapping("/api/v1/interview/question-answer-result")
-    public ApiResult<Void> saveQnAResult(
-            @RequestBody QnAResultRequest request) {
+    public ApiResult<Void> saveQnAResult(@RequestBody QnAResultRequest request) {
         interviewService.saveQnAResult(request.toServiceRequest());
         return success(null);
     }
