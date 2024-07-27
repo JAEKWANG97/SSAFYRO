@@ -26,7 +26,7 @@ public class InterviewService {
 
         room.startInterview();
 
-        return new StartResponse(roomRedisRepository.save(roomId, room));
+        return new StartResponse(roomRedisRepository.save(room));
     }
 
     public ArticleResponse showArticle(String roomId) {
