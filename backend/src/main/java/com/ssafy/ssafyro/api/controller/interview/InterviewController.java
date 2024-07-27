@@ -27,7 +27,7 @@ public class InterviewController {
     @PatchMapping("/api/v1/interview/start")
     public ApiResult<StartResponse> startInterview(@RequestBody StartRequest startRequest) {
         return success(
-                interviewService.startInterview(startRequest)
+                interviewService.startInterview(startRequest.roomId())
         );
     }
 

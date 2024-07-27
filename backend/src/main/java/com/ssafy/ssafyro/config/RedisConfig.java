@@ -1,6 +1,7 @@
 package com.ssafy.ssafyro.config;
 
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +38,16 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, InterviewRedis> interviewRedisTemplate() {
         RedisTemplate<String, InterviewRedis> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setEnableTransactionSupport(true);
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, RoomRedis> roomRedisTemplate() {
+        RedisTemplate<String, RoomRedis> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

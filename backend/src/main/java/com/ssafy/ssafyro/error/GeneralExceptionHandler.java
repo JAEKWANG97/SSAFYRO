@@ -34,7 +34,7 @@ public class GeneralExceptionHandler {
     // Room 관련 예외 처리
     @ExceptionHandler(RoomNotFoundException.class)
     public ResponseEntity<?> handleRoomNotFoundException(RoomNotFoundException e) {
-        return newResponse(e, HttpStatus.NOT_FOUND);
+        return newResponse("회의 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ApiResult<?>> newResponse(Throwable throwable, HttpStatus status) {
