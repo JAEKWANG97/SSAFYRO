@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.api.service.room;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,13 +44,10 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
         // when
         RoomCreateResponse roomCreateResponse = roomService.createRoom(roomCreateServiceRequest);
+        RoomRedis savedRoom = roomRedisRepository.findById(roomCreateResponse.roomId()).orElse(null);
 
         // then
         assertThat(roomCreateResponse.roomId()).isNotNull();
-
-        // 실제로 Redis에 저장되었는지 확인
-        RoomRedis savedRoom =
-                roomRedisRepository.findById(roomCreateResponse.roomId()).orElse(null);
         assertThat(savedRoom).isNotNull();
         assertThat(savedRoom.getTitle()).isEqualTo("test");
         assertThat(savedRoom.getType()).isEqualTo(RoomType.INTERVIEW);
@@ -60,8 +58,12 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void getRoomByIdTest() {
         // given
-        RoomRedis room = RoomRedis.builder().title("test").description("test description")
-                .type(RoomType.INTERVIEW).capacity(3).build();
+        RoomRedis room = RoomRedis.builder()
+                .title("test")
+                .description("test description")
+                .type(RoomType.INTERVIEW)
+                .capacity(3)
+                .build();
 
         String savedRoomId = roomRedisRepository.save(room);
 
@@ -115,7 +117,6 @@ public class RoomServiceTest extends IntegrationTestSupport {
         RoomListServiceRequest request =
                 new RoomListServiceRequest(roomType, capacity, status, page, size);
 
-
         // when
         RoomListResponse response = roomService.getRoomList(request);
 
@@ -125,7 +126,10 @@ public class RoomServiceTest extends IntegrationTestSupport {
     }
 
     private RoomRedis createRoom(String title, RoomType type, int capacity) {
-        return RoomRedis.builder().title(title).description("Test Room Description").type(type)
+        return RoomRedis.builder()
+                .title(title)
+                .description("Test Room Description")
+                .type(type)
                 .capacity(capacity).build();
     }
 

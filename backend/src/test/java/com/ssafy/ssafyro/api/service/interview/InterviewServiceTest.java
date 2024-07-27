@@ -70,7 +70,11 @@ class InterviewServiceTest extends IntegrationTestSupport {
     }
 
     private RoomRedis createRoom() {
-        return RoomRedis.builder().title("Test Room").description("Test Room Description")
-                .type(RoomType.PRESENTATION).capacity(3).build();
+        return RoomRedis.builder()
+                .title("Test Room")
+                .description("Test Room Description")
+                .type(RoomType.PRESENTATION)
+                .capacity(3)
+                .build();
     }
 }

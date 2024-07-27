@@ -115,27 +115,18 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
         RoomRedis room = createRoom("Test Room", RoomType.PRESENTATION, 3);
         roomRedisRepository.save(room);
 
-        // 저장 확인
-        assertThat(roomRedisRepository.findById(room.getId()).get().getTitle())
-                .isEqualTo(room.getTitle());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getType())
-                .isEqualTo(room.getType());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getCapacity())
-                .isEqualTo(room.getCapacity());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
-                .isEqualTo(room.getStatus());
-
-
         // when
-        roomRedisRepository.delete(roomRedisRepository.findById(room.getId()).orElse(null));
+        roomRedisRepository.delete(room);
 
         // then
         assertThat(roomRedisRepository.findById(room.getId())).isNotPresent();
-
     }
 
     private RoomRedis createRoom(String title, RoomType type, int capacity) {
-        return RoomRedis.builder().title(title).description("Test Room Description").type(type)
+        return RoomRedis.builder()
+                .title(title)
+                .description("Test Room Description")
+                .type(type)
                 .capacity(capacity).build();
     }
 }

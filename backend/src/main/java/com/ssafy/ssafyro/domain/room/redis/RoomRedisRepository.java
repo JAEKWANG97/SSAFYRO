@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -38,7 +39,7 @@ public class RoomRedisRepository {
 
     public List<RoomRedis> findRooms(String type, Integer capacity, String status, int page,
             int size) {
-        String pattern = String.format("room:%s:%d:%s:*", type, capacity, status);
+        String pattern = getPattern(type, capacity, status);
         List<RoomRedis> rooms = new ArrayList<>();
 
         try (Cursor<String> cursor =
@@ -56,6 +57,7 @@ public class RoomRedisRepository {
                 .skip((long) (page - 1) * size).limit(size).collect(Collectors.toList());
     }
 
+
     public Optional<RoomRedis> findById(String id) {
         String pattern = "room:*:*:*:" + id;
         Set<String> keys = redisTemplate.keys(pattern);
@@ -70,5 +72,26 @@ public class RoomRedisRepository {
         String pattern = room.generateKey();
         redisTemplate.delete(pattern);
     }
+
+    private static @NotNull String getPattern(String type, Integer capacity, String status) {
+        String pattern = String.format("room:%s:%d:%s:*", type, capacity, status);
+        if(type == null && capacity == null && status == null) {
+            pattern = "room:*";
+        } else if (type == null && capacity == null) {
+            pattern = String.format("room:*:%s:*", status);
+        } else if (type == null && status == null) {
+            pattern = String.format("room:*:%d:*", capacity);
+        } else if (capacity == null && status == null) {
+            pattern = String.format("room:%s:*:*", type);
+        } else if (type == null) {
+            pattern = String.format("room:*:%d:%s:*", capacity, status);
+        } else if (capacity == null) {
+            pattern = String.format("room:%s:*:%s:*", type, status);
+        } else if (status == null) {
+            pattern = String.format("room:%s:%d:*:*", type, capacity);
+        }
+        return pattern;
+    }
+
 
 }
