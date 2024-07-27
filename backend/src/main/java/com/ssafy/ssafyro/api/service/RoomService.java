@@ -8,7 +8,6 @@ import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.List;
@@ -34,8 +33,8 @@ public class RoomService {
 
 
     public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
-        RoomRedis room = roomRedisRepository.save(request.toEntity());
-        return RoomCreateResponse.of(room.getId());
+        String key = roomRedisRepository.save(request.toEntity());
+        return RoomCreateResponse.of(key);
     }
 
     public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {

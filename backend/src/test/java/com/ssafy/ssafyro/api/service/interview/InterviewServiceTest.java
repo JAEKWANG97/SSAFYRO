@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
-import com.ssafy.ssafyro.domain.room.redis.RoomRedisTemplateRepository;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.List;
@@ -23,7 +23,7 @@ class InterviewServiceTest extends IntegrationTestSupport {
     private InterviewService interviewService;
 
     @Autowired
-    private RoomRedisTemplateRepository roomRedisRepository;
+    private RoomRedisRepository roomRedisRepository;
 
     @Autowired
     private RedisTemplate<String, RoomRedis> redisTemplate;
