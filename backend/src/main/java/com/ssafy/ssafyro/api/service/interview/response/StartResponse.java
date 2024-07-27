@@ -1,4 +1,4 @@
 package com.ssafy.ssafyro.api.service.interview.response;
 
-public record StartResponse(String recruitStatus) {
+public record StartResponse(String startRoomId) {
 }

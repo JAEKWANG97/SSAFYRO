@@ -47,7 +47,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
         StartRequest startRequest = new StartRequest("roomId");
 
         given(interviewService.startInterview(any()))
-                .willReturn(new StartResponse("모집완료"));
+                .willReturn(new StartResponse("0a28f311-7d36-4813-a222-e5b3fee758bd"));
 
         mockMvc.perform(
                         patch("/api/v1/interview/start")
@@ -68,8 +68,8 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.recruitStatus").type(JsonFieldType.STRING)
-                                        .description("수정된 현재상태"),
+                                fieldWithPath("response.startRoomId").type(JsonFieldType.STRING)
+                                        .description("회의 시작된 방 ID"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )

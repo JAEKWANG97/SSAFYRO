@@ -1,10 +1,12 @@
 package com.ssafy.ssafyro.api.service.interview;
 
-import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
+import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
+import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InterviewService {
 
+    private final RoomRedisRepository roomRedisRepository;
     private final InterviewRedisRepository interviewRedisRepository;
 
-    public StartResponse startInterview(StartRequest startRequest) {
-        return new StartResponse("모집완료");
+    public StartResponse startInterview(String roomId) {
+        RoomRedis room = roomRedisRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+
+        room.startInterview();
+
+        return new StartResponse(roomRedisRepository.save(roomId, room));
     }
 
     public ArticleResponse showArticle(String roomId) {

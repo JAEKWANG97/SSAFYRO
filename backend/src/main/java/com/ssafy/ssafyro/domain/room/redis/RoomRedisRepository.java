@@ -1,12 +1,37 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
-import com.ssafy.ssafyro.domain.room.RoomType;
-import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+@RequiredArgsConstructor
 @Repository
-public interface RoomRedisRepository extends CrudRepository<RoomRedis, String> {
+public class RoomRedisRepository {
 
-    List<RoomRedis> find(RoomType roomType);
+    private static final String KEY_PREFIX = "room:";
+
+    private final RedisTemplate<String, RoomRedis> redisTemplate;
+
+    public String save(RoomRedis roomRedis) {
+        String key = generateRandomKey();
+        redisTemplate.opsForValue().set(KEY_PREFIX + key, roomRedis);
+
+        return key;
+    }
+
+    public String save(String key, RoomRedis roomRedis) {
+        redisTemplate.opsForValue().set(KEY_PREFIX + key, roomRedis);
+
+        return key;
+    }
+
+    public Optional<RoomRedis> findById(String key) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(KEY_PREFIX + key));
+    }
+
+    private String generateRandomKey() {
+        return UUID.randomUUID().toString();
+    }
 }
