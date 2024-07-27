@@ -22,9 +22,9 @@ import com.ssafy.ssafyro.api.service.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
@@ -51,8 +51,8 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         RoomListResponse roomListResponse = RoomListResponse.of(
                 List.of(RoomRedis.builder()
-                                .id(1L).
-                                title("Conference Room")
+                                .id("1")
+                                .title("Conference Room")
                                 .description("A spacious conference room")
                                 .status(RoomStatus.WAIT)
                                 .participantCount(3)
@@ -60,7 +60,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                 .type(RoomType.PRESENTATION)
                                 .capacity(3).build(),
                         RoomRedis.builder()
-                                .id(2L)
+                                .id("2")
                                 .title("Meeting Room")
                                 .description("A cozy meeting room")
                                 .status(RoomStatus.WAIT)
@@ -87,7 +87,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("응답"),
                                 fieldWithPath("response.rooms").type(JsonFieldType.ARRAY)
                                         .description("방 목록"),
-                                fieldWithPath("response.rooms[].id").type(JsonFieldType.NUMBER)
+                                fieldWithPath("response.rooms[].id").type(JsonFieldType.STRING)
                                         .description("방 ID"),
                                 fieldWithPath("response.rooms[].title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
@@ -113,7 +113,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void getRoomByIdTest() throws Exception {
         int requestRoomId = 1;
 
-        given(roomService.getRoomById(any(Long.class)))
+        given(roomService.getRoomById(any(String.class)))
                 .willReturn(RoomDetailResponse.of(RoomRedis.builder()
                         .title("title")
                         .description("description")
@@ -159,7 +159,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     @DisplayName("방을 생성합니다.")
     @Test
     void createRoom() throws Exception {
-        Long RoomId = 1L;
+        String RoomId = "1";
         Long userId = 1L;
 
         RoomCreateRequest roomCreateRequest = new RoomCreateRequest(
@@ -198,7 +198,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.roomId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("response.roomId").type(JsonFieldType.STRING)
                                         .description("방 ID"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
