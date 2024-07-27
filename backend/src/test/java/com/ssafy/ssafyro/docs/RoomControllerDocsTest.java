@@ -27,7 +27,6 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,21 +50,13 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         RoomListResponse roomListResponse = RoomListResponse.of(
                 List.of(RoomRedis.builder()
-                                .id("1")
                                 .title("Conference Room")
                                 .description("A spacious conference room")
-                                .status(RoomStatus.WAIT)
-                                .participantCount(3)
-                                .userList(List.of(1L, 2L, 3L))
                                 .type(RoomType.PRESENTATION)
                                 .capacity(3).build(),
                         RoomRedis.builder()
-                                .id("2")
                                 .title("Meeting Room")
                                 .description("A cozy meeting room")
-                                .status(RoomStatus.WAIT)
-                                .participantCount(3)
-                                .userList(List.of(1L, 2L, 3L))
                                 .type(RoomType.PRESENTATION)
                                 .capacity(3).build()));
 
@@ -103,6 +94,8 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("방 참가자 수"),
                                 fieldWithPath("response.rooms[].userList").type(JsonFieldType.ARRAY)
                                         .description("방 참가자 목록"),
+                                fieldWithPath("response.rooms[].createdDate").type(JsonFieldType.ARRAY)
+                                        .description("방 생성 시각"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )));
@@ -118,10 +111,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                         .title("title")
                         .description("description")
                         .type(RoomType.PRESENTATION)
-                        .status(RoomStatus.WAIT)
                         .capacity(3)
-                        .participantCount(1)
-                        .userList(List.of(1L))
                         .build())
                 );
 

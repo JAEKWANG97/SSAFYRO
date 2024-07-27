@@ -9,7 +9,6 @@ import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,10 +63,7 @@ class InterviewServiceTest extends IntegrationTestSupport {
                 .title("Test Room")
                 .description("Test Room Description")
                 .type(RoomType.PRESENTATION)
-                .status(RoomStatus.WAIT)
                 .capacity(3)
-                .participantCount(3)
-                .userList(List.of(1L, 2L, 3L))
                 .build();
     }
 }

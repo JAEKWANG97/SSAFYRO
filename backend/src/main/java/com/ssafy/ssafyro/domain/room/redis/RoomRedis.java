@@ -1,21 +1,19 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
 import com.ssafy.ssafyro.domain.room.RoomType;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RedisHash(value = "room")
 public class RoomRedis {
 
-    @Id
     private String id;
     private String title;
     private String description;
@@ -24,18 +22,19 @@ public class RoomRedis {
     private int capacity;
     private int participantCount;
     private List<Long> userList;
+    private LocalDateTime createdDate;
 
     @Builder
-    private RoomRedis(String id, String title, String description, RoomType type, RoomStatus status,
-                      int capacity, int participantCount, List<Long> userList) {
-        this.id = id;
+    private RoomRedis(String title, String description, RoomType type, int capacity) {
+        this.id = UUID.randomUUID().toString();
         this.title = title;
         this.description = description;
         this.type = type;
-        this.status = status;
+        this.status = RoomStatus.WAIT;
         this.capacity = capacity;
-        this.participantCount = participantCount;
-        this.userList = userList;
+        this.participantCount = 0;
+        this.userList = new ArrayList<>();
+        this.createdDate = LocalDateTime.now();
     }
 
     public void startInterview() {
