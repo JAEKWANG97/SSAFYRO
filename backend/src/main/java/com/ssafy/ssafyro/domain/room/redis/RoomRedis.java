@@ -1,33 +1,29 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
-import jakarta.persistence.GeneratedValue;
+import com.ssafy.ssafyro.domain.room.RoomType;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import com.ssafy.ssafyro.domain.room.RoomType;
 
 
-import lombok.Builder;
-
-
-@RedisHash(value = "room")
 @Getter
+@RedisHash(value = "room")
 public class RoomRedis {
 
     @Id
-    private Long id;
-
-    private final String title;
-    private final String description;
-    private final RoomType type;
-    private final RoomStatus status;
-    private final int capacity;
-    private final int participantCount;
-    private final List<Long> userList;
+    private String id;
+    private String title;
+    private String description;
+    private RoomType type;
+    private RoomStatus status;
+    private int capacity;
+    private int participantCount;
+    private List<Long> userList;
 
     @Builder
-    private RoomRedis(Long id, String title, String description, RoomType type, RoomStatus status,
+    private RoomRedis(String id, String title, String description, RoomType type, RoomStatus status,
                       int capacity, int participantCount, List<Long> userList) {
         this.id = id;
         this.title = title;
@@ -39,4 +35,11 @@ public class RoomRedis {
         this.userList = userList;
     }
 
+    public void startInterview() {
+        status = RoomStatus.ING;
+    }
+
+    public void endInterview() {
+        status = RoomStatus.END;
+    }
 }

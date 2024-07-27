@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoomRedisRepository extends CrudRepository<RoomRedis, Long> {
+public interface RoomRedisRepository extends CrudRepository<RoomRedis, String> {
 
     List<RoomRedis> find(RoomType roomType);
 }
