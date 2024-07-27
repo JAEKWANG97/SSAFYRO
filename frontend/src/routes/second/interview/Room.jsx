@@ -1,21 +1,25 @@
+// Room.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { rooms } from "./data";
+import Chat from "../components/Chat";
+import { useState } from "react";
 
 export default function Room() {
   const { roomid } = useParams();
   const navigate = useNavigate();
   const room = rooms.find((room) => room.roomId === roomid);
+  const [messages, setMessages] = useState([]);
 
-  const currentUser = { userId: 'LGG', name: 'Jun'}
+  const currentUser = { userId: "LGG", name: "Jun" };
 
   if (!room) return <div>방을 찾을 수 없습니다.</div>;
 
   function navigateHandler() {
     const participantIndex = room.participants.findIndex(
       (participant) => participant.userId === currentUser.userId
-    )
+    );
     if (participantIndex !== -1) {
-      room.participants.splice(participantIndex, 1)
+      room.participants.splice(participantIndex, 1);
     }
     navigate("/second/interview");
   }
@@ -24,17 +28,26 @@ export default function Room() {
     navigate(`/second/interview/room/${roomid}/pt_ready`);
   }
 
+  function sendMessage(newMessage) {
+    const newChatMessage = {
+      userId: currentUser.userId,
+      name: currentUser.name,
+      message: newMessage,
+    };
+    setMessages([...messages, newChatMessage]);
+  }
+
   return (
     <div className="flex justify-center">
       <div
-        className="w-9/10 mt-16 overflow-hidden"
+        className="w-full mt-16 overflow-hidden"
         style={{ minWidth: "1100px" }}
       >
         <div className="w-full h-[80vh] border border-black mx-auto mt-5 p-6 rounded-xl">
           <div className="flex justify-between items-center mb-2">
             <div className="flex">
-            <img
-                className="h-[25px] inline pr-4"
+              <img
+                className="h-[25px] pr-4 mt-1"
                 src="/SSAFYRO.png"
                 alt="SSAFYRO 로고"
               />
@@ -51,15 +64,15 @@ export default function Room() {
             </button>
           </div>
 
-          <div className="h-[95%] border rounded-xl" 
-          style={{ backgroundColor: "rgba(249, 250, 255, 1)", borderColor: "rgba(249, 250, 255, 1)" }}
+          <div
+            className="flex h-[95%] border rounded-xl mt-4"
+            style={{
+              backgroundColor: "rgba(249, 250, 255, 1)",
+              borderColor: "rgba(249, 250, 255, 1)",
+            }}
           >
-            <div className="flex h-[50%] p-4">
-              <div
-                className="w-[70%] rounded-lg p-1 flex items-center justify-between"
-                // style={{ backgroundColor: "rgba(200, 200, 200, 0.2)" }}
-                // style={{ backgroundColor: "rgba(174, 174, 174, 0.11)" }}
-              >
+            <div className="w-[70%] flex flex-col p-4">
+              <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
                 {room.participants.map((participant, index) => (
                   <div
                     key={index}
@@ -70,24 +83,63 @@ export default function Room() {
                       alt="User"
                       className="h-2/3 object-contain rounded-full"
                     />
-                    <span className="text-sm font-bold mt-2">{participant.userId}</span>
+                    <span className="text-sm font-bold mt-2">
+                      {participant.userId}
+                    </span>
                   </div>
                 ))}
-                {Array(room.maxParticipants - room.participants.length).fill().map((_, index) => (
-                  <div key={index} className="w-[33%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5">
-                    <span className="text-2xl text-gray-400">X</span>
-                  </div>
-                ))}
+                {Array(room.maxParticipants - room.participants.length)
+                  .fill()
+                  .map((_, index) => (
+                    <div
+                      key={index}
+                      className="w-[33%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
+                    >
+                      <span className="text-2xl text-gray-400">X</span>
+                    </div>
+                  ))}
               </div>
-              <div className="w-[30%] p-5 mt-2 bg-white shadow-md rounded-xl ml-3" >면접 팁 나오는 칸</div>
+
+              {/* Chat 컴포넌트를 사용 */}
+              <Chat
+                currentUser={currentUser}
+                messages={messages}
+                sendMessage={sendMessage}
+              />
             </div>
-            <div className="flex h-[42%] p-4">
-              <div className="w-[70%] rounded-lg p-5 bg-white shadow-md mr-3">
-              <h1 className="font-bold">Chat</h1>
-              <hr />
-                {/* 새로운 박스 내용 */}
-                새로운 박스 내용
+            <div
+              className="w-[30%] p-5 bg-white shadow-md rounded-xl ml-3 mr-5 mt-8 flex flex-col"
+              style={{ height: "60%" }}
+            >
+              <div className="flex items-center mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.5em"
+                  height="1.5em"
+                  viewBox="0 0 48 48"
+                  className="text-blue-500"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M18.005 43.5h12.188m-19.5-28.667C12.429 8.353 17.39 4.5 24.099 4.5s11.67 3.852 13.406 10.333s-1.502 13.125-7.312 16.48v7.312H18.005v-7.312c-7.65-3.654-9.049-10-7.312-16.48"
+                  ></path>
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M14.28 18.296s-.786-8.599 9.888-9.982"
+                  ></path>
+                </svg>
+                <h2 className="flex-grow text-lg font-bold ml-2">면접 Tip</h2>
               </div>
+              <p className="text-gray-700">
+                완벽하게 말할 필요 없어요! 자신이 생각한 바를 면접관이 이해할 수
+                있을 정도로만 전달할 수 있으면 되요!
+              </p>
             </div>
           </div>
         </div>
