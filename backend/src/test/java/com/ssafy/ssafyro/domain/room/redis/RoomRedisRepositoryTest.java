@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.room.RoomType;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,33 +23,119 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         Set<String> keys = redisTemplate.keys("room:*");
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys);
+        }
+    }
 
-        if (keys == null || keys.isEmpty()) {
-            return;
+    @DisplayName("회의 방 정보를 Redis에 저장하고 조회한다.")
+    @Test
+    void saveAndFindTest() {
+        // given
+        RoomRedis room = createRoom("Test Room", RoomType.PRESENTATION, 3);
+
+        // when
+        roomRedisRepository.save(room);
+        RoomRedis foundRoom = roomRedisRepository.findById(room.getId()).orElse(null);
+
+        // then
+        assertThat(foundRoom).isNotNull();
+        assertThat(foundRoom.getTitle()).isEqualTo("Test Room");
+        assertThat(foundRoom.getType()).isEqualTo(RoomType.PRESENTATION);
+        assertThat(foundRoom.getCapacity()).isEqualTo(3);
+        assertThat(foundRoom.getStatus()).isEqualTo(RoomStatus.WAIT);
+    }
+
+    @DisplayName("필터 조건에 맞는 방 목록을 조회한다.")
+    @Test
+    void findRoomsTest() {
+        // given
+        RoomRedis room1 = createRoom("Room1", RoomType.PRESENTATION, 3);
+        RoomRedis room2 = createRoom("Room2", RoomType.INTERVIEW, 3);
+        RoomRedis room3 = createRoom("Room3", RoomType.PRESENTATION, 3);
+        roomRedisRepository.save(room1);
+        roomRedisRepository.save(room2);
+        roomRedisRepository.save(room3);
+
+        // when
+        List<RoomRedis> rooms = roomRedisRepository.findRooms(RoomType.PRESENTATION.name(), 3,
+                RoomStatus.WAIT.name(), 1, 10);
+
+        // then
+        assertThat(rooms).extracting("title").containsExactlyInAnyOrder("Room1", "Room3");
+    }
+
+    @DisplayName("페이지네이션이 적용된 방 목록을 조회한다.")
+    @Test
+    void findRoomsWithPaginationTest() {
+        // given
+        for (int i = 0; i < 15; i++) {
+            roomRedisRepository.save(createRoom("Room" + i, RoomType.PRESENTATION, 3));
         }
 
-        redisTemplate.delete(keys);
+        // when
+        List<RoomRedis> firstPage = roomRedisRepository.findRooms(RoomType.PRESENTATION.name(), 3,
+                RoomStatus.WAIT.name(), 1, 10);
+        List<RoomRedis> secondPage = roomRedisRepository.findRooms(RoomType.PRESENTATION.name(), 3,
+                RoomStatus.WAIT.name(), 2, 10);
+
+        // then
+        assertThat(firstPage).hasSize(10);
+        assertThat(secondPage).hasSize(5);
     }
 
-    @DisplayName("회의 방 세션 정보를 Json으로 직렬화한 후 Redis에 저장한다.")
+    @DisplayName("방 상태를 변경한다.")
     @Test
-    void saveTest() {
-        //given
-        RoomRedis room = createRoom();
+    void changeRoomStatusTest() {
+        // given
+        RoomRedis room = createRoom("Test Room", RoomType.INTERVIEW, 2);
+        roomRedisRepository.save(room);
 
-        //when
-        String roomId = roomRedisRepository.save(room);
+        // when
+        room.startInterview();
+        roomRedisRepository.updateStatus(room);
+        RoomRedis startedRoom = roomRedisRepository.findById(room.getId()).orElse(null);
 
-        //then
-        assertThat(roomRedisRepository.findById(roomId).get().getTitle()).isEqualTo(room.getTitle());
+        room.endInterview();
+        roomRedisRepository.updateStatus(room);
+        RoomRedis endedRoom = roomRedisRepository.findById(room.getId()).orElse(null);
+
+        // then
+        assertThat(startedRoom).isNotNull();
+        assertThat(startedRoom.getStatus()).isEqualTo(RoomStatus.ING);
+        assertThat(endedRoom).isNotNull();
+        assertThat(endedRoom.getStatus()).isEqualTo(RoomStatus.END);
     }
 
-    private RoomRedis createRoom() {
-        return RoomRedis.builder()
-                .title("Test Room1")
-                .description("Test Room Description")
-                .type(RoomType.PRESENTATION)
-                .capacity(0)
-                .build();
+
+    @DisplayName("저장된 방을 삭제한다.")
+    @Test
+    void givenRoom_whenDelete_thenRoomIsDeleted() {
+        // given
+        RoomRedis room = createRoom("Test Room", RoomType.PRESENTATION, 3);
+        roomRedisRepository.save(room);
+
+        // 저장 확인
+        assertThat(roomRedisRepository.findById(room.getId()).get().getTitle())
+                .isEqualTo(room.getTitle());
+        assertThat(roomRedisRepository.findById(room.getId()).get().getType())
+                .isEqualTo(room.getType());
+        assertThat(roomRedisRepository.findById(room.getId()).get().getCapacity())
+                .isEqualTo(room.getCapacity());
+        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+                .isEqualTo(room.getStatus());
+
+
+        // when
+        roomRedisRepository.delete(roomRedisRepository.findById(room.getId()).orElse(null));
+
+        // then
+        assertThat(roomRedisRepository.findById(room.getId())).isNotPresent();
+
+    }
+
+    private RoomRedis createRoom(String title, RoomType type, int capacity) {
+        return RoomRedis.builder().title(title).description("Test Room Description").type(type)
+                .capacity(capacity).build();
     }
 }
