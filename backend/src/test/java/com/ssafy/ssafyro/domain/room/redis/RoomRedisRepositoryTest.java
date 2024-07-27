@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.room.RoomType;
-import java.util.ArrayList;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,10 +48,7 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
                 .title("Test Room1")
                 .description("Test Room Description")
                 .type(RoomType.PRESENTATION)
-                .status(RoomStatus.WAIT)
                 .capacity(0)
-                .participantCount(0)
-                .userList(new ArrayList<>())
                 .build();
     }
 }
