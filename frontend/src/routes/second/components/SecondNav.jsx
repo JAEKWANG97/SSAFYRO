@@ -17,7 +17,7 @@ export default function SeconddNav() {
 
   return (
     <>
-      <div className="mb-6 border-b border-gray-200">
+      <div className="pt-6 mb-6 border-b border-gray-200">
         <ul
           className="flex flex-wrap text-sm font-medium text-center"
           id="default-tab"

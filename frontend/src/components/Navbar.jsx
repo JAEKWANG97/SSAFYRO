@@ -50,122 +50,114 @@ export default function Navbar() {
   };
 
   return (
-    <>
-    {/* <div className="flex justify-center">
-      <div
-        className="container mx-auto overflow-hidden max-w-6xl"
-        style={{ minWidth: "1100px" }}
-      > */}
-        <nav className="flex items-center py-8 px-64 text-lg bg-white shadow-md">
-          {/* 로고 자리 */}
-          <div className="flex-shrink-0 min-w-[200px]">
-            <a className="font-extrabold text-2xl" href="/">
-              <img
-                className="h-[25px] inline pr-4"
-                src="/SSAFYRO.png"
-                alt="SSAFYRO 로고"
-              />
-              SSAFYRO
+    <div className="bg-white shadow-md">
+      <div className="container mx-auto flex items-center justify-between py-8 px-64" style={{ minWidth: "1100px" }}>
+        {/* 로고 자리 */}
+        <div className="flex-shrink-0 min-w-[200px]">
+          <a className="font-extrabold text-2xl flex items-center" href="/">
+            <img
+              className="h-[25px] inline pr-4"
+              src="/SSAFYRO.png"
+              alt="SSAFYRO 로고"
+            />
+            SSAFYRO
+          </a>
+        </div>
+
+        {/* 메뉴 자리 */}
+        <div className="flex-grow text-center relative flex justify-center">
+          <div className="relative inline-block mx-8" ref={dropdown1Ref}>
+            <a
+              className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
+              onClick={toggleDropdown1}
+            >
+              1차 전형 준비
             </a>
-          </div>
-
-          {/* 메뉴 자리 */}
-          <div className="flex-grow text-center relative flex justify-center">
-            <div className="relative inline-block mx-8" ref={dropdown1Ref}>
-              <a
-                className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
-                onClick={toggleDropdown1}
-              >
-                1차 전형 준비
-              </a>
-              {dropdown1Open && (
-                <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]">
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-6 py-3 hover:bg-gray-100"
-                        onClick={() => handleNavClick("essay")}
-                      >
-                        에세이
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-6 py-3 hover:bg-gray-100"
-                        onClick={() => handleNavClick("sw")}
-                      >
-                        SW 적성진단
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="relative inline-block mx-3" ref={dropdown2Ref}>
-              <a
-                className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
-                onClick={toggleDropdown2}
-              >
-                2차 전형 준비
-              </a>
-              {dropdown2Open && (
-                <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]">
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li>
-                      <a
-                        href="/second/guide/personality"
-                        className="block px-6 py-3 hover:bg-gray-100"
-                      >
-                        면접가이드
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/second/interview"
-                        className="block px-6 py-3 hover:bg-gray-100"
-                      >
-                        면접연습
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 회원 메뉴 */}
-          <div className="flex-shrink-0 min-w-[200px] text-end">
-            {isLogin ? (
-              <>
-                <a
-                  className="mx-8 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
-                  href={`/account/profile/${userId}`}
-                >
-                  프로필
-                </a>
-                <button
-                  className="mx-3 font-semibold hover:text-[#90CCF0]"
-                  onClick={loginTrigger}
-                >
-                  로그아웃
-                </button>
-              </>
-            ) : (
-              <a
-                className="mx-3 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
-                href="/account/login"
-              >
-                로그인
-              </a>
+            {dropdown1Open && (
+              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <a
+                      href="#"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("essay")}
+                    >
+                      에세이
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("sw")}
+                    >
+                      SW 적성진단
+                    </a>
+                  </li>
+                </ul>
+              </div>
             )}
           </div>
-        </nav>
-        <button onClick={loginTrigger}>login</button>
-      {/* </div>
-    </div> */}
-    </>
+
+          <div className="relative inline-block mx-3" ref={dropdown2Ref}>
+            <a
+              className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
+              onClick={toggleDropdown2}
+            >
+              2차 전형 준비
+            </a>
+            {dropdown2Open && (
+              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <a
+                      href="/second/guide/personality"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                    >
+                      면접가이드
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/second/interview"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                    >
+                      면접연습
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 회원 메뉴 */}
+        <div className="flex-shrink-0 min-w-[200px] text-end">
+          {isLogin ? (
+            <>
+              <a
+                className="mx-8 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
+                href={`/account/profile/${userId}`}
+              >
+                프로필
+              </a>
+              <button
+                className="mx-3 font-semibold hover:text-[#90CCF0]"
+                onClick={loginTrigger}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <a
+              className="mx-3 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
+              href="/account/login"
+            >
+              로그인
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
