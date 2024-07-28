@@ -40,4 +40,11 @@ public abstract class Report extends BaseEntity {
     private int totalScore;
 
     private int pronunciationScore;
+
+    protected Report(User user, Room room, int totalScore, int pronunciationScore) {
+        this.user = user;
+        this.room = room;
+        this.totalScore = totalScore;
+        this.pronunciationScore = pronunciationScore;
+    }
 }

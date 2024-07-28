@@ -1,6 +1,7 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
 import com.ssafy.ssafyro.domain.room.RoomType;
+import com.ssafy.ssafyro.domain.room.entity.Room;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,15 @@ public class RoomRedis {
         status = RoomStatus.ING;
     }
 
-    public void endInterview() {
+    public void finishInterview() {
         status = RoomStatus.END;
+    }
+
+    public Room toEntity() {
+        return Room.builder()
+                .id(id)
+                .title(title)
+                .type(type)
+                .build();
     }
 }
