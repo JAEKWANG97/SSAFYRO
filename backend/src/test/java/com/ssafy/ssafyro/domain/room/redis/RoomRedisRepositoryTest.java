@@ -96,7 +96,7 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
         roomRedisRepository.updateStatus(room);
         RoomRedis startedRoom = roomRedisRepository.findById(room.getId()).orElse(null);
 
-        room.endInterview();
+        room.finishInterview();
         roomRedisRepository.updateStatus(room);
         RoomRedis endedRoom = roomRedisRepository.findById(room.getId()).orElse(null);
 
