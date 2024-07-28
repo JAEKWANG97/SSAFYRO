@@ -24,7 +24,7 @@ export default function GuestContents() {
           </div>
 
           <div
-            className="w-1/3 h-[375px] border rounded-xl flex flex-col items-center"
+            className="w-1/3 h-[375px] border rounded-xl flex flex-col items-center bg-white shadow-sm"
             style={{ borderColor: "#E2E5EB" }}
           >
             <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 mt-8">

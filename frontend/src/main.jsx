@@ -57,16 +57,7 @@ const AppLayout = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen"
-    //  style={{backgroundColor: "rgba(235, 237, 255, 0.5)"}}
-    style={{
-      backgroundImage: `url(${backgroundImg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: "center",
-      backgroundColor: "rgba(255, 255, 255, 1)",
-      backgroundBlendMode: "overlay"
-    }}
-     >
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {!shouldHideNavbar && <Navbar />}
       <div className="flex-grow px-64">
         <Outlet />
