@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.api.service.interview;
 
 import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 
+import com.ssafy.ssafyro.api.service.interview.request.FinishServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
@@ -43,7 +44,6 @@ public class InterviewService {
     private final InterviewRedisRepository interviewRedisRepository;
 
     public StartResponse startInterview(String roomId) {
-
         RoomRedis room = roomRedisRepository.findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
@@ -52,8 +52,8 @@ public class InterviewService {
         return new StartResponse(roomRedisRepository.updateStatus(room));
     }
 
-    public FinishResponse finishInterview(String roomId) {
-        RoomRedis roomRedis = roomRedisRepository.findById(roomId)
+    public FinishResponse finishInterview(FinishServiceRequest request) {
+        RoomRedis roomRedis = roomRedisRepository.findById(request.roomId())
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         roomRedis.finishInterview();
@@ -63,12 +63,12 @@ public class InterviewService {
         roomRepository.save(room);
 
         //레포트 생성
-        for (Long id : roomRedis.getUserList()) {
-            User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        for (Long userId : roomRedis.getUserList()) {
+            User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-            List<InterviewRedis> interviewRedisList = interviewRedisRepository.findByUserId(id);
+            List<InterviewRedis> interviewRedisList = interviewRedisRepository.findByUserId(userId);
 
-            int totalScore = 0;
+            int totalScore = request.totalScores().get(userId);
 
             int pronunciationScore = interviewRedisList.stream()
                     .mapToInt(InterviewRedis::getPronunciationScore)
@@ -113,12 +113,12 @@ public class InterviewService {
                 .build();
     }
 
-    public ArticleResponse showArticle(String roomId) {
-        return new ArticleResponse("", "", List.of());
-    }
-
     public void saveQnAResult(QnAResultServiceRequest request) {
         interviewRedisRepository.save(request.toEntity());
+    }
+
+    public ArticleResponse showArticle(String roomId) {
+        return new ArticleResponse("", "", List.of());
     }
 }
 

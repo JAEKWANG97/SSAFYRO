@@ -35,7 +35,7 @@ public class InterviewController {
     @PatchMapping("/api/v1/interview/finish")
     public ApiResult<FinishResponse> finishInterview(@RequestBody FinishRequest finishRequest) {
         return success(
-                interviewService.finishInterview(finishRequest.roomId())
+                interviewService.finishInterview(finishRequest.toServiceRequest())
         );
     }
 
