@@ -41,14 +41,25 @@ class InterviewServiceTest extends IntegrationTestSupport {
     @DisplayName("모의 면접을 시작한다.")
     @Test
     void startInterview() {
-        //given
-        String roomId = roomRedisRepository.save(createRoom());
+        // given
+        RoomRedis room = createRoom();
+        roomRedisRepository.save(room);
 
-        //when
-        interviewService.startInterview(roomId);
+        assertThat(roomRedisRepository.findById(room.getId()).get().getTitle())
+                .isEqualTo(createRoom().getTitle());
+        assertThat(roomRedisRepository.findById(room.getId()).get().getType())
+                .isEqualTo(createRoom().getType());
+        assertThat(roomRedisRepository.findById(room.getId()).get().getCapacity())
+                .isEqualTo(createRoom().getCapacity());
+        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+                .isEqualTo(RoomStatus.WAIT);
 
-        //then
-        assertThat(roomRedisRepository.findById(roomId).get().getStatus()).isEqualTo(RoomStatus.ING);
+        // when
+        interviewService.startInterview(room.getId());
+
+        // then
+        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+                .isEqualTo(RoomStatus.ING);
     }
 
     @DisplayName("모의 면접 시작 시 방 아이디를 찾을 수 없는 경우 예외가 발생한다.")
