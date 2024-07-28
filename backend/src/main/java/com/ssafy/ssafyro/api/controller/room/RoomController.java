@@ -31,9 +31,9 @@ public class RoomController {
     public ApiResult<RoomListResponse> getRooms(@ModelAttribute RoomListRequest request,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        RoomListServiceRequest serviceRequest = new RoomListServiceRequest(request.type(),
-                request.capacity(), request.status(), page, size);
-        return success(roomService.getRoomList(serviceRequest));
+
+        return success(roomService.getRoomList(new RoomListServiceRequest(request.type(),
+                request.capacity(), request.status(), page, size)));
     }
 
     @GetMapping("/api/v1/rooms/{id}")

@@ -45,6 +45,10 @@ public class RoomRedis {
         status = RoomStatus.END;
     }
 
+    public void addParticipant(Long userId) {
+        userList.add(userId);
+    }
+
     public String generateKey() {
         return String.format("room:%s:%d:%s:%s", this.type, this.capacity, this.status, this.id);
     }
