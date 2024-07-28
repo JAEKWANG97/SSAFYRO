@@ -21,12 +21,13 @@ public class InterviewService {
     private final InterviewRedisRepository interviewRedisRepository;
 
     public StartResponse startInterview(String roomId) {
+
         RoomRedis room = roomRedisRepository.findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         room.startInterview();
 
-        return new StartResponse(roomRedisRepository.save(room));
+        return new StartResponse(roomRedisRepository.updateStatus(room));
     }
 
     public ArticleResponse showArticle(String roomId) {

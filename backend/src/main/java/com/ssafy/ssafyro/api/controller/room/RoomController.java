@@ -6,7 +6,8 @@ import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
-import com.ssafy.ssafyro.api.service.RoomService;
+import com.ssafy.ssafyro.api.service.room.RoomService;
+import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,8 +28,12 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping("/api/v1/rooms")
-    public ApiResult<RoomListResponse> getRooms(@ModelAttribute RoomListRequest request) {
-        return success(roomService.getRoomList(request.toServiceRequest()));
+    public ApiResult<RoomListResponse> getRooms(@ModelAttribute RoomListRequest request,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        RoomListServiceRequest serviceRequest = new RoomListServiceRequest(request.type(),
+                request.capacity(), request.status(), page, size);
+        return success(roomService.getRoomList(serviceRequest));
     }
 
     @GetMapping("/api/v1/rooms/{id}")

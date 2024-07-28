@@ -44,4 +44,8 @@ public class RoomRedis {
     public void endInterview() {
         status = RoomStatus.END;
     }
+
+    public String generateKey() {
+        return String.format("room:%s:%d:%s:%s", this.type, this.capacity, this.status, this.id);
+    }
 }
