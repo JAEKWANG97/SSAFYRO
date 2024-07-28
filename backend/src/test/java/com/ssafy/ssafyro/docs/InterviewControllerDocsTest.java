@@ -221,7 +221,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
         FinishRequest request = new FinishRequest("roomId");
 
         mockMvc.perform(
-                        post("/api/v1/interview/finish")
+                        patch("/api/v1/interview/finish")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
