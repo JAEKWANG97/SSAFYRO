@@ -28,6 +28,8 @@ import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
 
+import backgroundImg from '../public/main/SSAFYRO.png'
+
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
@@ -55,7 +57,16 @@ const AppLayout = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen"
+    //  style={{backgroundColor: "rgba(235, 237, 255, 0.5)"}}
+    style={{
+      backgroundImage: `url(${backgroundImg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: "center",
+      backgroundColor: "rgba(255, 255, 255, 1)",
+      backgroundBlendMode: "overlay"
+    }}
+     >
       {!shouldHideNavbar && <Navbar />}
       <div className="flex-grow px-64">
         <Outlet />

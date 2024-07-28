@@ -43,7 +43,7 @@ export default function Room() {
         className="w-full mt-16 overflow-hidden"
         style={{ minWidth: "1100px" }}
       >
-        <div className="w-full h-[80vh] border border-black mx-auto mt-5 p-6 rounded-xl">
+        <div className="w-full h-[80vh] mx-auto mt-5 p-6 rounded-xl bg-white shadow-2xl">
           <div className="flex justify-between items-center mb-2">
             <div className="flex">
               <img
@@ -107,39 +107,51 @@ export default function Room() {
                 sendMessage={sendMessage}
               />
             </div>
-            <div
-              className="w-[30%] p-5 bg-white shadow-md rounded-xl ml-3 mr-5 mt-8 flex flex-col"
-              style={{ height: "60%" }}
-            >
-              <div className="flex items-center mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.5em"
-                  height="1.5em"
-                  viewBox="0 0 48 48"
-                  className="text-blue-500"
-                >
-                  <path
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M18.005 43.5h12.188m-19.5-28.667C12.429 8.353 17.39 4.5 24.099 4.5s11.67 3.852 13.406 10.333s-1.502 13.125-7.312 16.48v7.312H18.005v-7.312c-7.65-3.654-9.049-10-7.312-16.48"
-                  ></path>
-                  <path
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.28 18.296s-.786-8.599 9.888-9.982"
-                  ></path>
-                </svg>
-                <h2 className="flex-grow text-lg font-bold ml-2">면접 Tip</h2>
+            <div className="w-[30%] flex flex-col justify-between">
+              <div className="p-5 bg-white shadow-md rounded-xl ml-3 mr-5 mt-8" style={{ height: "60%" }}>
+                <div className="flex items-center mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="2.0em"
+                    height="2.0em"
+                    viewBox="0 0 48 48"
+                    className="text-blue-500"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M18.005 43.5h12.188m-19.5-28.667C12.429 8.353 17.39 4.5 24.099 4.5s11.67 3.852 13.406 10.333s-1.502 13.125-7.312 16.48v7.312H18.005v-7.312c-7.65-3.654-9.049-10-7.312-16.48"
+                    ></path>
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M14.28 18.296s-.786-8.599 9.888-9.982"
+                    ></path>
+                  </svg>
+                  <h2 className="flex-grow text-2xl font-bold ml-2">선배들의 Tip!</h2>
+                </div>
+                <div className="flex items-start mt-8 px-2">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded-full mr-2">
+                    1
+                  </div>
+                  <p className="px-2 text-gray-700">
+                    완벽하게 말할 필요 없어요! 자신이 생각한 바를 면접관이 이해할 수
+                    있을 정도로만 전달할 수 있으면 되요!
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-700">
-                완벽하게 말할 필요 없어요! 자신이 생각한 바를 면접관이 이해할 수
-                있을 정도로만 전달할 수 있으면 되요!
-              </p>
+              <div className="p-7 flex justify-center ml-3 mr-5 mt-8 mb-7" style={{ height: "25%" }}>
+                <button
+                  className="w-full font-extrabold bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
+                  onClick={startInterviewHandler}
+                >
+                  면접 시작
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -147,3 +159,4 @@ export default function Room() {
     </div>
   );
 }
+`   `

@@ -29,7 +29,7 @@ export default function Interview() {
       <main className="flex-grow p-6">
         <div className="container mx-auto">
           <h1 className="text-3xl font-bold">모의 면접 방 목록</h1>
-          <div className="flex">
+          <div className="flex mt-12">
             {/* 검색 필터 */}
             <div className="w-1/4 p-4 bg-white shadow rounded">
               <div className="mb-4">
@@ -123,9 +123,6 @@ export default function Interview() {
           </div>
         </div>
       </main>
-      <footer className="bg-gray-200 p-4">
-        <div className="container mx-auto text-center">푸터 콘텐츠</div>
-      </footer>
     </div>
   );
 }
