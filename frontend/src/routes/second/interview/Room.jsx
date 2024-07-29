@@ -1,26 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { rooms } from "./data";
+import { rooms } from "./data.js";
 import Chat from "../components/Chat";
 import { useState } from "react";
 
 export default function Room() {
   const { roomid } = useParams();
   const navigate = useNavigate();
-  const roomIndex = rooms.findIndex((room) => room.roomId === roomid);
+  const roomIndex = rooms.findIndex((room) => room.id === roomid);
   const room = roomIndex !== -1 ? rooms[roomIndex] : null;
   const [messages, setMessages] = useState([]);
 
-  const currentUser = { userId: "LGG", name: "Jun" };
+  const currentUser = { userId: "user1", name: "Alice" };
 
   if (!room) return <div>방을 찾을 수 없습니다.</div>;
 
   function navigateHandler() {
     // 참가자가 방을 나가면 제거
-    const participantIndex = room.participants.findIndex(
+    const participantIndex = room.userList.findIndex(
       (participant) => participant.userId === currentUser.userId
     );
     if (participantIndex !== -1) {
-      room.participants.splice(participantIndex, 1);
+      room.userList.splice(participantIndex, 1);
     }
 
     // 참가자가 아무도 없으면 방을 삭제
@@ -32,7 +32,7 @@ export default function Room() {
   }
 
   function startInterviewHandler() {
-    navigate(`/second/interview/room/${roomid}/pt_ready`);
+    navigate(`/second/interview/room/${id}/pt_ready`);
   }
 
   function sendMessage(newMessage) {
@@ -80,7 +80,7 @@ export default function Room() {
           >
             <div className="w-[70%] flex flex-col p-4">
               <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
-                {room.participants.map((participant, index) => (
+                {room.userList.map((participant, index) => (
                   <div
                     key={index}
                     className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
@@ -95,25 +95,21 @@ export default function Room() {
                     </span>
                   </div>
                 ))}
-                {Array(room.maxParticipants - room.participants.length)
+                {Array(room.capacity - room.userList.length)
                   .fill()
                   .map((_, index) => (
                     <div
-                      key={index + room.participants.length}
+                      key={index + room.userList.length}
                       className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                     >
                       {/* 빈자리 */}
                     </div>
                   ))}
-                {Array(
-                  3 - Math.max(room.maxParticipants, room.participants.length)
-                )
+                {Array(3 - Math.max(room.capacity, room.userList.length))
                   .fill()
                   .map((_, index) => (
                     <div
-                      key={
-                        index + room.maxParticipants + room.participants.length
-                      }
+                      key={index + room.maxParticipants + room.userList.length}
                       className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                     >
                       {/* 최대 수용 인원을 초과한 자리 X 표시 */}
