@@ -126,7 +126,7 @@ export default function Interview() {
                     <div
                       key={room.roomId}
                       className="bg-white shadow rounded p-4 flex flex-col justify-between"
-                      style={{ height: "200px" }} // 고정된 높이 설정
+                      style={{ height: "250px" }} // 고정된 높이 설정
                     >
                       <div className="flex justify-between items-center mb-2">
                         <span

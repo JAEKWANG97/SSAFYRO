@@ -1,3 +1,5 @@
+// CreateRoom.jsx
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUser, rooms } from "./data"; // data.js 파일에서 currentUser와 rooms 가져오기
@@ -82,6 +84,7 @@ export default function CreateRoom() {
             className="w-full border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            maxLength={30}
           />
         </div>
         <div className="mb-8">
@@ -90,6 +93,8 @@ export default function CreateRoom() {
             className="w-full border border-gray-300 rounded-lg p-4 h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            maxLength={50}
+            style={{ resize: 'none'}}
           ></textarea>
         </div>
 
