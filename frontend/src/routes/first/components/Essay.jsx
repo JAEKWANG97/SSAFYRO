@@ -12,7 +12,7 @@ export default function Essay() {
   return (
     <>
 
-      <div className='flex border-b pb-4 items-center'>
+      <div className='flex border-b pb-10 items-center'>
         <p className="text-3xl font-bold pr-4">에세이</p>
         <Ismajor/>
         <button
@@ -37,7 +37,7 @@ export default function Essay() {
         )}
       </div>
 
-      <div className="py-2">
+      <div className="pt-6">
         <div className={`flex ${showCorrection ? 'flex-row space-x-4' : 'flex-col'}`}>
           <textarea
             className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-[#90CCF0] focus:border-[#90CCF0]"

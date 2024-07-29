@@ -1,6 +1,8 @@
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Button from './../../../../components/Button';
 
 export default function GuideNav() {
+  const nav = useNavigate();
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
@@ -8,30 +10,24 @@ export default function GuideNav() {
   return (
     <>
       <nav className="flex py-2 px-4">
-        <a
-          className={`mx-3 ${
-            isActive("/second/guide/personality") ? "text-[#90CCF0]" : ""
-          }`}
-          href="/second/guide/personality"
-        >
-          인성면접
-        </a>
-        <a
-          className={`mx-3 ${
-            isActive("/second/guide/pt") ? "text-[#90CCF0]" : ""
-          }`}
-          href="/second/guide/pt"
-        >
-          PT면접
-        </a>
-        <a
-          className={`mx-3 ${
-            isActive("/second/guide/it") ? "text-[#90CCF0]" : ""
-          }`}
-          href="/second/guide/it"
-        >
-          최신 IT 이슈
-        </a>
+        <Button 
+          text="인성면접" 
+          type="GUIDENAV" 
+          onClick={() => nav('/second/guide/personality')}
+          isActive={isActive('/second/guide/personality')}
+        />
+        <Button 
+          text="PT면접" 
+          type="GUIDENAV" 
+          onClick={() => nav('/second/guide/pt')}
+          isActive={isActive('/second/guide/pt')}
+        />
+        <Button 
+          text="최신 IT 이슈" 
+          type="GUIDENAV" 
+          onClick={() => nav('/second/guide/it')}
+          isActive={isActive('/second/guide/it')}
+        />
       </nav>
     </>
   );

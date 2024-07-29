@@ -59,8 +59,10 @@ const AppLayout = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {!shouldHideNavbar && <Navbar />}
-      <div className="flex-grow px-64">
-        <Outlet />
+      <div className="flex-grow">
+        <div className="container mx-auto" style={{ maxWidth: "1100px", paddingLeft: "1rem", paddingRight: "1rem" }}>
+          <Outlet />
+        </div>
       </div>
       {!shouldHideFooter && <Footer />}
     </div>

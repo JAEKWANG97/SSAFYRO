@@ -1,4 +1,3 @@
-// First.jsx
 import Essay from './components/Essay';
 import Test from './components/Test';
 import useFirstStore from '../../stores/FirstStore';
@@ -13,9 +12,9 @@ export default function First() {
 
   return (
     <>
-      <div className="mb-6 border-b border-gray-200">
+      <div className="pt-6 b-6 border-b border-gray-200">
         <ul
-          className="flex flex-wrap text-sm font-medium text-center "
+          className="flex flex-wrap text-sm font-medium text-center"
           id="default-tab"
           data-tabs-toggle="#default-tab-content"
           role="tablist"
@@ -59,36 +58,24 @@ export default function First() {
         </ul>
       </div>
       <div id="default-tab-content">
-        {activeTab === 'essay' && (
-          <div
-            className="p-4 rounded-lg"
-            id="essay"
-            role="tabpanel"
-            aria-labelledby="essay-tab"
-            style={{
-              background: 'rgba(144, 204, 240, 0.25)', 
-              marginBottom: '20px' 
-
-            }}
-          >
-            <Essay />
-          </div>
-        )}
-        {activeTab === 'sw' && (
-          <div
-            className="p-4 rounded-lg"
-            id="sw"
-            role="tabpanel"
-            aria-labelledby="sw-tab"
-            style={{
-              background: 'rgba(144, 204, 240, 0.25)', 
-              marginBottom: '20px' 
-
-            }}
-          >
-            <Test />
-          </div>
-        )}
+        <div
+          className="pt-8 rounded-lg min-h-[300px]"
+          id="essay"
+          role="tabpanel"
+          aria-labelledby="essay-tab"
+          style={{ display: activeTab === 'essay' ? 'block' : 'none' }}
+        >
+          <Essay />
+        </div>
+        <div
+          className="pt-8 rounded-lg min-h-[300px]"
+          id="sw"
+          role="tabpanel"
+          aria-labelledby="sw-tab"
+          style={{ display: activeTab === 'sw' ? 'block' : 'none' }}
+        >
+          <Test />
+        </div>
       </div>
     </>
   );
