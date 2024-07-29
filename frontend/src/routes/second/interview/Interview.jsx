@@ -30,7 +30,7 @@ export default function Interview() {
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow p-6">
           <div className="container mx-auto">
-            <h1 className="text-3xl font-bold">모의 면접 방 목록</h1>
+            <h1 className="text-3xl font-bold mb-12">모의 면접 방 목록</h1>
             <div className="flex">
               {/* 검색 필터 */}
               <div className="w-1/4 p-4 bg-white shadow rounded">
