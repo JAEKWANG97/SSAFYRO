@@ -140,7 +140,7 @@ public class InterviewService {
         return new ArticleResponse(
                 article.title(),
                 article.content(),
-                List.of(article.question())
+                article.question()
         );
     }
 }
