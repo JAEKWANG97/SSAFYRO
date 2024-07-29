@@ -22,9 +22,7 @@ public record RoomListResponse(List<RoomInfo> rooms) {
                             RoomType type,
                             RoomStatus status,
                             int capacity,
-                            int participantCount
-
-    ) {
+                            int participantCount) {
 
         public RoomInfo(RoomRedis room) {
             this(
