@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { rooms } from "./data";
 import SecondNav from "../components/SecondNav.jsx";
 
+// import axios
+import axios from "axios";
+
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const navigate = useNavigate();
@@ -11,6 +14,8 @@ export default function Interview() {
 
   useEffect(() => {
     // 데이터 로딩
+    // axios로 API에서 불러오기
+
     setRoomList(rooms);
   }, []);
 
