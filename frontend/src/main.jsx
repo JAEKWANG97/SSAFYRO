@@ -10,7 +10,12 @@ import Footer from "./components/Footer.jsx";
 import "./index.css";
 
 // router
-import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useLocation,
+  Outlet,
+} from "react-router-dom";
 // import routes
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
@@ -28,7 +33,7 @@ import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
 
-import backgroundImg from '../public/main/SSAFYRO.png'
+import backgroundImg from "../public/main/SSAFYRO.png";
 
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
@@ -48,11 +53,11 @@ const AppLayout = () => {
   ];
 
   // Check if the current path matches any of the routes where the Navbar or Footer should be hidden
-  const shouldHideNavbar = hideNavbarRoutes.some((route) => 
+  const shouldHideNavbar = hideNavbarRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
 
-  const shouldHideFooter = hideFooterRoutes.some((route) => 
+  const shouldHideFooter = hideFooterRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
 
@@ -60,7 +65,14 @@ const AppLayout = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       {!shouldHideNavbar && <Navbar />}
       <div className="flex-grow">
-        <div className="container mx-auto" style={{ maxWidth: "1100px", paddingLeft: "1rem", paddingRight: "1rem" }}>
+        <div
+          className="container mx-auto"
+          style={{
+            maxWidth: "1100px",
+            paddingLeft: "4rem",
+            paddingRight: "4rem",
+          }}
+        >
           <Outlet />
         </div>
       </div>
@@ -79,11 +91,17 @@ const router = createBrowserRouter([
         path: "account/",
         children: [
           { path: "login", element: <Login /> },
-          { path: "profile/:userId", children: [
-            { path: "", element: <Profile /> },
-            { path: "personality_feedback", element: <PersonalityFeedback /> },
-            { path: "pt_feedback", element: <PtFeedback /> },
-          ],}
+          {
+            path: "profile/:userId",
+            children: [
+              { path: "", element: <Profile /> },
+              {
+                path: "personality_feedback",
+                element: <PersonalityFeedback />,
+              },
+              { path: "pt_feedback", element: <PtFeedback /> },
+            ],
+          },
         ],
       },
       { path: "first/", element: <First /> },
