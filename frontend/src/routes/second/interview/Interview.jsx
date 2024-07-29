@@ -22,7 +22,7 @@ export default function Interview() {
   //   };
 
   //   const response = await axios
-  //     .get("http://localhost:8000/api/rooms/")
+  //     .get("http://i11c201.p.ssafy.io:8080/api/rooms/")
   //     .then((response) => {
   //       setRooms(response.rooms);
   //     })
