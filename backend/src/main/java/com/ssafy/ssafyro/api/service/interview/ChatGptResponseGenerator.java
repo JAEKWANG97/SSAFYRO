@@ -30,12 +30,31 @@ public class ChatGptResponseGenerator {
     }
 
     private String createFeedbackPrompt(String question, String answer) {
-        StringBuilder prompt = new StringBuilder();
-        prompt.append("질문에 대한 답변이 적절한지 피드백 해줘\n");
-        prompt.append("질문: ").append(question);
-        prompt.append("답변: ").append(answer);
+        return "질문에 대한 답변이 적절한지 피드백 해줘.\n"
+                + "질문: " + question + "\n"
+                + "답변: " + answer;
+    }
 
-        return prompt.toString();
+    private String getFeedback(HttpEntity<Request> request) {
+        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
+                .getBody()
+                .choices()
+                .get(0)
+                .text();
+    }
+
+    public AiArticle generateArticle() {
+        HttpEntity<Request> request = new HttpEntity<>(
+                new Request(createArticlePrompt()),
+                setHeaders()
+        );
+
+        return getArticle(request);
+    }
+
+    private String createArticlePrompt() {
+        return "Presentation 면접을 볼건데 IT 관련 기사 하나와 기사에 맞는 질문 1개만 뽑아줘.\n"
+                + "결과는 기사 제목, 기사 내용, 질문 순서로 구분자(:)로 나눠줘.";
     }
 
     private HttpHeaders setHeaders() {
@@ -45,12 +64,15 @@ public class ChatGptResponseGenerator {
         return headers;
     }
 
-    private String getFeedback(HttpEntity<Request> request) {
-        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
+    private AiArticle getArticle(HttpEntity<Request> request) {
+        String[] result = restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
                 .getBody()
                 .choices()
                 .get(0)
-                .text();
+                .text()
+                .split(":");
+
+        return new AiArticle(result);
     }
 
     private record Request(String model, String prompt, int maxToken) {

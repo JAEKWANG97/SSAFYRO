@@ -7,6 +7,7 @@ import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
+import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
@@ -38,6 +39,7 @@ public class InterviewService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final ReportRepository reportRepository;
+    private final ArticleRepository articleRepository;
     private final InterviewResultRepository interviewResultRepository;
 
     private final RoomRedisRepository roomRedisRepository;
@@ -118,7 +120,15 @@ public class InterviewService {
     }
 
     public ArticleResponse showArticle(String roomId) {
-        return new ArticleResponse("", "", List.of());
+        AiArticle article = chatGPTFeedbackFactory.generateArticle();
+
+        articleRepository.save(article.toEntity());
+
+        return new ArticleResponse(
+                article.title(),
+                article.content(),
+                List.of(article.question())
+        );
     }
 }
 
