@@ -4,9 +4,11 @@ export default function Button({ text, type, onClick, isActive }) {
     ? `w-30 h-10 rounded-xl px-2 py-2 mx-2 text-base border border-[#90CCF0] ${
         isActive ? 'bg-[#90CCF0] text-white' : 'bg-white text-[#90CCF0] hover:bg-[#90CCF0] hover:text-white'
       }`
-    : type === 'NEGATIVE'
-      ? `bg-red-500 text-white`
-      : `bg-gray-200`;
+    : type === 'INTERVIEWCLOSE'
+      ?  'bg-red-100 text-red-800 text-base font-semibold px-4 py-2 rounded ml-auto'
+      : type === 'INTERVIEWSTART'
+        ? 'bg-blue-100 text-blue-800 text-base font-semibold px-4 py-2 rounded ml-auto'
+        : 'text-white'
 
   return (
     <button
