@@ -1,27 +1,73 @@
-// Interview.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { rooms } from "./data";
 import SecondNav from "../components/SecondNav.jsx";
+import Filter from "../components/Filter.jsx";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
+  const [filteredRoomList, setFilteredRoomList] = useState([]); // 필터링된 방 목록 상태 추가
+  // 필터링 정보 관리 상태 데이터
+  const [filter, setFilter] = useState({
+    selectedType: "",
+    selectedParticipants: "",
+    searchTerm: "",
+    isRecruiting: false,
+  });
+
   const navigate = useNavigate();
-  const currentUser = { userId: "LGG", name: "Jun" }; // 현재 로그인한 사용자 정보
+  const currentUser = { userId: "LGG", name: "Jun" };
 
   useEffect(() => {
-    // 데이터 로딩
     setRoomList(rooms);
+    setFilteredRoomList(rooms); // 초기에는 모든 방을 표시
   }, []);
 
   const handleJoinRoom = (roomId) => {
-    const roomIndex = roomList.findIndex((room) => room.roomId === roomId);
-    if (roomIndex !== -1 && roomList[roomIndex].status === "open") {
-      const updateRooms = [...roomList];
+    const roomIndex = filteredRoomList.findIndex((room) => room.roomId === roomId);
+    if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "open") {
+      const updateRooms = [...filteredRoomList];
       updateRooms[roomIndex].participants.push(currentUser);
-      setRoomList(updateRooms);
+      setFilteredRoomList(updateRooms);
       navigate(`/second/interview/room/${roomId}`);
     }
+  };
+
+  const handleFilterChange = (key, value) => {
+    setFilter({ ...filter, [key]: value });
+  };
+
+  const handleSearchClick = () => {
+    let filtered = roomList;
+
+    // 면접 종류 필터링
+    if (filter.selectedType) {
+      filtered = filtered.filter((room) => room.type === filter.selectedType);
+    }
+
+    // 참여 인원 필터링
+    if (filter.selectedParticipants) {
+      filtered = filtered.filter(
+        (room) => room.maxParticipants === parseInt(filter.selectedParticipants)
+      );
+    }
+
+    // 검색어 필터링
+    if (filter.searchTerm) {
+      const lowerCaseSearchTerm = filter.searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (room) =>
+          room.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+          room.description.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+    }
+
+    // 모집중 필터링
+    if (filter.isRecruiting) {
+      filtered = filtered.filter((room) => room.status === "open");
+    }
+
+    setFilteredRoomList(filtered); // 필터링된 결과 업데이트
   };
 
   return (
@@ -32,48 +78,18 @@ export default function Interview() {
           <div className="container mx-auto">
             <h1 className="text-3xl font-bold">모의 면접 방 목록</h1>
             <div className="flex">
-              {/* 검색 필터 */}
-              <div className="w-1/4 p-4 bg-white shadow rounded">
-                <div className="mb-4">
-                  <label className="block mb-2">면접 종류 선택</label>
-                  <select className="w-full border p-2 rounded bg-gray-50">
-                    <option>전체</option>
-                    <option>인성 면접</option>
-                    <option>PT 면접</option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-2">참여 인원 선택</label>
-                  <select className="w-full border p-2 rounded bg-gray-50">
-                    <option>전체</option>
-                    <option>1명</option>
-                    <option>2명</option>
-                    <option>3명</option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="검색어를 입력하세요"
-                    className="w-full border p-2 rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    모집중
-                  </label>
-                </div>
-                <button className="w-full bg-blue-600 text-white p-2 rounded">
-                  검색하기
-                </button>
-              </div>
+              <Filter
+                filter={filter}
+                onFilterChange={handleFilterChange}
+                onSearchClick={handleSearchClick}
+              />
               <div className="w-3/4 px-4">
                 <div className="grid grid-cols-3 gap-4">
-                  {roomList.map((room) => (
+                  {filteredRoomList.map((room) => ( // 필터링된 목록을 사용하여 렌더링
                     <div
                       key={room.roomId}
-                      className="bg-white shadow rounded p-4"
+                      className="bg-white shadow rounded p-4 flex flex-col justify-between"
+                      style={{ height: "200px" }} // 고정된 높이 설정
                     >
                       <div className="flex justify-between items-center mb-2">
                         <span
@@ -91,12 +107,14 @@ export default function Interview() {
                           {room.type}
                         </span>
                       </div>
-                      <p className="text-gray-700 font-semibold">
-                        {room.title}
-                      </p>
-                      <p className="text-gray-500 text-sm">
-                        {room.description}
-                      </p>
+                      <div className="flex-grow">
+                        <p className="text-gray-700 font-semibold">
+                          {room.title}
+                        </p>
+                        <p className="text-gray-500 text-sm">
+                          {room.description}
+                        </p>
+                      </div>
                       <div className="mt-4 flex justify-between items-center">
                         <div>
                           <img
