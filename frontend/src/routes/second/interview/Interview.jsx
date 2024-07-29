@@ -109,14 +109,14 @@ export default function Interview() {
                       <div className="flex justify-between items-center mb-2">
                         <span
                           className={`text-sm bg-${
-                            room.status === "open" ? "green" : "red"
+                            room.status === "WAIT" ? "green" : "red"
                           }-100 text-${
-                            room.status === "open" ? "green" : "red"
+                            room.status === "WAIT" ? "green" : "red"
                           }-800 text-xs font-medium py-1 px-2 rounded border border-${
-                            room.status === "open" ? "green" : "red"
+                            room.status === "WAIT" ? "green" : "red"
                           }-400`}
                         >
-                          {room.status === "open" ? "모집중" : "마감"}
+                          {room.status === "WAIT" ? "모집중" : "마감"}
                         </span>
                         <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
                           {typeKorean[room.type]}
@@ -136,13 +136,13 @@ export default function Interview() {
                             alt="group icon"
                           />
                           <span className="text-sm text-gray-600">
-                            {room.participants.length} / {room.maxParticipants}
+                            {room.participantCount} / {room.capacity}
                           </span>
                         </div>
                         <button
-                          onClick={() => handleJoinRoom(room.roomId)}
+                          onClick={() => handleJoinRoom(room.id)}
                           className="bg-blue-600 text-white mr-2 py-1 px-2 rounded w-[60px]"
-                          disabled={room.status !== "open"}
+                          disabled={room.status !== "WAIT"}
                         >
                           참여
                         </button>
