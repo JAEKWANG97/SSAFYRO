@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class ChatGptResponseGenerator {
 
-    private static final String API_URL = "https://api.openai.com/v1/completions";
+    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
     @Value("${openai.api.key}")
     private String apiKey;
@@ -22,7 +22,7 @@ public class ChatGptResponseGenerator {
 
     public String generateFeedbackBy(String question, String answer) {
         HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createFeedbackPrompt(question, answer)),
+                new Request(createFeedbackPrompt(question, answer), 1000),
                 setHeaders()
         );
 
@@ -30,7 +30,7 @@ public class ChatGptResponseGenerator {
     }
 
     private String createFeedbackPrompt(String question, String answer) {
-        return "질문에 대한 답변이 적절한지 피드백 해줘.\n"
+        return "답변은 md 형식이 아닌 text로만, 질문에 대한 답변이 적절한지 피드백 해줘.\n"
                 + "질문: " + question + "\n"
                 + "답변: " + answer;
     }
@@ -40,12 +40,16 @@ public class ChatGptResponseGenerator {
                 .getBody()
                 .choices()
                 .get(0)
-                .text();
+                .message()
+                .content();
+
+//        return restTemplate.exchange(API_URL, HttpMethod.POST, request, String.class)
+//                .getBody();
     }
 
     public AiArticle generateArticle() {
         HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createArticlePrompt()),
+                new Request(createArticlePrompt(), 1000),
                 setHeaders()
         );
 
@@ -53,8 +57,37 @@ public class ChatGptResponseGenerator {
     }
 
     private String createArticlePrompt() {
-        return "Presentation 면접을 볼건데 IT 관련 기사 하나와 기사에 맞는 질문 1개만 뽑아줘.\n"
-                + "결과는 기사 제목, 기사 내용, 질문 순서로 구분자(:)로 나눠줘.";
+        return "ssafy PT 모의 면접에 쓰일 IT 신기술 기사 제목, 1000자 이내의 내용, 그리고 그에 따른 질문 2가지 생성해주는데 기사 만들 때 키워드는 2가지 골라서 해줘  질문에 대한 답변은 필요 없어. \n"
+                + "기사 제목, 기사 내용,  질문1, 질문2 는 각각 \"-------------\" 구분자로 나눠줘\n"
+                + "\n"
+                + "키워드 : \n"
+                + "블록체인\n"
+                + "메타버스\n"
+                + "NFT\n"
+                + "AR/VR\n"
+                + "핀테크\n"
+                + "클라우드\n"
+                + "사물인터넷\n"
+                + "빅데이터\n"
+                + "인공지능\n"
+                + "자율주행\n"
+                + "\n"
+                + "예시답안:\n"
+                + "\n"
+                + "기사 제목 : \n"
+                + "\n"
+                + "-------------\n"
+                + "\n"
+                + "기사 내용:\n"
+                + "\n"
+                + "-------------\n"
+                + "\n"
+                + "질문1 : \n"
+                + "\n"
+                + "-------------\n"
+                + "\n"
+                + "질문2: \n"
+                + "\n";
     }
 
     private HttpHeaders setHeaders() {
@@ -69,22 +102,34 @@ public class ChatGptResponseGenerator {
                 .getBody()
                 .choices()
                 .get(0)
-                .text()
-                .split(":");
+                .message()
+                .content()
+                .split("-------------");
 
         return new AiArticle(result);
     }
 
-    private record Request(String model, String prompt, int maxToken) {
+    private record Request(String model, List<Message> messages, int max_tokens) {
 
-        private Request(String prompt) {
-            this("gpt-3.5-turbo-instruct", prompt, 100);
+        private Request(String messages, int max_tokens) {
+            this(
+                    "gpt-4o-mini",
+                    List.of(new Message("user", messages)),
+                    max_tokens
+            );
+        }
+
+        private record Message(String role, String content) {
         }
     }
 
-    private record Response(List<Choice> choices) {
+    public record Response(List<Choice> choices) {
 
-        private record Choice(String text) {
+        public record Choice(Message message) {
+
+            public record Message(String role,
+                                  String content) {
+            }
         }
     }
 }
