@@ -12,7 +12,7 @@ export default function Interview() {
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" }; // 현재 로그인한 사용자 정보
 
-  // 방 목록 불러오기
+  // axios로 방 목록 불러오기
   // const [rooms, setRooms] = useState([]);
 
   // const getRooms = async () => {
@@ -119,7 +119,7 @@ export default function Interview() {
                           {room.status === "open" ? "모집중" : "마감"}
                         </span>
                         <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
-                          {room.type}
+                          {typeKorean[room.type]}
                         </span>
                       </div>
                       <p className="text-gray-700 font-semibold">
