@@ -99,12 +99,9 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("response.rooms[].status")
                                         .type(JsonFieldType.STRING)
                                         .description("방 상태"),
-                                fieldWithPath("response.rooms[].userList")
-                                        .type(JsonFieldType.ARRAY)
-                                        .description("방 참가자 목록"),
-                                fieldWithPath("response.rooms[].createdDate")
-                                        .type(JsonFieldType.ARRAY)
-                                        .description("방 생성 시각"),
+                                fieldWithPath("response.rooms[].participantCount")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("방 참가자 수"),
                                 fieldWithPath("error").type(
                                         JsonFieldType.NULL)
                                         .description("에러"))));
