@@ -32,6 +32,12 @@ export default function Interview() {
   //     });
   // };
 
+  // 영어로 들어오는 방 Type를 한글로 변환
+  const typeKorean = {
+    PRESENTATION: "PT",
+    PERSONALITY: "인성",
+  };
+
   useEffect(() => {
     // 데이터 로딩
     // axios로 API에서 불러오기
