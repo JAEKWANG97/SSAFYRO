@@ -2,13 +2,37 @@ import ServiceContents from "./ServiceContents";
 
 export default function GuestContents() {
   return (
-    <div className="container mx-auto mt-16 overflow-hidden" style={{ minWidth: "1100px", paddingLeft: "1rem", paddingRight: "1rem" }}>
-      <div className="flex">
-        <div className="w-2/3 h-[375px] mr-10 rounded-xl bg-blue-100 p-8 flex items-center bg-gradient-to-r from-sky-500 to-indigo-500 relative justify-center">
-          <div>
-            <img
-              src="/public/main/main_characters.png"
-              alt="Main Character"
+    <div className="flex justify-center">
+      <div
+        className="container mx-auto mt-16 overflow-hidden max-w-6xl"
+        style={{ minWidth: "1100px" }}
+      >
+        <div className="flex">
+          <div className="w-2/3 h-[375px] mr-10 rounded-xl bg-blue-100 p-8 flex items-center bg-gradient-to-r from-sky-500 to-indigo-500 relative justify-center">
+            <div>
+              <img
+                src="/public/main/main_characters.png"
+                alt="Main Character"
+              />
+            </div>
+            <div className="absolute bottom-6 right-6 text-white drop-shadow-sm">
+              <h1 className="text-3xl font-bold">
+                SSAFY로 가는 지름길, 싸피로
+              </h1>
+              <p>지금, SSAFY 입과 준비를 SSAFYRO에서 시작하세요.</p>
+            </div>
+          </div>
+
+          <div
+            className="w-1/3 h-[375px] border rounded-xl flex flex-col items-center bg-white shadow-sm"
+            style={{ borderColor: "#E2E5EB" }}
+          >
+            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 mt-8">
+              로그인
+            </h2>
+            <hr
+              className="border-t-1 border-gray-300 mb-6"
+              style={{ borderColor: "#E2E5EB", width: "90%" }}
             />
           </div>
           <div className="absolute bottom-6 right-6 text-white drop-shadow-sm">

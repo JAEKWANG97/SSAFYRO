@@ -125,12 +125,8 @@ export default function Interview() {
               </div>
             </div>
           </div>
-        </main>
-        <footer className="bg-gray-200 p-4">
-          <div className="container mx-auto text-center">푸터 콘텐츠</div>
-        </footer>
-      </div>
-
-    </>
+        </div>
+      </main>
+    </div>
   );
 }
