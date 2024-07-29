@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { rooms } from "./data";
 import SecondNav from "../components/SecondNav.jsx";
 
-
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const navigate = useNavigate();
-  const currentUser = { userId: 'LGG', name: 'Jun' }; // 현재 로그인한 사용자 정보
+  const currentUser = { userId: "LGG", name: "Jun" }; // 현재 로그인한 사용자 정보
 
   useEffect(() => {
     // 데이터 로딩
@@ -16,11 +15,11 @@ export default function Interview() {
   }, []);
 
   const handleJoinRoom = (roomId) => {
-    const roomIndex = roomList.findIndex((room) => room.roomId === roomId)
-    if (roomIndex !== -1 && roomList[roomIndex].status === 'open') {
-      const updateRooms = [...roomList]
-      updateRooms[roomIndex].participants.push(currentUser)
-      setRoomList(updateRooms)
+    const roomIndex = roomList.findIndex((room) => room.roomId === roomId);
+    if (roomIndex !== -1 && roomList[roomIndex].status === "open") {
+      const updateRooms = [...roomList];
+      updateRooms[roomIndex].participants.push(currentUser);
+      setRoomList(updateRooms);
       navigate(`/second/interview/room/${roomId}`);
     }
   };
@@ -92,8 +91,12 @@ export default function Interview() {
                           {room.type}
                         </span>
                       </div>
-                      <p className="text-gray-700 font-semibold">{room.title}</p>
-                      <p className="text-gray-500 text-sm">{room.description}</p>
+                      <p className="text-gray-700 font-semibold">
+                        {room.title}
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        {room.description}
+                      </p>
                       <div className="mt-4 flex justify-between items-center">
                         <div>
                           <img
@@ -125,8 +128,8 @@ export default function Interview() {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 }
