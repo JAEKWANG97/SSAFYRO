@@ -21,6 +21,7 @@ include::api/room/get-rooms.adoc[]
 include::api/room/get-room-by-id.adoc[]
 include::api/room/create-room.adoc[]
 include::api/room/enter-room.adoc[]
+include::api/room/fast-enter-room.adoc[]
 
 [[interview-API]]
 == 면접 API
