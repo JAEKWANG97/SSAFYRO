@@ -5,6 +5,9 @@ import static com.ssafy.ssafyro.config.RabbitMqConfig.PERSONALITY;
 import static com.ssafy.ssafyro.config.RabbitMqConfig.PERSONALITY_KEY;
 import static com.ssafy.ssafyro.config.RabbitMqConfig.PRESENTATION;
 import static com.ssafy.ssafyro.config.RabbitMqConfig.PRESENTATION_KEY;
+import static com.ssafy.ssafyro.domain.room.RoomType.INTERVIEW;
+import static com.ssafy.ssafyro.domain.room.RoomType.valueOf;
+import static com.ssafy.ssafyro.domain.room.redis.RoomStatus.WAIT;
 
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
@@ -19,14 +22,12 @@ import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +82,7 @@ public class RoomService {
     }
 
     public void sendToQueue(RoomType roomType, String roomId) {
-        if (roomType.equals(RoomType.INTERVIEW)) {
+        if (roomType == INTERVIEW) {
             rabbitTemplate.convertAndSend(EXCHANGE, PERSONALITY_KEY, roomId);
             return;
         }
@@ -89,40 +90,43 @@ public class RoomService {
     }
 
     public RoomFastEnterResponse fastRoomEnter(String type) {
-        RoomType roomType = RoomType.valueOf(type);
-        String queueName = roomType.equals(RoomType.INTERVIEW) ? PERSONALITY : PRESENTATION;
-        String routingKey = roomType.equals(RoomType.INTERVIEW) ? PERSONALITY_KEY : PRESENTATION_KEY;
+        RoomType roomType = valueOf(type);
+        String queueName = roomType == INTERVIEW ? PERSONALITY : PRESENTATION;
+        String routingKey = roomType == INTERVIEW ? PERSONALITY_KEY : PRESENTATION_KEY;
 
-        Set<String> roomIds = getRoomIds(queueName);
+        Set<String> maxUserRoom = new HashSet<>();
 
-        for (String id : roomIds) {
-            if (id == null) {
+        while (true) {
+            String roomId = (String) rabbitTemplate.receiveAndConvert(queueName);
+            if (roomId == null) {
                 return RoomFastEnterResponse.notExisting();
             }
 
-            RoomRedis roomRedis = roomRedisRepository.findById(id)
-                    .orElseThrow(() -> new RoomNotFoundException("Room not found"));
-
-            if (!roomRedis.getStatus().equals(RoomStatus.WAIT)) {
-                return RoomFastEnterResponse.notExisting();
+            if (canEnterRoom(roomId, maxUserRoom)) {
+                resendMaxUserRooms(maxUserRoom, routingKey);
+                return new RoomFastEnterResponse(true, roomId);
             }
-            if (roomRedis.getUserList().size() == 3) {
-                rabbitTemplate.convertAndSend(EXCHANGE, routingKey, id);
-                continue;
-            }
-
-            return new RoomFastEnterResponse(true, id);
         }
-        return RoomFastEnterResponse.notExisting();
     }
 
-    private @NotNull Set<String> getRoomIds(String queueName) {
-        Set<String> roomIds = new HashSet<>();
-        String roomId;
-        while ((roomId = (String) rabbitTemplate.receiveAndConvert(queueName)) != null) {
-            roomIds.add(roomId);
+    private boolean canEnterRoom(String roomId, Set<String> maxUserRoom) {
+        RoomRedis roomRedis = getRoomRedis(roomId);
+
+        if (roomRedis.getStatus() != WAIT) {
+            return false;
         }
-        return roomIds;
+
+        if (roomRedis.getUserList().size() == 3) {
+            maxUserRoom.add(roomId);
+            return false;
+        }
+
+        return true;
     }
+
+    private void resendMaxUserRooms(Set<String> maxUserRoom, String routingKey) {
+        maxUserRoom.forEach(remainId -> rabbitTemplate.convertAndSend(EXCHANGE, routingKey, remainId));
+    }
+
 
 }

@@ -15,6 +15,7 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -60,7 +61,7 @@ public class RoomController {
     }
 
     @GetMapping("/api/v1/rooms/fast-enter/{type}")
-    public ApiResult<RoomFastEnterResponse> fastEnterRoom(@PathVariable String type) {
+    public ApiResult<RoomFastEnterResponse> fastEnterRoom(@PathVariable @NotEmpty String type) {
         return success(roomService.fastRoomEnter(type));
     }
 }
