@@ -5,12 +5,14 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomExitRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +51,11 @@ public class RoomController {
     @PostMapping("/api/v1/rooms/enter")
     public ApiResult<RoomEnterResponse> enterRoom(@RequestBody RoomEnterRequest request) {
         return success(roomService.enterRoom(request.toServiceRequest()));
+    }
+
+    @PostMapping("/api/v1/rooms/exit")
+    public ApiResult<RoomExitResponse> exitRoom(@RequestBody RoomExitRequest request) {
+        return success(roomService.exitRoom(request.toServiceRequest()));
     }
 
 }
