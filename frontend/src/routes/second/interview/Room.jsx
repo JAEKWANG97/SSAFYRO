@@ -24,7 +24,7 @@ export default function Room() {
     }
 
     // 참가자가 아무도 없으면 방을 삭제
-    if (room.participants.length === 0) {
+    if (room.userList.length === 0) {
       rooms.splice(roomIndex, 1);
     }
 
@@ -32,7 +32,7 @@ export default function Room() {
   }
 
   function startInterviewHandler() {
-    navigate(`/second/interview/room/${id}/pt_ready`);
+    navigate(`/second/interview/room/${roomid}/pt_ready`);
   }
 
   function sendMessage(newMessage) {
@@ -109,7 +109,7 @@ export default function Room() {
                   .fill()
                   .map((_, index) => (
                     <div
-                      key={index + room.maxParticipants + room.userList.length}
+                      key={index + room.capacity + room.userList.length}
                       className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                     >
                       {/* 최대 수용 인원을 초과한 자리 X 표시 */}
