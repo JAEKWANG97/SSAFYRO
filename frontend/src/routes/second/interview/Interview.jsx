@@ -12,6 +12,26 @@ export default function Interview() {
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" }; // 현재 로그인한 사용자 정보
 
+  // 방 목록 불러오기
+  // const [rooms, setRooms] = useState([]);
+
+  // const getRooms = async () => {
+  //   let filter = {
+  //     type: "all",
+  //     capacity: "all",
+  //   };
+
+  //   const response = await axios
+  //     .get("http://localhost:8000/api/rooms/")
+  //     .then((response) => {
+  //       setRooms(response.rooms);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert("방 목록을 불러오는데 실패했습니다.");
+  //     });
+  // };
+
   useEffect(() => {
     // 데이터 로딩
     // axios로 API에서 불러오기
