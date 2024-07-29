@@ -13,16 +13,21 @@ export default function Interview() {
   const currentUser = { userId: "LGG", name: "Jun" }; // 현재 로그인한 사용자 정보
 
   // axios로 방 목록 불러오기
+
+  // const APIURL = "http://i11c201.p.ssafy.io:8080/api/v1/";
+
   // const [rooms, setRooms] = useState([]);
 
   // const getRooms = async () => {
   //   let filter = {
-  //     type: "all",
-  //     capacity: "all",
+  //     type: "PT",
+  //     capacity: "3",
+  //     page: 1,
+  //     size: 10,
   //   };
 
   //   const response = await axios
-  //     .get("http://i11c201.p.ssafy.io:8080/api/rooms/")
+  //     .get(APIURL + "rooms", { params: filter })
   //     .then((response) => {
   //       setRooms(response.rooms);
   //     })
