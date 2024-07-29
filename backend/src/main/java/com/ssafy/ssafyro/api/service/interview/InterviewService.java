@@ -54,6 +54,19 @@ public class InterviewService {
         return new StartResponse(roomRedisRepository.updateStatus(room));
     }
 
+    public FinishResponse finishInterview(String roomId) {
+        RoomRedis roomRedis = roomRedisRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+
+        roomRedis.finishInterview();
+
+        //방 정보 RDB 저장
+        Room room = roomRedis.toEntity();
+        roomRepository.save(room);
+
+        return new FinishResponse(roomRedisRepository.updateStatus(roomRedis));
+    }
+
     public FinishResponse finishInterview(FinishServiceRequest request) {
         RoomRedis roomRedis = roomRedisRepository.findById(request.roomId())
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));

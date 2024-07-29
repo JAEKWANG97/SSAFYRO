@@ -1,7 +1,5 @@
 package com.ssafy.ssafyro.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +36,6 @@ public class RedisConfig {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        return objectMapper;
-    }
-
-    @Bean
     public RedisTemplate<String, InterviewRedis> interviewRedisTemplate() {
         RedisTemplate<String, InterviewRedis> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
@@ -60,7 +50,7 @@ public class RedisConfig {
         RedisTemplate<String, RoomRedis> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.setEnableTransactionSupport(true);
         return template;
     }
