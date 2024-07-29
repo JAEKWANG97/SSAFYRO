@@ -20,12 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.room.RoomController;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
+import com.ssafy.ssafyro.api.controller.room.dto.request.RoomExitRequest;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
@@ -61,11 +63,11 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         // when & then
         mockMvc.perform(get("/api/v1/rooms").param("type", "PT").param("capacity", "3")
-                .param("page", "1").param("size", "10")).andExpect(status().isOk())
+                        .param("page", "1").param("size", "10")).andExpect(status().isOk())
                 .andDo(document("get-rooms", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(parameterWithName("type")
-                                .description("방의 타입 (예: PT)"),
+                                        .description("방의 타입 (예: PT)"),
                                 parameterWithName("capacity")
                                         .description("방의 수용 인원 (예: 3)"),
                                 parameterWithName("page")
@@ -73,10 +75,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                 parameterWithName("size")
                                         .description("페이지 당 방의 수 (예: 10)")),
                         responseFields(fieldWithPath("success")
-                                .type(JsonFieldType.BOOLEAN)
-                                .description("성공 여부"),
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
                                 fieldWithPath("response").type(
-                                        JsonFieldType.OBJECT)
+                                                JsonFieldType.OBJECT)
                                         .description("응답"),
                                 fieldWithPath("response.rooms")
                                         .type(JsonFieldType.ARRAY)
@@ -109,7 +111,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .type(JsonFieldType.ARRAY)
                                         .description("방 생성 시각"),
                                 fieldWithPath("error").type(
-                                        JsonFieldType.NULL)
+                                                JsonFieldType.NULL)
                                         .description("에러"))));
     }
 
@@ -126,10 +128,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andDo(document("get-room-by-id", preprocessResponse(prettyPrint()),
                         responseFields(fieldWithPath("success")
-                                .type(JsonFieldType.BOOLEAN)
-                                .description("성공 여부"),
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
                                 fieldWithPath("response").type(
-                                        JsonFieldType.OBJECT)
+                                                JsonFieldType.OBJECT)
                                         .description("응답"),
                                 fieldWithPath("response.title")
                                         .type(JsonFieldType.STRING)
@@ -147,13 +149,13 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .type(JsonFieldType.ARRAY)
                                         .description("방 참가자 목록"),
                                 fieldWithPath("response.type").type(
-                                        JsonFieldType.STRING)
+                                                JsonFieldType.STRING)
                                         .description("방 타입"),
                                 fieldWithPath("response.capacity")
                                         .type(JsonFieldType.NUMBER)
                                         .description("방 수용 인원"),
                                 fieldWithPath("error").type(
-                                        JsonFieldType.NULL)
+                                                JsonFieldType.NULL)
                                         .description("에러"))));
     }
 
@@ -169,37 +171,37 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .willReturn(RoomCreateResponse.of(RoomId));
 
         mockMvc.perform(post("/api/v1/rooms")
-                .content(objectMapper.writeValueAsString(roomCreateRequest))
-                .contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                        .content(objectMapper.writeValueAsString(roomCreateRequest))
+                        .contentType(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("create-room", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(fieldWithPath("userId")
-                                .type(JsonFieldType.NUMBER)
-                                .description("유저 ID"),
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("유저 ID"),
                                 fieldWithPath("title").type(
-                                        JsonFieldType.STRING)
+                                                JsonFieldType.STRING)
                                         .description("방 제목"),
                                 fieldWithPath("description").type(
-                                        JsonFieldType.STRING)
+                                                JsonFieldType.STRING)
                                         .description("방 설명"),
                                 fieldWithPath("type").type(
-                                        JsonFieldType.STRING)
+                                                JsonFieldType.STRING)
                                         .description("방 이름"),
                                 fieldWithPath("capacity").type(
-                                        JsonFieldType.NUMBER)
+                                                JsonFieldType.NUMBER)
                                         .description("방 수용 인원")),
                         responseFields(fieldWithPath("success")
-                                .type(JsonFieldType.BOOLEAN)
-                                .description("성공 여부"),
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
                                 fieldWithPath("response").type(
-                                        JsonFieldType.OBJECT)
+                                                JsonFieldType.OBJECT)
                                         .description("응답"),
                                 fieldWithPath("response.roomId")
                                         .type(JsonFieldType.STRING)
                                         .description("방 ID"),
                                 fieldWithPath("error").type(
-                                        JsonFieldType.NULL)
+                                                JsonFieldType.NULL)
                                         .description("에러"))));
     }
 
@@ -212,25 +214,60 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         given(roomService.enterRoom(any())).willReturn(roomEnterResponse);
 
         mockMvc.perform(post("/api/v1/rooms/enter")
-                .content(objectMapper.writeValueAsString(roomEnterRequest))
-                .contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                        .content(objectMapper.writeValueAsString(roomEnterRequest))
+                        .contentType(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("enter-room", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(fieldWithPath("userId")
-                                .type(JsonFieldType.NUMBER)
-                                .description("유저 ID"),
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("유저 ID"),
                                 fieldWithPath("roomId").type(
-                                        JsonFieldType.STRING)
+                                                JsonFieldType.STRING)
                                         .description("방 ID")),
                         responseFields(fieldWithPath("success")
-                                .type(JsonFieldType.BOOLEAN)
-                                .description("성공 여부"),
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
                                 fieldWithPath("response").type(
-                                        JsonFieldType.OBJECT)
+                                                JsonFieldType.OBJECT)
                                         .description("응답"),
                                 fieldWithPath("error").type(
-                                        JsonFieldType.NULL)
+                                                JsonFieldType.NULL)
+                                        .description("에러"))));
+    }
+
+    @DisplayName("방을 나갑니다.")
+    @Test
+    void exitRoom() throws Exception {
+        RoomExitResponse roomExitResponse = new RoomExitResponse();
+        RoomExitRequest roomEnterRequest = new RoomExitRequest("1", 1L);
+
+        given(roomService.exitRoom(any())).willReturn(roomExitResponse);
+
+        mockMvc.perform(post("/api/v1/rooms/exit")
+                        .content(objectMapper.writeValueAsString(roomEnterRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("exit-room",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("userId")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("유저 ID"),
+                                fieldWithPath("roomId").type(
+                                                JsonFieldType.STRING)
+                                        .description("방 ID")),
+                        responseFields(
+                                fieldWithPath("success")
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(
+                                                JsonFieldType.OBJECT)
+                                        .description("응답"),
+                                fieldWithPath("error").type(
+                                                JsonFieldType.NULL)
                                         .description("에러"))));
     }
 

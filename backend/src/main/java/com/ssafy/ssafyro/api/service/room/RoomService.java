@@ -2,10 +2,12 @@ package com.ssafy.ssafyro.api.service.room;
 
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
+import com.ssafy.ssafyro.api.service.room.request.RoomExitServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
@@ -44,11 +46,23 @@ public class RoomService {
     }
 
     public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {
-        RoomRedis room = roomRedisRepository.findById(request.roomId())
-                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+        RoomRedis room = getRoomRedis(request.roomId());
         room.addParticipant(request.userId());
         roomRedisRepository.save(room);
 
         return new RoomEnterResponse();
+    }
+
+    public RoomExitResponse exitRoom(RoomExitServiceRequest request) {
+        RoomRedis room = getRoomRedis(request.roomId());
+        room.removeParticipant(request.userId());
+        roomRedisRepository.save(room);
+
+        return new RoomExitResponse();
+    }
+
+    private RoomRedis getRoomRedis(String roomId) {
+        return roomRedisRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 }

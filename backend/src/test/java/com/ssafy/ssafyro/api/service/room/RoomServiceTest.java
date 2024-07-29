@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.verify;
 
+import com.ssafy.ssafyro.api.service.room.request.RoomExitServiceRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -195,6 +196,43 @@ public class RoomServiceTest extends IntegrationTestSupport {
         assertThat(room).isNotNull();
         assertThat(room.getUserList()).contains(userId);
         assertThat(room.getUserList().size()).isEqualTo(2);
+    }
+
+    @DisplayName("존재하지 않는 방에서 나가려고 시도하면 예외가 발생한다.")
+    @Test
+    void exitNonExistingRoomTest() {
+        // given
+        String nonExistingRoomId = "non-existing-id";
+        Long userId = 1L;
+        RoomExitServiceRequest request = new RoomExitServiceRequest(nonExistingRoomId, userId);
+
+        // when & then
+        assertThatThrownBy(() -> roomService.exitRoom(request))
+                .isInstanceOf(RoomNotFoundException.class)
+                .hasMessage("Room not found");
+    }
+
+    @DisplayName("사용자가 방에서 나간 후 해당 방의 사용자 목록이 업데이트된다.")
+    @Test
+    void updateUserListAfterExitingRoom() {
+        // given
+        RoomRedis testRoom = createRoom("Test Room", RoomType.INTERVIEW, 3);
+        testRoom.addParticipant(123L);
+        testRoom.addParticipant(1L);
+        roomRedisRepository.save(testRoom);
+
+        String roomId = testRoom.getId();
+        Long userId = 1L;
+        RoomExitServiceRequest request = new RoomExitServiceRequest(roomId, userId);
+
+        // when
+        roomService.exitRoom(request);
+
+        // then
+        RoomRedis room = roomRedisRepository.findById(roomId).orElse(null);
+        assertThat(room).isNotNull();
+        assertThat(room.getUserList()).doesNotContain(userId);
+        assertThat(room.getUserList().size()).isEqualTo(1);
     }
 
 }
