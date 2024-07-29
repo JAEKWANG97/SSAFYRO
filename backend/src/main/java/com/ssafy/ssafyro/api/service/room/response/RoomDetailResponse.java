@@ -11,7 +11,6 @@ public record RoomDetailResponse(
     RoomType type,
     RoomStatus status,
     int capacity,
-    int participantCount,
     List<Long> userList
 ) {
     public static RoomDetailResponse of(RoomRedis room) {
@@ -21,7 +20,6 @@ public record RoomDetailResponse(
             room.getType(),
             room.getStatus(),
             room.getCapacity(),
-            room.getParticipantCount(),
             room.getUserList()
         );
     }
