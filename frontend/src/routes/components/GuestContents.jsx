@@ -8,18 +8,24 @@ export default function GuestContents() {
         style={{ minWidth: "1100px" }}
       >
         <div className="flex">
-          <div className="w-2/3 h-[375px] mr-10 rounded-xl bg-blue-100 p-8 flex items-center bg-gradient-to-r from-sky-500 to-indigo-500 relative justify-center">
-            <div>
-              <img
-                src="/public/main/main_characters.png"
-                alt="Main Character"
-              />
-            </div>
-            <div className="absolute bottom-6 right-6 text-white drop-shadow-sm">
-              <h1 className="text-3xl font-bold">
-                SSAFY로 가는 지름길, 싸피로
-              </h1>
-              <p>지금, SSAFY 입과 준비를 SSAFYRO에서 시작하세요.</p>
+          <div className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center bg-gradient-to-r from-sky-500 to-indigo-500">
+            <div className="flex items-center">
+              <div className="flex-none">
+                <img
+                  src="/public/main/main_characters.png"
+                  alt="Main Character"
+                  className="h-full object-contain"
+                />
+              </div>
+              <div className="ml-6 text-white drop-shadow-sm">
+                <p className="text-3xl font-bold pb-2">
+                  SSAFY로 가는 지름길,
+                </p>
+                <p className="text-3xl font-bold pb-4">
+                   SSAFYRO
+                </p>
+                <p className='font-semibold'>SSAFY 입과 준비를 SSAFYRO에서 시작하세요</p>
+              </div>
             </div>
           </div>
 
