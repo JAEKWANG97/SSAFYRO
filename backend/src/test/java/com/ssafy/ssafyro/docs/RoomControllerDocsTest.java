@@ -99,9 +99,6 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("response.rooms[].status")
                                         .type(JsonFieldType.STRING)
                                         .description("방 상태"),
-                                fieldWithPath("response.rooms[].participantCount")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("방 참가자 수"),
                                 fieldWithPath("response.rooms[].userList")
                                         .type(JsonFieldType.ARRAY)
                                         .description("방 참가자 목록"),
@@ -140,9 +137,6 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("response.status")
                                         .type(JsonFieldType.STRING)
                                         .description("방 상태"),
-                                fieldWithPath("response.participantCount")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("방 참가자 수"),
                                 fieldWithPath("response.userList")
                                         .type(JsonFieldType.ARRAY)
                                         .description("방 참가자 목록"),

@@ -21,7 +21,6 @@ public class RoomRedis {
     private RoomType type;
     private RoomStatus status;
     private int capacity;
-    private int participantCount;
     private List<Long> userList;
     private LocalDateTime createdDate;
 
@@ -33,7 +32,6 @@ public class RoomRedis {
         this.type = type;
         this.status = RoomStatus.WAIT;
         this.capacity = capacity;
-        this.participantCount = 0;
         this.userList = new ArrayList<>();
         this.createdDate = LocalDateTime.now();
     }
