@@ -13,6 +13,7 @@ import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
+import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +32,8 @@ public class RoomController {
 
     @GetMapping("/api/v1/rooms")
     public ApiResult<RoomListResponse> getRooms(@ModelAttribute RoomListRequest request,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                                                @RequestParam(defaultValue = "1") int page,
+                                                @RequestParam(defaultValue = "10") int size) {
 
         return success(roomService.getRoomList(new RoomListServiceRequest(request.type(),
                 request.capacity(), request.status(), page, size)));
@@ -58,4 +59,8 @@ public class RoomController {
         return success(roomService.exitRoom(request.toServiceRequest()));
     }
 
+    @GetMapping("/api/v1/rooms/fast-enter")
+    public ApiResult<RoomFastEnterResponse> fastEnterRoom(@RequestParam String type) {
+        return success(roomService.fastRoomEnter(type));
+    }
 }

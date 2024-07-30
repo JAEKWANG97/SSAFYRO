@@ -1,0 +1,12 @@
+[[article-question-show]]
+=== 빠른 방 입장 요청
+
+==== HTTP Request
+
+include::{snippets}/fast-enter-room/path-parameters.adoc[]
+include::{snippets}/fast-enter-room/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/fast-enter-room/http-response.adoc[]
+include::{snippets}/fast-enter-room/response-fields.adoc[]
