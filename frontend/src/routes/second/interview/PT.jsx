@@ -1,6 +1,16 @@
 import React, { useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+// OpenVidu-liveKit import
+import {
+  LocalVideoTrack,
+  RemoteParticipant,
+  RemoteTrack,
+  RemoteTrackPublication,
+  Room,
+  RoomEvent,
+} from "livekit-client";
+
 export default function PT() {
   const { roomid } = useParams();
 
@@ -63,6 +73,13 @@ export default function PT() {
     "Participant" + Math.floor(Math.random() * 100)
   );
   const [roomName, setRoomName] = useState("Test Room");
+
+  const joinRoom = async function () {
+    const room = new Room(); // Initialize a now Room object
+    setRoom(room);
+
+    room.on(RoomEvent.TrackSubscribed);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
