@@ -29,10 +29,9 @@ class ChatGptResponseGeneratorTest extends IntegrationTestSupport {
     @DisplayName("ChatGPT API를 활용해 IT 기사 제목, 내용, 질문을 생성한다.")
     @Test
     void createArticlePromptTest() {
-
-
         // when
         AiArticle aiArticle = chatGptResponseGenerator.generateArticle();
+        
         // then
         System.out.println(aiArticle.title());
         System.out.println(aiArticle.content());

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -12,9 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,7 +36,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class RoomControllerDocsTest extends RestDocsSupport {
@@ -65,8 +63,12 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .willReturn(roomListResponse);
 
         // when & then
-        mockMvc.perform(get("/api/v1/rooms").param("type", "PT").param("capacity", "3")
-                        .param("page", "1").param("size", "10")).andExpect(status().isOk())
+        mockMvc.perform(get("/api/v1/rooms")
+                        .param("type", "PT")
+                        .param("capacity", "3")
+                        .param("page", "1")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
                 .andDo(document("get-rooms", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(parameterWithName("type")
@@ -276,15 +278,17 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .willReturn(new RoomFastEnterResponse(true, roomId));
 
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/api/v1/rooms/fast-enter/{type}", type)
+                        get("/api/v1/rooms/fast-enter")
+                                .param("type", type)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andDo(document("users"))
                 .andDo(document("fast-enter-room",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        pathParameters(
+                        queryParameters(
                                 parameterWithName("type").description("INTERVIEW: 인성, \n PRESENTATION: pt 면접")
                         ),
                         responseFields(
