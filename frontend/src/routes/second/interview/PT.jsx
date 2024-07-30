@@ -156,8 +156,6 @@ export default function PT() {
             <span className="text-lg ml-1">Minutes</span>
             <span className="text-2xl font-semibold ml-4">59</span>
             <span className="text-lg ml-1">Seconds</span>
-            <span className="text-2xl font-semibold ml-4">59</span>
-            <span className="text-lg ml-1">Millisecond</span>
           </div>
           <button
             onClick={handleEndInterview}
