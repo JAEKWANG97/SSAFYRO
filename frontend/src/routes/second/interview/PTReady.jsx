@@ -67,6 +67,41 @@ export default function PTReady() {
     return <div className="text-4xl font-bold">⏱ {formatTime(seconds)}</div>;
   };
 
+  // 테스트용 더미 데이터
+
+  const initData = {
+    title: "Test Title",
+    content: "Test Content",
+    question: ["Question 1", "Question 2"],
+  };
+
+  const dummyData = {
+    title: "2024 미국 대선과 AI 기술 주도의 미래",
+    content:
+      "트럼프가 총에 맞았지만 엄청난 운으로 살아남았다. 투명 트럼프가 울부짖었다. 크아아아앙. 투명 트럼프는 존나 강해서 미국 대통령 선거를 씹어먹었다. \n 투명 트럼프가 가져오는 미국 중심 외교 정책은 우크라이나 전쟁을 비롯한 국제 정세 양상에 어떤 영향을 끼치는가? 이것은 2022년 들어서 급성장하기 시작한 인공지능(AI) 발전과도 관계를 맺을 수 있어보인다. AI로 매우 효율적인 작업이 가능해지면서 군사 분야에서도 고도의 발전을 기대하게 한다.",
+    question: [
+      "다음 기사를 읽고 현재 불편 사항을 개선할 수 있는 서비스를 제안하시오.",
+      "AI 기술이 발전함에 따라 군사 분야에서 어떤 변화가 있을 것이라고 생각하시나요?",
+    ],
+  };
+
+  // axios 데이터 요청
+  const [interviewQuestion, setInerviewQuestion] = useState(initData);
+
+  const APIURL = "http://i11c201.p.ssafy.io:8080/api/v1/";
+
+  axios
+    .get(APIURL + `interview/pt/${roomid}`)
+    .then((response) => {
+      setInerviewQuestion(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      setInerviewQuestion(dummyData);
+    });
+
+  // axios 데이터 요청 끝
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-4xl relative">
@@ -83,22 +118,9 @@ export default function PTReady() {
           </div>
         </div>
         <div className="bg-gray-200 p-6 rounded-lg mb-6">
-          <h3 className="text-xl font-bold mb-4">PT 면접 주제</h3>
-          <p className="mb-4">
-            다음 기사를 읽고 현재 불편 사항을 개선할 서비스를 제안하시오
-          </p>
-          <p className="mb-2">
-            트럼프가 총에 맞았지만 엄청난 운으로 살아남았다. 투명 트럼프가
-            울부짖었다. 크아아아앙. 투명 트럼프는 존나 강해서 미국 대통령 선거를
-            씹어먹었다.
-          </p>
-          <p>
-            투명 트럼프가 가져오는 미국 중심 외교 정책은 우크라이나 전쟁을
-            비롯한 국제 정세 양상에 어떤 영향을 끼치는가? 이것은 2022년 들어서
-            급성장하기 시작한 인공지능(AI) 발전과도 관계를 맺을 수 있어보인다.
-            AI로 매우 효율적인 작업이 가능해지면서 군사 분야에서도 고도의 발전을
-            기대하게 한다.
-          </p>
+          <h3 className="text-xl font-bold mb-4">{interviewQuestion.title}</h3>
+          <p className="mb-4">{interviewQuestion.question[0]}</p>
+          <p className="mb-2">{interviewQuestion.content}</p>
         </div>
         <div className="flex">
           <Button
