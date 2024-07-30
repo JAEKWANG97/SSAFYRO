@@ -11,6 +11,9 @@ import {
   RoomEvent,
   TrackPublication,
 } from "livekit-client";
+// OpenVidu Components
+import VideoComponent from "./components/VideoComponent";
+import AudioComponent from "./components/AudioComponent";
 
 export default function PT() {
   const { roomid } = useParams();
