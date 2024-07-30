@@ -1,5 +1,5 @@
 import FirstdNav from './components/FirstNav';
-import Ismajor from './../../components/Ismajor'
+import Ismajor from './../../components/Ismajor';
 
 export default function Test() {
   const cards = [
@@ -37,10 +37,10 @@ export default function Test() {
 
   return (
     <>
-      <FirstdNav/>
+      <FirstdNav />
       <div className='flex border-b pb-10 items-center'>
         <p className="text-3xl font-bold pr-4">SW 적성진단</p>
-        <Ismajor/>
+        <Ismajor />
       </div>
 
       <div className="pt-10 py-2">

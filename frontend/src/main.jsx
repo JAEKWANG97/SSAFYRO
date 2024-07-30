@@ -32,8 +32,6 @@ import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
 
-import backgroundImg from "../public/main/SSAFYRO.png";
-
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
@@ -103,8 +101,8 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: "first/:tab", element: <Essay />, condition: { tab: "essay" } },
-      { path: "first/:tab", element: <Test />, condition: { tab: "test" } },
+      { path: "first/essay", element: <Essay /> },
+      { path: "first/test", element: <Test /> },
       { path: "second/interview/:tab", element: <Interview /> },
       { path: "second/guide/:tab", element: <GuidePersonality /> },
       {
@@ -131,7 +129,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  // <React.StrictMode>
-  <RouterProvider router={router} />
-  // </React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );
