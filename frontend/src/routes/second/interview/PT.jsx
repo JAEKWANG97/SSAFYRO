@@ -69,6 +69,19 @@ export default function PT() {
   configureUrls();
 
   // OpenVidu Token 가져오기
+  /**
+   * --------------------------------------------
+   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
+   * --------------------------------------------
+   * The method below request the creation of a token to
+   * your application server. This prevents the need to expose
+   * your LiveKit API key and secret to the client side.
+   *
+   * In this sample code, there is no user control at all. Anybody could
+   * access your application server endpoints. In a real production
+   * environment, your application server must identify the user to allow
+   * access to the endpoints.
+   */
   const getToken = async function (roomName, participantName) {
     const response = await fetch(APPLICATION_SERVER_URL + "token", {
       method: "POST",
@@ -180,6 +193,30 @@ export default function PT() {
             </div>
             <div>
               <video ref={videoStream} autoPlay playsInline></video>
+            </div>
+            {/* OpenVidu 화상 회의 레이아웃 */}
+            <div>
+              {localTrack && (
+                <VideoComponent
+                  track={localTrack}
+                  participantIdentity={participantName}
+                  local={true}
+                />
+              )}
+              {remoteTracks.map((remoteTrack) =>
+                remoteTrack.trackPublication.kind === "video" ? (
+                  <VideoComponent
+                    key={remoteTrack.trackPublication.trackSid}
+                    track={remoteTrack.trackPublication.videoTrack}
+                    participantIdentity={remoteTrack.participantIdentity}
+                  />
+                ) : (
+                  <AudioComponent
+                    key={remoteTrack.trackPublication.trackSid}
+                    track={remoteTrack.trackPublication.audioTrack}
+                  />
+                )
+              )}
             </div>
           </div>
         </div>
