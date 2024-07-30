@@ -1,5 +1,6 @@
-import useFirstStore from '../../../stores/FirstStore';
-import Ismajor from '../../../components/Ismajor';
+import FirstdNav from './components/FirstNav';
+import useFirstStore from '../../stores/FirstStore';
+import Ismajor from './../../components/Ismajor'
 
 export default function Essay() {
   const selected = useFirstStore((state) => state.selected)
@@ -11,7 +12,7 @@ export default function Essay() {
 
   return (
     <>
-
+      <FirstdNav/>
       <div className='flex border-b pb-10 items-center'>
         <p className="text-3xl font-bold pr-4">에세이</p>
         <Ismajor/>
