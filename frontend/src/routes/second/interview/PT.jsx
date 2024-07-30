@@ -29,18 +29,18 @@ export default function PT() {
   };
 
   // video 출력 테스트 코드입니다.
-  let videoStream = useRef(null);
-  const constraints = {
-    audio: true,
-    video: true,
-  };
+  // let videoStream = useRef(null);
+  // const constraints = {
+  //   audio: true,
+  //   video: true,
+  // };
 
-  navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then((stream) => {
-      videoStream.current.srcObject = stream;
-    })
-    .catch((error) => console.log(error));
+  // navigator.mediaDevices
+  //   .getUserMedia(constraints)
+  //   .then((stream) => {
+  //     videoStream.current.srcObject = stream;
+  //   })
+  //   .catch((error) => console.log(error));
   // video 출력 테스트 코드 끝
 
   // OpenVidu 연결 코드입니다.
@@ -50,7 +50,7 @@ export default function PT() {
   const configureUrls = function () {
     if (!APPLICATION_SERVER_URL) {
       if (window.location.hostname === "localhost") {
-        APPLICATION_SERVER_URL = "https://localhost:6080/";
+        APPLICATION_SERVER_URL = "http://localhost:6080/";
       } else {
         APPLICATION_SERVER_URL =
           "https://" + window.location.hostname + ":6443/";
@@ -59,9 +59,9 @@ export default function PT() {
 
     if (!LIVEKIT_URL) {
       if (window.location.hostname === "localhost") {
-        LIVEKIT_URL = "https://localhost:7880/";
+        LIVEKIT_URL = "ws://localhost:7880/";
       } else {
-        LIVEKIT_URL = "https://" + window.location.hostname + ":7443/";
+        LIVEKIT_URL = "wss://" + window.location.hostname + ":7443/";
       }
     }
   };
@@ -69,6 +69,19 @@ export default function PT() {
   configureUrls();
 
   // OpenVidu Token 가져오기
+  /**
+   * --------------------------------------------
+   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
+   * --------------------------------------------
+   * The method below request the creation of a token to
+   * your application server. This prevents the need to expose
+   * your LiveKit API key and secret to the client side.
+   *
+   * In this sample code, there is no user control at all. Anybody could
+   * access your application server endpoints. In a real production
+   * environment, your application server must identify the user to allow
+   * access to the endpoints.
+   */
   const getToken = async function (roomName, participantName) {
     const response = await fetch(APPLICATION_SERVER_URL + "token", {
       method: "POST",
@@ -87,7 +100,19 @@ export default function PT() {
     }
 
     const data = await response.json();
+    console.log(data.token);
     return data.token;
+  };
+
+  // OpenVidu 연결 종료
+  const leaveRoom = async function () {
+    // Leave the room by calling 'disconnect' method over the Room object
+    await room?.disconnect();
+
+    // Reset the state
+    setRoom(undefined);
+    setLocalTrack(undefined);
+    setRemoteTracks([]);
   };
 
   // OpenVidu 변수 초기 선언
@@ -106,7 +131,7 @@ export default function PT() {
 
     // Specify the actions when events take place in the room
     // On every new Track recived...
-    room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+    room.on(RoomEvent.TrackSubscribed, (_track, publication, participant) => {
       setRemoteTracks((prev) => [
         ...prev,
         {
@@ -117,7 +142,7 @@ export default function PT() {
     });
 
     // On every Track destroyed...
-    room.on(RoomEvent.TrackUnsubscribed, (track, publication) => {
+    room.on(RoomEvent.TrackUnsubscribed, (_track, publication) => {
       setRemoteTracks((prev) =>
         prev.filter(
           (track) => track.trackPublication.trackSid !== publication.trackSid
@@ -127,11 +152,12 @@ export default function PT() {
 
     try {
       // Get a token from your application server with the room name ane participant name
+      console.log(roomName, participantName);
       const token = await getToken(roomName, participantName);
 
       // Connect to the room with the LiveKit URL and the token
       await room.connect(LIVEKIT_URL, token);
-
+      console.log("Connected to the room", room.name);
       // Publish your camera and microphone
       await room.localParticipant.enableCameraAndMicrophone();
       setLocalTrack(
@@ -146,6 +172,10 @@ export default function PT() {
       await leaveRoom();
     }
   };
+
+  useEffect(() => {
+    joinRoom();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -178,8 +208,32 @@ export default function PT() {
               <div className="w-16 h-16 bg-white rounded-full mb-2"></div>
               <span className="text-gray-600">이정준</span>
             </div>
-            <div>
+            {/* <div>
               <video ref={videoStream} autoPlay playsInline></video>
+            </div> */}
+            {/* OpenVidu 화상 회의 레이아웃 */}
+            <div>
+              {localTrack && (
+                <VideoComponent
+                  track={localTrack}
+                  participantIdentity={participantName}
+                  local={true}
+                />
+              )}
+              {remoteTracks.map((remoteTrack) =>
+                remoteTrack.trackPublication.kind === "video" ? (
+                  <VideoComponent
+                    key={remoteTrack.trackPublication.trackSid}
+                    track={remoteTrack.trackPublication.videoTrack}
+                    participantIdentity={remoteTrack.participantIdentity}
+                  />
+                ) : (
+                  <AudioComponent
+                    key={remoteTrack.trackPublication.trackSid}
+                    track={remoteTrack.trackPublication.audioTrack}
+                  />
+                )
+              )}
             </div>
           </div>
         </div>
