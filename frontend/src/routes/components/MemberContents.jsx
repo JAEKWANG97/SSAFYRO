@@ -2,66 +2,72 @@ import ServiceContents from "./ServiceContents";
 
 export default function MemberContents() {
   return (
-    <div
-      className="container mx-auto mt-16 overflow-hidden max-w-6xl"
-      // style={{ minWidth: "1100px" }}
-    >
-      <div className="flex">
-        <div
-          className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center relative justify-center"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(56, 189, 248, 0.5), rgba(67, 56, 202, 0.3))",
-          }}
-        >
-          <div>
-            <img src="/public/main/main_characters.png" alt="Main Character" />
+    <div className="flex justify-center">
+      <div
+        className="container mx-auto mt-16 overflow-hidden max-w-6xl"
+        style={{ minWidth: "1100px" }}
+      >
+        <div className="flex">
+          <div className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center bg-gradient-to-r from-sky-500 to-purple-300">
+            <div className="flex items-start w-full p-4 mt-6">
+              <div className="flex-grow text-white drop-shadow-sm">
+                <p className="text-3xl font-bold pb-2">SSAFY로 가는 지름길</p>
+                <p className="text-3xl font-bold pb-4">SSAFYRO</p>
+                <p className="font-semibold mb-0 pb-0">SSAFY 입과 준비,</p>
+                <p className="font-semibold mb-0 pb-0">
+                  SSAFYRO에서 시작하세요
+                </p>
+              </div>
+              <div className="flex-none">
+                <img
+                  src="/public/main/main_characters.png"
+                  alt="Main Character"
+                  className="object-contain"
+                  style={{ height: "90%", width: "90%" }}
+                />
+              </div>
+            </div>
           </div>
-          <div className="absolute bottom-6 right-6 text-white drop-shadow-sm">
-            <h1 className="text-3xl font-bold">SSAFY로 가는 지름길, 싸피로</h1>
-            <p>지금, SSAFY 입과 준비를 SSAFYRO에서 시작하세요.</p>
+
+          <div
+            className="w-1/3 h-[375px] rounded-xl bg-purple-200"
+            // style={{ backgroundColor: "rgba(249, 255, 215, 0.5)" }}
+            // style={{
+            //   background:
+            //     "linear-gradient(to right, rgba(67, 56, 202, 0.3), rgba(231, 226, 253, 0.5))",
+            // }}
+          >
+            <div className="flex items-center justify-center w-full mt-8 mb-6">
+              <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200">
+                <img
+                  src="/public/main/drawing.jpg"
+                  alt="Main Character"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <div className="text-center mt-8 mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                UserName 님의 합격 지수
+              </h2>
+              <p className="font-bold">
+                <span className="text-3xl text-cyan-600">Score</span>{" "}
+                <span className="text-xl text-gray-800">점</span>
+              </p>
+            </div>
+            <div className="w-full flex justify-center mt-4">
+              <button className="mx-4 text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-neutral-500/25 border-2 border-white hover:bg-gradient-to-r hover:from-purple-400/50 hover:to-pink-400/50">
+                마이페이지 바로가기
+              </button>
+              {/* <button className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 font-bold px-4 py-3 rounded-xl w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">
+              마이페이지 바로가기
+            </button> */}
+            </div>
           </div>
         </div>
 
-        <div
-          className="w-1/3 h-[375px] rounded-xl bg-purple-200"
-          // style={{ backgroundColor: "rgba(249, 255, 215, 0.5)" }}
-          // style={{
-          //   background:
-          //     "linear-gradient(to right, rgba(67, 56, 202, 0.3), rgba(231, 226, 253, 0.5))",
-          // }}
-        >
-          <div className="flex items-center justify-center w-full mt-8 mb-6">
-            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200">
-              <img
-                src="/public/main/drawing.jpg"
-                alt="Main Character"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <div className="text-center mt-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              UserName 님의 합격 지수
-            </h2>
-            <p className="font-bold">
-              <span className="text-3xl text-cyan-600">Score</span>{" "}
-              <span className="text-xl text-gray-800">점</span>
-            </p>
-          </div>
-          <div className="w-full flex justify-center mt-4">
-            <button className="mx-4 text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-neutral-500/25 border-2 border-white hover:bg-gradient-to-r hover:from-purple-400/50 hover:to-pink-400/50">
-              마이페이지 바로가기
-            </button>
-            {/* <button className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 font-bold px-4 py-3 rounded-xl w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">
-              마이페이지 바로가기
-            </button> */}
-          </div>
-        </div>
-      </div>
-      
-      <ServiceContents />
-      {/* <div className="flex">
+        <ServiceContents />
+        {/* <div className="flex">
         <button
           className="w-1/2 h-[250px] mr-10 rounded-xl mt-10 relative p-6 text-left flex"
           style={{ backgroundColor: "rgba(198, 234, 246, 0.5)" }}
@@ -164,6 +170,7 @@ export default function MemberContents() {
           className="h-4/5 w-auto object-contain absolute bottom-8 right-10"
         />
       </button> */}
+      </div>
     </div>
   );
 }

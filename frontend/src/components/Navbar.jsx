@@ -3,7 +3,7 @@ import useFirstStore from "../stores/FirstStore";
 
 export default function Navbar() {
   const setActiveTab = useFirstStore((state) => state.setActiveTab);
-  
+
   const userId = 1; // 임의로 지정
   const [isLogin, setIsLogin] = useState(false); // 로그인을 관리하는 상태
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
@@ -50,12 +50,16 @@ export default function Navbar() {
   };
 
   return (
-    <>
-      <nav className="flex items-center py-8 px-64 text-lg bg-white shadow-md">
+    <div className="bg-white shadow-md">
+      <div className="container mx-auto flex items-center justify-between py-8 px-64" style={{ minWidth: "1100px" }}>
         {/* 로고 자리 */}
         <div className="flex-shrink-0 min-w-[200px]">
-          <a className="font-extrabold text-2xl" href="/">
-            <img className="h-[25px] inline pr-4" src="/SSAFYRO.png" alt="SSAFYRO 로고" />
+          <a className="font-extrabold text-2xl flex items-center" href="/">
+            <img
+              className="h-[25px] inline pr-4"
+              src="/SSAFYRO.png"
+              alt="SSAFYRO 로고"
+            />
             SSAFYRO
           </a>
         </div>
@@ -70,13 +74,13 @@ export default function Navbar() {
               1차 전형 준비
             </a>
             {dropdown1Open && (
-              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]">
+              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
                       href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
-                      onClick={() => handleNavClick('essay')}
+                      onClick={() => handleNavClick("essay")}
                     >
                       에세이
                     </a>
@@ -85,7 +89,7 @@ export default function Navbar() {
                     <a
                       href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
-                      onClick={() => handleNavClick('sw')}
+                      onClick={() => handleNavClick("sw")}
                     >
                       SW 적성진단
                     </a>
@@ -94,7 +98,7 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          
+
           <div className="relative inline-block mx-3" ref={dropdown2Ref}>
             <a
               className="font-semibold hover:text-[#90CCF0] cursor-pointer whitespace-nowrap"
@@ -103,13 +107,23 @@ export default function Navbar() {
               2차 전형 준비
             </a>
             {dropdown2Open && (
-              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]">
+              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
-                    <a href="/second/guide/personality" className="block px-6 py-3 hover:bg-gray-100">면접가이드</a>
+                    <a
+                      href="/second/guide/personality"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                    >
+                      면접가이드
+                    </a>
                   </li>
                   <li>
-                    <a href="/second/interview" className="block px-6 py-3 hover:bg-gray-100">면접연습</a>
+                    <a
+                      href="/second/interview"
+                      className="block px-6 py-3 hover:bg-gray-100"
+                    >
+                      면접연습
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -121,15 +135,29 @@ export default function Navbar() {
         <div className="flex-shrink-0 min-w-[200px] text-end">
           {isLogin ? (
             <>
-              <a className="mx-8 font-semibold hover:text-[#90CCF0] whitespace-nowrap" href={`/account/profile/${userId}`}>프로필</a>
-              <button className="mx-3 font-semibold hover:text-[#90CCF0]" onClick={loginTrigger}>로그아웃</button>
+              <a
+                className="mx-8 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
+                href={`/account/profile/${userId}`}
+              >
+                프로필
+              </a>
+              <button
+                className="mx-3 font-semibold hover:text-[#90CCF0]"
+                onClick={loginTrigger}
+              >
+                로그아웃
+              </button>
             </>
           ) : (
-            <a className="mx-3 font-semibold hover:text-[#90CCF0] whitespace-nowrap" href="/account/login">로그인</a>
+            <a
+              className="mx-3 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
+              href="/account/login"
+            >
+              로그인
+            </a>
           )}
         </div>
-      </nav>
-      <button onClick={loginTrigger}>login</button>
-    </>
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useRef, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function PT() {
   const { roomid } = useParams();
@@ -7,12 +7,27 @@ export default function PT() {
   const navigate = useNavigate();
 
   const handleEndInterview = () => {
-    navigate('/second/interview');
+    navigate("/second/interview");
   };
 
   const handleStartSurvey = () => {
-    navigate(`/second/interview/room/${roomid}/pt/survey`)
-  }
+    navigate(`/second/interview/room/${roomid}/pt/survey`);
+  };
+
+  // video 출력 테스트 코드입니다.
+  let videoStream = useRef(null);
+  const constraints = {
+    audio: true,
+    video: true,
+  };
+
+  navigator.mediaDevices
+    .getUserMedia(constraints)
+    .then((stream) => {
+      videoStream.current.srcObject = stream;
+    })
+    .catch((error) => console.log(error));
+  // video 출력 테스트 코드 끝
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -26,7 +41,12 @@ export default function PT() {
             <span className="text-2xl font-semibold ml-4">59</span>
             <span className="text-lg ml-1">Millisecond</span>
           </div>
-          <button onClick={handleEndInterview} className="bg-red-500 text-white px-4 py-2 rounded">면접 종료</button>
+          <button
+            onClick={handleEndInterview}
+            className="bg-red-500 text-white px-4 py-2 rounded"
+          >
+            면접 종료
+          </button>
         </div>
         <div className="flex justify-between mb-6">
           <div className="flex space-x-4">
@@ -42,6 +62,9 @@ export default function PT() {
               <div className="w-16 h-16 bg-white rounded-full mb-2"></div>
               <span className="text-gray-600">이정준</span>
             </div>
+            <div>
+              <video ref={videoStream} autoPlay playsInline></video>
+            </div>
           </div>
         </div>
         <div className="bg-gray-200 p-4 rounded-lg mb-4">
@@ -49,18 +72,45 @@ export default function PT() {
         </div>
         <div className="flex justify-between items-center mb-4">
           <button className="bg-gray-200 px-4 py-2 rounded flex items-center">
-            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h3v7h3v-7h3m10 0h-3v7h-3v-7h-3m10 0h-3v7h-3v-7h-3M13 7h7v7h-7z"></path>
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M3 10h3v7h3v-7h3m10 0h-3v7h-3v-7h-3m10 0h-3v7h-3v-7h-3M13 7h7v7h-7z"
+              ></path>
             </svg>
             음소거
           </button>
-          <button onClick={handleStartSurvey} className="bg-gray-200 px-4 py-2 rounded flex items-center">
-            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4h16v16H4z"></path>
+          <button
+            onClick={handleStartSurvey}
+            className="bg-gray-200 px-4 py-2 rounded flex items-center"
+          >
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 4h16v16H4z"
+              ></path>
             </svg>
             평가
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">답변 제출하기</button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            답변 제출하기
+          </button>
         </div>
       </div>
     </div>

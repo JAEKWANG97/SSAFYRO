@@ -12,9 +12,9 @@ export default function First() {
 
   return (
     <>
-      <div className="mb-4 border-b border-gray-200">
+      <div className="pt-6 b-6 border-b border-gray-200">
         <ul
-          className="flex flex-wrap -mb-px text-sm font-medium text-center"
+          className="flex flex-wrap text-sm font-medium text-center"
           id="default-tab"
           data-tabs-toggle="#default-tab-content"
           role="tablist"
@@ -58,26 +58,24 @@ export default function First() {
         </ul>
       </div>
       <div id="default-tab-content">
-        {activeTab === 'essay' && (
-          <div
-            className="p-4 rounded-lg bg-gray-50"
-            id="essay"
-            role="tabpanel"
-            aria-labelledby="essay-tab"
-          >
-            <Essay />
-          </div>
-        )}
-        {activeTab === 'sw' && (
-          <div
-            className="p-4 rounded-lg bg-gray-50"
-            id="sw"
-            role="tabpanel"
-            aria-labelledby="sw-tab"
-          >
-            <Test />
-          </div>
-        )}
+        <div
+          className="pt-8 rounded-lg min-h-[300px]"
+          id="essay"
+          role="tabpanel"
+          aria-labelledby="essay-tab"
+          style={{ display: activeTab === 'essay' ? 'block' : 'none' }}
+        >
+          <Essay />
+        </div>
+        <div
+          className="pt-8 rounded-lg min-h-[300px]"
+          id="sw"
+          role="tabpanel"
+          aria-labelledby="sw-tab"
+          style={{ display: activeTab === 'sw' ? 'block' : 'none' }}
+        >
+          <Test />
+        </div>
       </div>
     </>
   );
