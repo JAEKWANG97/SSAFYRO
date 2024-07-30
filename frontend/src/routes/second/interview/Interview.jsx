@@ -43,7 +43,7 @@ export default function Interview() {
       })
       .catch((error) => {
         console.log(error);
-        setRoomList(rooms);
+        setFilteredRoomList(rooms);
         alert("방 목록을 불러오는데 실패했습니다.");
       });
   };
@@ -78,6 +78,8 @@ export default function Interview() {
 
   const handleSearchClick = () => {
     let filtered = roomList;
+
+    // 필터링을 서버에서 받아오는 방식이라 여기는 갈아 엎을듯...
 
     // 면접 종류 필터링
     if (filter.selectedType) {
