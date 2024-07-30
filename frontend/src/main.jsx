@@ -105,6 +105,8 @@ const router = createBrowserRouter([
       },
       { path: "first/:tab", element: <Essay />, condition: { tab: "essay" } },
       { path: "first/:tab", element: <Test />, condition: { tab: "test" } },
+      { path: "second/interview/:tab", element: <Interview /> },
+      { path: "second/guide/:tab", element: <GuidePersonality /> },
       {
         path: "second/",
         children: [

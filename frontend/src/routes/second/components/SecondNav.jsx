@@ -1,17 +1,28 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useSecondStore from "../../../stores/SecondStore";
+import { useEffect } from 'react';
 
-export default function SeconddNav() {
+export default function SecondNav() {
   const secondActiveTab = useSecondStore((state) => state.secondActiveTab);
   const setSecondActiveTab = useSecondStore((state) => state.setSecondActiveTab);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // URL 경로를 기반으로 secondActiveTab 설정
+  useEffect(() => {
+    if (location.pathname.includes('/second/guide')) {
+      setSecondActiveTab('guide');
+    } else if (location.pathname.includes('/second/interview')) {
+      setSecondActiveTab('practice');
+    }
+  }, [location.pathname, setSecondActiveTab]);
 
   const handleTabClick = (tab) => {
     setSecondActiveTab(tab);
-    if (tab === 'practice') {
-      navigate('/second/interview');
-    } else if ('tab == guide') {
+    if (tab === 'guide') {
       navigate('/second/guide/personality');
+    } else if (tab === 'practice') {
+      navigate('/second/interview');
     }
   };
 
