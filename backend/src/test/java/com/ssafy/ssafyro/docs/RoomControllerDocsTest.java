@@ -47,7 +47,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         return new RoomController(roomService);
     }
 
-    @DisplayName("room의 type이 PT, capacity가 3인 경우 모든 방을 보여준다.")
+    @DisplayName("room의 type이 PRESENTATION, capacity가 3인 경우 모든 방을 보여준다.")
     @Test
     void getAllRoomsTest() throws Exception {
         // given
@@ -64,7 +64,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         // when & then
         mockMvc.perform(get("/api/v1/rooms")
-                        .param("type", "PT")
+                        .param("type", "PRESENTATION")
                         .param("capacity", "3")
                         .param("page", "1")
                         .param("size", "10"))
@@ -72,7 +72,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .andDo(document("get-rooms", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(parameterWithName("type")
-                                        .description("방의 타입 (예: PT)"),
+                                        .description("방의 타입 (예: PRESENTATION / PERSONALITY)"),
                                 parameterWithName("capacity")
                                         .description("방의 수용 인원 (예: 3)"),
                                 parameterWithName("page")
@@ -289,7 +289,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("type").description("INTERVIEW: 인성, \n PRESENTATION: pt 면접")
+                                parameterWithName("type").description("PERSONALITY: 인성, \n PRESENTATION: pt 면접")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)

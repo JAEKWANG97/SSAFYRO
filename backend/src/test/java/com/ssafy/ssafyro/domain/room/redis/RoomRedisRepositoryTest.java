@@ -51,7 +51,7 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
     void findRoomsTest() {
         // given
         RoomRedis room1 = createRoom("Room1", RoomType.PRESENTATION, 3);
-        RoomRedis room2 = createRoom("Room2", RoomType.INTERVIEW, 3);
+        RoomRedis room2 = createRoom("Room2", RoomType.PERSONALITY, 3);
         RoomRedis room3 = createRoom("Room3", RoomType.PRESENTATION, 3);
         roomRedisRepository.save(room1);
         roomRedisRepository.save(room2);
@@ -88,7 +88,7 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
     @Test
     void changeRoomStatusTest() {
         // given
-        RoomRedis room = createRoom("Test Room", RoomType.INTERVIEW, 2);
+        RoomRedis room = createRoom("Test Room", RoomType.PERSONALITY, 2);
         roomRedisRepository.save(room);
 
         // when

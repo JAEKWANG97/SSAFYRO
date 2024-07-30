@@ -5,7 +5,6 @@ import static com.ssafy.ssafyro.config.RabbitMqConfig.PERSONALITY;
 import static com.ssafy.ssafyro.config.RabbitMqConfig.PERSONALITY_KEY;
 import static com.ssafy.ssafyro.config.RabbitMqConfig.PRESENTATION;
 import static com.ssafy.ssafyro.config.RabbitMqConfig.PRESENTATION_KEY;
-import static com.ssafy.ssafyro.domain.room.RoomType.INTERVIEW;
 import static com.ssafy.ssafyro.domain.room.RoomType.valueOf;
 import static com.ssafy.ssafyro.domain.room.redis.RoomStatus.WAIT;
 
@@ -84,7 +83,7 @@ public class RoomService {
     }
 
     private void sendToQueue(RoomType roomType, String roomId) {
-        if (INTERVIEW.equals(roomType)) {
+        if (RoomType.PERSONALITY.equals(roomType)) {
             rabbitTemplate.convertAndSend(EXCHANGE, PERSONALITY_KEY, roomId);
             return;
         }
@@ -93,8 +92,8 @@ public class RoomService {
 
     public RoomFastEnterResponse fastRoomEnter(String type) {
         RoomType roomType = valueOf(type);
-        String queueName = roomType == INTERVIEW ? PERSONALITY : PRESENTATION;
-        String routingKey = roomType == INTERVIEW ? PERSONALITY_KEY : PRESENTATION_KEY;
+        String queueName = roomType == RoomType.PERSONALITY ? PERSONALITY : PRESENTATION;
+        String routingKey = roomType == RoomType.PERSONALITY ? PERSONALITY_KEY : PRESENTATION_KEY;
 
         Set<String> maxUserRoom = new HashSet<>();
 
