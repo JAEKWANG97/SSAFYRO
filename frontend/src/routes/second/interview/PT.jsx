@@ -1,5 +1,19 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+// OpenVidu-liveKit import
+import {
+  LocalVideoTrack,
+  RemoteParticipant,
+  RemoteTrack,
+  RemoteTrackPublication,
+  Room,
+  RoomEvent,
+  TrackPublication,
+} from "livekit-client";
+// OpenVidu Components
+import VideoComponent from "./components/VideoComponent";
+import AudioComponent from "./components/AudioComponent";
 
 export default function PT() {
   const { roomid } = useParams();
@@ -29,6 +43,110 @@ export default function PT() {
     .catch((error) => console.log(error));
   // video 출력 테스트 코드 끝
 
+  // OpenVidu 연결 코드입니다.
+  // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
+  let APPLICATION_SERVER_URL = ""; // Application 서버 주소
+  let LIVEKIT_URL = ""; // LiveKit 서버 주소
+  const configureUrls = function () {
+    if (!APPLICATION_SERVER_URL) {
+      if (window.location.hostname === "localhost") {
+        APPLICATION_SERVER_URL = "https://localhost:6080/";
+      } else {
+        APPLICATION_SERVER_URL =
+          "https://" + window.location.hostname + ":6443/";
+      }
+    }
+
+    if (!LIVEKIT_URL) {
+      if (window.location.hostname === "localhost") {
+        LIVEKIT_URL = "https://localhost:7880/";
+      } else {
+        LIVEKIT_URL = "https://" + window.location.hostname + ":7443/";
+      }
+    }
+  };
+
+  configureUrls();
+
+  // OpenVidu Token 가져오기
+  const getToken = async function (roomName, participantName) {
+    const response = await fetch(APPLICATION_SERVER_URL + "token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomName: roomName,
+        participantName: participantName,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Failed to get token: ${error.errorMessage}`);
+    }
+
+    const data = await response.json();
+    return data.token;
+  };
+
+  // OpenVidu 변수 초기 선언
+  const [room, setRoom] = useState(undefined);
+  const [localTrack, setLocalTrack] = useState(undefined);
+  const [remoteTracks, setRemoteTracks] = useState([]);
+
+  const [participantName, setParticipantName] = useState(
+    "Participant" + Math.floor(Math.random() * 100)
+  );
+  const [roomName, setRoomName] = useState("Test Room");
+
+  const joinRoom = async function () {
+    const room = new Room(); // Initialize a now Room object
+    setRoom(room);
+
+    // Specify the actions when events take place in the room
+    // On every new Track recived...
+    room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+      setRemoteTracks((prev) => [
+        ...prev,
+        {
+          trackPublication: publication,
+          participantIdentity: participant.identity,
+        },
+      ]);
+    });
+
+    // On every Track destroyed...
+    room.on(RoomEvent.TrackUnsubscribed, (track, publication) => {
+      setRemoteTracks((prev) =>
+        prev.filter(
+          (track) => track.trackPublication.trackSid !== publication.trackSid
+        )
+      );
+    });
+
+    try {
+      // Get a token from your application server with the room name ane participant name
+      const token = await getToken(roomName, participantName);
+
+      // Connect to the room with the LiveKit URL and the token
+      await room.connect(LIVEKIT_URL, token);
+
+      // Publish your camera and microphone
+      await room.localParticipant.enableCameraAndMicrophone();
+      setLocalTrack(
+        room.localParticipant.videoTrackPublications.values().next().value
+          .videoTrack
+      );
+    } catch (error) {
+      console.log(
+        "화상 면접실에 연결하는 중 오류가 발생했습니다.",
+        error.message
+      );
+      await leaveRoom();
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-5xl">
@@ -38,8 +156,6 @@ export default function PT() {
             <span className="text-lg ml-1">Minutes</span>
             <span className="text-2xl font-semibold ml-4">59</span>
             <span className="text-lg ml-1">Seconds</span>
-            <span className="text-2xl font-semibold ml-4">59</span>
-            <span className="text-lg ml-1">Millisecond</span>
           </div>
           <button
             onClick={handleEndInterview}
