@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RoomType {
 
-    INTERVIEW("인성"),
+    PERSONALITY("인성"),
     PRESENTATION("PT");
 
     private final String text;
