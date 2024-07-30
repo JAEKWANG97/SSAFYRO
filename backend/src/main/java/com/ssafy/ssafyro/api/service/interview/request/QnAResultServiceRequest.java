@@ -1,11 +1,10 @@
 package com.ssafy.ssafyro.api.service.interview.request;
 
-import com.ssafy.ssafyro.domain.Interview.InterviewRedis;
+import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import lombok.Builder;
 
 @Builder
-public record QnAResultServiceRequest(String roomId,
-                                      String userId,
+public record QnAResultServiceRequest(Long userId,
                                       String question,
                                       String answer,
                                       int pronunciationScore,
@@ -19,7 +18,6 @@ public record QnAResultServiceRequest(String roomId,
 
     public InterviewRedis toEntity() {
         return InterviewRedis.builder()
-                .roomId(roomId)
                 .userId(userId)
                 .question(question)
                 .answer(answer)

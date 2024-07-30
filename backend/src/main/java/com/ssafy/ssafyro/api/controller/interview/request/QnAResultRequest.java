@@ -6,8 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record QnAResultRequest(@NotEmpty String roomId,
-                               @NotEmpty String userId,
+public record QnAResultRequest(@NotNull Long userId,
                                @NotEmpty String question,
                                @NotEmpty String answer,
                                @NotNull int pronunciationScore,
@@ -21,7 +20,6 @@ public record QnAResultRequest(@NotEmpty String roomId,
 
     public QnAResultServiceRequest toServiceRequest() {
         return QnAResultServiceRequest.builder()
-                .roomId(roomId)
                 .userId(userId)
                 .question(question)
                 .answer(answer)

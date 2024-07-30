@@ -1,16 +1,15 @@
-package com.ssafy.ssafyro.domain.Interview;
+package com.ssafy.ssafyro.domain.interview;
 
-import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Builder;
-import org.springframework.data.redis.core.RedisHash;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@RedisHash(value = "interview", timeToLive = 600)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InterviewRedis {
 
-    @Id
-    private String id;
-    private String roomId;
-    private String userId;
+    private Long userId;
     private String question;
     private String answer;
     private int pronunciationScore;
@@ -23,10 +22,10 @@ public class InterviewRedis {
     private double neutral;
 
     @Builder
-    private InterviewRedis(String roomId, String userId, String question, String answer, int pronunciationScore,
-                           double happy,
-                           double disgust, double sad, double surprise, double fear, double angry, double neutral) {
-        this.roomId = roomId;
+    private InterviewRedis(Long userId, String question, String answer,
+                           int pronunciationScore,
+                           double happy, double disgust, double sad, double surprise,
+                           double fear, double angry, double neutral) {
         this.userId = userId;
         this.question = question;
         this.answer = answer;

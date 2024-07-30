@@ -1,6 +1,7 @@
 package com.ssafy.ssafyro.domain.interviewresult;
 
 import com.ssafy.ssafyro.domain.BaseEntity;
+import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.report.Report;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -65,5 +66,25 @@ public class InterviewResult extends BaseEntity {
         this.surprise = surprise;
         this.fear = fear;
         this.angry = angry;
+    }
+
+    public static InterviewResult create(Report report,
+                                         InterviewRedis interviewRedis,
+                                         String feedback,
+                                         int pronunciationScore) {
+        return InterviewResult.builder()
+                .report(report)
+                .question(interviewRedis.getQuestion())
+                .answer(interviewRedis.getAnswer())
+                .feedback(feedback)
+                .pronunciationScore(pronunciationScore)
+                .happy(interviewRedis.getHappy())
+                .neutral(interviewRedis.getNeutral())
+                .sad(interviewRedis.getSad())
+                .disgust(interviewRedis.getDisgust())
+                .surprise(interviewRedis.getSurprise())
+                .fear(interviewRedis.getFear())
+                .angry(interviewRedis.getAngry())
+                .build();
     }
 }

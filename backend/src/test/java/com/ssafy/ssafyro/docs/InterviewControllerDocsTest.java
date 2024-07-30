@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest.TotalScore;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
@@ -47,7 +48,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
         StartRequest startRequest = new StartRequest("roomId");
 
         given(interviewService.startInterview(any()))
-                .willReturn(new StartResponse("모집완료"));
+                .willReturn(new StartResponse("0a28f311-7d36-4813-a222-e5b3fee758bd"));
 
         mockMvc.perform(
                         patch("/api/v1/interview/start")
@@ -68,8 +69,8 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.recruitStatus").type(JsonFieldType.STRING)
-                                        .description("수정된 현재상태"),
+                                fieldWithPath("response.startRoomId").type(JsonFieldType.STRING)
+                                        .description("회의 시작된 방 ID"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
@@ -123,8 +124,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @Test
     void saveQuestionResult() throws Exception {
         QnAResultRequest request = QnAResultRequest.builder()
-                .roomId("roomId")
-                .userId("userId")
+                .userId(1L)
                 .question("자신의 강점이 뭐라고 생각하시나요?")
                 .answer("포기할 줄 모르는 자세입니다.")
                 .pronunciationScore(3)
@@ -148,9 +148,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("roomId").type(JsonFieldType.STRING)
-                                        .description("방 고유 Id"),
-                                fieldWithPath("userId").type(JsonFieldType.STRING)
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                         .description("면접자 고유 Id"),
                                 fieldWithPath("question").type(JsonFieldType.STRING)
                                         .description("면접 질문"),
@@ -221,10 +219,13 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 종료 API")
     @Test
     void finishInterview() throws Exception {
-        FinishRequest request = new FinishRequest("roomId");
+        FinishRequest request = new FinishRequest(
+                "roomId",
+                List.of(new TotalScore(1L, 100), new TotalScore(2L, 90))
+        );
 
         mockMvc.perform(
-                        post("/api/v1/interview/finish")
+                        patch("/api/v1/interview/finish")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -235,7 +236,13 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("roomId").type(JsonFieldType.STRING)
-                                        .description("방 고유 Id")
+                                        .description("방 고유 id"),
+                                fieldWithPath("totalScores").type(JsonFieldType.ARRAY)
+                                        .description("유저 별 통합 점수"),
+                                fieldWithPath("totalScores[].userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 id"),
+                                fieldWithPath("totalScores[].totalScore").type(JsonFieldType.NUMBER)
+                                        .description("통합 점수")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
