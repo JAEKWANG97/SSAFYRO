@@ -1,5 +1,3 @@
-// main.jsx
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -22,7 +20,8 @@ import Login from "./routes/accounts/Login.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
 import PersonalityFeedback from "./routes/accounts/PersonalityFeedback.jsx";
 import PtFeedback from "./routes/accounts/PtFeedback.jsx";
-import First from "./routes/first/First.jsx";
+import Essay from './routes/first/Essay.jsx'
+import Test from './routes/first/Test.jsx'
 import GuidePersonality from "./routes/second/guide/GuidePersonality.jsx";
 import GuidePT from "./routes/second/guide/GuidePT.jsx";
 import GuideIT from "./routes/second/guide/GuideIT.jsx";
@@ -104,7 +103,8 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: "first/", element: <First /> },
+      { path: "first/:tab", element: <Essay />, condition: { tab: "essay" } },
+      { path: "first/:tab", element: <Test />, condition: { tab: "test" } },
       {
         path: "second/",
         children: [

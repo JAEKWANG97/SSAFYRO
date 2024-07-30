@@ -1,8 +1,7 @@
-import useFirstStore from '../../../stores/FirstStore';
-import Ismajor from '../../../components/Ismajor';
+import FirstdNav from './components/FirstNav';
+import Ismajor from './../../components/Ismajor'
 
 export default function Test() {
-  const selected = useFirstStore((state) => state.selected);
   const cards = [
     {
       title: 'Noteworthy technology acquisitions 2021',
@@ -38,6 +37,7 @@ export default function Test() {
 
   return (
     <>
+      <FirstdNav/>
       <div className='flex border-b pb-10 items-center'>
         <p className="text-3xl font-bold pr-4">SW 적성진단</p>
         <Ismajor/>

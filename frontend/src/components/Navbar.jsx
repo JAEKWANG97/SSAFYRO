@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import useFirstStore from "../stores/FirstStore";
 
 export default function Navbar() {
-  const setActiveTab = useFirstStore((state) => state.setActiveTab);
-
   const userId = 1; // 임의로 지정
   const [isLogin, setIsLogin] = useState(false); // 로그인을 관리하는 상태
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
@@ -42,12 +40,6 @@ export default function Navbar() {
     };
   }, []);
 
-  const handleNavClick = (tab) => {
-    setActiveTab(tab);
-    if (window.location.pathname !== "/first") {
-      window.location.href = "/first";
-    }
-  };
 
   return (
     <div className="bg-white shadow-md">
@@ -78,18 +70,16 @@ export default function Navbar() {
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
-                      href="#"
+                      href="/first/essay"
                       className="block px-6 py-3 hover:bg-gray-100"
-                      onClick={() => handleNavClick("essay")}
                     >
                       에세이
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/first/test"
                       className="block px-6 py-3 hover:bg-gray-100"
-                      onClick={() => handleNavClick("sw")}
                     >
                       SW 적성진단
                     </a>
@@ -107,14 +97,14 @@ export default function Navbar() {
               2차 전형 준비
             </a>
             {dropdown2Open && (
-              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
+              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[140px]" style={{ top: "100%", left: "0" }}>
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
                       href="/second/guide/personality"
                       className="block px-6 py-3 hover:bg-gray-100"
                     >
-                      면접가이드
+                      면접 가이드
                     </a>
                   </li>
                   <li>
@@ -122,7 +112,7 @@ export default function Navbar() {
                       href="/second/interview"
                       className="block px-6 py-3 hover:bg-gray-100"
                     >
-                      면접연습
+                      면접 연습하기
                     </a>
                   </li>
                 </ul>

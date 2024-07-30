@@ -31,12 +31,7 @@ export default function CreateRoom() {
     };
     console.log(roomData)
 
-    // 서버에 POST 요청 보내기
-    axios.post('http://localhost:8080/api/v1/rooms', roomData, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    axios.post('http://i11c201.p.ssafy.io:9999/api/v1/', roomData)
     .then(response => {
       const newRoomId = response.data.roomId; // 서버에서 반환된 roomId
 

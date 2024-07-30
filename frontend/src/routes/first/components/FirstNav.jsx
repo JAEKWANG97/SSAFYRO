@@ -1,25 +1,35 @@
-import Essay from './components/Essay';
-import Test from './components/Test';
-import useFirstStore from '../../stores/FirstStore';
+import { useNavigate, useParams } from 'react-router-dom';
+import useFirstStore from '../../../stores/FirstStore';
+import { useEffect } from 'react';
 
-export default function First() {
+export default function FirstdNav() {
+  const { tab } = useParams(); // URL 파라미터에서 탭 정보를 가져옴
   const activeTab = useFirstStore((state) => state.activeTab);
   const setActiveTab = useFirstStore((state) => state.setActiveTab);
+  const navigate = useNavigate();
+
+  // URL 파라미터를 기반으로 activeTab 설정
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [tab, setActiveTab]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    navigate(`/first/${tab}`);
   };
 
   return (
     <>
-      <div className="pt-6 b-6 border-b border-gray-200">
+      <div className="pt-6 mb-6 border-b border-gray-200">
         <ul
           className="flex flex-wrap text-sm font-medium text-center"
           id="default-tab"
           data-tabs-toggle="#default-tab-content"
           role="tablist"
         >
-          <li className="me-2" role="presentation">
+          <li className="me-2" role="essay">
             <button
               className={`inline-block p-4 border-b-2 rounded-t-lg font-bold ${
                 activeTab === 'essay'
@@ -37,45 +47,25 @@ export default function First() {
               에세이
             </button>
           </li>
-          <li className="me-2" role="presentation">
+          <li className="me-2" role="test">
             <button
               className={`inline-block p-4 border-b-2 rounded-t-lg font-bold ${
-                activeTab === 'sw'
+                activeTab === 'test'
                   ? 'border-[#90CCF0] text-[#90CCF0]'
                   : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'
               }`}
-              id="sw-tab"
-              data-tabs-target="#sw"
+              id="test-tab"
+              data-tabs-target="#test"
               type="button"
               role="tab"
-              aria-controls="sw"
-              aria-selected={activeTab === 'sw'}
-              onClick={() => handleTabClick('sw')}
+              aria-controls="test"
+              aria-selected={activeTab === 'test'}
+              onClick={() => handleTabClick('test')}
             >
               SW 적성진단
             </button>
           </li>
         </ul>
-      </div>
-      <div id="default-tab-content">
-        <div
-          className="pt-8 rounded-lg min-h-[300px]"
-          id="essay"
-          role="tabpanel"
-          aria-labelledby="essay-tab"
-          style={{ display: activeTab === 'essay' ? 'block' : 'none' }}
-        >
-          <Essay />
-        </div>
-        <div
-          className="pt-8 rounded-lg min-h-[300px]"
-          id="sw"
-          role="tabpanel"
-          aria-labelledby="sw-tab"
-          style={{ display: activeTab === 'sw' ? 'block' : 'none' }}
-        >
-          <Test />
-        </div>
       </div>
     </>
   );
