@@ -57,6 +57,8 @@ public class RoomService {
         room.addParticipant(request.userId());
         roomRedisRepository.save(room);
 
+        sendToQueue(room.getType(), room.getId());
+
         return RoomCreateResponse.of(room.getId());
     }
 
@@ -81,8 +83,8 @@ public class RoomService {
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 
-    public void sendToQueue(RoomType roomType, String roomId) {
-        if (roomType == INTERVIEW) {
+    private void sendToQueue(RoomType roomType, String roomId) {
+        if (INTERVIEW.equals(roomType)) {
             rabbitTemplate.convertAndSend(EXCHANGE, PERSONALITY_KEY, roomId);
             return;
         }
