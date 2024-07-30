@@ -3,28 +3,25 @@ package com.ssafy.ssafyro.api.service.room;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.mockito.Mockito.verify;
-
-import com.ssafy.ssafyro.api.service.room.request.RoomExitServiceRequest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
+import com.ssafy.ssafyro.api.service.room.request.RoomExitServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
-import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 public class RoomServiceTest extends IntegrationTestSupport {
 
@@ -109,6 +106,34 @@ public class RoomServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder(
                         tuple("Room 1", RoomType.INTERVIEW, 3),
                         tuple("Room 2", RoomType.INTERVIEW, 3));
+    }
+
+    @DisplayName("type=null, capacity=null, status=null, page=1, size=10인 방 목록을 조회한다.")
+    @Test
+    void getRoomListWhenParamsNullTest() {
+        //given
+        for (int i = 0; i < 10; i++) {
+            roomRedisRepository.save(createRoom("Room " + i, RoomType.INTERVIEW, 3));
+        }
+        RoomListServiceRequest request = new RoomListServiceRequest(null, null, null, 1, 10);
+        //when
+        RoomListResponse response = roomService.getRoomList(request);
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.rooms()).hasSize(10);
+        assertThat(response.rooms()).extracting("title", "type", "capacity")
+                .containsExactlyInAnyOrder(
+                        tuple("Room 0", RoomType.INTERVIEW, 3),
+                        tuple("Room 1", RoomType.INTERVIEW, 3),
+                        tuple("Room 2", RoomType.INTERVIEW, 3),
+                        tuple("Room 3", RoomType.INTERVIEW, 3),
+                        tuple("Room 4", RoomType.INTERVIEW, 3),
+                        tuple("Room 5", RoomType.INTERVIEW, 3),
+                        tuple("Room 6", RoomType.INTERVIEW, 3),
+                        tuple("Room 7", RoomType.INTERVIEW, 3),
+                        tuple("Room 8", RoomType.INTERVIEW, 3),
+                        tuple("Room 9", RoomType.INTERVIEW, 3));
     }
 
     @DisplayName("빈 방 목록을 조회한다.")
