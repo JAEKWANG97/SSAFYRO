@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 // OpenVidu-liveKit import
@@ -9,6 +9,7 @@ import {
   RemoteTrackPublication,
   Room,
   RoomEvent,
+  TrackPublication,
 } from "livekit-client";
 
 export default function PT() {
@@ -64,6 +65,28 @@ export default function PT() {
 
   configureUrls();
 
+  // OpenVidu Token 가져오기
+  const getToken = async function (roomName, participantName) {
+    const response = await fetch(APPLICATION_SERVER_URL + "token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomName: roomName,
+        participantName: participantName,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Failed to get token: ${error.errorMessage}`);
+    }
+
+    const data = await response.json();
+    return data.token;
+  };
+
   // OpenVidu 변수 초기 선언
   const [room, setRoom] = useState(undefined);
   const [localTrack, setLocalTrack] = useState(undefined);
@@ -78,7 +101,47 @@ export default function PT() {
     const room = new Room(); // Initialize a now Room object
     setRoom(room);
 
-    room.on(RoomEvent.TrackSubscribed);
+    // Specify the actions when events take place in the room
+    // On every new Track recived...
+    room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+      setRemoteTracks((prev) => [
+        ...prev,
+        {
+          trackPublication: publication,
+          participantIdentity: participant.identity,
+        },
+      ]);
+    });
+
+    // On every Track destroyed...
+    room.on(RoomEvent.TrackUnsubscribed, (track, publication) => {
+      setRemoteTracks((prev) =>
+        prev.filter(
+          (track) => track.trackPublication.trackSid !== publication.trackSid
+        )
+      );
+    });
+
+    try {
+      // Get a token from your application server with the room name ane participant name
+      const token = await getToken(roomName, participantName);
+
+      // Connect to the room with the LiveKit URL and the token
+      await room.connect(LIVEKIT_URL, token);
+
+      // Publish your camera and microphone
+      await room.localParticipant.enableCameraAndMicrophone();
+      setLocalTrack(
+        room.localParticipant.videoTrackPublications.values().next().value
+          .videoTrack
+      );
+    } catch (error) {
+      console.log(
+        "화상 면접실에 연결하는 중 오류가 발생했습니다.",
+        error.message
+      );
+      await leaveRoom();
+    }
   };
 
   return (
