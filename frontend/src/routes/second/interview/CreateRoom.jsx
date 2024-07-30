@@ -1,8 +1,7 @@
-// CreateRoom.jsx
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { currentUser, rooms } from "./data"; // data.js 파일에서 currentUser와 rooms 가져오기
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { currentUser } from './data'; // currentUser 가져오기
+import axios from 'axios';
 
 export default function CreateRoom() {
   const navigate = useNavigate();
@@ -11,36 +10,46 @@ export default function CreateRoom() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  function handleCancel() {
+  const handleCancel = () => {
     navigate("/second/interview");
   }
 
-  function handleCreateRoom() {
+  const handleCreateRoom = () => {
     // 필수 입력 필드가 모두 채워졌는지 확인
     if (!participantCount || !interviewType || !title || !description) {
       alert("필수 내용을 입력해 주세요");
       return;
     }
 
-    // 새로운 roomId 생성
-    const newRoomId = (rooms.length + 1).toString();
-
-    // 새로운 방 객체 생성
-    const newRoom = {
-      roomId: newRoomId,
-      title,
-      description,
-      type: interviewType,
-      participants: [{ userId: currentUser.userId, name: currentUser.name }],
-      maxParticipants: parseInt(participantCount),
-      status: 'open',
+    // roomData 객체 생성
+    const roomData = {
+      userId: currentUser.userId, 
+      title,                                 // 방 이름
+      description,                           // 방 설명
+      type: interviewType,                   // 면접종류
+      capacity: parseInt(participantCount),  // 참여인원수
     };
+    console.log(roomData)
 
-    // rooms 배열에 새로운 방 추가
-    rooms.push(newRoom);
+    // 서버에 POST 요청 보내기
+    axios.post('http://localhost:8080/api/v1/rooms', roomData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      const newRoomId = response.data.roomId; // 서버에서 반환된 roomId
 
-    // 생성된 방으로 이동
-    navigate(`/second/interview/room/${newRoomId}`);
+      // 조건에 따라 적절한 경로로 리디렉션
+      if (interviewType === 'personality') {
+        navigate(`/second/interview/room/${newRoomId}/personality`);
+      } else if (interviewType === 'pt') {
+        navigate(`/second/interview/room/${newRoomId}/pt`);
+      }
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+    });
   }
 
   return (
@@ -58,8 +67,8 @@ export default function CreateRoom() {
               <option value="" disabled>
                 면접 종류 선택
               </option>
-              <option value="인성 면접">인성 면접</option>
-              <option value="PT 면접">PT 면접</option>
+              <option value="personality">인성 면접</option>
+              <option value="pt">PT 면접</option>
             </select>
 
             <select
