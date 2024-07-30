@@ -23,28 +23,30 @@ export default function Interview() {
 
   // axios로 방 목록 불러오기
 
-  // const APIURL = "http://i11c201.p.ssafy.io:8080/api/v1/";
+  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
-  // const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
-  // const getRooms = async () => {
-  //   let filter = {
-  //     type: "PT",
-  //     capacity: "3",
-  //     page: 1,
-  //     size: 10,
-  //   };
+  const getRooms = async () => {
+    let filter = {
+      type: "PRESENTATION",
+      capacity: "3",
+      page: 1,
+      size: 10,
+    };
 
-  //   const response = await axios
-  //     .get(APIURL + "rooms", { params: filter })
-  //     .then((response) => {
-  //       setRooms(response.rooms);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       alert("방 목록을 불러오는데 실패했습니다.");
-  //     });
-  // };
+    const response = await axios
+      .get(APIURL + "rooms", { params: filter })
+      .then((response) => {
+        console.log(response.data.response.rooms);
+        setFilteredRoomList(response.data.response.rooms);
+      })
+      .catch((error) => {
+        console.log(error);
+        setRoomList(rooms);
+        alert("방 목록을 불러오는데 실패했습니다.");
+      });
+  };
 
   // 영어로 들어오는 방 Type를 한글로 변환
   const typeKorean = {
@@ -55,9 +57,9 @@ export default function Interview() {
   useEffect(() => {
     // 데이터 로딩
     // axios로 API에서 불러오기
-
-    setRoomList(rooms);
-    setFilteredRoomList(rooms); // 초기에는 모든 방을 표시
+    getRooms();
+    // setRoomList(rooms);
+    // setFilteredRoomList(rooms); // 초기에는 모든 방을 표시
   }, []);
 
   const handleJoinRoom = (id) => {
