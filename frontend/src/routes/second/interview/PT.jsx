@@ -28,21 +28,6 @@ export default function PT() {
     navigate(`/second/interview/room/${roomid}/pt/survey`);
   };
 
-  // video 출력 테스트 코드입니다.
-  // let videoStream = useRef(null);
-  // const constraints = {
-  //   audio: true,
-  //   video: true,
-  // };
-
-  // navigator.mediaDevices
-  //   .getUserMedia(constraints)
-  //   .then((stream) => {
-  //     videoStream.current.srcObject = stream;
-  //   })
-  //   .catch((error) => console.log(error));
-  // video 출력 테스트 코드 끝
-
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL = ""; // Application 서버 주소
@@ -195,9 +180,6 @@ export default function PT() {
           </button>
         </div>
         <div className="flex justify-center mb-6">
-          {/* <div>
-              <video ref={videoStream} autoPlay playsInline></video>
-            </div> */}
           {/* OpenVidu 화상 회의 레이아웃 */}
           <div className="flex space-x-4 justify-between">
             {localTrack && (
