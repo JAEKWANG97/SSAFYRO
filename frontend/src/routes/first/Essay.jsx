@@ -1,21 +1,21 @@
 import FirstdNav from './components/FirstNav';
 import useFirstStore from '../../stores/FirstStore';
-import Ismajor from './../../components/Ismajor'
+import Ismajor from './../../components/Ismajor';
 
 export default function Essay() {
-  const selected = useFirstStore((state) => state.selected)
-  const showCorrection = useFirstStore((state) => state.showCorrection)
-  const setShowCorrection = useFirstStore((state) => state.setShowCorrection)
+  const selected = useFirstStore((state) => state.selected);
+  const showCorrection = useFirstStore((state) => state.showCorrection);
+  const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
   const handleAiCorrection = () => {
     setShowCorrection(true);
   };
 
   return (
     <>
-      <FirstdNav/>
+      <FirstdNav />
       <div className='flex border-b pb-10 items-center'>
         <p className="text-3xl font-bold pr-4">에세이</p>
-        <Ismajor/>
+        <Ismajor />
         <button
           type="button"
           className="ml-auto text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
@@ -23,7 +23,7 @@ export default function Essay() {
           AI 첨삭
         </button>
       </div>
-  
+
       <div className="border-t border-gray-300 bg-white">
         {selected === 'major' && (
           <div className="py-5 flex justify-center border-b border-gray-300">
@@ -63,7 +63,6 @@ export default function Essay() {
           </button>
         </div>
       </div>
-
     </>
   );
 }

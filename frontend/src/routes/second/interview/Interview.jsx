@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { rooms } from "./data";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
-
-// import axios
 import axios from "axios";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]); // 필터링된 방 목록 상태 추가
-  // 필터링 정보 관리 상태 데이터
   const [filter, setFilter] = useState({
     selectedType: "",
     selectedParticipants: "",
@@ -21,11 +17,7 @@ export default function Interview() {
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" };
 
-  // axios로 방 목록 불러오기
-
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
-
-  const [rooms, setRooms] = useState([]);
 
   const getRooms = async () => {
     let filter = {
@@ -43,23 +35,18 @@ export default function Interview() {
       })
       .catch((error) => {
         console.log(error);
-        setFilteredRoomList(rooms);
+        setFilteredRoomList([]);
         alert("방 목록을 불러오는데 실패했습니다.");
       });
   };
 
-  // 영어로 들어오는 방 Type를 한글로 변환
   const typeKorean = {
     PRESENTATION: "PT",
     PERSONALITY: "인성",
   };
 
   useEffect(() => {
-    // 데이터 로딩
-    // axios로 API에서 불러오기
     getRooms();
-    // setRoomList(rooms);
-    // setFilteredRoomList(rooms); // 초기에는 모든 방을 표시
   }, []);
 
   const handleJoinRoom = (id) => {
@@ -79,21 +66,16 @@ export default function Interview() {
   const handleSearchClick = () => {
     let filtered = roomList;
 
-    // 필터링을 서버에서 받아오는 방식이라 여기는 갈아 엎을듯...
-
-    // 면접 종류 필터링
     if (filter.selectedType) {
       filtered = filtered.filter((room) => room.type === filter.selectedType);
     }
 
-    // 참여 인원 필터링
     if (filter.selectedParticipants) {
       filtered = filtered.filter(
         (room) => room.maxParticipants === parseInt(filter.selectedParticipants)
       );
     }
 
-    // 검색어 필터링
     if (filter.searchTerm) {
       const lowerCaseSearchTerm = filter.searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -103,12 +85,11 @@ export default function Interview() {
       );
     }
 
-    // 모집중 필터링
     if (filter.isRecruiting) {
       filtered = filtered.filter((room) => room.status === "WAIT");
     }
 
-    setFilteredRoomList(filtered); // 필터링된 결과 업데이트
+    setFilteredRoomList(filtered);
   };
 
   return (
@@ -128,12 +109,12 @@ export default function Interview() {
                 <div className="grid grid-cols-3 gap-4">
                   {filteredRoomList.map(
                     (
-                      room // 필터링된 목록을 사용하여 렌더링
+                      room
                     ) => (
                       <div
                         key={room.id}
                         className="bg-white shadow rounded p-4 flex flex-col justify-between"
-                        style={{ height: "200px" }} // 고정된 높이 설정
+                        style={{ height: "200px" }}
                       >
                         <div className="flex justify-between items-center mb-2">
                           <span

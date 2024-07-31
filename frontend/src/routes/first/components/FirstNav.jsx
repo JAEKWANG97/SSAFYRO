@@ -1,23 +1,28 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useFirstStore from '../../../stores/FirstStore';
 import { useEffect } from 'react';
 
 export default function FirstdNav() {
-  const { tab } = useParams(); // URL 파라미터에서 탭 정보를 가져옴
   const activeTab = useFirstStore((state) => state.activeTab);
   const setActiveTab = useFirstStore((state) => state.setActiveTab);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // URL 파라미터를 기반으로 activeTab 설정
   useEffect(() => {
-    if (tab) {
-      setActiveTab(tab);
+    if (location.pathname.includes('essay')) {
+      setActiveTab('essay');
+    } else if (location.pathname.includes('test')) {
+      setActiveTab('test');
     }
-  }, [tab, setActiveTab]);
+  }, [location, setActiveTab]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
-    navigate(`/first/${tab}`);
+    if (tab === 'essay') {
+      navigate('/first/essay');
+    } else if (tab === 'test') {
+      navigate('/first/test');
+    }
   };
 
   return (

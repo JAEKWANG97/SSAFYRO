@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useFirstStore from "../stores/FirstStore";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+  const setActiveTab = useFirstStore((state) => state.setActiveTab);
   const userId = 1; // 임의로 지정
   const [isLogin, setIsLogin] = useState(false); // 로그인을 관리하는 상태
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
   const [dropdown2Open, setDropdown2Open] = useState(false); // 드롭다운 2 상태
+  const navigate = useNavigate();
 
   const dropdown1Ref = useRef(null);
   const dropdown2Ref = useRef(null);
@@ -40,6 +43,18 @@ export default function Navbar() {
     };
   }, []);
 
+  const handleNavClick = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'essay') {
+      navigate('/first/essay');
+    } else if (tab === 'test') {
+      navigate('/first/test');
+    } else if (tab === 'guide') {
+      navigate('/second/guide/personality');
+    } else if (tab === 'interview') {
+      navigate('/second/interview');
+    }
+  };
 
   return (
     <div className="bg-white shadow-md">
@@ -70,16 +85,18 @@ export default function Navbar() {
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
-                      href="/first/essay"
+                      href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("essay")}
                     >
                       에세이
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/first/test"
+                      href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("test")}
                     >
                       SW 적성진단
                     </a>
@@ -103,6 +120,7 @@ export default function Navbar() {
                     <a
                       href="/second/guide/personality"
                       className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("guide")}
                     >
                       면접 가이드
                     </a>
@@ -111,6 +129,7 @@ export default function Navbar() {
                     <a
                       href="/second/interview"
                       className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("interview")}
                     >
                       면접 연습하기
                     </a>
