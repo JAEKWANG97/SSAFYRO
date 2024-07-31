@@ -44,7 +44,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     void createRoomTest() {
         // given
         RoomCreateServiceRequest roomCreateServiceRequest = new RoomCreateServiceRequest(1L, "test", "test",
-                "INTERVIEW", 3);
+                "PERSONALITY", 3);
 
         // when
         RoomCreateResponse roomCreateResponse = roomService.createRoom(roomCreateServiceRequest);
@@ -54,7 +54,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
         assertThat(roomCreateResponse.roomId()).isNotNull();
         assertThat(savedRoom).isNotNull();
         assertThat(savedRoom.getTitle()).isEqualTo("test");
-        assertThat(savedRoom.getType()).isEqualTo(RoomType.INTERVIEW);
+        assertThat(savedRoom.getType()).isEqualTo(RoomType.PERSONALITY);
         assertThat(savedRoom.getCapacity()).isEqualTo(3);
     }
 
@@ -65,7 +65,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
         RoomRedis room = RoomRedis.builder()
                 .title("test")
                 .description("test description")
-                .type(RoomType.INTERVIEW)
+                .type(RoomType.PERSONALITY)
                 .capacity(3)
                 .build();
 
@@ -85,7 +85,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void getRoomListTest() {
         // given
-        String roomType = RoomType.INTERVIEW.name();
+        String roomType = RoomType.PERSONALITY.name();
         int capacity = 3;
         String status = RoomStatus.WAIT.name();
         int page = 1;
@@ -93,8 +93,8 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
         RoomListServiceRequest request = new RoomListServiceRequest(roomType, capacity, status, page, size);
 
-        roomRedisRepository.save(createRoom("Room 1", RoomType.INTERVIEW, 3));
-        roomRedisRepository.save(createRoom("Room 2", RoomType.INTERVIEW, 3));
+        roomRedisRepository.save(createRoom("Room 1", RoomType.PERSONALITY, 3));
+        roomRedisRepository.save(createRoom("Room 2", RoomType.PERSONALITY, 3));
 
         // when
         RoomListResponse response = roomService.getRoomList(request);
@@ -104,8 +104,8 @@ public class RoomServiceTest extends IntegrationTestSupport {
         assertThat(response.rooms()).hasSize(2);
         assertThat(response.rooms()).extracting("title", "type", "capacity")
                 .containsExactlyInAnyOrder(
-                        tuple("Room 1", RoomType.INTERVIEW, 3),
-                        tuple("Room 2", RoomType.INTERVIEW, 3));
+                        tuple("Room 1", RoomType.PERSONALITY, 3),
+                        tuple("Room 2", RoomType.PERSONALITY, 3));
     }
 
     @DisplayName("type=null, capacity=null, status=null, page=1, size=10인 방 목록을 조회한다.")
@@ -113,7 +113,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     void getRoomListWhenParamsNullTest() {
         //given
         for (int i = 0; i < 10; i++) {
-            roomRedisRepository.save(createRoom("Room " + i, RoomType.INTERVIEW, 3));
+            roomRedisRepository.save(createRoom("Room " + i, RoomType.PERSONALITY, 3));
         }
         RoomListServiceRequest request = new RoomListServiceRequest(null, null, null, 1, 10);
         //when
@@ -124,23 +124,23 @@ public class RoomServiceTest extends IntegrationTestSupport {
         assertThat(response.rooms()).hasSize(10);
         assertThat(response.rooms()).extracting("title", "type", "capacity")
                 .containsExactlyInAnyOrder(
-                        tuple("Room 0", RoomType.INTERVIEW, 3),
-                        tuple("Room 1", RoomType.INTERVIEW, 3),
-                        tuple("Room 2", RoomType.INTERVIEW, 3),
-                        tuple("Room 3", RoomType.INTERVIEW, 3),
-                        tuple("Room 4", RoomType.INTERVIEW, 3),
-                        tuple("Room 5", RoomType.INTERVIEW, 3),
-                        tuple("Room 6", RoomType.INTERVIEW, 3),
-                        tuple("Room 7", RoomType.INTERVIEW, 3),
-                        tuple("Room 8", RoomType.INTERVIEW, 3),
-                        tuple("Room 9", RoomType.INTERVIEW, 3));
+                        tuple("Room 0", RoomType.PERSONALITY, 3),
+                        tuple("Room 1", RoomType.PERSONALITY, 3),
+                        tuple("Room 2", RoomType.PERSONALITY, 3),
+                        tuple("Room 3", RoomType.PERSONALITY, 3),
+                        tuple("Room 4", RoomType.PERSONALITY, 3),
+                        tuple("Room 5", RoomType.PERSONALITY, 3),
+                        tuple("Room 6", RoomType.PERSONALITY, 3),
+                        tuple("Room 7", RoomType.PERSONALITY, 3),
+                        tuple("Room 8", RoomType.PERSONALITY, 3),
+                        tuple("Room 9", RoomType.PERSONALITY, 3));
     }
 
     @DisplayName("빈 방 목록을 조회한다.")
     @Test
     void getEmptyRoomListTest() {
         // given
-        String roomType = RoomType.INTERVIEW.name();
+        String roomType = RoomType.PERSONALITY.name();
         int capacity = 3;
         String status = RoomStatus.WAIT.name();
         int page = 1;
@@ -168,7 +168,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @DisplayName("존재하는 방에 사용자가 입장할 수 있다.")
     void enterExistingRoom() {
         // given
-        RoomRedis testRoom = createRoom("Test Room", RoomType.INTERVIEW, 3);
+        RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
         testRoom.addParticipant(123L);
         roomRedisRepository.save(testRoom);
         String roomId = testRoom.getId();
@@ -188,7 +188,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @DisplayName("존재하지 않는 방에 입장 시도 시 예외가 발생한다.")
     void enterNonExistingRoom() {
         // given
-        RoomRedis testRoom = createRoom("Test Room", RoomType.INTERVIEW, 3);
+        RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
         testRoom.addParticipant(123L);
         roomRedisRepository.save(testRoom);
         String nonExistingRoomId = "non-existing-id";
@@ -205,7 +205,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @DisplayName("사용자가 방에 입장한 후 해당 방의 사용자 목록이 업데이트된다.")
     void updateUserListAfterEnteringRoom() {
         // given
-        RoomRedis testRoom = createRoom("Test Room", RoomType.INTERVIEW, 3);
+        RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
         testRoom.addParticipant(123L);
         roomRedisRepository.save(testRoom);
 
@@ -241,7 +241,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void updateUserListAfterExitingRoom() {
         // given
-        RoomRedis testRoom = createRoom("Test Room", RoomType.INTERVIEW, 3);
+        RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
         testRoom.addParticipant(123L);
         testRoom.addParticipant(1L);
         roomRedisRepository.save(testRoom);
