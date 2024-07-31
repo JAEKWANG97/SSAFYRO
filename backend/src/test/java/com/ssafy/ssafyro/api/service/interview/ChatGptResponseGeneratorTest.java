@@ -1,12 +1,10 @@
 package com.ssafy.ssafyro.api.service.interview;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Disabled
 class ChatGptResponseGeneratorTest extends IntegrationTestSupport {
 
     @Autowired
@@ -33,7 +31,7 @@ class ChatGptResponseGeneratorTest extends IntegrationTestSupport {
     void createArticlePromptTest() {
         // when
         AiArticle aiArticle = chatGptResponseGenerator.generateArticle();
-
+        
         // then
         System.out.println(aiArticle.title());
         System.out.println(aiArticle.content());
