@@ -15,6 +15,9 @@ import {
 import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
+// face-api.js import
+import * as faceapi from "face-api.js";
+
 export default function PT() {
   const { roomid } = useParams();
 
