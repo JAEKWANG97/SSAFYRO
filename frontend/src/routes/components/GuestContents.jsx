@@ -1,4 +1,5 @@
 import ServiceContents from "./ServiceContents";
+import maincharacter from './../../../public/main/main_characters.png'
 
 export default function GuestContents() {
   return (
@@ -10,22 +11,22 @@ export default function GuestContents() {
         <div className="flex">
           <div className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center bg-gradient-to-r from-sky-500 to-purple-300">
             <div className="flex items-start w-full p-4 mt-6">
-              <div className="flex-grow text-white drop-shadow-sm">
-                <p className="text-3xl font-bold pb-2">
+              <div className="flex-grow text-white drop-shadow-sm pt-12">
+                <p className="text-3xl font-extrabold pb-3 mr-5">
                   SSAFY로 가는 지름길
                 </p>
-                <p className="text-3xl font-bold pb-4">
+                <p className="text-3xl font-extrabold pb-4">
                   SSAFYRO
                 </p>
-                <p className='font-semibold mb-0 pb-0'>SSAFY 입과 준비,</p>
+                <p className='font-semibold mb-0 pb-0'>SSAFY 입과 준비</p>
                 <p className='font-semibold mb-0 pb-0'>SSAFYRO에서 시작하세요</p>
               </div>
               <div className="flex-none">
                 <img
-                  src="/public/main/main_characters.png"
+                  src={maincharacter}
                   alt="Main Character"
                   className="object-contain"
-                  style={{ height: '90%', width: '90%' }}
+                  style={{ height: '90%', width: '90%', marginLeft: '20px' }}
                 />
               </div>
             </div>
@@ -77,97 +78,7 @@ export default function GuestContents() {
           </div>
         </div>
         <ServiceContents />
-        {/* <div className="flex">
-        <button className="w-1/2 h-[250px] mr-10 rounded-xl mt-10 relative p-6 text-left flex" style={{ backgroundColor: "rgba(198, 234, 246, 0.5)" }}>
-          <div>
-            <div className="flex items-center mb-2">
-              <span className="text-sm font-bold mr-1">에세이</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M340.864 149.312a30.59 30.59 0 0 0 0 42.752L652.736 512L340.864 831.872a30.59 30.59 0 0 0 0 42.752a29.12 29.12 0 0 0 41.728 0L714.24 534.336a32 32 0 0 0 0-44.672L382.592 149.376a29.12 29.12 0 0 0-41.728 0z"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold mb-1">
-              SSAFY 전형 맟춤 에세이 첨삭 기능! <br />
-              어려운 자소서, 이제는 쉽게!
-            </h2>
-            <p className="text-sm text-gray-600">
-              SSAFY 전형 준비가 더 쉬워집니다
-            </p>
-          </div>
-          <img
-            src="/public/main/essay.png"
-            alt="Essay"
-            className="h-3/5 w-auto object-contain absolute bottom-12 right-10"
-          />
-        </button>
-
-        <button
-          className="w-1/2 h-[250px] rounded-xl mt-10 relative p-6 text-left flex"
-          style={{ backgroundColor: "rgba(231, 226, 253, 0.5)" }}
-        >
-          <div>
-            <div className="flex items-center mb-2">
-              <span className="text-sm font-bold mr-1">CT & 코딩테스트</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M340.864 149.312a30.59 30.59 0 0 0 0 42.752L652.736 512L340.864 831.872a30.59 30.59 0 0 0 0 42.752a29.12 29.12 0 0 0 41.728 0L714.24 534.336a32 32 0 0 0 0-44.672L382.592 149.376a29.12 29.12 0 0 0-41.728 0z"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold mb-1">내용 <br />내용</h2>
-            <p className="text-sm text-gray-600">AI 기반 추천 문제로 합격률 UP! </p>
-          </div>
-          <img
-            src="/public/main/3d_coding.png"
-            alt="Coding"
-            className="h-3/5 w-auto object-contain absolute bottom-12 right-10"
-          />
-        </button>
-      </div>
-
-      <button
-        className="w-full h-[250px] rounded-xl mt-10 relative p-6 mb-12 text-left flex"
-        style={{ backgroundColor: "rgba(255, 239, 213, 0.5)" }}
-      >
-        <div>
-          <div className="flex items-center mb-2">
-            <span className="text-sm font-bold mr-1">PT & 인성면접</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              viewBox="0 0 1024 1024"
-            >
-              <path
-                fill="currentColor"
-                d="M340.864 149.312a30.59 30.59 0 0 0 0 42.752L652.736 512L340.864 831.872a30.59 30.59 0 0 0 0 42.752a29.12 29.12 0 0 0 41.728 0L714.24 534.336a32 32 0 0 0 0-44.672L382.592 149.376a29.12 29.12 0 0 0-41.728 0z"
-              ></path>
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold mb-1">
-            내용 <br />
-            내용
-          </h2>
-          <p className="text-sm text-gray-600">
-            AI 기반 추천 문제로 합격률 UP!{" "}
-          </p>
-        </div>
-        <img src="/public/main/3d_interview.png" alt="Interview" className="h-4/5 w-auto object-contain absolute bottom-8 right-10"/>
-      </button> */}
+        
       </div>
     </div>
   );

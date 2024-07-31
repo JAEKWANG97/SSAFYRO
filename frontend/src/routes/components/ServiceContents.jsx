@@ -21,7 +21,7 @@ export default function ServiceContents() {
                 ></path>
               </svg>
             </div>
-            <h2 className="text-xl font-bold mb-1">
+            <h2 className="text-xl font-bold mb-1 pt-12">
               AI 기반 에세이 첨삭 기능! <br />
               어려운 자소서, 이제는 쉽게!
             </h2>
