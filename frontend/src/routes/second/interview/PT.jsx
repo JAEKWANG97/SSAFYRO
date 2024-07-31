@@ -161,8 +161,22 @@ export default function PT() {
     }
   };
 
+  // face-api.js 로드 함수
+  // 참고 출처: 재광이형 샘플 프로젝트 https://github.com/JAEKWANG97/react-face-api
+  const loadFaceAPIModels = async () => {
+    const MODEL_URL = "/models";
+
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+      faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+      faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+    ]);
+  };
+
   useEffect(() => {
     joinRoom();
+    loadFaceAPIModels();
   }, []);
 
   return (
