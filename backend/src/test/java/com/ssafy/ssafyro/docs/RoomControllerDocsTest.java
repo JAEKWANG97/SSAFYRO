@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -167,6 +168,8 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         given(roomService.createRoom(any(RoomCreateServiceRequest.class)))
                 .willReturn(RoomCreateResponse.of(RoomId));
+        willDoNothing().given(roomRabbitMqService)
+                .sendToQueue(any(), any());
 
         mockMvc.perform(post("/api/v1/rooms")
                         .content(objectMapper.writeValueAsString(roomCreateRequest))
