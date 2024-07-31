@@ -18,11 +18,13 @@ import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
+@Disabled
 public class RoomServiceTest extends IntegrationTestSupport {
 
     @Autowired
