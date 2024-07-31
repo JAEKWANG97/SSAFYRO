@@ -212,7 +212,7 @@ export default function PT() {
               <video ref={videoStream} autoPlay playsInline></video>
             </div> */}
             {/* OpenVidu 화상 회의 레이아웃 */}
-            <div>
+            <div className="flex space-x-4">
               {localTrack && (
                 <VideoComponent
                   track={localTrack}
