@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { LocalVideoTrack, RemoteVideoTrack } from "livekit-client";
+// VideoComponent Style Sheet
+import "./VideoComponent.css";
 
 export default function VideoComponent({
   track,
@@ -19,11 +21,13 @@ export default function VideoComponent({
   }, [track]);
 
   return (
-    <div id={"camera-" + participantIdentity}>
-      <div>
-        <p>{participantIdentity + (local ? " (You)" : "")}</p>
+    <>
+      <div id={"camera-" + participantIdentity} className="rounded bg-gray-300">
+        <video ref={videoElement} id={track.sid} className="rounded"></video>
+        <p className="text-center text-gray-600 py-4">
+          {participantIdentity + (local ? " (You)" : "")}
+        </p>
       </div>
-      <video ref={videoElement} id={track.sid}></video>
-    </div>
+    </>
   );
 }
