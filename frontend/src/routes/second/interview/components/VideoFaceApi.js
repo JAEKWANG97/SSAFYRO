@@ -31,19 +31,27 @@ const handleVideoPlay = async function (videoElement, canvasRef) {
 
     // 주기적으로 얼굴을 감지하는 인터벌 설정
     setInterval(async () => {
-        const detections = await faceapi
-            .detectAllFaces(
-                videoElement.current,
-                new faceapi.TinyFaceDetectorOptions()
-            )
-            .withFaceLandmarks()
-            .withFaceExpressions()
+        try {
+            const detections = await faceapi
+                .detectAllFaces(
+                    videoElement.current,
+                    new faceapi.TinyFaceDetectorOptions()
+                )
+                .withFaceLandmarks()
+                .withFaceExpressions()
 
-        const resizedDetections = faceapi.resizeResults(detections, displaySize)
-        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
-        faceapi.draw.drawDetections(canvas, resizedDetections)
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+            const resizedDetections = faceapi.resizeResults(
+                detections,
+                displaySize
+            )
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
+            faceapi.draw.drawDetections(canvas, resizedDetections)
+            faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+            faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+        } catch (error) {
+            console.error(error)
+            console.log("오류 발생으로 표정 인식이 중지됩니다.")
+        }
     }, 100)
 }
 
