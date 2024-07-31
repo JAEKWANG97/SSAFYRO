@@ -5,7 +5,7 @@ export default function MemberContents() {
     <div className="flex justify-center">
       <div
         className="container mx-auto mt-16 overflow-hidden max-w-6xl"
-        style={{ minWidth: "1100px" }}
+        style={{ minWidth: "900px" }}
       >
         <div className="flex">
           <div className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center bg-gradient-to-r from-sky-500 to-purple-300">
