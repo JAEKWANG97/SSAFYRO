@@ -29,7 +29,10 @@ export default function VideoComponent({
 
   return (
     <>
-      <div id={"camera-" + participantIdentity} className="rounded bg-gray-300">
+      <div
+        id={"camera-" + participantIdentity}
+        className="rounded bg-gray-300 relative"
+      >
         <video
           ref={videoElement}
           id={track.sid}
