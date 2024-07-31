@@ -24,7 +24,7 @@ export default function VideoComponent({
     <>
       <div id={"camera-" + participantIdentity} className="rounded bg-gray-300">
         <video ref={videoElement} id={track.sid} className="rounded"></video>
-        <p className="text-center text-gray-600 my-4">
+        <p className="text-center text-gray-600 py-4">
           {participantIdentity + (local ? " (You)" : "")}
         </p>
       </div>

@@ -194,35 +194,37 @@ export default function PT() {
             면접 종료
           </button>
         </div>
-        <div className="flex justify-between mb-6">
-          <div className="flex space-x-4">
-            {/* <div>
+        <div className="flex justify-center mb-6">
+          {/* <div>
               <video ref={videoStream} autoPlay playsInline></video>
             </div> */}
-            {/* OpenVidu 화상 회의 레이아웃 */}
-            <div className="flex space-x-4">
-              {localTrack && (
+          {/* OpenVidu 화상 회의 레이아웃 */}
+          <div className="flex space-x-4 justify-between">
+            {localTrack && (
+              <div>
                 <VideoComponent
                   track={localTrack}
                   participantIdentity={participantName}
                   local={true}
                 />
-              )}
-              {remoteTracks.map((remoteTrack) =>
-                remoteTrack.trackPublication.kind === "video" ? (
+              </div>
+            )}
+            {remoteTracks.map((remoteTrack) =>
+              remoteTrack.trackPublication.kind === "video" ? (
+                <div>
                   <VideoComponent
                     key={remoteTrack.trackPublication.trackSid}
                     track={remoteTrack.trackPublication.videoTrack}
                     participantIdentity={remoteTrack.participantIdentity}
                   />
-                ) : (
-                  <AudioComponent
-                    key={remoteTrack.trackPublication.trackSid}
-                    track={remoteTrack.trackPublication.audioTrack}
-                  />
-                )
-              )}
-            </div>
+                </div>
+              ) : (
+                <AudioComponent
+                  key={remoteTrack.trackPublication.trackSid}
+                  track={remoteTrack.trackPublication.audioTrack}
+                />
+              )
+            )}
           </div>
         </div>
         <div className="bg-gray-200 p-4 rounded-lg mb-4">
