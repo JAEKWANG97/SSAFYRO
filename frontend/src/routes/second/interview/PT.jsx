@@ -196,18 +196,6 @@ export default function PT() {
         </div>
         <div className="flex justify-between mb-6">
           <div className="flex space-x-4">
-            <div className="w-24 h-32 bg-gray-300 flex flex-col items-center justify-center rounded">
-              <div className="w-16 h-16 bg-white rounded-full mb-2"></div>
-              <span className="text-gray-600">이정준</span>
-            </div>
-            <div className="w-24 h-32 bg-gray-300 flex flex-col items-center justify-center rounded border-4 border-blue-500">
-              <div className="w-16 h-16 bg-white rounded-full mb-2"></div>
-              <span className="text-gray-600">이정준</span>
-            </div>
-            <div className="w-24 h-32 bg-gray-300 flex flex-col items-center justify-center rounded">
-              <div className="w-16 h-16 bg-white rounded-full mb-2"></div>
-              <span className="text-gray-600">이정준</span>
-            </div>
             {/* <div>
               <video ref={videoStream} autoPlay playsInline></video>
             </div> */}

@@ -22,11 +22,11 @@ export default function VideoComponent({
 
   return (
     <>
-      <div id={"camera-" + participantIdentity}>
-        <div>
-          <p>{participantIdentity + (local ? " (You)" : "")}</p>
-        </div>
-        <video ref={videoElement} id={track.sid}></video>
+      <div id={"camera-" + participantIdentity} className="rounded bg-gray-300">
+        <video ref={videoElement} id={track.sid} className="rounded"></video>
+        <p className="text-center text-gray-600 my-4">
+          {participantIdentity + (local ? " (You)" : "")}
+        </p>
       </div>
     </>
   );
