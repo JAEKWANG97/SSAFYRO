@@ -3,7 +3,11 @@ import { LocalVideoTrack, RemoteVideoTrack } from "livekit-client";
 // VideoComponent Style Sheet
 import "./VideoComponent.css";
 // face-api.js function import
-import { loadFaceAPIModels, handleVideoPlay } from "./VideoFaceApi";
+import {
+  loadFaceAPIModels,
+  handleVideoPlay,
+  faceExpression,
+} from "./VideoFaceApi";
 
 export default function VideoComponent({
   track,
@@ -29,6 +33,9 @@ export default function VideoComponent({
 
   return (
     <>
+      {local ? (
+        <p className="text-center text-gray-600 py-4">{faceExpression}</p>
+      ) : null}
       <div
         id={"camera-" + participantIdentity}
         className="rounded bg-gray-300 relative"
