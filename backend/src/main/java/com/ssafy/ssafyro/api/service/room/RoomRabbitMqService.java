@@ -24,8 +24,8 @@ public class RoomRabbitMqService {
     private final RoomService roomService;
     private final RoomRabbitMqRepository roomRabbitMqRepository;
 
-    public void sendToQueue(RoomType roomType, String roomId) {
-        if (PERSONALITY.equals(roomType)) {
+    public void sendToQueue(String type, String roomId) {
+        if (PERSONALITY.equals(RoomType.valueOf(type))) {
             roomRabbitMqRepository.pushQueue(PERSONALITY_KEY.getText(), roomId);
             return;
         }

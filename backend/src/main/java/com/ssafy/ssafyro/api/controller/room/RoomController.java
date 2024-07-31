@@ -16,7 +16,6 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.domain.room.RoomType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,7 +49,7 @@ public class RoomController {
     @PostMapping("/api/v1/rooms")
     public ApiResult<RoomCreateResponse> createRoom(@RequestBody RoomCreateRequest request) {
         RoomCreateResponse roomCreateResponse = roomService.createRoom(request.toServiceRequest());
-        rabbitMqService.sendToQueue(RoomType.valueOf(request.type()), roomCreateResponse.roomId());
+        rabbitMqService.sendToQueue(request.type(), roomCreateResponse.roomId());
 
         return success(roomCreateResponse);
     }
