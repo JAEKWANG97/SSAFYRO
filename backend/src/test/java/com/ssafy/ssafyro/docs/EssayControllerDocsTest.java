@@ -1,5 +1,8 @@
 package com.ssafy.ssafyro.docs;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -14,6 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.essay.EssayController;
 import com.ssafy.ssafyro.api.controller.essay.request.EssayReviewRequest;
 import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
+import com.ssafy.ssafyro.api.service.essay.EssayService;
+import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
+import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -21,15 +27,20 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 public class EssayControllerDocsTest extends RestDocsSupport {
 
+    private final EssayService essayService = mock(EssayService.class);
+
     @Override
     protected Object initController() {
-        return new EssayController();
+        return new EssayController(essayService);
     }
 
     @DisplayName("에세이 첨삭 API")
     @Test
     void reviewEssay() throws Exception {
-        EssayReviewRequest essayReviewRequest = new EssayReviewRequest("첨삭 전 에세이");
+        EssayReviewRequest essayReviewRequest = new EssayReviewRequest(1L, "첨삭 전 에세이");
+
+        given(essayService.reviewEssay(any(EssayReviewServiceRequest.class)))
+                .willReturn(new EssayReviewResponse("첨삭 후 에세이"));
 
         mockMvc.perform(
                         post("/api/v1/essays/review")
@@ -42,6 +53,8 @@ public class EssayControllerDocsTest extends RestDocsSupport {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestFields(
+                                        fieldWithPath("essayQuestionId").type(JsonFieldType.NUMBER)
+                                                .description("에세이 질문 id"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
                                                 .description("첨삭 전 에세이")
                                 ),
