@@ -41,7 +41,11 @@ export default function VideoComponent({
   return (
     <>
       {local ? (
-        <img src={"/emotion/" + faceEmotionIcon[faceExpression]} alt="" />
+        <img
+          src={"/emotion/" + faceEmotionIcon[faceExpression]}
+          className="w-[30px] m-auto pb-5"
+          alt=""
+        />
       ) : null}
       <div
         id={"camera-" + participantIdentity}
