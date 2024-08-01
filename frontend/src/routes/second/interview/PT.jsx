@@ -188,7 +188,7 @@ export default function PT() {
         </div>
         <div className="flex justify-center mb-6">
           {/* OpenVidu 화상 회의 레이아웃 */}
-          <div className="flex space-x-4 justify-between">
+          <div className="flex space-x-4 justify-between items-end">
             {localTrack && (
               <div>
                 <VideoComponent
