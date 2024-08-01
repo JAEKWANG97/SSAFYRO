@@ -26,8 +26,8 @@ public class ChatController {
 
     @MessageMapping("/{roomId}")
     @SendTo("/topic/{roomId}")
-    public Receive chat(@DestinationVariable String roomId, Send send) {
-        return new Receive(send.name() + ": " + send.message());
+    public Send chat(@DestinationVariable String roomId, Send send) {
+        return send;
     }
 
     @MessageMapping("/interview/start/{roomId}")
