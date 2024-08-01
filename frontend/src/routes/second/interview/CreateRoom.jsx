@@ -38,11 +38,12 @@ export default function CreateRoom() {
         const newRoomId = response.data.response.roomId; // 서버에서 반환된 roomId
 
         // 조건에 따라 적절한 경로로 리디렉션
-        if (interviewType === "PERSONALITY") {
-          navigate(`/second/interview/room/${newRoomId}/personality`);
-        } else if (interviewType === "PRESENTATION") {
-          navigate(`/second/interview/room/${newRoomId}/pt`);
-        }
+        navigate(`/second/interview/room/${newRoomId}`);
+        // if (interviewType === "PERSONALITY") {
+        //   navigate(`/second/interview/room/${newRoomId}/personality`);
+        // } else if (interviewType === "PRESENTATION") {
+        //   navigate(`/second/interview/room/${newRoomId}/pt_ready`);
+        // }
       })
       .catch((error) => {
         console.error("There was an error!", error);
