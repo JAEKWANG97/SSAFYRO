@@ -20,7 +20,7 @@ public class ReportController {
 
     @GetMapping("/api/v1/reports")
     public ApiResult<ReportListResponse> showReports(@ModelAttribute ReportListRequest reportListRequest,
-                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "1") int page,
                                                      @RequestParam(defaultValue = "10") int size) {
         return success(reportService.showReports(reportListRequest.toServiceRequest(page, size)));
     }
