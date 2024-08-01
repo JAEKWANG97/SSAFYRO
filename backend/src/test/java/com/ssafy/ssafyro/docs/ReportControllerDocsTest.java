@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.docs;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -14,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.report.ReportController;
-import com.ssafy.ssafyro.api.controller.report.dto.ReportListRequest;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
@@ -24,6 +24,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
@@ -39,9 +40,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 레포트 목록 조회 API")
     @Test
     void showReports() throws Exception {
-        ReportListRequest request = new ReportListRequest(1L);
 
-        given(reportService.showReports(request.toServiceRequest(1, 10)))
+        given(reportService.showReports(any(Long.class), any(Pageable.class)))
                 .willReturn(ReportListResponse.of(
                         List.of(
                                 PersonalityInterviewReport.builder()
@@ -54,7 +54,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
 
         mockMvc.perform(
                         get("/api/v1/reports")
-                                .param("userId", String.valueOf(request.userId()))
+                                .param("userId", "1")
                                 .param("page", "1")
                                 .param("size", "10")
                                 .contentType(MediaType.APPLICATION_JSON)
