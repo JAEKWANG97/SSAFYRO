@@ -16,8 +16,6 @@ public abstract class IntegrationTestSupport {
     protected static final GenericContainer RABBITMQ_CONTAINER;
 
     static {
-        System.setProperty("testcontainers.skip.ryuk", "true");
-
         REDIS_CONTAINER = new GenericContainer<>(REDIS_IMAGE)
                 .withExposedPorts(6379)
                 .withReuse(true);

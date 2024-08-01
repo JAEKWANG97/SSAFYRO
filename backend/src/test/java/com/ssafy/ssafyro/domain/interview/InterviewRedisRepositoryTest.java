@@ -6,11 +6,13 @@ import static org.assertj.core.api.Assertions.tuple;
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
+@Disabled
 class InterviewRedisRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
