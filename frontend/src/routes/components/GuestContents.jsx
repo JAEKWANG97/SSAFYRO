@@ -6,27 +6,24 @@ export default function GuestContents() {
     <div className="flex justify-center">
       <div
         className="container mx-auto mt-16 overflow-hidden max-w-6xl"
-        style={{ minWidth: "900px" }}
+        style={{ minWidth: "1000px" }}
       >
         <div className="flex">
           <div className="w-2/3 h-[375px] mr-10 rounded-xl p-8 flex items-center bg-gradient-to-r from-sky-500 to-purple-300">
-            <div className="flex items-start w-full p-4 mt-6">
+            <div className="flex items-start w-full p-4 mt-10">
               <div className="flex-grow text-white drop-shadow-sm pt-12">
-                <p className="text-3xl font-extrabold pb-3 mr-5">
+                <p className="text-4xl font-extrabold pb-8">
                   SSAFY로 가는 지름길
                 </p>
-                <p className="text-3xl font-extrabold pb-4">
-                  SSAFYRO
-                </p>
-                <p className='font-semibold mb-0 pb-0'>SSAFY 입과 준비</p>
-                <p className='font-semibold mb-0 pb-0'>SSAFYRO에서 시작하세요</p>
+                <p className='text-xl font-semibold mb-0 pb-0'>막막한 SSAFY 입과 준비</p>
+                <p className='text-xl font-semibold mb-0 pb-0'>SSAFYRO에서 시작하세요</p>
               </div>
               <div className="flex-none">
                 <img
                   src={maincharacter}
                   alt="Main Character"
                   className="object-contain"
-                  style={{ height: '90%', width: '90%', marginLeft: '20px' }}
+                  style={{ height: '80%', width: '90%'}}
                 />
               </div>
             </div>
