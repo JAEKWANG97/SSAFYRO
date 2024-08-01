@@ -36,30 +36,23 @@ import Survey from "./components/Survey.jsx";
 const AppLayout = () => {
   const location = useLocation();
 
-  // Define routes where the Navbar and Footer should be hidden
+  // Define routes where the Navbar should be hidden
   const hideNavbarRoutes = [
     "/second/interview/room",
     "/second/interview/room/:roomid/pt",
     "/second/interview/room/:roomid/pt/survey",
   ];
 
-  const hideFooterRoutes = [
-    "/second/interview/room",
-    "/second/interview/room/:roomid/pt",
-    "/second/interview/room/:roomid/pt/survey",
-  ];
-
-  // Check if the current path matches any of the routes where the Navbar or Footer should be hidden
+  // Check if the current path matches any of the routes where the Navbar should be hidden
   const shouldHideNavbar = hideNavbarRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
 
-  const shouldHideFooter = hideFooterRoutes.some((route) =>
-    location.pathname.startsWith(route)
-  );
+  // Define the main page route where the background should not be gray
+  const isMainPage = location.pathname === "/";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className={`flex flex-col min-h-screen ${isMainPage ? "" : "bg-gray-50"}`}>
       {!shouldHideNavbar && <Navbar />}
       <div className="flex-grow">
         <div
@@ -73,7 +66,7 @@ const AppLayout = () => {
           <Outlet />
         </div>
       </div>
-      {!shouldHideFooter && <Footer />}
+      {isMainPage && <Footer />}
     </div>
   );
 };
@@ -129,7 +122,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  // </React.StrictMode>
 );

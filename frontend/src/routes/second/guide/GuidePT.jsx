@@ -8,7 +8,7 @@ export default function GuidePT() {
     <>
       <SecondNav />
       <GuideNav />
-      <div className="container mx-auto p-5 max-w-3xl bg-white rounded-lg shadow-lg mt-10">
+      <div className="container mx-auto p-5 max-w-3xl bg-white rounded-lg shadow-lg mt-10 mb-20">
         <div className="text-center mb-8">
           <img src={PtImg} className="w-[400px] h-[300px] rounded-lg mx-auto" alt="PT 면접 가이드 이미지" />
         </div>
