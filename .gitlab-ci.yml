@@ -3,10 +3,6 @@
 # 사용될 Docker 이미지를 정의합니다.
 image: openjdk:17
 
-# 캐시를 사용하여 빌드 속도를 향상시킬 수 있습니다.
-cache:
-  paths:
-    - .m2/repository
 
 # 파이프라인의 단계를 정의합니다.
 stages:
@@ -18,9 +14,14 @@ build-job:
   stage: build
   script:
     - ./gradlew clean build
+  tags:
+    - SSAFYRO-backend-CI
+
 
 # 테스트 단계
 test-job:
   stage: test
   script:
     - ./gradlew test
+  tags:
+    - SSAFYRO-backend-CI
