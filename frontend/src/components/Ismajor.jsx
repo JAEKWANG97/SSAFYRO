@@ -19,8 +19,8 @@ export default function Ismajor() {
             type="button" 
             className={`px-4 py-2 text-sm font-bold bg-white border border-gray-300 rounded-s-lg ${
               selected === 'major' 
-                ? 'font-bold text-[#90CCF0]'
-                : 'font-bold text-gray-900'
+                ? 'font-extrabold text-blue-400'
+                : 'font-extrabold text-gray-900'
             }`}
             onClick={() => handleSelect('major')}>
             전공자
@@ -30,8 +30,8 @@ export default function Ismajor() {
             type="button" 
             className={`px-4 py-2 text-sm font-bold bg-white border border-gray-300 rounded-e-lg ${
               selected === 'nonMajor' 
-                ? 'text-[#90CCF0]'
-                : 'text-gray-900'
+                ? 'font-extrabold text-blue-400'
+                : 'font-extrabold text-gray-900'
             }`}
             onClick={() => handleSelect('nonMajor')}>
             비전공자

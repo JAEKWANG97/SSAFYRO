@@ -27,7 +27,7 @@ export default function FirstdNav() {
 
   return (
     <>
-      <div className="pt-6 mb-6 border-b border-gray-200">
+      <div className="pt-6 mb-6 border-b border-gray-400">
         <ul
           className="flex flex-wrap text-sm font-medium text-center"
           id="default-tab"
@@ -36,9 +36,9 @@ export default function FirstdNav() {
         >
           <li className="me-2" role="essay">
             <button
-              className={`inline-block p-4 border-b-2 rounded-t-lg font-bold ${
+              className={`inline-block p-4 border-b-2 rounded-t-lg font-extrabold ${
                 activeTab === 'essay'
-                  ? 'border-[#90CCF0] text-[#90CCF0]'
+                  ? 'border-blue-400 text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'
               }`}
               id="essay-tab"
@@ -54,9 +54,9 @@ export default function FirstdNav() {
           </li>
           <li className="me-2" role="test">
             <button
-              className={`inline-block p-4 border-b-2 rounded-t-lg font-bold ${
+              className={`inline-block p-4 border-b-2 rounded-t-lg font-extrabold ${
                 activeTab === 'test'
-                  ? 'border-[#90CCF0] text-[#90CCF0]'
+                  ? 'border-blue-400 text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300'
               }`}
               id="test-tab"
