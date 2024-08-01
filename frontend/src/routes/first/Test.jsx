@@ -39,7 +39,7 @@ export default function Test() {
     <>
       <FirstdNav />
       <div className='flex border-b pb-10 items-center'>
-        <p className="text-3xl font-bold pr-4">SW 적성진단</p>
+        <p className="text-2xl font-bold pr-4 pl-2">SW 적성진단</p>
         <Ismajor />
       </div>
 
