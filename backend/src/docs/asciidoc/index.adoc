@@ -21,6 +21,7 @@ include::api/room/get-rooms.adoc[]
 include::api/room/get-room-by-id.adoc[]
 include::api/room/create-room.adoc[]
 include::api/room/enter-room.adoc[]
+include::api/room/exit-room.adoc[]
 include::api/room/fast-enter-room.adoc[]
 
 [[interview-API]]
@@ -31,3 +32,8 @@ include::api/interview/interview-article.adoc[]
 include::api/interview/interview-question-answer-save.adoc[]
 include::api/interview/interview-score.adoc[]
 include::api/interview/interview-finish.adoc[]
+
+[[essay-API]]
+== 에세이 API
+
+include::api/essay/essay-review.adoc[]

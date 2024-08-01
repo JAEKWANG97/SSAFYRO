@@ -289,7 +289,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("type").description("PERSONALITY: 인성, \n PRESENTATION: pt 면접")
+                                parameterWithName("type").description("PERSONALITY: 인성 면접, \n PRESENTATION: PT 면접")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)

@@ -1,0 +1,12 @@
+[[exit-room]]
+=== 방 퇴장
+
+==== HTTP Request
+
+include::{snippets}/exit-room/http-request.adoc[]
+include::{snippets}/exit-room/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/exit-room/http-response.adoc[]
+include::{snippets}/exit-room/response-fields.adoc[]
