@@ -1,0 +1,12 @@
+[[essay-save]]
+=== 에세이 저장
+
+==== HTTP Request
+
+include::{snippets}/essay-save/http-request.adoc[]
+include::{snippets}/essay-save/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/essay-save/http-response.adoc[]
+include::{snippets}/essay-save/response-fields.adoc[]
