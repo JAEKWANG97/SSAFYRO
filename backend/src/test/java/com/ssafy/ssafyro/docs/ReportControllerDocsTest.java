@@ -17,9 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
-import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
+import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
 
     private final ReportService reportService = Mockito.mock(ReportService.class);
 
+    private final Report report = Mockito.mock(Report.class);
+    private final Room room = Mockito.mock(Room.class);
+
     @Override
     protected Object initController() {
         return new ReportController(reportService);
@@ -40,17 +44,22 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 레포트 목록 조회 API")
     @Test
     void showReports() throws Exception {
+        given(room.getId()).willReturn("roomId");
+        given(room.getTitle()).willReturn("title");
+        given(room.getType()).willReturn(RoomType.PERSONALITY);
+        given(room.getCreatedDate()).willReturn(LocalDateTime.now());
+
+        given(report.getId()).willReturn(1L);
+        given(report.getRoom()).willReturn(room);
+        given(report.getTotalScore()).willReturn(90);
+        given(report.getPronunciationScore()).willReturn(3);
+
+        ReportListResponse response = ReportListResponse.of(
+                List.of(report)
+        );
 
         given(reportService.showReports(any(Long.class), any(Pageable.class)))
-                .willReturn(ReportListResponse.of(
-                        List.of(
-                                PersonalityInterviewReport.builder()
-                                        .room(Room.builder().title("제목1").type(RoomType.PERSONALITY).build())
-                                        .totalScore(90)
-                                        .pronunciationScore(3)
-                                        .build()
-                        )
-                ));
+                .willReturn(response);
 
         mockMvc.perform(
                         get("/api/v1/reports")
@@ -75,7 +84,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("응답"),
                                 fieldWithPath("response.reports").type(JsonFieldType.ARRAY)
                                         .description("방 정보"),
-                                fieldWithPath("response.reports[].reportId").type(JsonFieldType.NULL)
+                                fieldWithPath("response.reports[].reportId").type(JsonFieldType.NUMBER)
                                         .description("방 고유 ID"),
                                 fieldWithPath("response.reports[].title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
@@ -85,7 +94,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("면접 총 점수"),
                                 fieldWithPath("response.reports[].pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
-                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.NULL)
+                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.STRING)
                                         .description("면접 날짜(yyyy.mm.dd)"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
