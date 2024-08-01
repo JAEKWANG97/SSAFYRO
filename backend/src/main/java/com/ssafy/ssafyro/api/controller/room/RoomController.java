@@ -63,4 +63,5 @@ public class RoomController {
     public ApiResult<RoomFastEnterResponse> fastEnterRoom(@RequestParam String type) {
         return success(roomService.fastRoomEnter(type));
     }
+
 }
