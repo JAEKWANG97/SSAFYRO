@@ -5,6 +5,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +20,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/api/v1/reports")
-    public ApiResult<ReportListResponse> showReports(@RequestParam Long userId,
+    public ApiResult<ReportListResponse> showReports(@RequestParam @NotNull Long userId,
                                                      @PageableDefault(page = 1) Pageable pageable) {
         return success(reportService.showReports(userId, pageable));
     }
