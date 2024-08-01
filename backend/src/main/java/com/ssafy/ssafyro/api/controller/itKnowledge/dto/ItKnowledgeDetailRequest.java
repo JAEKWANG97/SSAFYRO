@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record ItKnowledgeDetailRequest(@NotNull Long id) {
 
-    public static ItKnowledgeDetailServiceRequest toServiceRequest(ItKnowledgeDetailRequest request) {
-        return new ItKnowledgeDetailServiceRequest(request.id());
+    public ItKnowledgeDetailServiceRequest toServiceRequest() {
+        return new ItKnowledgeDetailServiceRequest(id());
     }
 }
