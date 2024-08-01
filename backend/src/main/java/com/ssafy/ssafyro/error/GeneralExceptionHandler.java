@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.error;
 import static com.ssafy.ssafyro.api.ApiUtils.error;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
+import com.ssafy.ssafyro.error.essayquestion.EssayQuestionNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Locale;
@@ -35,6 +36,11 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(RoomNotFoundException.class)
     public ResponseEntity<?> handleRoomNotFoundException(RoomNotFoundException e) {
         return newResponse("회의 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EssayQuestionNotFoundException.class)
+    public ResponseEntity<?> handleEssayQuestionNotFoundException(EssayQuestionNotFoundException e) {
+        return newResponse("에세이 질문을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ApiResult<?>> newResponse(Throwable throwable, HttpStatus status) {
