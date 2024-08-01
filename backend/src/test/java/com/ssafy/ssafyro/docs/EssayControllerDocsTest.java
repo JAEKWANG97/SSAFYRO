@@ -19,7 +19,9 @@ import com.ssafy.ssafyro.api.controller.essay.request.EssayReviewRequest;
 import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
 import com.ssafy.ssafyro.api.service.essay.EssayService;
 import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
+import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
+import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -76,6 +78,9 @@ public class EssayControllerDocsTest extends RestDocsSupport {
     @Test
     void save() throws Exception {
         EssaySaveRequest essaySaveRequest = new EssaySaveRequest(1L, 1L, "에세이");
+
+        given(essayService.save(any(EssaySaveServiceRequest.class)))
+                .willReturn(new EssaySaveResponse(1L));
 
         mockMvc.perform(
                         post("/api/v1/essays")

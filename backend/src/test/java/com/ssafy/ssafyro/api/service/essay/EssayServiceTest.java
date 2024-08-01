@@ -6,11 +6,15 @@ import static org.mockito.BDDMockito.given;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
+import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
+import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestionRepository;
+import com.ssafy.ssafyro.domain.user.User;
+import com.ssafy.ssafyro.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,9 @@ class EssayServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private EssayService essayService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private EssayQuestionRepository essayQuestionRepository;
@@ -50,12 +57,43 @@ class EssayServiceTest extends IntegrationTestSupport {
         assertThat(response.content()).isEqualTo("첨삭 후 에세이");
     }
 
+    @DisplayName("에세이를 저장한다.")
+    @Test
+    void saveTest() {
+        //given
+        User user = userRepository.save(createUser());
+
+        EssayQuestion essayQuestion = essayQuestionRepository.save(createEssayQuestion());
+
+        EssaySaveServiceRequest essaySaveServiceRequest = new EssaySaveServiceRequest(
+                1L,
+                1L,
+                "에세이"
+        );
+
+        //when
+        EssaySaveResponse response = essayService.save(essaySaveServiceRequest);
+
+        //then
+        assertThat(response.essayId()).isEqualTo(1L);
+    }
+
     private EssayQuestion createEssayQuestion() {
         return EssayQuestion.builder()
                 .generation(11)
                 .majorType(MajorType.MAJOR)
-                .content("")
+                .content("에세이 질문")
                 .characterLimit(600)
+                .build();
+    }
+
+    private User createUser() {
+        return User.builder()
+                .providerId("providerId")
+                .providerName("providerName")
+                .nickname("김두열")
+                .profileImageUrl("https://profileImageUrl.example")
+                .majorType(MajorType.MAJOR)
                 .build();
     }
 }
