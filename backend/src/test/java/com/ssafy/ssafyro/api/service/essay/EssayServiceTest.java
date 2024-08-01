@@ -92,7 +92,7 @@ class EssayServiceTest extends IntegrationTestSupport {
                 .providerId("providerId")
                 .providerName("providerName")
                 .nickname("김두열")
-                .profileImageUrl("profileImageUrl")
+                .profileImageUrl("https://profileImageUrl.example")
                 .majorType(MajorType.MAJOR)
                 .build();
     }
