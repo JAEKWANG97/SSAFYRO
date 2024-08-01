@@ -30,3 +30,8 @@ include::api/interview/interview-start.adoc[]
 include::api/interview/interview-article.adoc[]
 include::api/interview/interview-question-answer-save.adoc[]
 include::api/interview/interview-finish.adoc[]
+
+[[report-API]]
+== 면접 레포트 API
+
+include::api/report/reports-list.adoc[]
