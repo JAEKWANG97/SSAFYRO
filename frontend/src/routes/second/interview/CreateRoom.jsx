@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { currentUser } from './data'; // currentUser 가져오기
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+// 더미 데이터 가져오기: API 연동 시 삭제
+import { currentUser } from "./data"; // currentUser 가져오기
 
 export default function CreateRoom() {
   const navigate = useNavigate();
@@ -12,7 +14,7 @@ export default function CreateRoom() {
 
   const handleCancel = () => {
     navigate("/second/interview");
-  }
+  };
 
   const handleCreateRoom = () => {
     // 필수 입력 필드가 모두 채워졌는지 확인
@@ -23,29 +25,30 @@ export default function CreateRoom() {
 
     // roomData 객체 생성
     const roomData = {
-      userId: currentUser.userId, 
-      title,                                 // 방 이름
-      description,                           // 방 설명
-      type: interviewType,                   // 면접종류
-      capacity: parseInt(participantCount),  // 참여인원수
+      userId: currentUser.userId,
+      title, // 방 이름
+      description, // 방 설명
+      type: interviewType, // 면접종류
+      capacity: parseInt(participantCount), // 참여인원수
     };
-    console.log(roomData)
+    console.log(roomData);
 
-    axios.post('http://i11c201.p.ssafy.io:9999/api/v1/', roomData)
-    .then(response => {
-      const newRoomId = response.data.roomId; // 서버에서 반환된 roomId
+    axios
+      .post("http://i11c201.p.ssafy.io:9999/api/v1/", roomData)
+      .then((response) => {
+        const newRoomId = response.data.roomId; // 서버에서 반환된 roomId
 
-      // 조건에 따라 적절한 경로로 리디렉션
-      if (interviewType === 'personality') {
-        navigate(`/second/interview/room/${newRoomId}/personality`);
-      } else if (interviewType === 'pt') {
-        navigate(`/second/interview/room/${newRoomId}/pt`);
-      }
-    })
-    .catch(error => {
-      console.error('There was an error!', error);
-    });
-  }
+        // 조건에 따라 적절한 경로로 리디렉션
+        if (interviewType === "personality") {
+          navigate(`/second/interview/room/${newRoomId}/personality`);
+        } else if (interviewType === "pt") {
+          navigate(`/second/interview/room/${newRoomId}/pt`);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -98,7 +101,7 @@ export default function CreateRoom() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             maxLength={50}
-            style={{ resize: 'none'}}
+            style={{ resize: "none" }}
           ></textarea>
         </div>
 
