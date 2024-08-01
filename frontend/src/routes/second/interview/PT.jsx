@@ -86,7 +86,7 @@ export default function PT() {
     }
 
     const data = await response.json();
-    console.log(data.response.token);
+    // console.log(data.response.token);
     return data.response.token;
   };
 
@@ -138,12 +138,12 @@ export default function PT() {
 
     try {
       // Get a token from your application server with the room name ane participant name
-      console.log(roomName, participantName);
+      // console.log(roomName, participantName);
       const token = await getToken(roomName, participantName);
 
       // Connect to the room with the LiveKit URL and the token
       await room.connect(LIVEKIT_URL, token);
-      console.log("Connected to the room", room.name);
+      // console.log("Connected to the room", room.name);
       // Publish your camera and microphone
       await room.localParticipant.enableCameraAndMicrophone();
       setLocalTrack(
