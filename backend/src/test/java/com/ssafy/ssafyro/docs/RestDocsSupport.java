@@ -5,6 +5,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +20,7 @@ public abstract class RestDocsSupport {
     @BeforeEach
     void setUp(RestDocumentationContextProvider provider) {
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .apply(documentationConfiguration(provider))
                 .build();
         this.objectMapper = new ObjectMapper();
