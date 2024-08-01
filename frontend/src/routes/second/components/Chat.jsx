@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Client as StompClient } from '@stomp/stompjs';
 import sendImg from '../../../../public/main/send.jpeg';
+import ssafyLogo from '../../../../public/SSAFYRO.png'
 
 const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
   const [newMessage, setNewMessage] = useState("");
@@ -76,8 +77,8 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       <div className="flex-grow overflow-auto mb-4">
         {messages.map((message, index) => {
           console.log("message : ", message)
-          const showProfile = index === 0 || messages[index - 1].userId !== message.userId;
-          const isCurrentUser = message.userId === currentUser.userId;
+          const showProfile = index === 0 || messages[index - 1].name !== message.name;
+          const isCurrentUser = message.name === currentUser.name;
 
           return (
             <div
@@ -93,7 +94,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
                   />
                   <div className="flex flex-col">
                     <span className="text-xs text-gray-500">
-                      {message.userId}
+                      {message.name}
                     </span>
                     <div className="bg-gray-100 p-2 rounded-lg inline-block mt-1">
                       {/* {message.content} */}
@@ -134,7 +135,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
           className="flex-grow bg-transparent border-none outline-none"
         />
         <button onClick={handleSendMessage} className="text-2xl text-gray-500">
-          <img src={sendImg} alt="SSAFYRO 로고" className="w-6 h-6 mr-2 rounded-md" />
+          <img src={ssafyLogo} alt="SSAFYRO 로고" className="w-6 h-6 mr-2 rounded-md" />
         </button>
       </div>
     </div>
