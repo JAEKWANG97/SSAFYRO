@@ -34,7 +34,6 @@ const handleVideoPlay = async function (
     canvasRef,
     setFaceExpression
 ) {
-    console.log(videoElement.current)
     const canvas = faceapi.createCanvasFromMedia(videoElement.current)
     canvasRef.current.appendChild(canvas)
     const displaySize = {
