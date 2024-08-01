@@ -1,0 +1,12 @@
+[[get-essay-question-by-major-type-and-generation]]
+=== 에세이 질문 조회
+
+==== HTTP Request
+
+include::{snippets}/get-essay-question-by-major-type-and-generation/http-request.adoc[]
+include::{snippets}/get-essay-question-by-major-type-and-generation/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-essay-question-by-major-type-and-generation/http-response.adoc[]
+include::{snippets}/get-essay-question-by-major-type-and-generation/response-fields.adoc[]
