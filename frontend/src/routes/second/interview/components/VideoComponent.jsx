@@ -61,6 +61,7 @@ export default function VideoComponent({
           }
         ></video>
         <div
+          className="hidden"
           ref={canvasRef}
           style={{ position: "absolute", top: 0, left: 0 }}
         />
