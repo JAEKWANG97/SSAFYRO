@@ -30,8 +30,9 @@ export default function PT() {
 
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
-  let APPLICATION_SERVER_URL = ""; // Application 서버 주소
-  let LIVEKIT_URL = ""; // LiveKit 서버 주소
+  let APPLICATION_SERVER_URL =
+    "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/"; // Application 서버 주소
+  let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/"; // LiveKit 서버 주소
   const configureUrls = function () {
     if (!APPLICATION_SERVER_URL) {
       if (window.location.hostname === "localhost") {
@@ -85,8 +86,8 @@ export default function PT() {
     }
 
     const data = await response.json();
-    console.log(data.token);
-    return data.token;
+    console.log(data.response.token);
+    return data.response.token;
   };
 
   // OpenVidu 연결 종료
@@ -158,9 +159,15 @@ export default function PT() {
     }
   };
 
+  // useEffect가 불필요하게 실행되는 것으로 추정되어서, joinRoomTrigger로 joinRoom 함수가 최초 한 번만 실행되도록 제어합니다.
+  let joinRoomTrigger = 1;
+
   useEffect(() => {
-    joinRoom();
-  }, []);
+    if (joinRoomTrigger === 1) {
+      joinRoomTrigger = 0;
+      joinRoom();
+    }
+  }, [joinRoomTrigger]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
