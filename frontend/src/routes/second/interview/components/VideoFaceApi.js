@@ -61,7 +61,7 @@ const handleVideoPlay = async function (
             )
 
             // 출력될 사용자 표정 지정
-            console.log(getExpression(resizedDetections[0].expressions))
+            // console.log(getExpression(resizedDetections[0].expressions))
             setFaceExpression(getExpression(resizedDetections[0].expressions))
 
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
