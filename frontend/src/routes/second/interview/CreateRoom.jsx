@@ -26,22 +26,21 @@ export default function CreateRoom() {
     // roomData 객체 생성
     const roomData = {
       userId: currentUser.userId,
-      title, // 방 이름
-      description, // 방 설명
+      title: title, // 방 이름
+      description: description, // 방 설명
       type: interviewType, // 면접종류
       capacity: parseInt(participantCount), // 참여인원수
     };
-    console.log(roomData);
 
     axios
-      .post("http://i11c201.p.ssafy.io:9999/api/v1/", roomData)
+      .post("http://i11c201.p.ssafy.io:9999/api/v1/rooms", roomData)
       .then((response) => {
-        const newRoomId = response.data.roomId; // 서버에서 반환된 roomId
+        const newRoomId = response.data.response.roomId; // 서버에서 반환된 roomId
 
         // 조건에 따라 적절한 경로로 리디렉션
-        if (interviewType === "personality") {
+        if (interviewType === "PERSONALITY") {
           navigate(`/second/interview/room/${newRoomId}/personality`);
-        } else if (interviewType === "pt") {
+        } else if (interviewType === "PRESENTATION") {
           navigate(`/second/interview/room/${newRoomId}/pt`);
         }
       })
@@ -65,8 +64,8 @@ export default function CreateRoom() {
               <option value="" disabled>
                 면접 종류 선택
               </option>
-              <option value="personality">인성 면접</option>
-              <option value="pt">PT 면접</option>
+              <option value="PERSONALITY">인성 면접</option>
+              <option value="PRESENTATION">PT 면접</option>
             </select>
 
             <select
