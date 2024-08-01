@@ -1,13 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LocalVideoTrack, RemoteVideoTrack } from "livekit-client";
 // VideoComponent Style Sheet
 import "./VideoComponent.css";
 // face-api.js function import
-import {
-  loadFaceAPIModels,
-  handleVideoPlay,
-  faceExpression,
-} from "./VideoFaceApi";
+import { loadFaceAPIModels, handleVideoPlay } from "./VideoFaceApi";
 
 export default function VideoComponent({
   track,
@@ -16,6 +12,7 @@ export default function VideoComponent({
 }) {
   const videoElement = useRef(null);
   const canvasRef = useRef();
+  const [faceExpression, setFaceExpression] = useState("netural");
 
   useEffect(() => {
     if (videoElement.current) {
@@ -47,7 +44,10 @@ export default function VideoComponent({
           width={"200px"}
           height={"200px"}
           onCanPlayThrough={
-            local ? () => handleVideoPlay(videoElement, canvasRef) : null
+            local
+              ? () =>
+                  handleVideoPlay(videoElement, canvasRef, setFaceExpression)
+              : null
           }
         ></video>
         <div

@@ -29,7 +29,11 @@ const loadFaceAPIModels = async function () {
 }
 
 // face-api.js: 비디오 재생이 시작될 때 호출되는 함수
-const handleVideoPlay = async function (videoElement, canvasRef) {
+const handleVideoPlay = async function (
+    videoElement,
+    canvasRef,
+    setFaceExpression
+) {
     console.log(videoElement.current)
     const canvas = faceapi.createCanvasFromMedia(videoElement.current)
     canvasRef.current.appendChild(canvas)
@@ -58,7 +62,7 @@ const handleVideoPlay = async function (videoElement, canvasRef) {
 
             // 출력될 사용자 표정 지정
             console.log(getExpression(resizedDetections[0].expressions))
-            faceExpression = getExpression(resizedDetections[0].expressions)
+            setFaceExpression(getExpression(resizedDetections[0].expressions))
 
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
             faceapi.draw.drawDetections(canvas, resizedDetections)
@@ -71,4 +75,4 @@ const handleVideoPlay = async function (videoElement, canvasRef) {
     }, 100)
 }
 
-export { loadFaceAPIModels, handleVideoPlay, faceExpression }
+export { loadFaceAPIModels, handleVideoPlay }
