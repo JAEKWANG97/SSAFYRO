@@ -2,7 +2,6 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -22,7 +21,6 @@ import com.ssafy.ssafyro.api.controller.room.RoomController;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomExitRequest;
-import com.ssafy.ssafyro.api.service.room.RoomRabbitMqService;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
@@ -43,11 +41,10 @@ import org.springframework.restdocs.payload.JsonFieldType;
 public class RoomControllerDocsTest extends RestDocsSupport {
 
     private final RoomService roomService = mock(RoomService.class);
-    private final RoomRabbitMqService roomRabbitMqService = mock(RoomRabbitMqService.class);
 
     @Override
     protected Object initController() {
-        return new RoomController(roomService, roomRabbitMqService);
+        return new RoomController(roomService);
     }
 
     @DisplayName("room의 type이 PRESENTATION, capacity가 3인 경우 모든 방을 보여준다.")
@@ -168,8 +165,6 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         given(roomService.createRoom(any(RoomCreateServiceRequest.class)))
                 .willReturn(RoomCreateResponse.of(RoomId));
-        willDoNothing().given(roomRabbitMqService)
-                .sendToQueue(any(), any());
 
         mockMvc.perform(post("/api/v1/rooms")
                         .content(objectMapper.writeValueAsString(roomCreateRequest))
@@ -279,7 +274,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         String roomId = "roomId";
         String type = "PRESENTATION";
 
-        given(roomRabbitMqService.fastRoomEnter(any(String.class)))
+        given(roomService.fastRoomEnter(any(String.class)))
                 .willReturn(new RoomFastEnterResponse(true, roomId));
 
         mockMvc.perform(

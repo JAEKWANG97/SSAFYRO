@@ -7,7 +7,6 @@ import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomExitRequest;
 import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
-import com.ssafy.ssafyro.api.service.room.RoomRabbitMqService;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoomController {
 
     private final RoomService roomService;
-    private final RoomRabbitMqService rabbitMqService;
 
     @GetMapping("/api/v1/rooms")
     public ApiResult<RoomListResponse> getRooms(@ModelAttribute RoomListRequest request,
@@ -48,10 +46,7 @@ public class RoomController {
 
     @PostMapping("/api/v1/rooms")
     public ApiResult<RoomCreateResponse> createRoom(@RequestBody RoomCreateRequest request) {
-        RoomCreateResponse roomCreateResponse = roomService.createRoom(request.toServiceRequest());
-        rabbitMqService.sendToQueue(request.type(), roomCreateResponse.roomId());
-
-        return success(roomCreateResponse);
+        return success(roomService.createRoom(request.toServiceRequest()));
     }
 
     @PostMapping("/api/v1/rooms/enter")
@@ -66,7 +61,7 @@ public class RoomController {
 
     @GetMapping("/api/v1/rooms/fast-enter")
     public ApiResult<RoomFastEnterResponse> fastEnterRoom(@RequestParam String type) {
-        return success(rabbitMqService.fastRoomEnter(type));
+        return success(roomService.fastRoomEnter(type));
     }
 
 }
