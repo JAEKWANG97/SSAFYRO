@@ -15,7 +15,7 @@ class ChatGptResponseGeneratorTest extends IntegrationTestSupport {
     //API 키 필요
     @DisplayName("ChatGPT API를 활용해 질문에 대한 답변이 적절한지 피드백을 얻는다.")
     @Test
-    void generateFeedbackTest() throws InterruptedException {
+    void generateFeedbackTest() {
         //given
         String question = "AI가 무엇인가요?";
         String answer = "AI는 인공지능을 의미합니다. 인공지능은 인간의 지능을 모방하여 만든 기술이며, 컴퓨터 프로그램이나 기계가 인간의 학습능력, 추론능력, 지각능력, 자연어 이해능력 등을 갖추도록 만든 기술입니다.";
@@ -39,5 +39,19 @@ class ChatGptResponseGeneratorTest extends IntegrationTestSupport {
         System.out.println(aiArticle.content());
         System.out.println(aiArticle.question().get(0));
         System.out.println(aiArticle.question().get(1));
+    }
+
+    @DisplayName("ChatGPT API를 활용해 에세이를 첨삭 받는다.")
+    @Test
+    void generateNewEssayTest() {
+        // given
+        String question = "";
+        String answer = "";
+
+        // when
+        String newEssay = chatGptResponseGenerator.generateNewEssay(question, answer);
+
+        // then
+        System.out.println(newEssay);
     }
 }

@@ -5,6 +5,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.essay.request.EssayReviewRequest;
 import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
+import com.ssafy.ssafyro.api.service.essay.EssayService;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import jakarta.validation.Valid;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EssayController {
 
+    private final EssayService essayService;
+
     @PostMapping("/api/v1/essays/review")
     public ApiResult<EssayReviewResponse> reviewEssay(@Valid @RequestBody EssayReviewRequest request) {
-        return success(new EssayReviewResponse("첨삭 후 에세이"));
+        return success(essayService.reviewEssay(request.toServiceRequest()));
     }
 
     @PostMapping("/api/v1/essays")
