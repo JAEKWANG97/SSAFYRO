@@ -17,7 +17,7 @@ build-job:
   tags:
     - SSAFYRO-backend-CI
   only:
-    - develop
+    - back-end
 
 
 # 테스트 단계
@@ -28,4 +28,4 @@ test-job:
   tags:
     - SSAFYRO-backend-CI
   only:
-    - develop
+    - back-end
