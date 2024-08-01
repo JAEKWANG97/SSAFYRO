@@ -27,6 +27,6 @@ public class EssayController {
 
     @PostMapping("/api/v1/essays")
     public ApiResult<EssaySaveResponse> save(@Valid @RequestBody EssaySaveRequest request) {
-        return success(new EssaySaveResponse(1L));
+        return success(essayService.save(request.toServiceRequest()));
     }
 }
