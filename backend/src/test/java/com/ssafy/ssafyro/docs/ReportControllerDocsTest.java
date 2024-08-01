@@ -17,7 +17,10 @@ import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.controller.report.dto.ReportListRequest;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
-import java.time.LocalDateTime;
+import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
+import com.ssafy.ssafyro.domain.room.RoomType;
+import com.ssafy.ssafyro.domain.room.entity.Room;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,20 +39,21 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 레포트 목록 조회 API")
     @Test
     void showReports() throws Exception {
-        ReportListRequest request = new ReportListRequest("roomId", 1L);
+        ReportListRequest request = new ReportListRequest(1L);
 
         given(reportService.showReports(request.toServiceRequest(1, 10)))
-                .willReturn(ReportListResponse.builder()
-                        .title("title")
-                        .type("PRESENTATION")
-                        .totalScore(92)
-                        .pronunciationScore(3)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(ReportListResponse.of(
+                        List.of(
+                                PersonalityInterviewReport.builder()
+                                        .room(Room.builder().title("제목1").type(RoomType.PERSONALITY).build())
+                                        .totalScore(90)
+                                        .pronunciationScore(3)
+                                        .build()
+                        )
+                ));
 
         mockMvc.perform(
                         get("/api/v1/reports")
-                                .param("roomId", request.roomId())
                                 .param("userId", String.valueOf(request.userId()))
                                 .param("page", "1")
                                 .param("size", "10")
@@ -60,7 +64,6 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("roomId").description("방 고유 ID"),
                                 parameterWithName("userId").description("유저 고유 ID"),
                                 parameterWithName("page").description("페이지 인덱스 번호"),
                                 parameterWithName("size").description("페이지 전체 크기")
@@ -70,16 +73,20 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.title").type(JsonFieldType.STRING)
+                                fieldWithPath("response.reports").type(JsonFieldType.ARRAY)
+                                        .description("방 정보"),
+                                fieldWithPath("response.reports[].reportId").type(JsonFieldType.NULL)
+                                        .description("방 고유 ID"),
+                                fieldWithPath("response.reports[].title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
-                                fieldWithPath("response.type").type(JsonFieldType.STRING)
+                                fieldWithPath("response.reports[].type").type(JsonFieldType.STRING)
                                         .description("면접 종류 (인성, PT)"),
-                                fieldWithPath("response.totalScore").type(JsonFieldType.NUMBER)
+                                fieldWithPath("response.reports[].totalScore").type(JsonFieldType.NUMBER)
                                         .description("면접 총 점수"),
-                                fieldWithPath("response.pronunciationScore").type(JsonFieldType.NUMBER)
+                                fieldWithPath("response.reports[].pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
-                                fieldWithPath("response.createdAt").type(JsonFieldType.STRING)
-                                        .description("면접 날짜"),
+                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.NULL)
+                                        .description("면접 날짜(yyyy.mm.dd)"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
