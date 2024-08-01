@@ -96,19 +96,22 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
                       {message.userId}
                     </span>
                     <div className="bg-gray-100 p-2 rounded-lg inline-block mt-1">
-                      {message.content}
+                      {/* {message.content} */}
+                      {message.message}
                     </div>
                   </div>
                 </>
               )}
               {isCurrentUser && (
                 <div className="bg-blue-100 p-2 rounded-lg inline-block mr-5">
-                  {message.content}
+                  {/* {message.content} */}
+                  {message.message}
                 </div>
               )}
               {!showProfile && !isCurrentUser && (
                 <div className="bg-gray-100 p-2 rounded-lg inline-block ml-10">
-                  {message.content}
+                  {/* {message.content} */}
+                  {message.message}
                 </div>
               )}
             </div>
