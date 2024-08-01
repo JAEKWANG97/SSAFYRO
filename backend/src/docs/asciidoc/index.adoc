@@ -37,3 +37,11 @@ include::api/interview/interview-finish.adoc[]
 == 에세이 API
 
 include::api/essay/essay-review.adoc[]
+include::api/essay/essay-save.adoc[]
+
+[[problem-API]]
+== 코딩 테스트 문제 API
+
+include::api/codingtestproblem/get-problems.adoc[]
+include::api/codingtestproblem/get-problem-by-id.adoc[]
+
