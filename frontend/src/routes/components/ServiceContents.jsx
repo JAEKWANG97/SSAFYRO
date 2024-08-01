@@ -1,8 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import essayImg from './../../../public/main/essay.png'
 import codingImg from './../../../public/main/3d_coding.png'
 import interviewImg from './../../../public/main/3d_interview.png'
 
 export default function ServiceContents() {
+
+  const nav = useNavigate()
   return (
     <>
       <div className="flex">
@@ -10,9 +13,9 @@ export default function ServiceContents() {
           className="w-1/2 h-[250px] mr-10 rounded-xl mt-10 relative p-6 text-left flex"
           style={{ backgroundColor: "rgba(198, 234, 246, 0.5)" }}
         >
-          <div>
-            <div className="flex items-center mb-2">
-              <span className="text-sm font-bold mr-1">에세이</span>
+          <div onClick={()=>{nav('/first/essay')}}>
+            <div className="flex items-center mb-2" >
+              <span className="text-sm font-bold mr-1" >에세이</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -44,7 +47,7 @@ export default function ServiceContents() {
           className="w-1/2 h-[250px] rounded-xl mt-10 relative p-6 text-left flex"
           style={{ backgroundColor: "rgba(231, 226, 253, 0.5)" }}
         >
-          <div>
+          <div onClick={()=>{nav('/first/test')}}>
             <div className="flex items-center mb-2">
               <span className="text-sm font-bold mr-1">SW 적성진단</span>
               <svg
@@ -75,8 +78,9 @@ export default function ServiceContents() {
         </button>
       </div>
 
-      <button
+      <div
         className="w-full h-[250px] rounded-xl mt-10 relative p-6 mb-12 text-left flex"
+        onClick={()=>{nav('/second/interview')}}
         style={{ backgroundColor: "rgba(255, 239, 213, 0.5)" }}
       >
         <div>
@@ -107,7 +111,7 @@ export default function ServiceContents() {
           alt="Interview"
           className="h-4/5 w-[850px] object-contain absolute bottom-8 right-10 pl-64"
         />
-      </button>
+      </div>
     </>
   );
 }
