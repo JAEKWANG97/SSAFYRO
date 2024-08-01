@@ -12,7 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.essay.EssayController;
-import com.ssafy.ssafyro.api.controller.essay.request.ReviewRequest;
+import com.ssafy.ssafyro.api.controller.essay.request.EssayReviewRequest;
+import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -28,11 +29,11 @@ public class EssayControllerDocsTest extends RestDocsSupport {
     @DisplayName("에세이 첨삭 API")
     @Test
     void reviewEssay() throws Exception {
-        ReviewRequest reviewRequest = new ReviewRequest("첨삭 전 에세이");
+        EssayReviewRequest essayReviewRequest = new EssayReviewRequest("첨삭 전 에세이");
 
         mockMvc.perform(
-                        post("/api/v1/essay/review")
-                                .content(objectMapper.writeValueAsString(reviewRequest))
+                        post("/api/v1/essays/review")
+                                .content(objectMapper.writeValueAsString(essayReviewRequest))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -51,6 +52,43 @@ public class EssayControllerDocsTest extends RestDocsSupport {
                                                 .description("응답"),
                                         fieldWithPath("response.content").type(JsonFieldType.STRING)
                                                 .description("첨삭 후 에세이"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("에세이 저장 API")
+    @Test
+    void save() throws Exception {
+        EssaySaveRequest essaySaveRequest = new EssaySaveRequest(1L, 1L, "에세이");
+
+        mockMvc.perform(
+                        post("/api/v1/essays")
+                                .content(objectMapper.writeValueAsString(essaySaveRequest))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("essay-save",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                                .description("유저 id"),
+                                        fieldWithPath("essayQuestionId").type(JsonFieldType.NUMBER)
+                                                .description("에세이 질문 id"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING)
+                                                .description("에세이")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.essayId").type(JsonFieldType.NUMBER)
+                                                .description("에세이 id"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
                                 )
