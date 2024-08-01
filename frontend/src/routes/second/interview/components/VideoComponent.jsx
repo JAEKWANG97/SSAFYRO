@@ -11,8 +11,18 @@ export default function VideoComponent({
   local = false,
 }) {
   const videoElement = useRef(null);
+  // 표정 표시를 위한 변수
   const canvasRef = useRef();
-  const [faceExpression, setFaceExpression] = useState("netural");
+  const [faceExpression, setFaceExpression] = useState("neutral");
+  const faceEmotionIcon = {
+    angry: "angry_2274563.png",
+    disgust: "vomiting_3688154.png",
+    fear: "dead_3746935.png",
+    happy: "happy_9294644.png",
+    sad: "sadness_7198866.png",
+    surprised: "surprised_3898405.png",
+    neutral: "neutral_3688059.png",
+  };
 
   useEffect(() => {
     if (videoElement.current) {
@@ -31,7 +41,7 @@ export default function VideoComponent({
   return (
     <>
       {local ? (
-        <p className="text-center text-gray-600 py-4">{faceExpression}</p>
+        <img src={"/emotion/" + faceEmotionIcon[faceExpression]} alt="" />
       ) : null}
       <div
         id={"camera-" + participantIdentity}
