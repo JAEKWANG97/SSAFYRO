@@ -57,7 +57,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white border-b">
       <div className="container mx-auto flex items-center justify-between py-8 px-64" style={{ minWidth: "1100px" }}>
         {/* 로고 자리 */}
         <div className="flex-shrink-0 min-w-[200px]">
