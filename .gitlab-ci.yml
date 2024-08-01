@@ -1,31 +1,18 @@
-# .gitlab-ci.yml
-
-# 사용될 Docker 이미지를 정의합니다.
 image: openjdk:17
 
-
-# 파이프라인의 단계를 정의합니다.
 stages:
-  - build
-  - test
+  - build_and_test
 
-# 빌드 단계
-build-job:
-  stage: build
+before_script:
+  - cd backend
+  - chmod +x ./gradlew
+
+build_and_test:
+  stage: build_and_test
   script:
-    - ./gradlew clean build
+    - ./gradlew build
   tags:
     - SSAFYRO-backend-CI
   only:
     - back-end
-
-
-# 테스트 단계
-test-job:
-  stage: test
-  script:
-    - ./gradlew test
-  tags:
-    - SSAFYRO-backend-CI
-  only:
-    - back-end
+    - merge_requests
