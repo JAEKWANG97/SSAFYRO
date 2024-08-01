@@ -19,11 +19,15 @@ public class EssayService {
     private final ChatGptResponseGenerator chatGptResponseGenerator;
 
     public EssayReviewResponse reviewEssay(EssayReviewServiceRequest request) {
-        EssayQuestion essayQuestion = essayQuestionRepository.findById(request.essayQuestionId())
-                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay not found"));
+        EssayQuestion essayQuestion = getEssayQuestion(request);
 
         return new EssayReviewResponse(
                 chatGptResponseGenerator.generateNewEssay(essayQuestion.getContent(), request.content())
         );
+    }
+
+    private EssayQuestion getEssayQuestion(EssayReviewServiceRequest request) {
+        return essayQuestionRepository.findById(request.essayQuestionId())
+                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay not found"));
     }
 }
