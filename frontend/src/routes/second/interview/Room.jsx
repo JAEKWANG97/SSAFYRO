@@ -1,33 +1,51 @@
+// Room.jsx
+
 import { useParams, useNavigate } from "react-router-dom";
-import { rooms } from "./data.js";
 import Chat from "../components/Chat";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Room() {
   const { roomid } = useParams();
   const navigate = useNavigate();
-  const roomIndex = rooms.findIndex((room) => room.id === roomid);
-  const room = roomIndex !== -1 ? rooms[roomIndex] : null;
+  const [room, setRoom] = useState(null);
+  // const roomIndex = rooms.findIndex((room) => room.id === roomid);
+  // const room = roomIndex !== -1 ? rooms[roomIndex] : null;
   const [messages, setMessages] = useState([]);
+  const currentUser = { userId: 10, name: "Alice" };
 
-  const currentUser = { userId: "user1", name: "Alice" };
+  // console.log(`roomid : ${roomid}`)
+  useEffect(() => {
+    // 방 정보 가져오기
+    const fetchRoomDetails = async () => {
+      try {
+        // 방에 참가한 사용자 서버에 알리기
+        await axios.post(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/enter`, { userId: currentUser.userId, roomId: roomid });
 
-  if (!room) return <div>방을 찾을 수 없습니다.</div>;
+        const response = await axios.get(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`)
+        setRoom(response.data.response)
+        console.log(`현재 사용자 정보 : ${currentUser.userId}`)
+        console.log('현재 방 정보 : ', response.data)
+        console.log('참가자 리스트 : ', response.data.response.userList)
+
+      } catch (error) {
+        console.error(error);
+        alert("방 정보를 불러오는데 실패했습니다.");
+        navigate("/")
+      }
+    }
+
+    fetchRoomDetails()
+
+    return () => {
+      if (room) {
+        leaveRoom()
+      }
+    }
+  }, [roomid]);
 
   function navigateHandler() {
-    // 참가자가 방을 나가면 제거
-    const participantIndex = room.userList.findIndex(
-      (participant) => participant.userId === currentUser.userId
-    );
-    if (participantIndex !== -1) {
-      room.userList.splice(participantIndex, 1);
-    }
-
-    // 참가자가 아무도 없으면 방을 삭제
-    if (room.userList.length === 0) {
-      rooms.splice(roomIndex, 1);
-    }
-
+    leaveRoom();
     navigate("/second/interview");
   }
 
@@ -35,14 +53,36 @@ export default function Room() {
     navigate(`/second/interview/room/${roomid}/pt_ready`);
   }
 
-  function sendMessage(newMessage) {
-    const newChatMessage = {
-      userId: currentUser.userId,
-      name: currentUser.name,
-      message: newMessage,
-    };
-    setMessages([...messages, newChatMessage]);
+  async function leaveRoom() {
+    if (room) {
+      try {
+        await axios.post(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`, { roomId: roomid, userId: currentUser.userId});
+      } catch (error) {
+        console.error("히히 못가:", error)
+      }
+
+      const updatedRoom = {...room}
+      const participantIndex = updatedRoom.userList.findIndex(
+        (participant) => participant.userId === currentUser.userId
+      )
+
+      if (participantIndex !== -1) {
+        updatedRoom.userList.splice(participantIndex, 1)
+        setRoom(updatedRoom)
+      }
+
+      // // 마지막 참가자가 방을 떠나면 서버에 방 삭제 요청
+      // if (updatedRoom.userList.length === 0) {
+      //   try {
+      //     await axios.delete(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`)
+      //   } catch (error) {
+      //     console.error("히히 삭제 못해", error)
+      //   }
+      // }
+    } 
   }
+
+  if (!room) return <div>로딩 중 ...</div>
 
   return (
     <div className="flex justify-center">
@@ -91,7 +131,7 @@ export default function Room() {
                       className="h-2/3 object-contain rounded-full"
                     />
                     <span className="text-sm font-bold mt-2">
-                      {participant.name}
+                      {participant}
                     </span>
                   </div>
                 ))}
@@ -118,11 +158,11 @@ export default function Room() {
                   ))}
               </div>
 
-              {/* Chat 컴포넌트를 사용 */}
               <Chat
                 currentUser={currentUser}
+                currentRoom={roomid}
                 messages={messages}
-                sendMessage={sendMessage}
+                setMessages={setMessages}
               />
             </div>
             <div className="w-[30%] flex flex-col justify-between">

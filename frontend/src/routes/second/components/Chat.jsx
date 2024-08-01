@@ -1,33 +1,82 @@
 // Chat.jsx
-import React, { useState } from "react";
-import sendImg from '../../../../public/main/send.jpeg'
 
-function Chat({ currentUser, messages, sendMessage }) {
+import React, { useState, useEffect, useRef } from "react";
+import { Client as StompClient } from '@stomp/stompjs';
+import sendImg from '../../../../public/main/send.jpeg';
+
+const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
   const [newMessage, setNewMessage] = useState("");
+  const stompClient = useRef(null);
 
-  function handleSendMessage() {
-    if (newMessage.trim() !== "") {
-      sendMessage(newMessage);
-      setNewMessage("");
+  useEffect(() => {
+    if (currentRoom) {
+      connectToRoom(currentRoom);
     }
-  }
 
-  function handleKeyDown(event) {
+    return () => {
+      if (stompClient.current) stompClient.current.deactivate();
+    };
+  }, [currentRoom]);
+
+  const connectToRoom = (roomId) => {
+    stompClient.current = new StompClient({
+      brokerURL: 'ws://i11c201.p.ssafy.io:9999/ssafyro-chat',
+      onConnect: (frame) => {
+        console.log("Connected: " + frame);
+        stompClient.current.subscribe(`/topic/${roomId}`, (message) => {
+          console.log("Received message: ", message.body)
+          const msg = JSON.parse(message.body);
+          console.log("Parsed message: ", msg)
+          setMessages(prevMessages => [...prevMessages, msg]);
+        });
+      },
+      onWebSocketError: (error) => {
+        console.error("WebSocket error: ", error);
+      },
+      onStompError: (frame) => {
+        console.error("STOMP error: ", frame.headers["message"]);
+        console.error("STOMP error details: ", frame.body);
+      }
+    });
+
+    stompClient.current.activate();
+  };
+
+  const sendMessage = () => {
+    if (!currentRoom || !stompClient.current || newMessage.trim() === "") return;
+
+    console.log("Sending message: ", newMessage)
+
+    stompClient.current.publish({
+      destination: `/chat/${currentRoom}`,
+      body: JSON.stringify({
+        userId: currentUser.userId,
+        name: currentUser.name,
+        message: newMessage,
+      }),
+    });
+    setNewMessage("");
+  };
+
+  const handleSendMessage = () => {
+    sendMessage();
+  };
+
+  const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleSendMessage();
     }
-  }
+  };
 
   return (
     <div className="flex-grow rounded-lg p-5 bg-white shadow-md mt-4 flex flex-col h-[50%]">
       <h1 className="font-bold mb-4">Chat</h1>
       <hr className="mb-4" />
 
-      {/* 채팅 메시지 리스트를 감싸는 div */}
       <div className="flex-grow overflow-auto mb-4">
         {messages.map((message, index) => {
-          const showProfile =
-            index === 0 || messages[index - 1].userId !== message.userId;
+          console.log("message : ", message)
+          const showProfile = index === 0 || messages[index - 1].userId !== message.userId;
           const isCurrentUser = message.userId === currentUser.userId;
 
           return (
@@ -47,19 +96,19 @@ function Chat({ currentUser, messages, sendMessage }) {
                       {message.userId}
                     </span>
                     <div className="bg-gray-100 p-2 rounded-lg inline-block mt-1">
-                      {message.message}
+                      {message.content}
                     </div>
                   </div>
                 </>
               )}
               {isCurrentUser && (
                 <div className="bg-blue-100 p-2 rounded-lg inline-block mr-5">
-                  {message.message}
+                  {message.content}
                 </div>
               )}
               {!showProfile && !isCurrentUser && (
                 <div className="bg-gray-100 p-2 rounded-lg inline-block ml-10">
-                  {message.message}
+                  {message.content}
                 </div>
               )}
             </div>
@@ -67,7 +116,6 @@ function Chat({ currentUser, messages, sendMessage }) {
         })}
       </div>
 
-      {/* 채팅 입력 영역 */}
       <div className="flex items-center p-2 bg-gray-100 rounded-3xl">
         <img
           src="/main/users.png"
@@ -84,7 +132,6 @@ function Chat({ currentUser, messages, sendMessage }) {
         />
         <button onClick={handleSendMessage} className="text-2xl text-gray-500">
           <img src={sendImg} alt="SSAFYRO 로고" className="w-6 h-6 mr-2 rounded-md" />
-          {/* 😃 */}
         </button>
       </div>
     </div>
