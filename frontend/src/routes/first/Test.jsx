@@ -112,7 +112,7 @@ export default function Test() {
               {tableData.map((item) => (
                 <tr
                   key={item.id}
-                  className="bg-white border-b-2 hover:bg-gray-100 hover:text-blue-500 hover:font-bold"
+                  className="bg-white border-b-2 hover:bg-gray-100 hover:text-blue-400 hover:font-bold"
                 >
                   <td className="px-4 py-4 text-gray-900 whitespace-nowrap text-center flex items-center justify-center">
                     <div className="flex items-center justify-center">
