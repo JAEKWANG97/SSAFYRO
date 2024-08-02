@@ -52,7 +52,7 @@ export default function Essay() {
     <>
       <FirstdNav />
       <div
-        className="container mx-auto p-5 max-w-4xl bg-white rounded-lg shadow-md mt-10"
+        className="container mx-auto p-5 max-w-4xl bg-white rounded-lg shadow-md mt-10 mb-20"
         style={{
           boxShadow:
             '0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
@@ -107,7 +107,7 @@ export default function Essay() {
 
             <div
               id="popover-description"
-              className="absolute left-0 right-auto mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-sm text-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 z-10 invisible opacity-0 transition-opacity duration-300"
+              className="absolute left-0 right-auto mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-sm text-gray-500 z-10 invisible opacity-0 transition-opacity duration-300"
             >
               <div className="p-3 space-y-2">
                 <p className="font-semibold text-gray-900">
