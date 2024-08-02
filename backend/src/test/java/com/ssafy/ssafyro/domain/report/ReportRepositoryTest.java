@@ -6,7 +6,6 @@ import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 class ReportRepositoryTest extends IntegrationTestSupport {
@@ -42,11 +42,11 @@ class ReportRepositoryTest extends IntegrationTestSupport {
         Page<Report> result = reportRepository.findAllByUser(user, Mockito.any(Pageable.class));
 
         //then
-        assertThat(result).hasSize(3)
+        assertThat(result.getContent()).hasSize(3)
                 .containsExactlyInAnyOrderElementsOf(reports);
     }
 
-    private static User makeUser() {
+    private User makeUser() {
         return User.builder()
                 .providerId("providerId")
                 .providerName("goole")
@@ -56,7 +56,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private static Report makeReport(User user, int totalScore) {
+    private Report makeReport(User user, int totalScore) {
         return PersonalityInterviewReport.builder()
                 .user(user)
                 .room(null)
