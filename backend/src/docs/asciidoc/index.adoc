@@ -39,11 +39,17 @@ include::api/interview/interview-finish.adoc[]
 include::api/essay/essay-review.adoc[]
 include::api/essay/essay-save.adoc[]
 
+[[essay-question-API]]
+== 에세이 질문 API
+
+include::api/essayquestion/get-essay-question-by-major-type-and-generation.adoc[]
+
 [[problem-API]]
 == 코딩 테스트 문제 API
 
 include::api/codingtestproblem/get-problems.adoc[]
 include::api/codingtestproblem/get-problem-by-id.adoc[]
+
 
 [[it-knowledge-API]]
 == IT 지식 API
