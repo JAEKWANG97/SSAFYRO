@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Chat from "../components/Chat";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Button from "../../../components/Button";
 
 export default function Room() {
   const { roomid } = useParams();
@@ -103,12 +104,14 @@ export default function Room() {
             <div className="items-center">
               <h1 className="font-extrabold text-2xl">{room.title}</h1>
             </div>
-            <button
+            {/* <button
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
               onClick={navigateHandler}
             >
               나가기
-            </button>
+            </button> */}
+            <Button 
+            text="나가기" type="WAITINGROOMOUT" onClick={navigateHandler}/>
           </div>
 
           <div
@@ -168,7 +171,7 @@ export default function Room() {
             <div className="w-[30%] flex flex-col justify-between">
               <div
                 className="p-5 bg-white shadow-md rounded-xl ml-3 mr-5 mt-8"
-                style={{ height: "60%" }}
+                style={{ height: "1000px" }}
               >
                 <div className="flex items-center mb-4">
                   <svg
@@ -208,15 +211,17 @@ export default function Room() {
                 </div>
               </div>
               <div
-                className="p-7 flex justify-center ml-3 mr-5 mt-8 mb-7"
+                className="p-7 flex justify-center ml-3 mr-5"
                 style={{ height: "25%" }}
               >
-                <button
+                {/* <button
                   className="w-full font-extrabold bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
                   onClick={startInterviewHandler}
                 >
                   면접 시작
-                </button>
+                </button> */}
+                <Button 
+                text="면접 시작" type="WAITINGROOMSTART" onClick={startInterviewHandler}/>
               </div>
             </div>
           </div>
