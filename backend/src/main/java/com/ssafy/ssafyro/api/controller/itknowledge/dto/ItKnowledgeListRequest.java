@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.controller.itKnowledge.dto;
+package com.ssafy.ssafyro.api.controller.itknowledge.dto;
 
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
 import org.springframework.data.domain.Pageable;
