@@ -1,6 +1,5 @@
 package com.ssafy.ssafyro.api.service.report.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
@@ -24,7 +23,7 @@ public record ReportListResponse(List<ReportInfo> reports) {
                               RoomType type,
                               int totalScore,
                               int pronunciationScore,
-                              @JsonFormat(pattern = "yyyy.MM.dd") LocalDateTime createdDate) {
+                              LocalDateTime createdDate) {
 
         private static ReportInfo entityToReportInfo(Report report) {
             Room room = report.getRoom();
