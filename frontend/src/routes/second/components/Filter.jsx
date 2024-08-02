@@ -1,32 +1,35 @@
-// Filter.jsx
+import React, { useState } from "react";
 
-import React from "react";
-
-export default function Filter({
-  filter,
-  onFilterChange,
-  onSearchClick,
-}) {
+export default function Filter({onSearchClick}) {
+  const [filter, setFilter] = useState({
+    type: "",
+    capacity: "",
+    page: 1,
+    size: 10,
+    title: "",
+    status: "",
+  });
+   
   return (
     <div className="mt-10 w-1/4 h-[350px] p-4 bg-white shadow rounded">
       <div className="mb-4">
         <label className="block mb-2">면접 종류 선택</label>
         <select
           className="w-full border p-2 rounded bg-gray-50"
-          value={filter.selectedType}
-          onChange={(e) => onFilterChange('selectedType', e.target.value)}
+          value={filter.type}
+          onChange={(e) => setFilter({ ...filter, type: e.target.value })}
         >
           <option value="">전체</option>
-          <option value="Personality">인성 면접</option>
-          <option value="PT">PT 면접</option>
+          <option value="PERSONALITY">인성 면접</option>
+          <option value="PRESENTATION">PT 면접</option>
         </select>
       </div>
       <div className="mb-4">
         <label className="block mb-2">참여 인원 선택</label>
         <select
           className="w-full border p-2 rounded bg-gray-50"
-          value={filter.selectedParticipants}
-          onChange={(e) => onFilterChange('selectedParticipants', e.target.value)}
+          value={filter.capacity}
+          onChange={(e) => setFilter({ ...filter, capacity: e.target.value })}
         >
           <option value="">전체</option>
           <option value="1">1명</option>
@@ -39,8 +42,8 @@ export default function Filter({
           type="text"
           placeholder="검색어를 입력하세요"
           className="w-full border p-2 rounded"
-          value={filter.searchTerm}
-          onChange={(e) => onFilterChange('searchTerm', e.target.value)}
+          value={filter.title}
+          onChange={(e) => setFilter({ ...filter, title: e.target.value })}
         />
       </div>
       <div className="mb-4">
@@ -48,15 +51,15 @@ export default function Filter({
           <input
             type="checkbox"
             className="mr-2"
-            checked={filter.isRecruiting}
-            onChange={(e) => onFilterChange('isRecruiting', e.target.checked)}
+            checked={filter.status}
+            onChange={(e) => setFilter({ ...filter, status: e.target.checked })}
           />
           모집중
         </label>
       </div>
       <button
         className="w-full bg-blue-600 text-white p-2 rounded"
-        onClick={onSearchClick}
+        onClick={() => onSearchClick(filter)}
       >
         검색하기
       </button>

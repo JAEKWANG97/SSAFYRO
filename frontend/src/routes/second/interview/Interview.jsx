@@ -8,25 +8,21 @@ import axios from "axios";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
-  const [filteredRoomList, setFilteredRoomList] = useState([]); // 필터링된 방 목록 상태 추가
-  const [filter, setFilter] = useState({
-    selectedType: "",
-    selectedParticipants: "",
-    searchTerm: "",
-    isRecruiting: false,
-  });
+  const [filteredRoomList, setFilteredRoomList] = useState([]);
 
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" };
 
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
-  const getRooms = async () => {
+  const getRooms = async (type, capacity, page, size, title = null, status = null) => {
     let filter = {
-      type: "PRESENTATION",
-      capacity: "3",
-      page: 1,
-      size: 10,
+      type: type,
+      capacity: capacity,
+      page: page,
+      size: size,
+      title: title,
+      status: status,
     };
 
     const response = await axios
@@ -48,54 +44,29 @@ export default function Interview() {
   };
 
   useEffect(() => {
-    getRooms();
+    getRooms(null, null, 1, 10, null, null);
   }, []);
 
   const handleJoinRoom = (id) => {
     const roomIndex = filteredRoomList.findIndex((room) => room.id === id);
     console.log("roomIndex: ", roomIndex)
     console.log("filteredRoomList:", filteredRoomList)
-    if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "WAIT") {
+    if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "WAIT" && filteredRoomList[roomIndex].participantCount < filteredRoomList[roomIndex].capacity) {
       const updateRooms = [...filteredRoomList];
-      // 위의 console.log에서는 잘 찍히는데 여기에서는 undefined가 떠.. 뭐가 문제인거야?
-      // console.log(updateRooms[roomIndex].userList);
-      // updateRooms[roomIndex].userList.push(currentUser);
       setFilteredRoomList(updateRooms);
       navigate(`/second/interview/room/${id}`);
+    } else {
+      alert("현재 참여할 수 없는 방입니다.");
     }
   };
 
-  const handleFilterChange = (key, value) => {
-    setFilter({ ...filter, [key]: value });
-  };
-
-  const handleSearchClick = () => {
-    let filtered = roomList;
-
-    if (filter.selectedType) {
-      filtered = filtered.filter((room) => room.type === filter.selectedType);
-    }
-
-    if (filter.selectedParticipants) {
-      filtered = filtered.filter(
-        (room) => room.maxParticipants === parseInt(filter.selectedParticipants)
-      );
-    }
-
-    if (filter.searchTerm) {
-      const lowerCaseSearchTerm = filter.searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (room) =>
-          room.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-          room.description.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-    }
-
-    if (filter.isRecruiting) {
-      filtered = filtered.filter((room) => room.status === "WAIT");
-    }
-
-    setFilteredRoomList(filtered);
+  const handleSearchClick = function (filter) {
+    getRooms(filter.type ? filter.type : null,
+       filter.capacity ? filter.capacity : null,
+       filter.page,
+       filter.size,
+       filter.title ? filter.title : null,
+       filter.status ? "WAIT" : null);
   };
 
   return (
@@ -106,11 +77,7 @@ export default function Interview() {
           <div className="container mx-auto">
             <h1 className="text-3xl font-bold mb-12">모의 면접 방 목록</h1>
             <div className="flex">
-              <Filter
-                filter={filter}
-                onFilterChange={handleFilterChange}
-                onSearchClick={handleSearchClick}
-              />
+              <Filter onSearchClick={handleSearchClick} />
               <div className="w-3/4 px-4">
                 <div className="grid grid-cols-3 gap-4">
                   {filteredRoomList.map((room) => (
