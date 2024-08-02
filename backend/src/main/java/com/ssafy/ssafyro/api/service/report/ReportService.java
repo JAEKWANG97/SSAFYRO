@@ -20,7 +20,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
 
-    public ReportListResponse showReports(Long userId, Pageable pageable) {
+    public ReportListResponse getReports(Long userId, Pageable pageable) {
         User user = getUser(userId);
         Page<Report> reportsWithPage = reportRepository.findAllByUser(user, pageable);
 

@@ -20,9 +20,9 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/api/v1/reports")
-    public ApiResult<ReportListResponse> showReports(@RequestParam @NotNull Long userId,
-                                                     @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return success(reportService.showReports(userId, pageable));
+    public ApiResult<ReportListResponse> getReports(@RequestParam @NotNull Long userId,
+                                                    @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return success(reportService.getReports(userId, pageable));
     }
 
 }
