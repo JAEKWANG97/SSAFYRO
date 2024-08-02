@@ -28,7 +28,7 @@ export default function Interview() {
     const response = await axios
       .get(APIURL + "rooms", { params: filter })
       .then((response) => {
-        console.log(response.data.response.rooms);
+        // console.log(response.data.response.rooms);
         setFilteredRoomList(response.data.response.rooms);
       })
       .catch((error) => {
