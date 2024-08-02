@@ -31,13 +31,11 @@ include::api/interview/interview-start.adoc[]
 include::api/interview/interview-article.adoc[]
 include::api/interview/interview-question-answer-save.adoc[]
 include::api/interview/interview-finish.adoc[]
-include::api/interview/interview-score.adoc[]
 
 [[report-API]]
 == 면접 레포트 API
 
 include::api/report/reports-list.adoc[]
-
 
 [[essay-API]]
 == 에세이 API
@@ -56,7 +54,6 @@ include::api/essayquestion/get-essay-question-by-major-type-and-generation.adoc[
 
 include::api/codingtestproblem/get-problems.adoc[]
 include::api/codingtestproblem/get-problem-by-id.adoc[]
-
 
 [[it-knowledge-API]]
 == IT 지식 API
