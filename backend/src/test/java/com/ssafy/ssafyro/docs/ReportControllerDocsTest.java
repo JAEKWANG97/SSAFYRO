@@ -58,7 +58,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 List.of(report)
         );
 
-        given(reportService.showReports(any(Long.class), any(Pageable.class)))
+        given(reportService.getReports(any(Long.class), any(Pageable.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -94,8 +94,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("면접 총 점수"),
                                 fieldWithPath("response.reports[].pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
-                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.STRING)
-                                        .description("면접 날짜(yyyy.mm.dd)"),
+                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.ARRAY)
+                                        .description("면접 날짜"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )

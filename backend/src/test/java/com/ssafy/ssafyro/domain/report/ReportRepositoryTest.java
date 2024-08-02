@@ -28,13 +28,13 @@ class ReportRepositoryTest extends IntegrationTestSupport {
     @Test
     void findAllByUser() {
         //given
-        User user = makeUser();
+        User user = creatUser();
         userRepository.save(user);
 
         List<Report> reports = List.of(
-                makeReport(user, 90),
-                makeReport(user, 92),
-                makeReport(user, 95)
+                createReport(user, 90),
+                createReport(user, 92),
+                createReport(user, 95)
         );
         reportRepository.saveAll(reports);
 
@@ -46,7 +46,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrderElementsOf(reports);
     }
 
-    private User makeUser() {
+    private User creatUser() {
         return User.builder()
                 .providerId("providerId")
                 .providerName("goole")
@@ -56,7 +56,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Report makeReport(User user, int totalScore) {
+    private Report createReport(User user, int totalScore) {
         return PersonalityInterviewReport.builder()
                 .user(user)
                 .room(null)
