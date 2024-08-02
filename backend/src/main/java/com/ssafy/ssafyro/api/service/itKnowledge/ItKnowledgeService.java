@@ -25,9 +25,9 @@ public class ItKnowledgeService {
     }
 
     public ItKnowledgeListResponse getItKnowledgeList(ItKnowledgeListServiceRequest request) {
-        Page<ItKnowledge> itKnowlegeList = itKnowledgeRepository.findAll(request.pageable());
+        Page<ItKnowledge> itKnowledgeList = itKnowledgeRepository.findAll(request.pageable());
 
-        return ItKnowledgeListResponse.of(itKnowlegeList);
+        return ItKnowledgeListResponse.of(itKnowledgeList);
     }
 
     private ItKnowledge getItKnowledge(ItKnowledgeDetailServiceRequest request) {
