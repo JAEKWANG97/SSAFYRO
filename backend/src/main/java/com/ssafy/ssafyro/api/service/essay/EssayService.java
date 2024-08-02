@@ -12,7 +12,7 @@ import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestionRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
-import com.ssafy.ssafyro.error.essay.EssayNotFountException;
+import com.ssafy.ssafyro.error.essay.EssayNotFoundException;
 import com.ssafy.ssafyro.error.essayquestion.EssayQuestionNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +68,7 @@ public class EssayService {
 
     private Essay getEssayBy(User user) {
         return essayRepository.findByUser(user)
-                .orElseThrow(() -> new EssayNotFountException("Essay not found"));
+                .orElseThrow(() -> new EssayNotFoundException("Essay not found"));
     }
 
     private Essay createEssay(EssayQuestion essayQuestion, User user, String content) {
