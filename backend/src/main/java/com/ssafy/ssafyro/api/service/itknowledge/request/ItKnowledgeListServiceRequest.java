@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.service.itKnowledge.request;
+package com.ssafy.ssafyro.api.service.itknowledge.request;
 
 import org.springframework.data.domain.Pageable;
 

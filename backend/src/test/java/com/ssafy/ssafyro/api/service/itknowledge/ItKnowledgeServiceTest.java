@@ -1,13 +1,13 @@
-package com.ssafy.ssafyro.api.service.itKnowledge;
+package com.ssafy.ssafyro.api.service.itknowledge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeListServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeDetailResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledgeRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -92,14 +92,20 @@ class ItKnowledgeServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(itKnowledgeService.getItKnowledgeList(request)).isNotNull();
-        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeList()).hasSize(2);
-        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeList()).extracting("title",
-                        "thumbnailImageUrl", "articleUrl")
+        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeInfos()).hasSize(2);
+        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeInfos())
+                .extracting("title", "thumbnailImageUrl", "articleUrl")
                 .containsExactly(
-                        tuple(itKnowledge1.getTitle(), itKnowledge1.getThumbnailImageUrl(),
-                                itKnowledge1.getArticleUrl()),
-                        tuple(itKnowledge2.getTitle(), itKnowledge2.getThumbnailImageUrl(),
-                                itKnowledge2.getArticleUrl())
+                        tuple(
+                                itKnowledge1.getTitle(),
+                                itKnowledge1.getThumbnailImageUrl(),
+                                itKnowledge1.getArticleUrl()
+                        ),
+                        tuple(
+                                itKnowledge2.getTitle(),
+                                itKnowledge2.getThumbnailImageUrl(),
+                                itKnowledge2.getArticleUrl()
+                        )
                 );
 
     }

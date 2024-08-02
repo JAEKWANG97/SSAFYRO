@@ -1,9 +1,9 @@
-package com.ssafy.ssafyro.api.service.itKnowledge;
+package com.ssafy.ssafyro.api.service.itknowledge;
 
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeListServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeDetailResponse;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeListResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledgeRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ItKnowledgeService {
     public ItKnowledgeListResponse getItKnowledgeList(ItKnowledgeListServiceRequest request) {
         Page<ItKnowledge> itKnowledgeList = itKnowledgeRepository.findAll(request.pageable());
 
-        return ItKnowledgeListResponse.of(itKnowledgeList);
+        return ItKnowledgeListResponse.of(itKnowledgeList.getContent());
     }
 
     private ItKnowledge getItKnowledge(ItKnowledgeDetailServiceRequest request) {
