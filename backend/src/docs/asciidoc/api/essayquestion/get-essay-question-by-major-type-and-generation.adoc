@@ -1,5 +1,5 @@
 [[get-essay-question-by-major-type-and-generation]]
-=== 에세이 질문 조회
+=== 에세이 질문 상세 조회
 
 ==== HTTP Request
 
