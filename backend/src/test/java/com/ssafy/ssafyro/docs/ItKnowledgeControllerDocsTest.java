@@ -5,7 +5,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -17,11 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.itKnowledge.ItKnowledgeController;
-import com.ssafy.ssafyro.api.service.itKnowledge.ItKnowledgeService;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeListServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeDetailResponse;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeListResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.ItKnowledgeService;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -96,8 +95,8 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
         given(itKnowledge.getArticleUrl()).willReturn("https://articleUrl.com");
 
         Pageable pageable = PageRequest.of(0, 10);
-        ItKnowledgeListResponse response = ItKnowledgeListResponse.of(
-                new PageImpl<>(List.of(itKnowledge), pageable, 0));
+        ItKnowledgeListResponse response = ItKnowledgeListResponse.of(List.of(itKnowledge));
+
 
         given(itKnowledgeService.getItKnowledgeList(any(ItKnowledgeListServiceRequest.class)))
                 .willReturn(response);
@@ -119,15 +118,15 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.itKnowledgeList[]").type(JsonFieldType.ARRAY)
+                                fieldWithPath("response.itKnowledgeInfos[]").type(JsonFieldType.ARRAY)
                                         .description("IT 지식 목록"),
-                                fieldWithPath("response.itKnowledgeList[].id").type(JsonFieldType.NUMBER)
+                                fieldWithPath("response.itKnowledgeInfos[].id").type(JsonFieldType.NUMBER)
                                         .description("IT 지식 ID"),
-                                fieldWithPath("response.itKnowledgeList[].title").type(JsonFieldType.STRING)
+                                fieldWithPath("response.itKnowledgeInfos[].title").type(JsonFieldType.STRING)
                                         .description("제목"),
-                                fieldWithPath("response.itKnowledgeList[].thumbnailImageUrl").type(JsonFieldType.STRING)
+                                fieldWithPath("response.itKnowledgeInfos[].thumbnailImageUrl").type(JsonFieldType.STRING)
                                         .description("썸네일 이미지 URL"),
-                                fieldWithPath("response.itKnowledgeList[].articleUrl").type(JsonFieldType.STRING)
+                                fieldWithPath("response.itKnowledgeInfos[].articleUrl").type(JsonFieldType.STRING)
                                         .description("기사 URL"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러 메시지")

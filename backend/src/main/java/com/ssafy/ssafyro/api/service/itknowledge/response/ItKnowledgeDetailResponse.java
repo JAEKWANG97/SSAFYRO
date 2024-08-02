@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.service.itKnowledge.response;
+package com.ssafy.ssafyro.api.service.itknowledge.response;
 
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import lombok.Builder;
