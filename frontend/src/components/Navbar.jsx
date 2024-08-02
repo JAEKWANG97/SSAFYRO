@@ -45,6 +45,8 @@ export default function Navbar() {
 
   const handleNavClick = (tab) => {
     setActiveTab(tab);
+    setDropdown1Open(false); // 드롭다운을 닫음
+    setDropdown2Open(false); // 드롭다운을 닫음
     if (tab === 'essay') {
       navigate('/first/essay');
     } else if (tab === 'test') {
@@ -118,7 +120,7 @@ export default function Navbar() {
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
-                      href="/second/guide/personality"
+                      href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
                       onClick={() => handleNavClick("guide")}
                     >
@@ -127,7 +129,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <a
-                      href="/second/interview"
+                      href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
                       onClick={() => handleNavClick("interview")}
                     >

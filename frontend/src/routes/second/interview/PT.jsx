@@ -21,6 +21,7 @@ export default function PT() {
   const navigate = useNavigate();
 
   const handleEndInterview = () => {
+    leaveRoom();
     navigate("/second/interview");
   };
 
