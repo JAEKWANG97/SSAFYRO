@@ -66,38 +66,8 @@ export default function Interview() {
     }
   };
 
-  const handleFilterChange = (key, value) => {
-    setFilter({ ...filter, [key]: value });
-  };
-
-  const handleSearchClick = (type, capacity, page, size, title = null, status = null) => {
-    getRooms(type, capacity, page, size);
-    // let filtered = roomList;
-
-    // if (filter.selectedType) {
-    //   filtered = filtered.filter((room) => room.type === filter.selectedType);
-    // }
-
-    // if (filter.selectedParticipants) {
-    //   filtered = filtered.filter(
-    //     (room) => room.maxParticipants === parseInt(filter.selectedParticipants)
-    //   );
-    // }
-
-    // if (filter.searchTerm) {
-    //   const lowerCaseSearchTerm = filter.searchTerm.toLowerCase();
-    //   filtered = filtered.filter(
-    //     (room) =>
-    //       room.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-    //       room.description.toLowerCase().includes(lowerCaseSearchTerm)
-    //   );
-    // }
-
-    // if (filter.isRecruiting) {
-    //   filtered = filtered.filter((room) => room.status === "WAIT");
-    // }
-
-    // setFilteredRoomList(filtered);
+  const handleSearchClick = function (filter) {
+    getRooms(filter.type, filter.capacity, filter.page, filter.size, filter.title, filter.status);
   };
 
   return (
@@ -108,11 +78,7 @@ export default function Interview() {
           <div className="container mx-auto">
             <h1 className="text-3xl font-bold mb-12">모의 면접 방 목록</h1>
             <div className="flex">
-              <Filter
-                filter={filter}
-                onFilterChange={handleFilterChange}
-                onSearchClick={handleSearchClick}
-              />
+              <Filter onSearchClick={handleSearchClick} />
               <div className="w-3/4 px-4">
                 <div className="grid grid-cols-3 gap-4">
                   {filteredRoomList.map((room) => (
