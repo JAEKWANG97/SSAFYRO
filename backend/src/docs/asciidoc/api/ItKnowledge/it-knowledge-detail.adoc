@@ -1,5 +1,5 @@
 [[it-knowledge-detail]]
-===
+=== IT 지식 상세 조회
 
 ==== HTTP Request
 

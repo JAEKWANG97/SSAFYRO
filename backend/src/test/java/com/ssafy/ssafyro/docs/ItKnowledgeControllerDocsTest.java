@@ -33,7 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-public class ItknowledgeControllerDocsTest extends RestDocsSupport {
+public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
 
     private final ItKnowledgeService itKnowledgeService = mock(ItKnowledgeService.class);
 
@@ -107,7 +107,7 @@ public class ItknowledgeControllerDocsTest extends RestDocsSupport {
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("get-it-knowledge-list",
+                .andDo(document("it-knowledge-list",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
