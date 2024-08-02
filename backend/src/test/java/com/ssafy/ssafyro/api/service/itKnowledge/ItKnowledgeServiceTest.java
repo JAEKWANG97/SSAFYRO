@@ -92,7 +92,7 @@ class ItKnowledgeServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(itKnowledgeService.getItKnowledgeList(request)).isNotNull();
-        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeList().size()).isEqualTo(2);
+        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeList()).hasSize(2);
         assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeList()).extracting("title",
                         "thumbnailImageUrl", "articleUrl")
                 .containsExactly(

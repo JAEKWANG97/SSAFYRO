@@ -42,6 +42,7 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
         return new ItKnowledgeController(itKnowledgeService);
     }
 
+    @DisplayName("IT Knowledge 상세 조회 API")
     @Test
     public void getItKnowledgeDetail() throws Exception {
         // given
@@ -84,7 +85,7 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("IT Knowledge List 조회")
+    @DisplayName("IT Knowledge List 조회 API")
     @Test
     void getItKnowledgeList() throws Exception {
         // given
@@ -108,7 +109,6 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("it-knowledge-list",
-                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
                                 parameterWithName("page").description("페이지 번호"),
