@@ -1,5 +1,8 @@
 package com.ssafy.ssafyro.api.controller.itKnowledge;
 
+import static com.ssafy.ssafyro.api.ApiUtils.success;
+
+import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.itKnowledge.dto.ItKnowledgeDetailRequest;
 import com.ssafy.ssafyro.api.controller.itKnowledge.dto.ItKnowledgeListRequest;
 import com.ssafy.ssafyro.api.service.itKnowledge.ItKnowledgeService;
@@ -17,12 +20,12 @@ public class ItKnowledgeController {
     private final ItKnowledgeService itKnowledgeService;
 
     @GetMapping("/api/v1/it-knowledge/{id}")
-    public ItKnowledgeDetailResponse getItKnowledgeDetail(@ModelAttribute ItKnowledgeDetailRequest request) {
-        return itKnowledgeService.getItKnowledgeDetail(request.toServiceRequest());
+    public ApiResult<ItKnowledgeDetailResponse> getItKnowledgeDetail(@ModelAttribute ItKnowledgeDetailRequest request) {
+        return success(itKnowledgeService.getItKnowledgeDetail(request.toServiceRequest()));
     }
 
     @GetMapping("/api/v1/it-knowledge")
-    public ItKnowledgeListResponse getItKnowledgeDetail(@ModelAttribute ItKnowledgeListRequest request) {
-        return itKnowledgeService.getItKnowledgeList(request.toServiceRequest());
+    public ApiResult<ItKnowledgeListResponse> getItKnowledgeDetail(@ModelAttribute ItKnowledgeListRequest request) {
+        return success(itKnowledgeService.getItKnowledgeList(request.toServiceRequest()));
     }
 }

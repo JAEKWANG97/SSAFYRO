@@ -51,3 +51,8 @@ include::api/codingtestproblem/get-problems.adoc[]
 include::api/codingtestproblem/get-problem-by-id.adoc[]
 
 
+[[it-knowledge-API]]
+== IT 지식 API
+
+include::api/Itknowledge/it-knowledge-detail.adoc[]
+include::api/Itknowledge/it-knowledge-list.adoc[]
