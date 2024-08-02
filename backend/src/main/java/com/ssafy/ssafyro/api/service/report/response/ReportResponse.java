@@ -7,11 +7,10 @@ import java.util.Map;
 
 public record ReportResponse(List<ReportDetailInfo> reportDetails) {
 
-    public static ReportResponse of(List<InterviewResult> reportDetails,
-                                    Map<Expression, Double> expression) {
+    public static ReportResponse of(List<InterviewResult> reportDetails) {
         return new ReportResponse(
                 reportDetails.stream()
-                        .map(interviewResult -> new ReportDetailInfo(interviewResult, expression))
+                        .map(ReportDetailInfo::new)
                         .toList()
         );
     }
@@ -21,17 +20,17 @@ public record ReportResponse(List<ReportDetailInfo> reportDetails) {
                                    String feedback,
                                    int pronunciationScore,
                                    Map<Expression, Double> expression) {
-        //Map key는 enum 으로 해보자
-        private ReportDetailInfo(InterviewResult interviewResult,
-                                 Map<Expression, Double> expression) {
+
+        private ReportDetailInfo(InterviewResult interviewResult) {
             this(
                     interviewResult.getQuestion(),
                     interviewResult.getAnswer(),
                     interviewResult.getFeedback(),
                     interviewResult.getPronunciationScore(),
-                    expression
+                    interviewResult.getTop3Expression()
             );
         }
+
     }
 
 }

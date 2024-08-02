@@ -2,7 +2,6 @@ package com.ssafy.ssafyro.api.service.report;
 
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
 import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.report.ReportRepository;
@@ -10,7 +9,6 @@ import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,13 +31,16 @@ public class ReportService {
         return ReportListResponse.of(reportsWithPage.getContent());
     }
 
+    //TODO: PT 상속 생각하기
+    //TODO: 각 단위 테스트 하기
     public ReportResponse getReport(Long reportId) {
-        //id를 통해 기사의 타입 확인
-        reportRepository.findById(reportId)
-                .orElseThrow(ReportNotFoundException::new);
-        List<InterviewResult> interviewResults = interviewResultRepository.findByReportId(reportId);
-        
-        return null;
+        if (!reportRepository.existsById(reportId)) {
+            throw new ReportNotFoundException();
+        }
+
+        return ReportResponse.of(
+                interviewResultRepository.findByReportId(reportId)
+        );
     }
 
     private User getUser(Long userId) {
