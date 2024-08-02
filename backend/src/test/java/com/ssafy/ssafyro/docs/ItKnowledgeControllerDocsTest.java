@@ -5,7 +5,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -17,11 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.itKnowledge.ItKnowledgeController;
-import com.ssafy.ssafyro.api.service.itKnowledge.ItKnowledgeService;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.request.ItKnowledgeListServiceRequest;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeDetailResponse;
-import com.ssafy.ssafyro.api.service.itKnowledge.response.ItKnowledgeListResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.ItKnowledgeService;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
+import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
