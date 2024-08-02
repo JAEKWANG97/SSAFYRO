@@ -4,12 +4,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -107,6 +110,37 @@ public class EssayControllerDocsTest extends RestDocsSupport {
                                                 .description("응답"),
                                         fieldWithPath("response.essayId").type(JsonFieldType.NUMBER)
                                                 .description("에세이 id"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("에세이 상세 조회 API")
+    @Test
+    void findEssay() throws Exception {
+        mockMvc.perform(
+                        get("/api/v1/essays")
+                                .queryParam("userId", "1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-essay-by-user-id",
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("userId").description("유저 id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.userId").type(JsonFieldType.NUMBER)
+                                                .description("유저 id"),
+                                        fieldWithPath("response.content").type(JsonFieldType.STRING)
+                                                .description("에세이 내용"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
                                 )

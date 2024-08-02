@@ -55,13 +55,13 @@ class CodingTestProblemServiceTest extends IntegrationTestSupport {
         codingTestProblemRepository.save(problem);
 
         //when
-        CodingTestProblemDetailResponse response = codingTestProblemService.findById(1L);
+        CodingTestProblemDetailResponse response = codingTestProblemService.findById(problem.getId());
 
         //then
         assertThat(response)
                 .extracting("id", "title", "difficulty", "correctRate", "recommendationCount", "problemUrl")
                 .containsExactly(
-                        1L, "문제1", Difficulty.D1, 100.0, 0, "https://example.com"
+                        problem.getId(), "문제1", Difficulty.D1, 100.0, 0, "https://example.com"
                 );
     }
 

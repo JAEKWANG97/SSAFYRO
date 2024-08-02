@@ -38,6 +38,7 @@ include::api/interview/interview-finish.adoc[]
 
 include::api/essay/essay-review.adoc[]
 include::api/essay/essay-save.adoc[]
+include::api/essay/get-essay-by-user-id.adoc[]
 
 [[essay-question-API]]
 == 에세이 질문 API
