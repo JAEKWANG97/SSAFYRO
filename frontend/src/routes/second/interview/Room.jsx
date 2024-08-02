@@ -53,7 +53,13 @@ export default function Room() {
 
   // 면접 시작
   function startInterviewHandler() {
-    navigate(`/second/interview/room/${roomid}/pt_ready`);
+    // 면접 종류가 PT일 경우
+    if (room.type === "PRESENTATION") {
+      navigate(`/second/interview/room/${roomid}/pt_ready`);
+    } else {
+      // 면접 종류가 인성일 경우
+      navigate(`/second/interview/room/${roomid}/pt`);
+    }
   }
 
   async function leaveRoom() {
