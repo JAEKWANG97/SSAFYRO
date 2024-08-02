@@ -1,0 +1,12 @@
+[[essay-review]]
+=== 에세이 첨삭
+
+==== HTTP Request
+
+include::{snippets}/essay-review/http-request.adoc[]
+include::{snippets}/essay-review/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/essay-review/http-response.adoc[]
+include::{snippets}/essay-review/response-fields.adoc[]

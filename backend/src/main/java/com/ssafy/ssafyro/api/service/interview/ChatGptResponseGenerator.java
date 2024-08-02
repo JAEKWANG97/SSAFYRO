@@ -29,24 +29,6 @@ public class ChatGptResponseGenerator {
         return getFeedback(request);
     }
 
-    private String createFeedbackPrompt(String question, String answer) {
-        return "답변은 md 형식이 아닌 text로만, 질문에 대한 답변이 적절한지 피드백 해줘.\n"
-                + "질문: " + question + "\n"
-                + "답변: " + answer;
-    }
-
-    private String getFeedback(HttpEntity<Request> request) {
-        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
-                .getBody()
-                .choices()
-                .get(0)
-                .message()
-                .content();
-
-//        return restTemplate.exchange(API_URL, HttpMethod.POST, request, String.class)
-//                .getBody();
-    }
-
     public AiArticle generateArticle() {
         HttpEntity<Request> request = new HttpEntity<>(
                 new Request(createArticlePrompt(), 1000),
@@ -54,6 +36,21 @@ public class ChatGptResponseGenerator {
         );
 
         return getArticle(request);
+    }
+
+    public String generateNewEssay(String question, String content) {
+        HttpEntity<Request> request = new HttpEntity<>(
+                new Request(createFeedbackPrompt(question, content), 1000),
+                setHeaders()
+        );
+
+        return getNewEssay(request);
+    }
+
+    private String createFeedbackPrompt(String question, String answer) {
+        return "답변은 md 형식이 아닌 text로만, 질문에 대한 답변이 적절한지 피드백 해줘.\n"
+                + "질문: " + question + "\n"
+                + "답변: " + answer;
     }
 
     private String createArticlePrompt() {
@@ -90,11 +87,19 @@ public class ChatGptResponseGenerator {
                 + "\n";
     }
 
-    private HttpHeaders setHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + apiKey);
-        headers.set("Content-Type", "application/json");
-        return headers;
+    private String createEssayReviewPrompt(String question, String content) {
+        return "답변은 md 형식이 아닌 text로만, 질문에 대한 에세이가 적절한지 판단하고 첨삭해줘.\n"
+                + "질문: " + question + "\n"
+                + "에세이: " + content;
+    }
+
+    private String getFeedback(HttpEntity<Request> request) {
+        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
+                .getBody()
+                .choices()
+                .get(0)
+                .message()
+                .content();
     }
 
     private AiArticle getArticle(HttpEntity<Request> request) {
@@ -107,6 +112,22 @@ public class ChatGptResponseGenerator {
                 .split("-------------");
 
         return new AiArticle(result);
+    }
+
+    private String getNewEssay(HttpEntity<Request> request) {
+        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
+                .getBody()
+                .choices()
+                .get(0)
+                .message()
+                .content();
+    }
+
+    private HttpHeaders setHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("Content-Type", "application/json");
+        return headers;
     }
 
     private record Request(String model, List<Message> messages, int max_tokens) {

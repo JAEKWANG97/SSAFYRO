@@ -3,7 +3,7 @@
 
 ==== HTTP Request
 
-include::{snippets}/fast-enter-room/path-parameters.adoc[]
+include::{snippets}/fast-enter-room/query-parameters.adoc[]
 include::{snippets}/fast-enter-room/http-request.adoc[]
 
 ==== HTTP Response

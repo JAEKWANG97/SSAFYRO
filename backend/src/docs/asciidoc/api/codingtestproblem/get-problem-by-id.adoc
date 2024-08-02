@@ -1,0 +1,12 @@
+[[get-problem-by-id]]
+=== 코딩 테스트 문제 상세 조회
+
+==== HTTP Request
+
+include::{snippets}/get-problem-by-id/http-request.adoc[]
+include::{snippets}/get-problem-by-id/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-problem-by-id/http-response.adoc[]
+include::{snippets}/get-problem-by-id/response-fields.adoc[]
