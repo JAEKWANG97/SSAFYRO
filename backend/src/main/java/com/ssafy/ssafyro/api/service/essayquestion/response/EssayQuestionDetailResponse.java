@@ -7,6 +7,10 @@ public record EssayQuestionDetailResponse(Long id,
                                           Integer characterLimit) {
 
     public EssayQuestionDetailResponse(EssayQuestion question) {
-        this(question.getId(), question.getContent(), question.getCharacterLimit());
+        this(
+                question.getId(),
+                question.getContent(),
+                question.getCharacterLimit()
+        );
     }
 }
