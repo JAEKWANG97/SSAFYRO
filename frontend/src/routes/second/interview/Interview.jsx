@@ -28,7 +28,7 @@ export default function Interview() {
     const response = await axios
       .get(APIURL + "rooms", { params: filter })
       .then((response) => {
-        console.log(response.data.response.rooms);
+        // console.log(response.data.response.rooms);
         setFilteredRoomList(response.data.response.rooms);
       })
       .catch((error) => {
@@ -38,15 +38,18 @@ export default function Interview() {
       });
   };
 
+  // 방 타입 한글로 변환
   const typeKorean = {
     PRESENTATION: "PT",
     PERSONALITY: "인성",
   };
 
+  // react useEffect Hook: 방 목록 불러오기
   useEffect(() => {
     getRooms(null, null, 1, 10, null, null);
   }, []);
 
+  // 방 참여
   const handleJoinRoom = (id) => {
     const roomIndex = filteredRoomList.findIndex((room) => room.id === id);
     console.log("roomIndex: ", roomIndex)
@@ -60,6 +63,7 @@ export default function Interview() {
     }
   };
 
+  // 필터 갱신
   const handleSearchClick = function (filter) {
     getRooms(filter.type ? filter.type : null,
        filter.capacity ? filter.capacity : null,
@@ -68,6 +72,22 @@ export default function Interview() {
        filter.title ? filter.title : null,
        filter.status ? "WAIT" : null);
   };
+
+  // 빠른 입장
+  const handleQuickStart = async function (type) {
+    await axios.get(APIURL + "rooms/fast-enter", {
+      params: {
+        type: type,
+      },
+    })
+    .then((response) => {
+      navigate(`/second/interview/room/${response.data.response.roomId}`);
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("빠른 입장에 실패했습니다.");
+    });
+  }
 
   return (
     <>
@@ -133,9 +153,19 @@ export default function Interview() {
                   ))}
                   <button
                     onClick={() => navigate("/second/interview/createroom")}
-                    className="bg-white shadow rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
+                    className="h-[200px] bg-white shadow rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
                   >
                     + 방 생성
+                  </button>
+                  <button className="h-[200px] bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
+                    onClick={() => handleQuickStart("PRESENTATION")}
+                  >
+                    PT면접 빠른 시작
+                  </button>
+                  <button className="h-[200px] bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white"
+                    onClick={() => handleQuickStart("PERSONALITY")}
+                  >
+                    인성면접 빠른 시작
                   </button>
                 </div>
               </div>
