@@ -55,10 +55,12 @@ export default function Interview() {
     const roomIndex = filteredRoomList.findIndex((room) => room.id === id);
     console.log("roomIndex: ", roomIndex)
     console.log("filteredRoomList:", filteredRoomList)
-    if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "WAIT") {
+    if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "WAIT" && filteredRoomList[roomIndex].participantCount < filteredRoomList[roomIndex].capacity) {
       const updateRooms = [...filteredRoomList];
       setFilteredRoomList(updateRooms);
       navigate(`/second/interview/room/${id}`);
+    } else {
+      alert("현재 참여할 수 없는 방입니다.");
     }
   };
 
