@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.openvidu.OpenViduTokenController;
 import com.ssafy.ssafyro.api.controller.openvidu.OpenViduTokenFactory;
-import com.ssafy.ssafyro.api.controller.openvidu.dto.TokenRequest;
+import com.ssafy.ssafyro.api.controller.openvidu.request.TokenRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

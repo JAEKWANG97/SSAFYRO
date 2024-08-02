@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.controller.openvidu.dto;
+package com.ssafy.ssafyro.api.controller.openvidu.request;
 
 import jakarta.validation.constraints.NotEmpty;
 
