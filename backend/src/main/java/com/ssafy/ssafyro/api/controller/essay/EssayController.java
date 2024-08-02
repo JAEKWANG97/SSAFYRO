@@ -35,6 +35,6 @@ public class EssayController {
 
     @GetMapping("/api/v1/essays")
     public ApiResult<EssayDetailResponse> findEssay(@RequestParam Long userId) {
-        return success(new EssayDetailResponse(1L, "에세이"));
+        return success(essayService.findBy(userId));
     }
 }

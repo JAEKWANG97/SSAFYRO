@@ -23,6 +23,7 @@ import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
 import com.ssafy.ssafyro.api.service.essay.EssayService;
 import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
+import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -120,6 +121,9 @@ public class EssayControllerDocsTest extends RestDocsSupport {
     @DisplayName("에세이 상세 조회 API")
     @Test
     void findEssay() throws Exception {
+        given(essayService.findBy(any(Long.class)))
+                .willReturn(new EssayDetailResponse(1L, "에세이"));
+
         mockMvc.perform(
                         get("/api/v1/essays")
                                 .queryParam("userId", "1")
