@@ -21,12 +21,12 @@ export default function Interview() {
 
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
-  const getRooms = async () => {
+  const getRooms = async (type, capacity, page, size) => {
     let filter = {
-      type: "PRESENTATION",
-      capacity: "3",
-      page: 1,
-      size: 10,
+      type: type,
+      capacity: capacity,
+      page: page,
+      size: size,
     };
 
     const response = await axios
@@ -48,7 +48,7 @@ export default function Interview() {
   };
 
   useEffect(() => {
-    getRooms();
+    getRooms(null, null, 1, 10);
   }, []);
 
   const handleJoinRoom = (id) => {
