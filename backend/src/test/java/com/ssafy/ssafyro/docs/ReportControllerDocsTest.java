@@ -1,8 +1,5 @@
 package com.ssafy.ssafyro.docs;
 
-import static com.ssafy.ssafyro.api.service.report.Expression.ANGRY;
-import static com.ssafy.ssafyro.api.service.report.Expression.HAPPY;
-import static com.ssafy.ssafyro.api.service.report.Expression.NEUTRAL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -28,7 +25,6 @@ import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -130,21 +126,16 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         given(interviewResult.getAnswer()).willReturn("답변");
         given(interviewResult.getFeedback()).willReturn("피드백");
         given(interviewResult.getPronunciationScore()).willReturn(3);
-        given(interviewResult.getAngry()).willReturn(0.01);
-        given(interviewResult.getFear()).willReturn(0.01);
-        given(interviewResult.getDisgust()).willReturn(0.01);
-        given(interviewResult.getHappy()).willReturn(0.01);
-        given(interviewResult.getNeutral()).willReturn(0.01);
-        given(interviewResult.getSad()).willReturn(0.01);
-        given(interviewResult.getSurprise()).willReturn(0.01);
-
-        Map<Expression, Double> expression = new HashMap<>();
-        expression.put(NEUTRAL, 0.9);
-        expression.put(HAPPY, 0.13);
-        expression.put(ANGRY, 0.17);
+        given(interviewResult.getTop3Expression()).willReturn(
+                Map.of(
+                        Expression.HAPPY, 0.8,
+                        Expression.SAD, 0.15,
+                        Expression.DISGUST, 0.05
+                )
+        );
 
         ReportResponse response = ReportResponse.of(
-                List.of(interviewResult), expression
+                List.of(interviewResult)
         );
 
         given(reportService.getReport(any(Long.class)))
@@ -184,12 +175,12 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                                 + "    FEAR,\n"
                                                 + "    ANGRY,\n"
                                                 + "    NEUTRAL)"),
-                                fieldWithPath("response.reportDetails[].expression.ANGRY").type(JsonFieldType.NUMBER)
-                                        .description("표정 점수: 화남"),
-                                fieldWithPath("response.reportDetails[].expression.NEUTRAL").type(JsonFieldType.NUMBER)
-                                        .description("표정 점수: 중립"),
                                 fieldWithPath("response.reportDetails[].expression.HAPPY").type(JsonFieldType.NUMBER)
                                         .description("표정 점수: 행복"),
+                                fieldWithPath("response.reportDetails[].expression.SAD").type(JsonFieldType.NUMBER)
+                                        .description("표정 점수: 슬픔"),
+                                fieldWithPath("response.reportDetails[].expression.DISGUST").type(JsonFieldType.NUMBER)
+                                        .description("표정 점수: 역겨움"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )
