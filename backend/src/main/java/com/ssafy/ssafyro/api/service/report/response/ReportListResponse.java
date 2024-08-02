@@ -4,7 +4,6 @@ import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.Builder;
 
 public record ReportListResponse(List<ReportInfo> reports) {
 
@@ -16,7 +15,6 @@ public record ReportListResponse(List<ReportInfo> reports) {
         );
     }
 
-    @Builder
     private record ReportInfo(Long reportId,
                               String title,
                               RoomType type,
