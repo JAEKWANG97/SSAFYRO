@@ -40,21 +40,25 @@ class ReportServiceTest extends IntegrationTestSupport {
     @Test
     void showReports() {
         //given
-        User user = makeUser();
+        User user = createUser();
+        userRepository.save(user);
 
-        Room room1 = makeRoom(1);
-        Room room2 = makeRoom(2);
-        Room room3 = makeRoom(3);
+        Room room1 = createRoom(1);
+        Room room2 = createRoom(2);
+        Room room3 = createRoom(3);
+        roomRepository.save(room1);
+        roomRepository.save(room2);
+        roomRepository.save(room3);
 
         List<Report> reports = List.of(
-                makeReport(user, 90, room1),
-                makeReport(user, 92, room2),
-                makeReport(user, 95, room3)
+                createReport(user, 90, room1),
+                createReport(user, 92, room2),
+                createReport(user, 95, room3)
         );
         reportRepository.saveAll(reports);
 
         //when
-        ReportListResponse response = reportService.showReports(user.getId(), Pageable.unpaged());
+        ReportListResponse response = reportService.getReports(user.getId(), Pageable.unpaged());
 
         //then
         assertThat(response.reports()).hasSize(3)
@@ -66,19 +70,17 @@ class ReportServiceTest extends IntegrationTestSupport {
                 );
     }
 
-    private User makeUser() {
-        User user = User.builder()
+    private User createUser() {
+        return User.builder()
                 .providerId("providerId")
                 .providerName("google")
                 .nickname("ssafyRo")
                 .profileImageUrl("www.image.url")
                 .majorType(MajorType.MAJOR)
                 .build();
-        userRepository.save(user);
-        return user;
     }
 
-    private Report makeReport(User user, int totalScore, Room room) {
+    private Report createReport(User user, int totalScore, Room room) {
         return PersonalityInterviewReport.builder()
                 .user(user)
                 .room(room)
@@ -87,14 +89,12 @@ class ReportServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Room makeRoom(int num) {
-        Room room = Room.builder()
+    private Room createRoom(int num) {
+        return Room.builder()
                 .id("roomId" + num)
                 .title("제목")
                 .type(RoomType.PERSONALITY)
                 .build();
-        roomRepository.save(room);
-        return room;
     }
 
 }
