@@ -1,5 +1,8 @@
 package com.ssafy.ssafyro.docs;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -12,6 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.essayquestion.EssayQuestionController;
+import com.ssafy.ssafyro.api.service.essayquestion.EssayQuestionService;
+import com.ssafy.ssafyro.api.service.essayquestion.request.EssayQuestionDetailServiceRequest;
+import com.ssafy.ssafyro.api.service.essayquestion.response.EssayQuestionDetailResponse;
+import com.ssafy.ssafyro.domain.MajorType;
+import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -19,14 +27,29 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 public class EssayQuestionControllerDocsTest extends RestDocsSupport {
 
+    private final EssayQuestionService essayQuestionService = mock(EssayQuestionService.class);
+
+    private final EssayQuestion essayQuestion = mock(EssayQuestion.class);
+
     @Override
     protected Object initController() {
-        return new EssayQuestionController();
+        return new EssayQuestionController(essayQuestionService);
     }
 
     @DisplayName("에세이 질문 상세 조회 API")
     @Test
     void findByMajorTypeAndGeneration() throws Exception {
+        given(essayQuestion.getId()).willReturn(1L);
+        given(essayQuestion.getGeneration()).willReturn(11);
+        given(essayQuestion.getMajorType()).willReturn(MajorType.MAJOR);
+        given(essayQuestion.getContent()).willReturn("에세이 질문");
+        given(essayQuestion.getCharacterLimit()).willReturn(600);
+
+        EssayQuestionDetailResponse response = new EssayQuestionDetailResponse(essayQuestion);
+
+        given(essayQuestionService.findByMajorTypeAndGeneration(any(EssayQuestionDetailServiceRequest.class)))
+                .willReturn(response);
+
         mockMvc.perform(
                         get("/api/v1/essay-questions")
                                 .queryParam("type", "MAJOR")
