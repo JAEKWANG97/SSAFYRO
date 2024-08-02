@@ -21,7 +21,6 @@ import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest.TotalScore;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
@@ -170,40 +169,6 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("화남 점수"),
                                 fieldWithPath("neutral").type(JsonFieldType.NUMBER)
                                         .description("무표정 점수")
-                        ),
-                        responseFields(
-                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                        .description("성공 여부"),
-                                fieldWithPath("response").type(JsonFieldType.NULL)
-                                        .description("응답"),
-                                fieldWithPath("error").type(JsonFieldType.NULL)
-                                        .description("에러")
-                        )
-                ));
-    }
-
-    @DisplayName("평가표 점수 저장 API")
-    @Test
-    void saveScore() throws Exception {
-        ScoreRequest request = new ScoreRequest("roomId", "userId", 82);
-
-        mockMvc.perform(
-                        post("/api/v1/interview/score")
-                                .content(objectMapper.writeValueAsString(request))
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("interview-score-save",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("roomId").type(JsonFieldType.STRING)
-                                        .description("방 고유 Id"),
-                                fieldWithPath("userId").type(JsonFieldType.STRING)
-                                        .description("면접자 고유 Id (점수받는 대상자)"),
-                                fieldWithPath("score").type(JsonFieldType.NUMBER)
-                                        .description("평가 점수")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
