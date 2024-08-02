@@ -4,7 +4,7 @@ import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import java.util.List;
 import lombok.Builder;
 import org.springframework.data.domain.Page;
-
+import retrofit2.http.HEAD;
 
 public record ItKnowledgeListResponse(List<ItKnowledgeInfo> itKnowledgeInfos) {
 
@@ -18,9 +18,9 @@ public record ItKnowledgeListResponse(List<ItKnowledgeInfo> itKnowledgeInfos) {
     }
 
     private record ItKnowledgeInfo(Long id,
-                                String title,
-                                String thumbnailImageUrl,
-                                String articleUrl) {
+                                   String title,
+                                   String thumbnailImageUrl,
+                                   String articleUrl) {
 
         public ItKnowledgeInfo(ItKnowledge itKnowledge) {
             this(
