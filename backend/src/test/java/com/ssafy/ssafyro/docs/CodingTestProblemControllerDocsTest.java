@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.codingtestproblem.CodingTestProblemController;
 import com.ssafy.ssafyro.api.service.codingtestproblem.CodingTestProblemService;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemDetailResponse;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemListResponse;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
 import com.ssafy.ssafyro.domain.codingtestproblem.Difficulty;
@@ -98,6 +99,17 @@ public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
     @DisplayName("SW 적성 진단 테스트 문제 상세 조회 API")
     @Test
     void findById() throws Exception {
+        given(problem1.getId()).willReturn(1L);
+        given(problem1.getTitle()).willReturn("문제1 제목");
+        given(problem1.getDifficulty()).willReturn(Difficulty.D1);
+        given(problem1.getCorrectRate()).willReturn(100.0);
+        given(problem1.getProblemUrl()).willReturn("https://example1.com");
+
+        CodingTestProblemDetailResponse response = new CodingTestProblemDetailResponse(problem1);
+
+        given(codingTestProblemService.findById(any(Long.class)))
+                .willReturn(response);
+
         mockMvc.perform(
                         get("/api/v1/coding-test-problems/{id}", 1)
                                 .contentType(MediaType.APPLICATION_JSON)

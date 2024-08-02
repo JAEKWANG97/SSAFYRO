@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemDetailResponse;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemListResponse;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblemRepository;
@@ -42,6 +43,25 @@ class CodingTestProblemServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder(
                         tuple(1L, "문제1"),
                         tuple(2L, "문제2")
+                );
+    }
+
+    @DisplayName("코딩 테스트 문제를 상세 조회한다.")
+    @Test
+    void findById() {
+        //given
+        CodingTestProblem problem = createProblem("문제1");
+
+        codingTestProblemRepository.save(problem);
+
+        //when
+        CodingTestProblemDetailResponse response = codingTestProblemService.findById(1L);
+
+        //then
+        assertThat(response)
+                .extracting("id", "title", "difficulty", "correctRate", "recommendationCount", "problemUrl")
+                .containsExactly(
+                        1L, "문제1", Difficulty.D1, 100.0, 0, "https://example.com"
                 );
     }
 
