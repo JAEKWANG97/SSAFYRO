@@ -3,14 +3,35 @@ import FirstdNav from './components/FirstNav';
 import useFirstStore from '../../stores/FirstStore';
 import Ismajor from './../../components/Ismajor';
 import Button from './../../components/Button';
+import Swal from 'sweetalert2';
 
 export default function Essay() {
-  const selected = useFirstStore((state) => state.selected);
-  const showCorrection = useFirstStore((state) => state.showCorrection);
+  const selected = useFirstStore((state) => state.selected); // 전공자, 비전공자 유무
+  const showCorrection = useFirstStore((state) => state.showCorrection); // AI 첨삭 버튼 클릭 유무
   const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
+  const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
+  const setEssayContent = useFirstStore((state) => state.setEssayContent);
 
   const handleAiCorrection = () => {
-    setShowCorrection(true);
+    if (
+      essayContent === undefined || 
+      essayContent.trim() === '' 
+    ) {
+      setShowCorrection(false)
+      Swal.fire({
+        title: '에세이를 입력해주세요',
+        text: 'AI 첨삭을 받으려면 에세이를 W작성해야 합니다.',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setShowCorrection(true);
+    }
+  };
+
+  const handleEssayContent = (e) => {
+    setEssayContent(e.target.value);
   };
 
   // useEffect를 사용하여 컴포넌트 마운트 시 DOM 이벤트를 설정
@@ -61,7 +82,7 @@ export default function Essay() {
         <div className="flex pb-10 items-center relative pt-4 ">
           <p className="text-2xl font-extrabold pr-4 pl-2">에세이</p>
           <Ismajor />
-          
+
           <div className="ml-auto relative">
             <svg
               id="info-icon"
@@ -160,6 +181,8 @@ export default function Essay() {
               autoCorrect="off"
               autoComplete="off"
               maxLength={600}
+              value={essayContent}
+              onChange={handleEssayContent}
             ></textarea>
 
             {showCorrection && (
