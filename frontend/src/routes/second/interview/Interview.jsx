@@ -38,15 +38,18 @@ export default function Interview() {
       });
   };
 
+  // 방 타입 한글로 변환
   const typeKorean = {
     PRESENTATION: "PT",
     PERSONALITY: "인성",
   };
 
+  // react useEffect Hook: 방 목록 불러오기
   useEffect(() => {
     getRooms(null, null, 1, 10, null, null);
   }, []);
 
+  // 방 참여
   const handleJoinRoom = (id) => {
     const roomIndex = filteredRoomList.findIndex((room) => room.id === id);
     console.log("roomIndex: ", roomIndex)
@@ -60,6 +63,7 @@ export default function Interview() {
     }
   };
 
+  // 필터 갱신
   const handleSearchClick = function (filter) {
     getRooms(filter.type ? filter.type : null,
        filter.capacity ? filter.capacity : null,
