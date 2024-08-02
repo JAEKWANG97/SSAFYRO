@@ -2,12 +2,12 @@ import React, { useState } from "react";
 
 export default function Filter({onSearchClick}) {
   const [filter, setFilter] = useState({
-    type: null,
-    capacity: null,
+    type: "",
+    capacity: "",
     page: 1,
     size: 10,
-    title: null,
-    status: null,
+    title: "",
+    status: "",
   });
    
   return (
@@ -17,7 +17,7 @@ export default function Filter({onSearchClick}) {
         <select
           className="w-full border p-2 rounded bg-gray-50"
           value={filter.type}
-          onChange={(e) => setFilter({ ...filter, type: e.target.value === "" ? null : e.target.value })}
+          onChange={(e) => setFilter({ ...filter, type: e.target.value })}
         >
           <option value="">전체</option>
           <option value="PERSONALITY">인성 면접</option>
@@ -29,7 +29,7 @@ export default function Filter({onSearchClick}) {
         <select
           className="w-full border p-2 rounded bg-gray-50"
           value={filter.capacity}
-          onChange={(e) => setFilter({ ...filter, capacity: e.target.value === "" ? null : e.target.value })}
+          onChange={(e) => setFilter({ ...filter, capacity: e.target.value })}
         >
           <option value="">전체</option>
           <option value="1">1명</option>
@@ -43,7 +43,7 @@ export default function Filter({onSearchClick}) {
           placeholder="검색어를 입력하세요"
           className="w-full border p-2 rounded"
           value={filter.title}
-          onChange={(e) => setFilter({ ...filter, title: e.target.value === "" ? null : e.target.value })}
+          onChange={(e) => setFilter({ ...filter, title: e.target.value })}
         />
       </div>
       <div className="mb-4">
@@ -52,8 +52,7 @@ export default function Filter({onSearchClick}) {
             type="checkbox"
             className="mr-2"
             checked={filter.status}
-            onChange={(e) => setFilter({ ...filter, status: e.target.checked ? "WAIT" : null })}
-            // onChange={(e) => onFilterChange('isRecruiting', e.target.checked)}
+            onChange={(e) => setFilter({ ...filter, status: e.target.checked })}
           />
           모집중
         </label>

@@ -8,13 +8,7 @@ import axios from "axios";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
-  const [filteredRoomList, setFilteredRoomList] = useState([]); // 필터링된 방 목록 상태 추가
-  const [filter, setFilter] = useState({
-    selectedType: "",
-    selectedParticipants: "",
-    searchTerm: "",
-    isRecruiting: false,
-  });
+  const [filteredRoomList, setFilteredRoomList] = useState([]);
 
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" };
@@ -67,7 +61,12 @@ export default function Interview() {
   };
 
   const handleSearchClick = function (filter) {
-    getRooms(filter.type, filter.capacity, filter.page, filter.size, filter.title, filter.status);
+    getRooms(filter.type ? filter.type : null,
+       filter.capacity ? filter.capacity : null,
+       filter.page,
+       filter.size,
+       filter.title ? filter.title : null,
+       filter.status ? "WAIT" : null);
   };
 
   return (
