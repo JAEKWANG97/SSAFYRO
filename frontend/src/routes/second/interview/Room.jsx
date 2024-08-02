@@ -13,7 +13,7 @@ export default function Room() {
   // const roomIndex = rooms.findIndex((room) => room.id === roomid);
   // const room = roomIndex !== -1 ? rooms[roomIndex] : null;
   const [messages, setMessages] = useState([]);
-  const currentUser = { userId: 10, name: "Alice" };
+  const currentUser = { userId: 10, name: "Alice" };  // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 
   // console.log(`roomid : ${roomid}`)
   useEffect(() => {
@@ -45,13 +45,21 @@ export default function Room() {
     }
   }, [roomid]);
 
+  // 방 나가기
   function navigateHandler() {
     leaveRoom();
     navigate("/second/interview");
   }
 
+  // 면접 시작
   function startInterviewHandler() {
-    navigate(`/second/interview/room/${roomid}/pt_ready`);
+    // 면접 종류가 PT일 경우
+    if (room.type === "PRESENTATION") {
+      navigate(`/second/interview/room/${roomid}/pt_ready`);
+    } else {
+      // 면접 종류가 인성일 경우
+      navigate(`/second/interview/room/${roomid}/pt`);
+    }
   }
 
   async function leaveRoom() {
