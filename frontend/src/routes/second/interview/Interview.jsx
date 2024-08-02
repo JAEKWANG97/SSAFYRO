@@ -133,9 +133,15 @@ export default function Interview() {
                   ))}
                   <button
                     onClick={() => navigate("/second/interview/createroom")}
-                    className="bg-white shadow rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
+                    className="h-[200px] bg-white shadow rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
                   >
                     + 방 생성
+                  </button>
+                  <button className="h-[200px] bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white">
+                    PT면접 빠른 시작
+                  </button>
+                  <button className="h-[200px] bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white">
+                    인성면접 빠른 시작
                   </button>
                 </div>
               </div>
