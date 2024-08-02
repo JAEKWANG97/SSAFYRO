@@ -21,12 +21,14 @@ export default function Interview() {
 
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
-  const getRooms = async (type, capacity, page, size) => {
+  const getRooms = async (type, capacity, page, size, title = null, status = null) => {
     let filter = {
       type: type,
       capacity: capacity,
       page: page,
       size: size,
+      title: title,
+      status: status,
     };
 
     const response = await axios
@@ -48,7 +50,7 @@ export default function Interview() {
   };
 
   useEffect(() => {
-    getRooms(null, null, 1, 10);
+    getRooms(null, null, 1, 10, null, null);
   }, []);
 
   const handleJoinRoom = (id) => {
@@ -68,33 +70,34 @@ export default function Interview() {
     setFilter({ ...filter, [key]: value });
   };
 
-  const handleSearchClick = () => {
-    let filtered = roomList;
+  const handleSearchClick = (type, capacity, page, size, title = null, status = null) => {
+    getRooms(type, capacity, page, size);
+    // let filtered = roomList;
 
-    if (filter.selectedType) {
-      filtered = filtered.filter((room) => room.type === filter.selectedType);
-    }
+    // if (filter.selectedType) {
+    //   filtered = filtered.filter((room) => room.type === filter.selectedType);
+    // }
 
-    if (filter.selectedParticipants) {
-      filtered = filtered.filter(
-        (room) => room.maxParticipants === parseInt(filter.selectedParticipants)
-      );
-    }
+    // if (filter.selectedParticipants) {
+    //   filtered = filtered.filter(
+    //     (room) => room.maxParticipants === parseInt(filter.selectedParticipants)
+    //   );
+    // }
 
-    if (filter.searchTerm) {
-      const lowerCaseSearchTerm = filter.searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (room) =>
-          room.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-          room.description.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-    }
+    // if (filter.searchTerm) {
+    //   const lowerCaseSearchTerm = filter.searchTerm.toLowerCase();
+    //   filtered = filtered.filter(
+    //     (room) =>
+    //       room.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+    //       room.description.toLowerCase().includes(lowerCaseSearchTerm)
+    //   );
+    // }
 
-    if (filter.isRecruiting) {
-      filtered = filtered.filter((room) => room.status === "WAIT");
-    }
+    // if (filter.isRecruiting) {
+    //   filtered = filtered.filter((room) => room.status === "WAIT");
+    // }
 
-    setFilteredRoomList(filtered);
+    // setFilteredRoomList(filtered);
   };
 
   return (
