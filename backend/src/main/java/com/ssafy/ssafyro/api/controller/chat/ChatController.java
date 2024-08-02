@@ -22,25 +22,25 @@ public class ChatController {
 
     @MessageMapping("/enter/{roomId}")
     @SendTo("/topic/{roomId}")
-    public NotificationResponse enterRoom(@DestinationVariable String roomId, MessageRequest request) {
+    public NotificationResponse enterRoom(@DestinationVariable String roomId, @Valid MessageRequest request) {
         return NotificationResponse.of(request.name() + "님이 입장하셨습니다.");
     }
 
     @MessageMapping("/leave/{roomId}")
     @SendTo("/topic/{roomId}")
-    public NotificationResponse leaveRoom(@DestinationVariable String roomId, MessageRequest request) {
+    public NotificationResponse leaveRoom(@DestinationVariable String roomId, @Valid MessageRequest request) {
         return NotificationResponse.of(request.name() + "님이 퇴장하셨습니다.");
     }
 
     @MessageMapping("/interview/start/{roomId}")
     @SendTo("/topic/{roomId}")
-    public NotificationResponse startInterview(@DestinationVariable String roomId, MessageRequest request) {
+    public NotificationResponse startInterview(@DestinationVariable String roomId, @Valid MessageRequest request) {
         return NotificationResponse.of(request.name() + "님이 면접을 시작하셨습니다!");
     }
 
     @MessageMapping("/interview/finish/{roomId}")
     @SendTo("/topic/{roomId}")
-    public NotificationResponse finishInterview(@DestinationVariable String roomId, MessageRequest request) {
+    public NotificationResponse finishInterview(@DestinationVariable String roomId, @Valid MessageRequest request) {
         return NotificationResponse.of(request.name() + "님이 면접을 종료하셨습니다!");
     }
 }

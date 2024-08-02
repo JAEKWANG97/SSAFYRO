@@ -6,6 +6,7 @@ import com.ssafy.ssafyro.api.controller.chat.dto.MessageRequest;
 import com.ssafy.ssafyro.api.controller.chat.dto.MessageResponse;
 import com.ssafy.ssafyro.api.controller.chat.dto.NotificationResponse;
 import java.lang.reflect.Type;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ class ChatControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<MessageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = "87af83cc-d64f-40c4-9b76-37084e5540e5";
+        String roomId = generateRandomRoomId();
         session.subscribe("/topic/" + roomId, this.createMessageStompFrameHandler(subscribeFuture));
 
         //when
@@ -53,11 +54,11 @@ class ChatControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<NotificationResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = "87af83cc-d64f-40c4-9b76-37084e5540e5";
+        String roomId = generateRandomRoomId();
         session.subscribe("/topic/" + roomId, this.createNotificationStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/chat/enter/" + roomId, new MessageRequest("김두열", ""));
+        session.send("/chat/enter/" + roomId, new MessageRequest("김두열", "입장"));
 
         //then
         NotificationResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
@@ -71,11 +72,11 @@ class ChatControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<NotificationResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = "87af83cc-d64f-40c4-9b76-37084e5540e5";
+        String roomId = generateRandomRoomId();
         session.subscribe("/topic/" + roomId, this.createNotificationStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/chat/leave/" + roomId, new MessageRequest("김두열", ""));
+        session.send("/chat/leave/" + roomId, new MessageRequest("김두열", "퇴장"));
 
         //then
         NotificationResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
@@ -89,11 +90,11 @@ class ChatControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<NotificationResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = "87af83cc-d64f-40c4-9b76-37084e5540e5";
+        String roomId = generateRandomRoomId();
         session.subscribe("/topic/" + roomId, this.createNotificationStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/chat/interview/start/" + roomId, new MessageRequest("김두열", ""));
+        session.send("/chat/interview/start/" + roomId, new MessageRequest("김두열", "면접 시작"));
 
         //then
         NotificationResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
@@ -107,11 +108,11 @@ class ChatControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<NotificationResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = "87af83cc-d64f-40c4-9b76-37084e5540e5";
+        String roomId = generateRandomRoomId();
         session.subscribe("/topic/" + roomId, this.createNotificationStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/chat/interview/finish/" + roomId, new MessageRequest("김두열", ""));
+        session.send("/chat/interview/finish/" + roomId, new MessageRequest("김두열", "면접 종료"));
 
         //then
         NotificationResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
@@ -159,5 +160,9 @@ class ChatControllerTest {
                 subscribeFuture.complete((NotificationResponse) payload);
             }
         };
+    }
+
+    private String generateRandomRoomId() {
+        return UUID.randomUUID().toString();
     }
 }
