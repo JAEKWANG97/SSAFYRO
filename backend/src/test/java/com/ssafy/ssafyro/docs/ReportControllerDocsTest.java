@@ -4,10 +4,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
@@ -15,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.report.ReportController;
+import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
+import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest.TotalScore;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.domain.report.Report;
@@ -22,6 +26,7 @@ import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -100,5 +105,53 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("에러")
                         )
                 ));
+    }
+
+    @DisplayName("면접 레포트 생성 API")
+    @Test
+    void createReport() throws Exception {
+        List<TotalScore> totalScores = List.of(
+                new TotalScore(1L, 100),
+                new TotalScore(2L, 90),
+                new TotalScore(3L, 80)
+        );
+
+        ReportCreateRequest request = new ReportCreateRequest(generateRandomRoomId(), totalScores);
+
+        mockMvc.perform(
+                        post("/api/v1/reports")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("report-create",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("roomId").type(JsonFieldType.STRING)
+                                        .description("방 id"),
+                                fieldWithPath("totalScores").type(JsonFieldType.ARRAY)
+                                        .description("유저 별 총 점수"),
+                                fieldWithPath("totalScores[].userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 id"),
+                                fieldWithPath("totalScores[].score").type(JsonFieldType.NUMBER)
+                                        .description("총 점수")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                        .description("응답"),
+                                fieldWithPath("response.reportInfos").type(JsonFieldType.ARRAY)
+                                        .description("면접 레포트 정보"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )
+                ));
+    }
+
+    private String generateRandomRoomId() {
+        return UUID.randomUUID().toString();
     }
 }

@@ -36,6 +36,7 @@ include::api/interview/interview-finish.adoc[]
 == 면접 레포트 API
 
 include::api/report/reports-list.adoc[]
+include::api/report/report-create.adoc[]
 
 [[essay-API]]
 == 에세이 API
