@@ -2,9 +2,9 @@ package com.ssafy.ssafyro.api.service.report;
 
 import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 
-import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
@@ -31,11 +31,11 @@ public class ReportService {
     private final InterviewResultRepository interviewResultRepository;
 //    private final ArticleRepository articleRepository;
 
-    public ReportListResponse getReports(Long userId, Pageable pageable) {
+    public ReportsResponse getReports(Long userId, Pageable pageable) {
         User user = getUser(userId);
         Page<Report> reportsWithPage = reportRepository.findAllByUser(user, pageable);
 
-        return ReportListResponse.of(reportsWithPage.getContent());
+        return ReportsResponse.of(reportsWithPage.getContent());
     }
 
     //TODO: User 검증 필요 (시큐리티 후에 작업 요망)

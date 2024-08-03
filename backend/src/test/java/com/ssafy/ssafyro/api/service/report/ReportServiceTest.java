@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
@@ -73,7 +73,7 @@ class ReportServiceTest extends IntegrationTestSupport {
         reportRepository.saveAll(reports);
 
         //when
-        ReportListResponse response = reportService.getReports(user.getId(), Pageable.unpaged());
+        ReportsResponse response = reportService.getReports(user.getId(), Pageable.unpaged());
 
         //then
         assertThat(response.reports()).hasSize(3)

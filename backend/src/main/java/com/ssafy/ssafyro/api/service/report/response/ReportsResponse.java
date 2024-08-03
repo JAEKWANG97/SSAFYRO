@@ -5,10 +5,10 @@ import com.ssafy.ssafyro.domain.room.RoomType;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record ReportListResponse(List<ReportInfo> reports) {
+public record ReportsResponse(List<ReportInfo> reports) {
 
-    public static ReportListResponse of(List<Report> reportList) {
-        return new ReportListResponse(
+    public static ReportsResponse of(List<Report> reportList) {
+        return new ReportsResponse(
                 reportList.stream()
                         .map(ReportInfo::new)
                         .toList()
