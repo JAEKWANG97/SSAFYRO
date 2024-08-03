@@ -63,7 +63,7 @@ public class RoomService {
     }
 
     public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {
-        RoomRedis room = getRoomRedis(request.roomId());
+        RoomRedis room = getRoomRedisBy(request.roomId());
         room.addParticipant(request.userId());
         roomRedisRepository.save(room);
 
@@ -71,7 +71,7 @@ public class RoomService {
     }
 
     public RoomExitResponse exitRoom(RoomExitServiceRequest request) {
-        RoomRedis room = getRoomRedis(request.roomId());
+        RoomRedis room = getRoomRedisBy(request.roomId());
         room.removeParticipant(request.userId());
         roomRedisRepository.save(room);
 
@@ -98,7 +98,7 @@ public class RoomService {
         }
     }
 
-    private RoomRedis getRoomRedis(String roomId) {
+    private RoomRedis getRoomRedisBy(String roomId) {
         return roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
@@ -112,7 +112,7 @@ public class RoomService {
     }
 
     private boolean canEnterRoom(String roomId, Set<String> remainRooms) {
-        RoomRedis roomRedis = getRoomRedis(roomId);
+        RoomRedis roomRedis = getRoomRedisBy(roomId);
 
         if (!WAIT.equals(roomRedis.getStatus())) {
             return false;

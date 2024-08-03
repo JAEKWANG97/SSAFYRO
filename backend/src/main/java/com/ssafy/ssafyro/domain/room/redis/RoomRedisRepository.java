@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Repository
 public class RoomRedisRepository {
+    
     String ROOM_PREFIX = "room:";
 
     private final RedisTemplate<String, RoomRedis> redisTemplate;
@@ -38,22 +39,24 @@ public class RoomRedisRepository {
     }
 
     private List<RoomRedis> searchRoomsBy(RoomFilterCondition condition) {
-        Set<String> keys = redisTemplate.keys("room:*");
+        Set<String> keys = Objects.requireNonNull(redisTemplate.keys("room:*"));
+        return paginateRooms(getFilteredRooms(condition, getAllRooms(keys)), condition.page(), condition.size());
+    }
 
-        assert keys != null;
-        List<RoomRedis> allRooms = keys.stream()
+    private @NotNull List<RoomRedis> getAllRooms(Set<String> keys) {
+        return keys.stream()
                 .map(key -> redisTemplate.opsForValue().get(key))
                 .filter(Objects::nonNull)
                 .toList();
+    }
 
-        List<RoomRedis> filteredRooms = allRooms.stream()
+    private static @NotNull List<RoomRedis> getFilteredRooms(RoomFilterCondition condition, List<RoomRedis> allRooms) {
+        return allRooms.stream()
                 .filter(room -> condition.title() == null || room.getTitle().contains(condition.title()))
                 .filter(room -> condition.type() == null || condition.type().equals(room.getType().name()))
                 .filter(room -> condition.capacity() == null || condition.capacity().equals(room.getCapacity()))
                 .filter(room -> condition.status() == null || condition.status().equals(room.getStatus().name()))
-                .collect(Collectors.toList());
-
-        return paginateRooms(filteredRooms, condition.page(), condition.size());
+                .toList();
     }
 
 
