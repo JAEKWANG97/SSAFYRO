@@ -19,8 +19,11 @@ import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
+import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
@@ -39,6 +42,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     private final ReportService reportService = Mockito.mock(ReportService.class);
 
     private final Report report = Mockito.mock(Report.class);
+    private final PresentationInterviewReport presentationInterviewReport = Mockito.mock(
+            PresentationInterviewReport.class);
     private final Room room = Mockito.mock(Room.class);
     private final InterviewResult interviewResult = Mockito.mock(InterviewResult.class);
 
@@ -51,7 +56,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @Test
     void showReports() throws Exception {
         given(room.getId()).willReturn("roomId");
-        given(room.getTitle()).willReturn("title");
+        given(room.getTitle()).willReturn(
+                "title");
         given(room.getType()).willReturn(RoomType.PERSONALITY);
         given(room.getCreatedDate()).willReturn(LocalDateTime.now());
 
@@ -108,9 +114,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("면접 레포트 상세 조회 API")
+    @DisplayName("인성 면접 레포트 상세 조회 API")
     @Test
-    void getReport() throws Exception {
+    void getReportPersonal() throws Exception {
         given(room.getId()).willReturn("roomId");
         given(room.getTitle()).willReturn("title");
         given(room.getType()).willReturn(RoomType.PERSONALITY);
@@ -146,7 +152,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                 .contentType(MediaType.APPLICATION_JSON)
                 ).andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("report-detail-list",
+                .andDo(document("report-personal-detail-list",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -157,6 +163,102 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
+                                fieldWithPath("response.reportDetails").type(JsonFieldType.ARRAY)
+                                        .description("레포트 상세 정보"),
+                                fieldWithPath("response.reportDetails[].question").type(JsonFieldType.STRING)
+                                        .description("각 질문"),
+                                fieldWithPath("response.reportDetails[].answer").type(JsonFieldType.STRING)
+                                        .description("질문 별 답변"),
+                                fieldWithPath("response.reportDetails[].feedback").type(JsonFieldType.STRING)
+                                        .description("답변의 피드백"),
+                                fieldWithPath("response.reportDetails[].pronunciationScore").type(JsonFieldType.NUMBER)
+                                        .description("질문 별 발음 점수"),
+                                fieldWithPath("response.reportDetails[].expression").type(JsonFieldType.OBJECT)
+                                        .description("표정 점수 상위 3개 \n (HAPPY,\n"
+                                                + "    DISGUST,\n"
+                                                + "    SAD,\n"
+                                                + "    SURPRISE,\n"
+                                                + "    FEAR,\n"
+                                                + "    ANGRY,\n"
+                                                + "    NEUTRAL)"),
+                                fieldWithPath("response.reportDetails[].expression.HAPPY").type(JsonFieldType.NUMBER)
+                                        .description("표정 점수: 행복"),
+                                fieldWithPath("response.reportDetails[].expression.SAD").type(JsonFieldType.NUMBER)
+                                        .description("표정 점수: 슬픔"),
+                                fieldWithPath("response.reportDetails[].expression.DISGUST").type(JsonFieldType.NUMBER)
+                                        .description("표정 점수: 역겨움"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )
+                ));
+    }
+
+    //TODO: 기사 내용 넣기
+    @DisplayName("PT 면접 레포트 상세 조회 API")
+    @Test
+    void getReportPresentation() throws Exception {
+        Article article = Article.builder()
+                .title("기사 제목")
+                .content("기사 내용")
+                .question("기사 질문")
+                .build();
+
+        given(room.getId()).willReturn("roomId");
+        given(room.getTitle()).willReturn("title");
+        given(room.getType()).willReturn(RoomType.PRESENTATION);
+        given(room.getCreatedDate()).willReturn(LocalDateTime.now());
+
+        given(presentationInterviewReport.getId()).willReturn(1L);
+        given(presentationInterviewReport.getRoom()).willReturn(room);
+        given(presentationInterviewReport.getTotalScore()).willReturn(90);
+        given(presentationInterviewReport.getPronunciationScore()).willReturn(3);
+        given(presentationInterviewReport.getArticle()).willReturn(article);
+
+        given(interviewResult.getReport()).willReturn(presentationInterviewReport);
+        given(interviewResult.getQuestion()).willReturn("질문1");
+        given(interviewResult.getAnswer()).willReturn("답변");
+        given(interviewResult.getFeedback()).willReturn("피드백");
+        given(interviewResult.getPronunciationScore()).willReturn(3);
+        given(interviewResult.getTop3Expression()).willReturn(
+                Map.of(
+                        Expression.HAPPY, 0.8,
+                        Expression.SAD, 0.15,
+                        Expression.DISGUST, 0.05
+                )
+        );
+
+        ReportResponse response = ReportPresentationResponse.of(
+                List.of(interviewResult),
+                article
+        );
+
+        given(reportService.getReport(any(Long.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/report/{id}", report.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("report-presentation-detail-list",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("report 고유 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                        .description("응답"),
+                                fieldWithPath("response.article").type(JsonFieldType.OBJECT)
+                                        .description("PT 기사 정보"),
+                                fieldWithPath("response.article.title").type(JsonFieldType.STRING)
+                                        .description("PT 기사 제목"),
+                                fieldWithPath("response.article.content").type(JsonFieldType.STRING)
+                                        .description("PT 기사 내용"),
+                                fieldWithPath("response.article.question").type(JsonFieldType.STRING)
+                                        .description("PT 기사 질문"),
                                 fieldWithPath("response.reportDetails").type(JsonFieldType.ARRAY)
                                         .description("레포트 상세 정보"),
                                 fieldWithPath("response.reportDetails[].question").type(JsonFieldType.STRING)
