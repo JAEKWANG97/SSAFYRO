@@ -23,7 +23,7 @@ public class ReportController {
 
     @GetMapping("/api/v1/reports")
     public ApiResult<ReportListResponse> getReports(@RequestParam @NotNull Long userId,
-                                                    @PageableDefault(page = 0, size = 10) Pageable pageable) {
+                                                    @PageableDefault(page = 1) Pageable pageable) {
         return success(reportService.getReports(userId, pageable));
     }
 
@@ -31,4 +31,5 @@ public class ReportController {
     public ApiResult<ReportResponse> getReport(@PathVariable("id") @NotNull Long reportId) {
         return success(reportService.getReport(reportId));
     }
+    
 }
