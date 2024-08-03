@@ -47,20 +47,20 @@ class InterviewServiceTest extends IntegrationTestSupport {
         RoomRedis room = createRoom();
         roomRedisRepository.save(room);
 
-        assertThat(roomRedisRepository.findById(room.getId()).get().getTitle())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getTitle())
                 .isEqualTo(createRoom().getTitle());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getType())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getType())
                 .isEqualTo(createRoom().getType());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getCapacity())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getCapacity())
                 .isEqualTo(createRoom().getCapacity());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getStatus())
                 .isEqualTo(RoomStatus.WAIT);
 
         // when
         interviewService.startInterview(room.getId());
 
         // then
-        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getStatus())
                 .isEqualTo(RoomStatus.ING);
     }
 

@@ -1,7 +1,6 @@
 package com.ssafy.ssafyro.api.controller.room;
 
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
-import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomListRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

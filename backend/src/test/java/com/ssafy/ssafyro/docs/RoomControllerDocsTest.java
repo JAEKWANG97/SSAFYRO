@@ -18,9 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.room.RoomController;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomExitRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomCreateRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomEnterRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomExitRequest;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
@@ -59,7 +59,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                         .description("A cozy meeting room")
                         .type(RoomType.PRESENTATION).capacity(3).build()));
 
-        given(roomService.getRoomList(any(RoomListServiceRequest.class)))
+        given(roomService.getRooms(any(RoomListServiceRequest.class)))
                 .willReturn(roomListResponse);
 
         // when & then

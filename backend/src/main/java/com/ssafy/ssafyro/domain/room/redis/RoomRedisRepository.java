@@ -1,9 +1,9 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
 import com.ssafy.ssafyro.domain.room.RoomFilterCondition;
-import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,47 +16,53 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Repository
 public class RoomRedisRepository {
+    String ROOM_PREFIX = "room:";
 
     private final RedisTemplate<String, RoomRedis> redisTemplate;
 
     public String save(RoomRedis room) {
-        redisTemplate.opsForValue().set(room.getId(), room);
+        redisTemplate.opsForValue().set(ROOM_PREFIX + room.getId(), room);
         return room.getId();
     }
 
-    public List<RoomRedis> findRooms(RoomFilterCondition condition) {
-        return searchRoomsByFilter(condition);
+    public List<RoomRedis> findRoomsBy(RoomFilterCondition condition) {
+        return searchRoomsBy(condition);
     }
 
-    public Optional<RoomRedis> findById(String id) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(id));
+    public Optional<RoomRedis> findBy(String id) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(ROOM_PREFIX + id));
     }
-
 
     public void delete(RoomRedis room) {
-        redisTemplate.delete(room.getId());
+        redisTemplate.delete(ROOM_PREFIX + room.getId());
     }
 
-    private List<RoomRedis> searchRoomsByFilter(RoomFilterCondition condition) {
-        Set<RoomRedis> allRooms = redisTemplate.opsForZSet().range("rooms", 0, -1);
+    private List<RoomRedis> searchRoomsBy(RoomFilterCondition condition) {
+        Set<String> keys = redisTemplate.keys("room:*");
 
-        assert allRooms != null;
+        assert keys != null;
+        List<RoomRedis> allRooms = keys.stream()
+                .map(key -> redisTemplate.opsForValue().get(key))
+                .filter(Objects::nonNull)
+                .toList();
+
         List<RoomRedis> filteredRooms = allRooms.stream()
-                .filter(room -> (condition.title() == null || room.getTitle().contains(condition.title())) &&
-                        (condition.type() == null || room.getType().name().equals(condition.type())) &&
-                        (condition.capacity() == null || room.getCapacity() == condition.capacity()) &&
-                        (condition.status() == null || room.getStatus().name().equals(condition.status())))
+                .filter(room -> condition.title() == null || room.getTitle().contains(condition.title()))
+                .filter(room -> condition.type() == null || condition.type().equals(room.getType().name()))
+                .filter(room -> condition.capacity() == null || condition.capacity().equals(room.getCapacity()))
+                .filter(room -> condition.status() == null || condition.status().equals(room.getStatus().name()))
                 .collect(Collectors.toList());
 
         return paginateRooms(filteredRooms, condition.page(), condition.size());
     }
+
 
     private List<RoomRedis> paginateRooms(List<RoomRedis> rooms, int page, int size) {
         return rooms.stream()
                 .sorted(Comparator.comparing(RoomRedis::getCreatedDate).reversed())
                 .skip((long) (page - 1) * size)
                 .limit(size)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

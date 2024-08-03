@@ -3,8 +3,8 @@ package com.ssafy.ssafyro.api.controller.itknowledge;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
-import com.ssafy.ssafyro.api.controller.itknowledge.dto.ItKnowledgeDetailRequest;
-import com.ssafy.ssafyro.api.controller.itknowledge.dto.ItKnowledgeListRequest;
+import com.ssafy.ssafyro.api.controller.itknowledge.request.ItKnowledgeDetailRequest;
+import com.ssafy.ssafyro.api.controller.itknowledge.request.ItKnowledgeListRequest;
 import com.ssafy.ssafyro.api.service.itknowledge.ItKnowledgeService;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;

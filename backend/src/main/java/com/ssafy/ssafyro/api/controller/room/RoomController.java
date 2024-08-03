@@ -3,12 +3,11 @@ package com.ssafy.ssafyro.api.controller.room;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomCreateRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomEnterRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomExitRequest;
-import com.ssafy.ssafyro.api.controller.room.dto.request.RoomListRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomCreateRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomEnterRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomExitRequest;
+import com.ssafy.ssafyro.api.controller.room.request.RoomListRequest;
 import com.ssafy.ssafyro.api.service.room.RoomService;
-import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
@@ -17,7 +16,6 @@ import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +30,7 @@ public class RoomController {
 
     @GetMapping("/api/v1/rooms")
     public ApiResult<RoomListResponse> getRooms(@RoomFiter RoomListRequest request) {
-        return success(roomService.getRoomList(request.toServiceRequest()));
+        return success(roomService.getRooms(request.toServiceRequest()));
     }
 
     @GetMapping("/api/v1/rooms/{id}")
