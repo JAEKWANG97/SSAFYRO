@@ -4,8 +4,14 @@ import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public record ReportResponse(List<ReportDetailInfo> reportDetails) {
+@Getter
+@RequiredArgsConstructor
+public class ReportResponse {
+
+    private final List<ReportDetailInfo> reportDetails;
 
     public static ReportResponse of(List<InterviewResult> reportDetails) {
         return new ReportResponse(
@@ -32,5 +38,4 @@ public record ReportResponse(List<ReportDetailInfo> reportDetails) {
         }
 
     }
-
 }
