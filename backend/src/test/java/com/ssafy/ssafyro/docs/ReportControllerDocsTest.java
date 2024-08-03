@@ -18,9 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.api.service.report.ReportService;
-import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
@@ -65,8 +65,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         given(report.getTotalScore()).willReturn(90);
         given(report.getPronunciationScore()).willReturn(3);
 
-        ReportListResponse response = ReportListResponse.of(
-                List.of(report)
+        ReportsResponse response = ReportsResponse.of(
+                List.of(report, report)
         );
 
         given(reportService.getReports(any(Long.class), any(Pageable.class)))
