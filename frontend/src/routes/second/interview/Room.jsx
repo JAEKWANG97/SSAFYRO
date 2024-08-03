@@ -63,18 +63,10 @@ export default function Room() {
       isInitialMount.current = false
     }
 
-    function handlePopState() {
-      console.log("뒤로가기가 감지되었습니다.")
-      leaveRoom();
-    }
-
-    window.addEventListener('popstate', handlePopState)
-
     return () => {
       if (room) {
         leaveRoom();
       }
-      window.removeEventListener('popstate', handlePopState)
     };
   }, []);
 

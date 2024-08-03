@@ -57,9 +57,6 @@ export default function Interview() {
     console.log("filteredRoomList:", filteredRoomList)
     if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "WAIT") {
       const updateRooms = [...filteredRoomList];
-      // 위의 console.log에서는 잘 찍히는데 여기에서는 undefined가 떠.. 뭐가 문제인거야?
-      // console.log(updateRooms[roomIndex].userList);
-      // updateRooms[roomIndex].userList.push(currentUser);
       setFilteredRoomList(updateRooms);
       navigate(`/second/interview/room/${id}`);
     }
