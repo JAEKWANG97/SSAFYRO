@@ -56,8 +56,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @Test
     void showReports() throws Exception {
         given(room.getId()).willReturn("roomId");
-        given(room.getTitle()).willReturn(
-                "title");
+        given(room.getTitle()).willReturn("title");
         given(room.getType()).willReturn(RoomType.PERSONALITY);
         given(room.getCreatedDate()).willReturn(LocalDateTime.now());
 
@@ -95,9 +94,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
                                 fieldWithPath("response.reports").type(JsonFieldType.ARRAY)
-                                        .description("방 정보"),
+                                        .description("방(레포트) 정보"),
                                 fieldWithPath("response.reports[].reportId").type(JsonFieldType.NUMBER)
-                                        .description("방 고유 ID"),
+                                        .description("레포트 고유 ID"),
                                 fieldWithPath("response.reports[].title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
                                 fieldWithPath("response.reports[].type").type(JsonFieldType.STRING)
