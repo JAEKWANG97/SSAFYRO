@@ -20,7 +20,7 @@ public class RoomRedisRepository {
     private final RedisTemplate<String, RoomRedis> redisTemplate;
 
     public String save(RoomRedis room) {
-        redisTemplate.opsForZSet().add("rooms", room, room.getCreatedDate().toEpochSecond(ZoneOffset.UTC));
+        redisTemplate.opsForValue().set(room.getId(), room);
         return room.getId();
     }
 
