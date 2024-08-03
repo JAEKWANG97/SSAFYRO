@@ -47,23 +47,28 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         return new RoomController(roomService);
     }
 
-    @DisplayName("room의 type이 PRESENTATION, capacity가 3인 경우 모든 방을 보여준다.")
+    @DisplayName("Room 목록 조회  API")
     @Test
     void getAllRoomsTest() throws Exception {
         // given
         RoomListResponse roomListResponse = RoomListResponse.of(List.of(
-                RoomRedis.builder().title("Conference Room")
+                RoomRedis.builder()
+                        .title("Conference Room")
                         .description("A spacious conference room")
-                        .type(RoomType.PRESENTATION).capacity(3).build(),
-                RoomRedis.builder().title("Meeting Room")
+                        .type(RoomType.PRESENTATION)
+                        .capacity(3).build(),
+                RoomRedis.builder()
+                        .title("Meeting Room")
                         .description("A cozy meeting room")
-                        .type(RoomType.PRESENTATION).capacity(3).build()));
+                        .type(RoomType.PRESENTATION)
+                        .capacity(3).build()));
 
         given(roomService.getRooms(any(RoomListServiceRequest.class)))
                 .willReturn(roomListResponse);
 
         // when & then
         mockMvc.perform(get("/api/v1/rooms")
+                        .param("title", "Room")
                         .param("type", "PRESENTATION")
                         .param("capacity", "3")
                         .param("page", "1")
@@ -71,7 +76,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andDo(document("get-rooms", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        queryParameters(parameterWithName("type")
+                        queryParameters(
+                                parameterWithName("title")
+                                        .description("방의 제목 (예: Room)"),
+                                parameterWithName("type")
                                         .description("방의 타입 (예: PRESENTATION / PERSONALITY)"),
                                 parameterWithName("capacity")
                                         .description("방의 수용 인원 (예: 3)"),
@@ -114,7 +122,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("에러"))));
     }
 
-    @DisplayName("특정 ID로 방 정보를 가져온다.")
+    @DisplayName("방 상세 조회 API")
     @Test
     void getRoomByIdTest() throws Exception {
         int requestRoomId = 1;
@@ -155,7 +163,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("에러"))));
     }
 
-    @DisplayName("방을 생성합니다.")
+    @DisplayName("방 생성 API")
     @Test
     void createRoom() throws Exception {
         String RoomId = "1";
@@ -201,7 +209,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("에러"))));
     }
 
-    @DisplayName("방을 입장합니다.")
+    @DisplayName("방 입장 API")
     @Test
     void enterRoom() throws Exception {
         RoomEnterRequest roomEnterRequest = new RoomEnterRequest(1L, "1");
@@ -232,7 +240,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("에러"))));
     }
 
-    @DisplayName("방을 나갑니다.")
+    @DisplayName("방 퇴장 API")
     @Test
     void exitRoom() throws Exception {
         RoomExitResponse roomExitResponse = new RoomExitResponse();
