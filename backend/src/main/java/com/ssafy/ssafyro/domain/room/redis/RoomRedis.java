@@ -66,8 +66,4 @@ public class RoomRedis {
     public void removeParticipant(Long userId) {
         userList.remove(userId);
     }
-
-    public String generateKey() {
-        return String.format("room:%s:%d:%s:%s", this.type, this.capacity, this.status, this.id);
-    }
 }
