@@ -114,6 +114,7 @@ public class RoomService {
     private boolean canEnterRoom(String roomId, Set<String> remainRooms) {
         RoomRedis roomRedis = getRoomRedis(roomId);
 
+        //TODO: 도메인의 책임 생각하기
         if (!WAIT.equals(roomRedis.getStatus())) {
             return false;
         }
