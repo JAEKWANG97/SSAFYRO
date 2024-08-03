@@ -6,7 +6,7 @@ import static com.ssafy.ssafyro.config.rabbitmq.RabbitMqElement.PRESENTATION_KEY
 import static com.ssafy.ssafyro.config.rabbitmq.RabbitMqElement.PRESENTATION_QUEUE;
 import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.valueOf;
-import static com.ssafy.ssafyro.domain.room.redis.RoomStatus.WAIT;
+import static com.ssafy.ssafyro.domain.room.RoomStatus.WAIT;
 
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;

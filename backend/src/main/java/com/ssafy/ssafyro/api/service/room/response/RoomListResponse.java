@@ -2,7 +2,7 @@ package com.ssafy.ssafyro.api.service.room.response;
 
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import java.util.List;
 
 public record RoomListResponse(List<RoomInfo> rooms) {

@@ -6,7 +6,6 @@ import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;

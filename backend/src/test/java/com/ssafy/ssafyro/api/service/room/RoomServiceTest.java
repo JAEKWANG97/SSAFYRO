@@ -15,10 +15,8 @@ import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
-import jakarta.transaction.Transactional;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
@@ -28,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Disabled
-public class RoomServiceTest extends IntegrationTestSupport {
+class RoomServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RoomService roomService;
@@ -227,7 +225,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
         RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
         assertThat(room).isNotNull();
         assertThat(room.getUserList()).contains(userId);
-        assertThat(room.getUserList().size()).isEqualTo(2);
+        assertThat(room.getUserList()).hasSize(2);
     }
 
     @DisplayName("존재하지 않는 방에서 나가려고 시도하면 예외가 발생한다.")
@@ -264,7 +262,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
         RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
         assertThat(room).isNotNull();
         assertThat(room.getUserList()).doesNotContain(userId);
-        assertThat(room.getUserList().size()).isEqualTo(1);
+        assertThat(room.getUserList()).hasSize(1);
     }
 
 }
