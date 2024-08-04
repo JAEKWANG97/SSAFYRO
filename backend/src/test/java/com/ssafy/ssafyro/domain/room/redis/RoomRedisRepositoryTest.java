@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.domain.room.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
+import com.ssafy.ssafyro.domain.room.RoomFilterCondition;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import java.util.List;
 import java.util.Set;
@@ -59,9 +60,17 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
         roomRedisRepository.save(room2);
         roomRedisRepository.save(room3);
 
+        RoomFilterCondition condition = RoomFilterCondition.builder()
+                .title("Room")
+                .type(RoomType.PRESENTATION.name())
+                .capacity(3)
+                .status(RoomStatus.WAIT.name())
+                .page(1)
+                .size(10)
+                .build();
+
         // when
-        List<RoomRedis> rooms = roomRedisRepository.findRooms(RoomType.PRESENTATION.name(), 3,
-                RoomStatus.WAIT.name(), 1, 10);
+        List<RoomRedis> rooms = roomRedisRepository.findRooms(condition);
 
         // then
         assertThat(rooms).extracting("title").containsExactlyInAnyOrder("Room1", "Room3");
@@ -71,19 +80,64 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
     @Test
     void findRoomsWithPaginationTest() {
         // given
-        for (int i = 0; i < 15; i++) {
-            roomRedisRepository.save(createRoom("Room" + i, RoomType.PRESENTATION, 3));
-        }
+        saveRooms();
+
+        RoomFilterCondition condition1 = RoomFilterCondition.builder()
+                .type(RoomType.PRESENTATION.name())
+                .capacity(3)
+                .status(RoomStatus.WAIT.name())
+                .page(1)
+                .size(10)
+                .build();
+
+        RoomFilterCondition condition2 = RoomFilterCondition.builder()
+                .type(RoomType.PRESENTATION.name())
+                .capacity(3)
+                .status(RoomStatus.WAIT.name())
+                .page(2)
+                .size(10)
+                .build();
 
         // when
-        List<RoomRedis> firstPage = roomRedisRepository.findRooms(RoomType.PRESENTATION.name(), 3,
-                RoomStatus.WAIT.name(), 1, 10);
-        List<RoomRedis> secondPage = roomRedisRepository.findRooms(RoomType.PRESENTATION.name(), 3,
-                RoomStatus.WAIT.name(), 2, 10);
+        List<RoomRedis> firstPage = roomRedisRepository.findRooms(condition1);
+        List<RoomRedis> secondPage = roomRedisRepository.findRooms(condition2);
 
         // then
         assertThat(firstPage).hasSize(10);
         assertThat(secondPage).hasSize(5);
+    }
+
+    @DisplayName("type = null 인 condition 으로 방 목록을 조회한다.")
+    @Test
+    void test() {
+        // given
+        saveRooms();
+
+        RoomFilterCondition condition1 = RoomFilterCondition.builder()
+                .type(null)
+                .capacity(3)
+                .status(RoomStatus.WAIT.name())
+                .page(1)
+                .size(10)
+                .build();
+
+        RoomFilterCondition condition2 = RoomFilterCondition.builder()
+                .type(null)
+                .capacity(3)
+                .status(RoomStatus.WAIT.name())
+                .page(2)
+                .size(10)
+                .build();
+        // when
+        List<RoomRedis> firstPage = roomRedisRepository.findRooms(condition1);
+        List<RoomRedis> secondPage = roomRedisRepository.findRooms(condition2);
+
+
+
+        // then
+        assertThat(firstPage).hasSize(10);
+        assertThat(secondPage).hasSize(5);
+
     }
 
     @DisplayName("방 상태를 변경한다.")
@@ -95,11 +149,11 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
 
         // when
         room.startInterview();
-        roomRedisRepository.updateStatus(room);
+        roomRedisRepository.save(room);
         RoomRedis startedRoom = roomRedisRepository.findById(room.getId()).orElse(null);
 
         room.finishInterview();
-        roomRedisRepository.updateStatus(room);
+        roomRedisRepository.save(room);
         RoomRedis endedRoom = roomRedisRepository.findById(room.getId()).orElse(null);
 
         // then
@@ -130,5 +184,11 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
                 .description("Test Room Description")
                 .type(type)
                 .capacity(capacity).build();
+    }
+
+    private void saveRooms() {
+        for (int i = 0; i < 15; i++) {
+            roomRedisRepository.save(createRoom("Room" + i, RoomType.PRESENTATION, 3));
+        }
     }
 }

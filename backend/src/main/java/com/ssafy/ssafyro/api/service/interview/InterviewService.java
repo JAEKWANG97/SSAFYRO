@@ -51,7 +51,7 @@ public class InterviewService {
 
         room.startInterview();
 
-        return new StartResponse(roomRedisRepository.updateStatus(room));
+        return new StartResponse(roomRedisRepository.save(room));
     }
 
     public FinishResponse finishInterview(String roomId) {
@@ -62,9 +62,8 @@ public class InterviewService {
 
         //방 정보 RDB 저장
         Room room = roomRedis.toEntity();
-        roomRepository.save(room);
 
-        return new FinishResponse(roomRedisRepository.updateStatus(roomRedis));
+        return new FinishResponse(roomRedisRepository.save(roomRedis));
     }
 
     public FinishResponse finishInterview(FinishServiceRequest request) {
