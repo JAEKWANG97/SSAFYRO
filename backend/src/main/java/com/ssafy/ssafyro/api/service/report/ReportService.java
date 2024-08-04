@@ -14,7 +14,6 @@ import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +30,10 @@ public class ReportService {
 
     public ReportsResponse getReports(Long userId, Pageable pageable) {
         User user = getUser(userId);
-        Page<Report> reportsWithPage = reportRepository.findAllByUser(user, pageable);
 
-        return ReportsResponse.of(reportsWithPage.getContent());
+        return ReportsResponse.of(
+                reportRepository.findAllByUser(user, pageable).getContent()
+        );
     }
 
     //TODO: User 검증 필요 (시큐리티 후에 작업 요망)
