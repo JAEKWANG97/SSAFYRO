@@ -127,7 +127,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         given(reportService.createReport(any(ReportCreateServiceRequest.class)))
                 .willReturn(response);
 
-        ReportCreateRequest request = new ReportCreateRequest(generateRandomRoomId(), 1L, 100);
+        ReportCreateRequest request = new ReportCreateRequest(generateRandomRoomId(), 1L, 1L, 100);
 
         mockMvc.perform(
                         post("/api/v1/reports")
@@ -141,6 +141,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("roomId").type(JsonFieldType.STRING)
+                                        .description("방 id"),
+                                fieldWithPath("articleId").type(JsonFieldType.NUMBER)
                                         .description("방 id"),
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                         .description("유저 id"),

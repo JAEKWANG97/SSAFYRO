@@ -7,6 +7,7 @@ import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.domain.article.Article;
+import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewInfos;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
@@ -18,6 +19,7 @@ import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
+import com.ssafy.ssafyro.error.article.ArticleNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class ReportService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
+    private final ArticleRepository articleRepository;
     private final InterviewResultRepository interviewResultRepository;
 
     private final InterviewRedisRepository interviewRedisRepository;
@@ -81,7 +84,7 @@ public class ReportService {
                     .user(user)
                     .totalScore(request.totalScore())
                     .pronunciationScore(interviewInfos.getTotalPronunciationScore())
-                    .article(getArticle())
+                    .article(getArticle(request.articleId()))
                     .build();
         }
 
@@ -93,8 +96,8 @@ public class ReportService {
                 .build();
     }
 
-    private Article getArticle() {
-        return chatGptResponseGenerator.generateArticle()
-                .toEntity();
+    private Article getArticle(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
     }
 }

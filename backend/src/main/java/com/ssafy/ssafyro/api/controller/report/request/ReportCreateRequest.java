@@ -5,13 +5,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record ReportCreateRequest(@NotEmpty String roomId,
+                                  @NotNull Long articleId,
                                   @NotNull Long userId,
                                   @NotNull Integer totalScore) {
 
     public ReportCreateServiceRequest toServiceRequest() {
-        return new ReportCreateServiceRequest(roomId, userId, totalScore);
-    }
-
-    public record TotalScore(Long userId, Integer score) {
+        return new ReportCreateServiceRequest(roomId, articleId, userId, totalScore);
     }
 }
