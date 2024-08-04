@@ -14,7 +14,11 @@ export default function Button({ text, type, onClick, isActive }) {
             ? "bg-red-100 text-red-800 text-base font-semibold px-5 py-2 rounded"
               : type === "WAITINGROOMSTART"
               ? "bg-blue-100 text-blue-800 text-xl font-bold px-16 py-7 rounded-full w-64"
-              : "text-white";
+                : type === "SEARCHROOM"
+                ? "text-white bg-blue-500 hover:bg-blue-800 font-medium rounded-lg p-2 mb-4 focus:outline-none dark:focus:ring-blue-800"
+                  : type === "ENTERROOM"
+                    ? "text-white bg-blue-500 hover:bg-blue-800 rounded px-2 w-[60px] focus:outline-none dark:focus:ring-blue-800"
+                      : "text-white";
 
 
   return (
