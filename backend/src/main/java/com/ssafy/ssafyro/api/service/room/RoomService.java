@@ -6,7 +6,6 @@ import static com.ssafy.ssafyro.config.rabbitmq.RabbitMqElement.PRESENTATION_KEY
 import static com.ssafy.ssafyro.config.rabbitmq.RabbitMqElement.PRESENTATION_QUEUE;
 import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.valueOf;
-import static com.ssafy.ssafyro.domain.room.redis.RoomStatus.WAIT;
 
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
@@ -34,8 +33,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class RoomService {
-
-    private final int MAX_USERS = 3;
 
     private final RoomRedisRepository roomRedisRepository;
     private final RoomRabbitMqRepository roomRabbitMqRepository;
@@ -114,13 +111,12 @@ public class RoomService {
     private boolean canEnterRoom(String roomId, Set<String> remainRooms) {
         RoomRedis roomRedis = getRoomRedis(roomId);
 
-        //TODO: 도메인의 책임 생각하기
-        if (!WAIT.equals(roomRedis.getStatus())) {
+        if (!roomRedis.isRecruiting()) {
             return false;
         }
         remainRooms.add(roomId);
 
-        return roomRedis.getUserList().size() != MAX_USERS;
+        return roomRedis.isEnoughCapacity();
     }
 
     private void resendRemainRooms(Set<String> remainRooms, String routingKey) {

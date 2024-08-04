@@ -47,4 +47,9 @@ public abstract class Report extends BaseEntity {
         this.totalScore = totalScore;
         this.pronunciationScore = pronunciationScore;
     }
+
+    public boolean isPresentation() {
+        return room.isPresentation();
+    }
+    
 }

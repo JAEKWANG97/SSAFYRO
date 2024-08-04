@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomRedis {
 
+    private final int MAX_CAPACITY = 3;
+
     private String id;
     private String title;
     private String description;
@@ -70,4 +72,13 @@ public class RoomRedis {
     public String generateKey() {
         return String.format("room:%s:%d:%s:%s", this.type, this.capacity, this.status, this.id);
     }
+
+    public boolean isRecruiting() {
+        return status.isRecruiting();
+    }
+
+    public boolean isEnoughCapacity() {
+        return capacity < MAX_CAPACITY;
+    }
+
 }

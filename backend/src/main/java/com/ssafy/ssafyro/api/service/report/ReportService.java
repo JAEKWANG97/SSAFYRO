@@ -1,7 +1,5 @@
 package com.ssafy.ssafyro.api.service.report;
 
-import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
-
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
@@ -45,7 +43,7 @@ public class ReportService {
 
         List<InterviewResult> interviewResult = interviewResultRepository.findByReportId(reportId);
 
-        if (report.getRoom().getType() == PRESENTATION) {
+        if (report.isPresentation()) {
             //TODO: 기사 저장 완료되면 수정
             Article article = getArticle();
             return ReportPresentationResponse.of(
