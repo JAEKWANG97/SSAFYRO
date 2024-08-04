@@ -4,9 +4,12 @@ import useFirstStore from '../../stores/FirstStore';
 import Ismajor from './../../components/Ismajor';
 import Button from './../../components/Button';
 import Swal from 'sweetalert2';
+import axios from "axios";
+
 
 export default function Essay() {
   const selected = useFirstStore((state) => state.selected); // 전공자, 비전공자 유무
+  const essayId = selected === 'major'? 1:2 
   const showCorrection = useFirstStore((state) => state.showCorrection); // AI 첨삭 버튼 클릭 유무
   const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
   const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
@@ -18,21 +21,43 @@ export default function Essay() {
       essayContent.trim() === '' 
     ) {
       setShowCorrection(false)
+      
       Swal.fire({
         title: '에세이를 입력해주세요',
-        text: 'AI 첨삭을 받으려면 에세이를 W작성해야 합니다.',
+        text: 'AI 첨삭을 받으려면 에세이를 작성해야 합니다.',
         icon: 'warning',
         confirmButtonColor: '#3085d6',
         confirmButtonText: '확인',
       });
+      
     } else {
       setShowCorrection(true);
+
+      const beforeEssay = {
+        essayQuestionId : essayId,
+        content : essayContent
+      }
+      
+      axios
+      .post("http://i11c201.p.ssafy.io:9999/api/v1/essays/review", beforeEssay)
     }
   };
 
   const handleEssayContent = (e) => {
     setEssayContent(e.target.value);
   };
+
+  const handleEssaySave = () => {
+    const afterEssay = {
+      userId : 1, // 임시 유저 정보
+      essayQuestionId : essayId,
+      content : essayContent
+    }
+
+    axios
+    .post("http://i11c201.p.ssafy.io:9999/api/v1/essays", afterEssay)
+
+  }
 
   // useEffect를 사용하여 컴포넌트 마운트 시 DOM 이벤트를 설정
   useEffect(() => {
@@ -53,7 +78,6 @@ export default function Essay() {
       });
     }
 
-    // Cleanup function to remove event listeners
     return () => {
       if (infoIcon && popoverDescription) {
         infoIcon.removeEventListener('mouseenter', () => {
@@ -192,7 +216,7 @@ export default function Essay() {
             )}
           </div>
           <div className="flex">
-            <Button text="저장" type="ESSAYSAVE" />
+            <Button text="저장" type="ESSAYSAVE" onClick={handleEssaySave} />
           </div>
         </div>
       </div>
