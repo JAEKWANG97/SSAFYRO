@@ -146,8 +146,7 @@ class ReportServiceTest extends IntegrationTestSupport {
 
         //then
         //TODO: 저장된 기사 내용 테스트하기
-//        assertThat(response.getArticle()).isNotNull()
-//                        .extracting()
+        assertThat(response.getArticle()).isNotNull();
         assertThat(response.getReportDetails()).hasSize(3)
                 .extracting("question")
                 .containsExactlyInAnyOrder(
