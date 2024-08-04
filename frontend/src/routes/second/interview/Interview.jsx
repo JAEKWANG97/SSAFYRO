@@ -14,7 +14,6 @@ export default function Interview() {
   const [isRotating, setIsRotating] = useState(false);
 
   const navigate = useNavigate();
-  const currentUser = { userId: "LGG", name: "Jun" };
 
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
