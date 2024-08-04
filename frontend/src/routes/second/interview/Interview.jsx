@@ -5,10 +5,14 @@ import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
 import axios from "axios";
+// 새로고침 아이콘 반응형으로 만들 css파일
+import "./styles.css"
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]);
+  // 아이콘 회전 상태
+  const [isRotating, setIsRotating] = useState(false)
 
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" };
@@ -104,6 +108,17 @@ export default function Interview() {
       });
   };
 
+  // 새로고침 핸들러
+  const handleRefreshClick = () => {
+    // 회전 시작
+    setIsRotating(true)
+    setTimeout(() => {
+      // 회전 멈춤
+      setIsRotating(false)
+      window.location.reload();
+    }, 500) // 0.7초 후 새로고침
+  }
+
   return (
     <>
       <SecondNav />
@@ -113,9 +128,9 @@ export default function Interview() {
             <div className="flex items-center mb-12">
               <h1 className="text-3xl font-bold mr-4">모의 면접 방 목록</h1>
               <svg
+                onClick={handleRefreshClick}
                 xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
+                className={`refresh-icon ${isRotating ? "rotating" : ""}`} // 클래스 조건부 추가
                 viewBox="0 0 16 16"
               >
                 <path
