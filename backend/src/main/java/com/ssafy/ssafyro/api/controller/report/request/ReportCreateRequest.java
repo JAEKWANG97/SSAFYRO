@@ -1,21 +1,15 @@
 package com.ssafy.ssafyro.api.controller.report.request;
 
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-public record ReportCreateRequest(String roomId, List<TotalScore> totalScores) {
+public record ReportCreateRequest(@NotEmpty String roomId,
+                                  @NotNull Long userId,
+                                  @NotNull Integer totalScore) {
 
     public ReportCreateServiceRequest toServiceRequest() {
-        Map<Long, Integer> scores = totalScores.stream()
-                .collect(Collectors.toMap(
-                                TotalScore::userId,
-                                TotalScore::score
-                        )
-                );
-
-        return new ReportCreateServiceRequest(roomId, scores);
+        return new ReportCreateServiceRequest(roomId, userId, totalScore);
     }
 
     public record TotalScore(Long userId, Integer score) {

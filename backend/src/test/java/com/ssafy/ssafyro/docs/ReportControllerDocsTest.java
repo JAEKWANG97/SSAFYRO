@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
-import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest.TotalScore;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.domain.report.Report;
@@ -110,13 +109,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 레포트 생성 API")
     @Test
     void createReport() throws Exception {
-        List<TotalScore> totalScores = List.of(
-                new TotalScore(1L, 100),
-                new TotalScore(2L, 90),
-                new TotalScore(3L, 80)
-        );
-
-        ReportCreateRequest request = new ReportCreateRequest(generateRandomRoomId(), totalScores);
+        ReportCreateRequest request = new ReportCreateRequest(generateRandomRoomId(), 1L, 100);
 
         mockMvc.perform(
                         post("/api/v1/reports")
@@ -131,11 +124,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                         requestFields(
                                 fieldWithPath("roomId").type(JsonFieldType.STRING)
                                         .description("방 id"),
-                                fieldWithPath("totalScores").type(JsonFieldType.ARRAY)
-                                        .description("유저 별 총 점수"),
-                                fieldWithPath("totalScores[].userId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                         .description("유저 id"),
-                                fieldWithPath("totalScores[].score").type(JsonFieldType.NUMBER)
+                                fieldWithPath("totalScore").type(JsonFieldType.NUMBER)
                                         .description("총 점수")
                         ),
                         responseFields(
@@ -143,8 +134,10 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.reportInfos").type(JsonFieldType.ARRAY)
-                                        .description("면접 레포트 정보"),
+                                fieldWithPath("response.userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 id"),
+                                fieldWithPath("response.reportId").type(JsonFieldType.NUMBER)
+                                        .description("레포트 id"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )

@@ -8,7 +8,6 @@ import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,7 +31,9 @@ public class ReportController {
 
     @PostMapping("/api/v1/reports")
     public ApiResult<ReportCreateResponse> createReport(@RequestBody ReportCreateRequest request) {
-        return success(new ReportCreateResponse(List.of()));
+        reportService.createReport(request.toServiceRequest());
+
+        return success(new ReportCreateResponse(1L, 1L));
     }
 
 }

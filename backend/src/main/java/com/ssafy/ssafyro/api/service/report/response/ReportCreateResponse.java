@@ -1,24 +1,10 @@
 package com.ssafy.ssafyro.api.service.report.response;
 
 import com.ssafy.ssafyro.domain.report.Report;
-import java.util.List;
-import lombok.Data;
 
-@Data
-public class ReportCreateResponse {
+public record ReportCreateResponse(Long userId, Long reportId) {
 
-    private final List<ReportInfo> reportInfos;
-
-    public ReportCreateResponse(List<Report> reports) {
-        this.reportInfos = reports.stream()
-                .map(ReportInfo::new)
-                .toList();
-    }
-
-    private record ReportInfo(Long userId, Long reportId) {
-
-        public ReportInfo(Report report) {
-            this(report.getUserId(), report.getId());
-        }
+    public static ReportCreateResponse of(Report report) {
+        return new ReportCreateResponse(report.getUserId(), report.getId());
     }
 }
