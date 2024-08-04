@@ -192,7 +192,6 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    //TODO: 기사 내용 넣기
     @DisplayName("PT 면접 레포트 상세 조회 API")
     @Test
     void getReportPresentation() throws Exception {
