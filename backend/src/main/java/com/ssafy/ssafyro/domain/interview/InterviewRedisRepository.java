@@ -25,6 +25,12 @@ public class InterviewRedisRepository {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
+    public InterviewInfos findBy(Long userId) {
+        String key = "interview:" + userId;
+
+        return new InterviewInfos(redisTemplate.opsForList().range(key, 0, -1));
+    }
+
     public void delete(Long userId) {
         redisTemplate.delete("interview:" + userId);
     }

@@ -31,9 +31,7 @@ public class ReportController {
 
     @PostMapping("/api/v1/reports")
     public ApiResult<ReportCreateResponse> createReport(@RequestBody ReportCreateRequest request) {
-        reportService.createReport(request.toServiceRequest());
-
-        return success(new ReportCreateResponse(1L, 1L));
+        return success(reportService.createReport(request.toServiceRequest()));
     }
 
 }

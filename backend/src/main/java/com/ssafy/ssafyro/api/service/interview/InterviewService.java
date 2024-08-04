@@ -8,9 +8,7 @@ import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
-import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
-import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
 import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
@@ -23,8 +21,6 @@ import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
-import com.ssafy.ssafyro.error.user.UserNotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +58,7 @@ public class InterviewService {
 
         //방 정보 RDB 저장
         Room room = roomRedis.toEntity();
+        roomRepository.save(room);
 
         return new FinishResponse(roomRedisRepository.save(roomRedis));
     }
@@ -75,36 +72,6 @@ public class InterviewService {
         //방 정보 RDB 저장
         Room room = roomRedis.toEntity();
         roomRepository.save(room);
-
-        //레포트 생성
-        for (Long userId : roomRedis.getUserList()) {
-            User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
-
-            List<InterviewRedis> interviewRedisList = interviewRedisRepository.findByUserId(userId);
-
-            int totalScore = request.totalScores().get(userId);
-
-            int pronunciationScore = interviewRedisList.stream()
-                    .mapToInt(InterviewRedis::getPronunciationScore)
-                    .sum();
-
-            Report report = createReport(room, user, totalScore, pronunciationScore);
-            reportRepository.save(report);
-
-            List<InterviewResult> list = interviewRedisList.stream()
-                    .map(interviewRedis -> InterviewResult.create(
-                            report,
-                            interviewRedis,
-                            chatGPTFeedbackFactory.generateFeedbackBy(
-                                    interviewRedis.getQuestion(),
-                                    interviewRedis.getAnswer()
-                            ),
-                            pronunciationScore)
-                    )
-                    .toList();
-
-            interviewResultRepository.saveAll(list);
-        }
 
         return new FinishResponse(roomRedisRepository.save(roomRedis));
     }
@@ -139,7 +106,7 @@ public class InterviewService {
         return new ArticleResponse(
                 article.title(),
                 article.content(),
-                article.question()
+                article.questions()
         );
     }
 }

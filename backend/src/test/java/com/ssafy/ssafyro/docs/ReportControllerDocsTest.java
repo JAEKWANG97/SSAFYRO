@@ -19,6 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
 import com.ssafy.ssafyro.api.service.report.ReportService;
+import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
 import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
@@ -109,6 +111,22 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 레포트 생성 API")
     @Test
     void createReport() throws Exception {
+        given(room.getId()).willReturn("roomId");
+        given(room.getTitle()).willReturn("title");
+        given(room.getType()).willReturn(RoomType.PERSONALITY);
+        given(room.getCreatedDate()).willReturn(LocalDateTime.now());
+
+        given(report.getId()).willReturn(1L);
+        given(report.getRoom()).willReturn(room);
+        given(report.getTotalScore()).willReturn(90);
+        given(report.getPronunciationScore()).willReturn(3);
+        given(report.getUserId()).willReturn(1L);
+
+        ReportCreateResponse response = ReportCreateResponse.of(report);
+
+        given(reportService.createReport(any(ReportCreateServiceRequest.class)))
+                .willReturn(response);
+
         ReportCreateRequest request = new ReportCreateRequest(generateRandomRoomId(), 1L, 100);
 
         mockMvc.perform(

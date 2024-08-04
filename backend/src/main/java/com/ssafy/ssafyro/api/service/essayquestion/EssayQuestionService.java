@@ -24,6 +24,6 @@ public class EssayQuestionService {
 
     private EssayQuestion getEssayQuestion(EssayQuestionDetailServiceRequest request) {
         return essayQuestionRepository.findByMajorTypeAndGeneration(request.type(), request.generation())
-                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay question not found"));
+                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay questions not found"));
     }
 }

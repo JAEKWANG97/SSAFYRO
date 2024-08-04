@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.domain.interviewresult;
 
+import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.domain.BaseEntity;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.report.Report;
@@ -70,14 +71,18 @@ public class InterviewResult extends BaseEntity {
 
     public static InterviewResult create(Report report,
                                          InterviewRedis interviewRedis,
-                                         String feedback,
-                                         int pronunciationScore) {
+                                         ChatGptResponseGenerator chatGptResponseGenerator) {
+        String feedback = chatGptResponseGenerator.generateFeedbackBy(
+                interviewRedis.getQuestion(),
+                interviewRedis.getAnswer()
+        );
+
         return InterviewResult.builder()
                 .report(report)
                 .question(interviewRedis.getQuestion())
                 .answer(interviewRedis.getAnswer())
                 .feedback(feedback)
-                .pronunciationScore(pronunciationScore)
+                .pronunciationScore(interviewRedis.getPronunciationScore())
                 .happy(interviewRedis.getHappy())
                 .neutral(interviewRedis.getNeutral())
                 .sad(interviewRedis.getSad())
