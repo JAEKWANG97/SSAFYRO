@@ -87,13 +87,14 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void getRoomListTest() {
         // given
+        String title = "Room 1";
         String roomType = RoomType.PERSONALITY.name();
         int capacity = 3;
         String status = RoomStatus.WAIT.name();
         int page = 1;
         int size = 10;
 
-        RoomListServiceRequest request = new RoomListServiceRequest(roomType, capacity, status, page, size);
+        RoomListServiceRequest request = new RoomListServiceRequest(title, roomType, capacity, status, page, size);
 
         roomRedisRepository.save(createRoom("Room 1", RoomType.PERSONALITY, 3));
         roomRedisRepository.save(createRoom("Room 2", RoomType.PERSONALITY, 3));
@@ -103,11 +104,12 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.rooms()).hasSize(2);
+        assertThat(response.rooms()).hasSize(1);
         assertThat(response.rooms()).extracting("title", "type", "capacity")
                 .containsExactlyInAnyOrder(
-                        tuple("Room 1", RoomType.PERSONALITY, 3),
-                        tuple("Room 2", RoomType.PERSONALITY, 3));
+                        tuple("Room 1", RoomType.PERSONALITY, 3)
+                );
+
     }
 
     @DisplayName("type=null, capacity=null, status=null, page=1, size=10인 방 목록을 조회한다.")
@@ -117,7 +119,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
         for (int i = 0; i < 10; i++) {
             roomRedisRepository.save(createRoom("Room " + i, RoomType.PERSONALITY, 3));
         }
-        RoomListServiceRequest request = new RoomListServiceRequest(null, null, null, 1, 10);
+        RoomListServiceRequest request = new RoomListServiceRequest(null, null, null, null, 1, 10);
         //when
         RoomListResponse response = roomService.getRoomList(request);
 
@@ -142,13 +144,14 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyRoomListTest() {
         // given
+        String title = "Room 1";
         String roomType = RoomType.PERSONALITY.name();
         int capacity = 3;
         String status = RoomStatus.WAIT.name();
         int page = 1;
         int size = 10;
 
-        RoomListServiceRequest request = new RoomListServiceRequest(roomType, capacity, status, page, size);
+        RoomListServiceRequest request = new RoomListServiceRequest(title, roomType, capacity, status, page, size);
 
         // when
         RoomListResponse response = roomService.getRoomList(request);

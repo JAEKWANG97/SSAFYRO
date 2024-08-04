@@ -17,6 +17,7 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
+import com.ssafy.ssafyro.domain.room.RoomFilterCondition;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.rabbitmq.RoomRabbitMqRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
@@ -38,8 +39,7 @@ public class RoomService {
     private final RoomRabbitMqRepository roomRabbitMqRepository;
 
     public RoomListResponse getRoomList(RoomListServiceRequest request) {
-        List<RoomRedis> rooms = roomRedisRepository.findRooms(request.roomType(),
-                request.capacity(), request.status(), request.page(), request.size());
+        List<RoomRedis> rooms = roomRedisRepository.findRooms(request.toFilterCondition());
 
         return RoomListResponse.of(rooms);
     }
@@ -72,6 +72,7 @@ public class RoomService {
         RoomRedis room = getRoomRedis(request.roomId());
         room.removeParticipant(request.userId());
         roomRedisRepository.save(room);
+
         return new RoomExitResponse();
     }
 

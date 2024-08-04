@@ -1,16 +1,14 @@
 package com.ssafy.ssafyro.domain.room.redis;
 
-import java.util.ArrayList;
+import com.ssafy.ssafyro.domain.room.RoomFilterCondition;
+import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,74 +20,35 @@ public class RoomRedisRepository {
     private final RedisTemplate<String, RoomRedis> redisTemplate;
 
     public String save(RoomRedis room) {
-        String key = room.generateKey();
-        redisTemplate.opsForValue().set(key, room);
+        redisTemplate.opsForValue().set(room.getId(), room);
         return room.getId();
     }
 
-    public String updateStatus(RoomRedis room) {
-        deleteRoomKeys(room);
-        String newKey = room.generateKey();
-        redisTemplate.opsForValue().set(newKey, room);
-        return newKey;
-    }
-
-    public List<RoomRedis> findRooms(String type, Integer capacity, String status, int page, int size) {
-        String pattern = buildPattern(type, capacity, status);
-        List<RoomRedis> rooms = new ArrayList<>();
-        searchRoomsByPattern(pattern, rooms);
-        return paginateRooms(rooms, page, size);
+    public List<RoomRedis> findRooms(RoomFilterCondition condition) {
+        return searchRoomsByFilter(condition);
     }
 
     public Optional<RoomRedis> findById(String id) {
-        String pattern = buildPattern("*", null, "*", id);
-        return searchRoomByPattern(pattern);
+        return Optional.ofNullable(redisTemplate.opsForValue().get(id));
     }
+
 
     public void delete(RoomRedis room) {
-        String key = room.generateKey();
-        redisTemplate.delete(key);
+        redisTemplate.delete(room.getId());
     }
 
-    private void deleteRoomKeys(RoomRedis room) {
-        String pattern = buildPattern(String.valueOf(room.getType()), room.getCapacity(), "*", room.getId());
-        Set<String> keys = redisTemplate.keys(pattern);
-        if (keys != null && !keys.isEmpty()) {
-            redisTemplate.delete(keys);
-        }
-    }
+    private List<RoomRedis> searchRoomsByFilter(RoomFilterCondition condition) {
+        Set<RoomRedis> allRooms = redisTemplate.opsForZSet().range("rooms", 0, -1);
 
-    private @NotNull Optional<RoomRedis> searchRoomByPattern(String pattern) {
-        Set<String> keys = redisTemplate.keys(pattern);
-        if (keys != null && !keys.isEmpty()) {
-            String key = keys.iterator().next();
-            return Optional.ofNullable(redisTemplate.opsForValue().get(key));
-        }
-        return Optional.empty();
-    }
+        assert allRooms != null;
+        List<RoomRedis> filteredRooms = allRooms.stream()
+                .filter(room -> (condition.title() == null || room.getTitle().contains(condition.title())) &&
+                        (condition.type() == null || room.getType().name().equals(condition.type())) &&
+                        (condition.capacity() == null || room.getCapacity() == condition.capacity()) &&
+                        (condition.status() == null || room.getStatus().name().equals(condition.status())))
+                .collect(Collectors.toList());
 
-    private void searchRoomsByPattern(String pattern, List<RoomRedis> rooms) {
-        try (Cursor<String> cursor = redisTemplate.scan(ScanOptions.scanOptions().match(pattern).build())) {
-            while (cursor.hasNext()) {
-                String key = cursor.next();
-                RoomRedis room = redisTemplate.opsForValue().get(key);
-                if (room != null) {
-                    rooms.add(room);
-                }
-            }
-        }
-    }
-
-    private @NotNull String buildPattern(String type, Integer capacity, String status) {
-        return buildPattern(type, capacity, status, "*");
-    }
-
-    private @NotNull String buildPattern(String type, Integer capacity, String status, String id) {
-        return String.format("room:%s:%s:%s:%s",
-                type != null ? type : "*",
-                capacity != null ? capacity.toString() : "*",
-                status != null ? status : "*",
-                id != null ? id : "*");
+        return paginateRooms(filteredRooms, condition.page(), condition.size());
     }
 
     private List<RoomRedis> paginateRooms(List<RoomRedis> rooms, int page, int size) {
@@ -99,4 +58,5 @@ public class RoomRedisRepository {
                 .limit(size)
                 .collect(Collectors.toList());
     }
+
 }
