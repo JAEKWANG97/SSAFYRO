@@ -9,13 +9,13 @@ import PreventRefresh from "../../components/PreventRefresh";
 import InterviewTips from "./components/InterviewTips";
 import userImg from "../../../../public/main/user.jpg";
 // import userImg from "../../../../public/main/users.png";
+import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 
 export default function Room() {
   const { roomid } = useParams();
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-  const currentUser = { userId: 10, name: "Alice" }; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 
   const isInitialMount = useRef(true);
 
@@ -27,11 +27,15 @@ export default function Room() {
           `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`
         );
         const roomData = response.data.response;
-
+        
+        // console.log("처음 방 참가자 리스트 : ", roomData.userList)
         // 현재 사용자 중복 여부 확인
-        const isUserAlreadyInRoom = roomData.userList.some(
-          (participant) => participant.userId === currentUser.userId
-        );
+        const isUserAlreadyInRoom = roomData.userList.some(participant => {
+          // console.log(`Comparing participant.userId: ${participant} with currentUser.userId: ${currentUser.userId}`);
+          return participant === currentUser.userId
+        });
+
+        // console.log("현재 사용자 중복이 있는가? : ", isUserAlreadyInRoom)
 
         if (!isUserAlreadyInRoom) {
           // 방에 참가한 사용자 서버에 알리기
@@ -46,12 +50,12 @@ export default function Room() {
           );
           const updatedRoomData = updatedResponse.data.response;
           setRoom(updatedRoomData);
-          console.log("현재 방 정보 : ", updatedRoomData);
-          console.log("참가자 리스트 : ", updatedRoomData.userList);
+          // console.log("현재 방 정보 : ", updatedRoomData);
+          // console.log("최종 방 참가자 리스트 : ", updatedRoomData.userList);
         } else {
           setRoom(roomData);
-          console.log("현재 방 정보 : ", roomData);
-          console.log("참가자 리스트 : ", roomData.userList);
+          // console.log("현재 방 정보 : ", roomData);
+          // console.log("최종 방 참가자 리스트 : ", roomData.userList);
         }
       } catch (error) {
         console.error(error);
