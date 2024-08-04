@@ -1,18 +1,17 @@
-// Interview.jsx
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
 import axios from "axios";
 // 새로고침 아이콘 반응형으로 만들 css파일
-import "./styles.css"
+import "./styles.css";
+import Button from "../../../components/Button.jsx";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]);
   // 아이콘 회전 상태
-  const [isRotating, setIsRotating] = useState(false)
+  const [isRotating, setIsRotating] = useState(false);
 
   const navigate = useNavigate();
   const currentUser = { userId: "LGG", name: "Jun" };
@@ -111,22 +110,22 @@ export default function Interview() {
   // 새로고침 핸들러
   const handleRefreshClick = () => {
     // 회전 시작
-    setIsRotating(true)
+    setIsRotating(true);
     setTimeout(() => {
       // 회전 멈춤
-      setIsRotating(false)
+      setIsRotating(false);
       window.location.reload();
-    }, 500) // 0.7초 후 새로고침
-  }
+    }, 1000); // 1초 후 새로고침
+  };
 
   return (
     <>
       <SecondNav />
       <div className="min-h-screen flex flex-col">
-        <main className="flex-grow p-6">
+        <main className="flex-grow p-4">
           <div className="container mx-auto">
-            <div className="flex items-center mb-12">
-              <h1 className="text-3xl font-bold mr-4">모의 면접 방 목록</h1>
+            <div className="flex items-center mb-2">
+              <h1 className="text-3xl font-bold mr-4">면접 스터디 모집</h1>
               <svg
                 onClick={handleRefreshClick}
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,16 +142,38 @@ export default function Interview() {
                 ></path>
               </svg>
             </div>
-
-            <div className="flex">
+            <div className="flex gap-4 mb-4"> {/* 빠른 시작 및 방 생성 버튼들을 flex 컨테이너로 묶음 */}
+              <button
+                className="bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
+                onClick={() => handleQuickStart("PRESENTATION")}
+              >
+                PT면접 빠른 시작
+              </button>
+              <button
+                className="bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white"
+                onClick={() => handleQuickStart("PERSONALITY")}
+              >
+                인성면접 빠른 시작
+              </button>
+              <button
+                onClick={() => navigate("/second/interview/createroom")}
+                className="rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
+              >
+                + 방 생성
+              </button>
+            </div>
+            <div className="bg-white p-2 shadow-2xl">
               <Filter onSearchClick={handleSearchClick} />
-              <div className="w-3/4 px-4">
-                <div className="grid grid-cols-3 gap-4">
+              <div className="flex justify-center">
+                <hr className="w-[97%]" />
+              </div>
+              <div className="w-full px-4 mt-10">
+                <div className="grid grid-cols-3 gap-10">
                   {filteredRoomList.map((room) => (
                     <div
                       key={room.id}
-                      className="bg-white shadow rounded p-4 flex flex-col justify-between"
-                      style={{ height: "250px" }}
+                      className="bg-white shadow rounded p-6 flex flex-col justify-between"
+                      style={{ height: "270px" }}
                     >
                       <div className="flex justify-between items-center mb-2">
                         <span
@@ -166,11 +187,11 @@ export default function Interview() {
                         >
                           {room.status === "WAIT" ? "모집중" : "마감"}
                         </span>
-                        <span className="text-sm bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
+                        <span className=" bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
                           {typeKorean[room.type]}
                         </span>
                       </div>
-                      <div className="flex-grow">
+                      <div className="flex-grow mt-2">
                         <p className="text-gray-700 font-semibold">
                           {room.title}
                         </p>
@@ -178,6 +199,7 @@ export default function Interview() {
                           {room.description}
                         </p>
                       </div>
+                      <hr />
                       <div className="mt-4 flex justify-between items-center">
                         <div>
                           <img
@@ -191,32 +213,15 @@ export default function Interview() {
                         </div>
                         <button
                           onClick={() => handleJoinRoom(room.id)}
-                          className="bg-blue-600 text-white mr-2 py-1 px-2 rounded w-[60px]"
+                          className="bg-blue-500 text-white py-1 px-2 rounded w-[60px]"
                           disabled={room.status !== "WAIT"}
                         >
                           참여
                         </button>
+                        {/* <Button text="참여하기" type="SEARCHROOM" onClick={() => handleJoinRoom(room.id)} disabled={room.status !== "WAIT"}/> */}
                       </div>
                     </div>
                   ))}
-                  <button
-                    onClick={() => navigate("/second/interview/createroom")}
-                    className="h-[200px] bg-white shadow rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
-                  >
-                    + 방 생성
-                  </button>
-                  <button
-                    className="h-[200px] bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
-                    onClick={() => handleQuickStart("PRESENTATION")}
-                  >
-                    PT면접 빠른 시작
-                  </button>
-                  <button
-                    className="h-[200px] bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white"
-                    onClick={() => handleQuickStart("PERSONALITY")}
-                  >
-                    인성면접 빠른 시작
-                  </button>
                 </div>
               </div>
             </div>
