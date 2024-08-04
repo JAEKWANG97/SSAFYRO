@@ -6,13 +6,16 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Button from "../../../components/Button";
 import PreventRefresh from "../../components/PreventRefresh";
+import InterviewTips from "./components/InterviewTips";
+import userImg from "../../../../public/main/user.jpg";
+// import userImg from "../../../../public/main/users.png";
 
 export default function Room() {
   const { roomid } = useParams();
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-  const currentUser = { userId: 10, name: "Alice" };  // 더미 사용자 정보: 실제 유저 정보로 대체 필요
+  const currentUser = { userId: 10, name: "Alice" }; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 
   const isInitialMount = useRef(true);
 
@@ -50,7 +53,6 @@ export default function Room() {
           console.log("현재 방 정보 : ", roomData);
           console.log("참가자 리스트 : ", roomData.userList);
         }
-
       } catch (error) {
         console.error(error);
         alert("방 정보를 불러오는데 실패했습니다.");
@@ -60,7 +62,7 @@ export default function Room() {
 
     if (isInitialMount.current) {
       fetchRoomDetails();
-      isInitialMount.current = false
+      isInitialMount.current = false;
     }
 
     return () => {
@@ -132,9 +134,9 @@ export default function Room() {
       >
         <div className="w-full h-[80vh] mx-auto mt-5 p-6 rounded-xl bg-white shadow-2xl">
           <div className="flex justify-between items-center mb-2">
-            <div className="flex border px-6 pt-2 pb-1 items-center justify-center">
-              <h1 className="font-extrabold text-2xl">PT</h1>
-            </div>
+            <span className=" text-indigo-800 text-2xl font-extrabold px-6 pt-2 pb-1 rounded  dark:text-indigo-300 border border-indigo-300">
+              {room.type === "PRESENTATION" ? "PT" : "인성"}
+            </span>
             <div className="items-center">
               <h1 className="font-extrabold text-2xl">{room.title}</h1>
             </div>
@@ -144,13 +146,13 @@ export default function Room() {
               onClick={navigateHandler}
             />
           </div>
-          
+
           <div
-            className="flex h-[95%] border rounded-xl mt-4"
-            style={{
-              backgroundColor: "rgba(249, 250, 255, 1)",
-              borderColor: "rgba(249, 250, 255, 1)",
-            }}
+            className="flex h-[95%] rounded-xl mt-4 bg-gray-50"
+            // style={{
+            //   backgroundColor: "rgba(249, 250, 255, 1)",
+            //   borderColor: "rgba(249, 250, 255, 1)",
+            // }}
           >
             <div className="w-[70%] flex flex-col p-4">
               <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
@@ -160,7 +162,7 @@ export default function Room() {
                     className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                   >
                     <img
-                      src="/main/users.png"
+                      src={userImg}
                       alt="User"
                       className="h-2/3 object-contain rounded-full"
                     />
@@ -200,47 +202,7 @@ export default function Room() {
               />
             </div>
             <div className="w-[30%] flex flex-col justify-between">
-              <div
-                className="p-5 bg-white shadow-md rounded-xl ml-3 mr-5 mt-8"
-                style={{ height: "1000px" }}
-              >
-                <div className="flex items-center mb-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="2.0em"
-                    height="2.0em"
-                    viewBox="0 0 48 48"
-                    className="text-blue-500"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18.005 43.5h12.188m-19.5-28.667C12.429 8.353 17.39 4.5 24.099 4.5s11.67 3.852 13.406 10.333s-1.502 13.125-7.312 16.48v7.312H18.005v-7.312c-7.65-3.654-9.049-10-7.312-16.48"
-                    ></path>
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.28 18.296s-.786-8.599 9.888-9.982"
-                    ></path>
-                  </svg>
-                  <h2 className="flex-grow text-2xl font-bold ml-2">
-                    선배들의 Tip!
-                  </h2>
-                </div>
-                <div className="flex items-start mt-8 px-2">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded-full mr-2">
-                    1
-                  </div>
-                  <p className="px-2 text-gray-700">
-                    완벽하게 말할 필요 없어요! 자신이 생각한 바를 면접관이
-                    이해할 수 있을 정도로만 전달할 수 있으면 되요!
-                  </p>
-                </div>
-              </div>
+                <InterviewTips />
               <div
                 className="p-7 flex justify-center ml-3 mr-5"
                 style={{ height: "25%" }}

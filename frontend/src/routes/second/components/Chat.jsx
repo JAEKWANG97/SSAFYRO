@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Client as StompClient } from "@stomp/stompjs";
 import sendImg from "../../../../public/main/send.jpeg";
 import ssafyLogo from "../../../../public/SSAFYRO.png";
+import userImg from "../../../../public/main/user.jpg";
+// import userImg from "../../../../public/main/users.png";
+
 
 const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
   const [newMessage, setNewMessage] = useState("");
@@ -137,7 +140,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
               {showProfile && !isCurrentUser && (
                 <>
                   <img
-                    src="/main/users.png"
+                    src={userImg}
                     alt="User"
                     className="w-8 h-8 rounded-full mr-3"
                   />
@@ -168,7 +171,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
 
       <div className="flex items-center p-2 bg-gray-100 rounded-3xl">
         <img
-          src="/main/users.png"
+          src={userImg}
           alt="User"
           className="w-8 h-8 rounded-full mr-3"
         />
@@ -184,7 +187,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
           <img
             src={ssafyLogo}
             alt="SSAFYRO 로고"
-            className="w-6 h-6 mr-2 rounded-md"
+            className="w-6 h-6 mt-1 mr-2 rounded-md"
           />
         </button>
       </div>
