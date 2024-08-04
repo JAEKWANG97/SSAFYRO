@@ -15,7 +15,14 @@ export default function Interview() {
 
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
-  const getRooms = async (type, capacity, page, size, title = null, status = null) => {
+  const getRooms = async (
+    type,
+    capacity,
+    page,
+    size,
+    title = null,
+    status = null
+  ) => {
     let filter = {
       type: type,
       capacity: capacity,
@@ -52,9 +59,14 @@ export default function Interview() {
   // 방 참여
   const handleJoinRoom = (id) => {
     const roomIndex = filteredRoomList.findIndex((room) => room.id === id);
-    console.log("roomIndex: ", roomIndex)
-    console.log("filteredRoomList:", filteredRoomList)
-    if (roomIndex !== -1 && filteredRoomList[roomIndex].status === "WAIT" && filteredRoomList[roomIndex].participantCount < filteredRoomList[roomIndex].capacity) {
+    console.log("roomIndex: ", roomIndex);
+    console.log("filteredRoomList:", filteredRoomList);
+    if (
+      roomIndex !== -1 &&
+      filteredRoomList[roomIndex].status === "WAIT" &&
+      filteredRoomList[roomIndex].participantCount <
+        filteredRoomList[roomIndex].capacity
+    ) {
       const updateRooms = [...filteredRoomList];
       setFilteredRoomList(updateRooms);
       navigate(`/second/interview/room/${id}`);
@@ -65,29 +77,32 @@ export default function Interview() {
 
   // 필터 갱신
   const handleSearchClick = function (filter) {
-    getRooms(filter.type ? filter.type : null,
-       filter.capacity ? filter.capacity : null,
-       filter.page,
-       filter.size,
-       filter.title ? filter.title : null,
-       filter.status ? "WAIT" : null);
+    getRooms(
+      filter.type ? filter.type : null,
+      filter.capacity ? filter.capacity : null,
+      filter.page,
+      filter.size,
+      filter.title ? filter.title : null,
+      filter.status ? "WAIT" : null
+    );
   };
 
   // 빠른 입장
   const handleQuickStart = async function (type) {
-    await axios.get(APIURL + "rooms/fast-enter", {
-      params: {
-        type: type,
-      },
-    })
-    .then((response) => {
-      navigate(`/second/interview/room/${response.data.response.roomId}`);
-    })
-    .catch((error) => {
-      console.log(error);
-      alert("빠른 입장에 실패했습니다.");
-    });
-  }
+    await axios
+      .get(APIURL + "rooms/fast-enter", {
+        params: {
+          type: type,
+        },
+      })
+      .then((response) => {
+        navigate(`/second/interview/room/${response.data.response.roomId}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("빠른 입장에 실패했습니다.");
+      });
+  };
 
   return (
     <>
@@ -95,7 +110,25 @@ export default function Interview() {
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow p-6">
           <div className="container mx-auto">
-            <h1 className="text-3xl font-bold mb-12">모의 면접 방 목록</h1>
+            <div className="flex items-center mb-12">
+              <h1 className="text-3xl font-bold mr-4">모의 면접 방 목록</h1>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M4.75 10.75h-3m12.5-2c0 3-2.798 5.5-6.25 5.5c-3.75 0-6.25-3.5-6.25-3.5v3.5m9.5-9h3m-12.5 2c0-3 2.798-5.5 6.25-5.5c3.75 0 6.25 3.5 6.25 3.5v-3.5"
+                ></path>
+              </svg>
+            </div>
+
             <div className="flex">
               <Filter onSearchClick={handleSearchClick} />
               <div className="w-3/4 px-4">
@@ -104,7 +137,7 @@ export default function Interview() {
                     <div
                       key={room.id}
                       className="bg-white shadow rounded p-4 flex flex-col justify-between"
-                      style={{ height: "200px" }}
+                      style={{ height: "250px" }}
                     >
                       <div className="flex justify-between items-center mb-2">
                         <span
@@ -157,12 +190,14 @@ export default function Interview() {
                   >
                     + 방 생성
                   </button>
-                  <button className="h-[200px] bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
+                  <button
+                    className="h-[200px] bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
                     onClick={() => handleQuickStart("PRESENTATION")}
                   >
                     PT면접 빠른 시작
                   </button>
-                  <button className="h-[200px] bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white"
+                  <button
+                    className="h-[200px] bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white"
                     onClick={() => handleQuickStart("PERSONALITY")}
                   >
                     인성면접 빠른 시작
