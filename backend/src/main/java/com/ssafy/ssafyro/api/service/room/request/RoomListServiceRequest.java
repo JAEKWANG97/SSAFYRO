@@ -16,6 +16,8 @@ public record RoomListServiceRequest(String title,
                 .type(roomType)
                 .capacity(capacity)
                 .status(status)
+                .page(page)
+                .size(size)
                 .build();
     }
 }
