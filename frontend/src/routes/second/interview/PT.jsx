@@ -15,10 +15,6 @@ import {
 import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
-// STT feature
-// import useSpeechToText from "./components/VoiceRecognitionSTT";
-import useSpeechToText from "./components/VoiceKitSTT";
-
 export default function PT() {
   const { roomid } = useParams();
 
@@ -175,26 +171,6 @@ export default function PT() {
     }
   }, [joinRoomTrigger]);
 
-  // STT feature
-  // // const { transcript, listening, restartListening } = useSpeechToText();
-  // const { transcript, listening, listen, stop, restart } = useSpeechToText();
-  // // const isRendering = useRef(true);
-  // useEffect(() => {
-  //   // return () =>{
-  //   //   isRendering.current = false;
-  //   // }
-  //   console.log(listening);
-  //   console.log(transcript);
-  //   try {
-  //     if (!listening) {
-  //       listen({ lang: "ko-KR" });
-  //       console.log("음성 인식을 시작합니다.");
-  //     }
-  //   } catch (error) {
-  //     console.log("음성 인식을 시작하는 중 오류가 발생했습니다.", error.message);
-  //     restart();
-  //   }
-  // });
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
 

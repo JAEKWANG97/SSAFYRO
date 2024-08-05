@@ -102,7 +102,7 @@ export default function Interview() {
       })
       .catch((error) => {
         console.log(error);
-        alert("빠른 입장에 실패했습니다.");
+        alert("빠른 입장할 수 있는 스터디 방이 현재 존재하지 않습니다.");
       });
   };
 
@@ -186,7 +186,8 @@ export default function Interview() {
                         >
                           {room.status === "WAIT" ? "모집중" : "마감"}
                         </span>
-                        <span className=" bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
+                        <span className={`border ${room.type === "PERSONALITY" ? "bg-emerald-100 text-emerald-800 border-emerald-400" : "bg-violet-100 text-violet-800 border-violet-400"
+                        } text-xs font-medium py-1 px-2 rounded`}>
                           {typeKorean[room.type]}
                         </span>
                       </div>
