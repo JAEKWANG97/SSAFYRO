@@ -24,11 +24,11 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String providerId;
-
-    private String providerName;
+    private String username;
 
     private String nickname;
+
+    private String providerId;
 
     private String profileImageUrl;
 
@@ -36,10 +36,10 @@ public class User extends BaseEntity {
     private MajorType majorType;
 
     @Builder
-    private User(String providerId, String providerName, String nickname, String profileImageUrl, MajorType majorType) {
-        this.providerId = providerId;
-        this.providerName = providerName;
+    private User(String username, String nickname, String providerId, String profileImageUrl, MajorType majorType) {
+        this.username = username;
         this.nickname = nickname;
+        this.providerId = providerId;
         this.profileImageUrl = profileImageUrl;
         this.majorType = majorType;
     }

@@ -48,9 +48,9 @@ class ReportRepositoryTest extends IntegrationTestSupport {
 
     private User creatUser() {
         return User.builder()
-                .providerId("providerId")
-                .providerName("goole")
+                .username("enduf768640@gmail.com")
                 .nickname("ssafyRo")
+                .providerId("providerId")
                 .profileImageUrl("www.image.url")
                 .majorType(MajorType.MAJOR)
                 .build();
