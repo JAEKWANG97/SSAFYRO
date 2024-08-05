@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Value("${front.domain}")
-    private String frontServerDomain;
+    private String FRONT_SERVER_DOMAIN;
 
     private final Jwt jwt;
     private final UserService userService;
@@ -48,6 +48,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private void sendToken(HttpServletResponse response, String token) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader("content-type", "application/json");
-        response.sendRedirect(frontServerDomain + "?token=" + token);
+        response.sendRedirect(FRONT_SERVER_DOMAIN + "?token=" + token);
     }
 }
