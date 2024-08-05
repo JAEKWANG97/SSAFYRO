@@ -158,9 +158,9 @@ class ReportServiceTest extends IntegrationTestSupport {
 
     private User createUser() {
         return User.builder()
-                .providerId("providerId")
-                .providerName("google")
+                .username("enduf768640@gmail.com")
                 .nickname("ssafyRo")
+                .providerId("providerId")
                 .profileImageUrl("www.image.url")
                 .majorType(MajorType.MAJOR)
                 .build();

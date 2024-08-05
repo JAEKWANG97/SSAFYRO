@@ -1,6 +1,5 @@
 package com.ssafy.ssafyro.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.ssafyro.api.service.user.UserService;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.security.Jwt.Claims;
@@ -20,9 +19,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Value("${front.domain}")
     private String frontServerDomain;
 
-    private final ObjectMapper objectMapper;
     private final Jwt jwt;
-
     private final UserService userService;
 
     @Override

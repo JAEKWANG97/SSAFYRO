@@ -107,9 +107,9 @@ class EssayServiceTest extends IntegrationTestSupport {
 
     private User createUser() {
         return User.builder()
-                .providerId("providerId")
-                .providerName("providerName")
+                .username("enduf768640@gmail.com")
                 .nickname("김두열")
+                .providerId("providerId")
                 .profileImageUrl("https://profileImageUrl.example")
                 .majorType(MajorType.MAJOR)
                 .build();
