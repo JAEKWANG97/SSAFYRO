@@ -1,5 +1,3 @@
-// Room.jsx
-
 import { useParams, useNavigate } from "react-router-dom";
 import Chat from "../components/Chat";
 import { useState, useEffect, useRef } from "react";
@@ -27,15 +25,10 @@ export default function Room() {
           `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`
         );
         const roomData = response.data.response;
-        
-        // console.log("처음 방 참가자 리스트 : ", roomData.userList)
-        // 현재 사용자 중복 여부 확인
+
         const isUserAlreadyInRoom = roomData.userList.some(participant => {
-          // console.log(`Comparing participant.userId: ${participant} with currentUser.userId: ${currentUser.userId}`);
           return participant === currentUser.userId
         });
-
-        // console.log("현재 사용자 중복이 있는가? : ", isUserAlreadyInRoom)
 
         if (!isUserAlreadyInRoom) {
           // 방에 참가한 사용자 서버에 알리기
@@ -50,12 +43,8 @@ export default function Room() {
           );
           const updatedRoomData = updatedResponse.data.response;
           setRoom(updatedRoomData);
-          // console.log("현재 방 정보 : ", updatedRoomData);
-          // console.log("최종 방 참가자 리스트 : ", updatedRoomData.userList);
         } else {
           setRoom(roomData);
-          // console.log("현재 방 정보 : ", roomData);
-          // console.log("최종 방 참가자 리스트 : ", roomData.userList);
         }
       } catch (error) {
         console.error(error);
@@ -114,29 +103,20 @@ export default function Room() {
         updatedRoom.userList.splice(participantIndex, 1);
         setRoom(updatedRoom);
       }
-
-      // // 마지막 참가자가 방을 떠나면 서버에 방 삭제 요청
-      // if (updatedRoom.userList.length === 0) {
-      //   try {
-      //     await axios.delete(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`)
-      //   } catch (error) {
-      //     console.error("히히 삭제 못해", error)
-      //   }
-      // }
     }
   }
 
   if (!room) return <div>로딩 중 ...</div>;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col justify-center items-center">
       {/* PreventRefresh 컴포넌트를 추가하여 새로고침 방지 기능 활성화 */}
       <PreventRefresh />
       <div
-        className="w-full mt-16 overflow-hidden"
+        className="w-full mt-8 mb-8 overflow-hidden"
         style={{ minWidth: "1100px" }}
       >
-        <div className="w-full h-[80vh] mx-auto mt-5 p-6 rounded-xl bg-white shadow-2xl">
+        <div className="w-full h-[85vh] mx-auto mt-6 p-6 rounded-xl bg-white shadow-2xl">
           <div className="flex justify-between items-center mb-2">
             <span className=" text-indigo-800 text-2xl font-extrabold px-6 pt-2 pb-1 rounded  dark:text-indigo-300 border border-indigo-300">
               {room.type === "PRESENTATION" ? "PT" : "인성"}
@@ -153,10 +133,6 @@ export default function Room() {
 
           <div
             className="flex h-[95%] rounded-xl mt-4 bg-gray-50"
-            // style={{
-            //   backgroundColor: "rgba(249, 250, 255, 1)",
-            //   borderColor: "rgba(249, 250, 255, 1)",
-            // }}
           >
             <div className="w-[70%] flex flex-col p-4">
               <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
@@ -197,26 +173,18 @@ export default function Room() {
                     </div>
                   ))}
               </div>
-
+              <InterviewTips />
+            </div>
+            <div className="w-[30%] flex flex-col justify-between">
               <Chat
                 currentUser={currentUser}
                 currentRoom={roomid}
                 messages={messages}
                 setMessages={setMessages}
               />
-            </div>
-            <div className="w-[30%] flex flex-col justify-between">
-                <InterviewTips />
               <div
-                className="p-7 flex justify-center ml-3 mr-5"
-                style={{ height: "25%" }}
+                className="p-7 flex justify-center items-center ml-3 mr-5"
               >
-                {/* <button
-                  className="w-full font-extrabold bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
-                  onClick={startInterviewHandler}
-                >
-                  면접 시작
-                </button> */}
                 <Button
                   text="면접 시작"
                   type="WAITINGROOMSTART"
