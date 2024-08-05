@@ -44,7 +44,8 @@ const handleVideoPlay = async function (
     faceapi.matchDimensions(canvas, displaySize)
 
     // 주기적으로 얼굴을 감지하는 인터벌 설정
-    setInterval(async () => {
+    let errorCount = 0
+    const detectFace = async function () {
         try {
             const detections = await faceapi
                 .detectAllFaces(
@@ -67,11 +68,20 @@ const handleVideoPlay = async function (
             faceapi.draw.drawDetections(canvas, resizedDetections)
             faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
             faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+
         } catch (error) {
             console.error(error)
             console.log("오류 발생으로 표정 인식이 중지됩니다.")
+            errorCount++
         }
-    }, 100)
+    }
+
+    setInterval(detectFace, 100)
+
+    if (errorCount > 1000) {
+        console.log("표정 인식이 너무 많이 실패하여 중지합니다.")
+        clearInterval(detectFace)
+    }
 }
 
 export { loadFaceAPIModels, handleVideoPlay }

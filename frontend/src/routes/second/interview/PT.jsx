@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 // OpenVidu-liveKit import
@@ -15,6 +15,10 @@ import {
 import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
+// STT feature
+// import useSpeechToText from "./components/VoiceRecognitionSTT";
+import useSpeechToText from "./components/VoiceKitSTT";
+
 export default function PT() {
   const { roomid } = useParams();
 
@@ -22,6 +26,7 @@ export default function PT() {
 
   const handleEndInterview = () => {
     leaveRoom();
+    stop();
     navigate("/second/interview");
   };
 
@@ -170,6 +175,67 @@ export default function PT() {
     }
   }, [joinRoomTrigger]);
 
+  // STT feature
+  // // const { transcript, listening, restartListening } = useSpeechToText();
+  // const { transcript, listening, listen, stop, restart } = useSpeechToText();
+  // // const isRendering = useRef(true);
+  // useEffect(() => {
+  //   // return () =>{
+  //   //   isRendering.current = false;
+  //   // }
+  //   console.log(listening);
+  //   console.log(transcript);
+  //   try {
+  //     if (!listening) {
+  //       listen({ lang: "ko-KR" });
+  //       console.log("음성 인식을 시작합니다.");
+  //     }
+  //   } catch (error) {
+  //     console.log("음성 인식을 시작하는 중 오류가 발생했습니다.", error.message);
+  //     restart();
+  //   }
+  // });
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+
+  const recognitionRef = useRef(null);
+
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+    recognitionRef.current.lang = 'ko-KR';
+
+    recognitionRef.current.onresult = (event) => {
+      const current = event.resultIndex;
+      console.log(event.results[current])
+      const transcript = event.results[current][0].transcript;
+      setTranscript(transcript);
+    };
+
+    recognitionRef.current.onerror = (event) => {
+      console.error('Speech recognition error', event.error);
+    };
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const startListening = useCallback(() => {
+    setIsListening(true);
+    recognitionRef.current.start();
+  }, []);
+
+  const stopListening = useCallback(() => {
+    setIsListening(false);
+    recognitionRef.current.stop();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-5xl">
@@ -186,6 +252,15 @@ export default function PT() {
           >
             면접 종료
           </button>
+          <button
+            onClick={isListening ? stopListening : startListening}
+            className={`px-4 py-2 rounded ${isListening ? 'bg-red-500' : 'bg-green-500'} text-white`}
+          >
+            {isListening ? '인식 중지' : '인식 시작'}
+          </button>
+          {/* {isRendering.current  ? null : <><button onClick={listen({ lang: "ko-KR" })} > 인식시작</button>
+          <button onClick={stop}> 인식종료</button></>} */}
+          
         </div>
         <div className="flex justify-center mb-6">
           {/* OpenVidu 화상 회의 레이아웃 */}
@@ -263,6 +338,7 @@ export default function PT() {
           </button>
         </div>
       </div>
+      { transcript }
     </div>
   );
 }
