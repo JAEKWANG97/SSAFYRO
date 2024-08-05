@@ -3,20 +3,17 @@ package com.ssafy.ssafyro.api.service.report;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportListResponse;
-import com.ssafy.ssafyro.domain.article.Article;
-import com.ssafy.ssafyro.domain.article.ArticleRepository;
-import com.ssafy.ssafyro.domain.interview.InterviewInfos;
-import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
-import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
-import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
-import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.article.Article;
+import com.ssafy.ssafyro.domain.article.ArticleRepository;
+import com.ssafy.ssafyro.domain.interview.InterviewInfos;
+import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
+import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
+import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.report.ReportRepository;
 import com.ssafy.ssafyro.domain.room.entity.Room;
@@ -24,8 +21,8 @@ import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.article.ArticleNotFoundException;
-import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
+import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +62,8 @@ public class ReportService {
 
         if (report.isPresentation()) {
             //TODO: 기사 저장 완료되면 수정
-            Article article = getArticle();
+            Article article = ((PresentationInterviewReport) report).getArticle();
+
             return ReportPresentationResponse.of(
                     interviewResult,
                     article
@@ -103,7 +101,7 @@ public class ReportService {
         Room room = getRoom(request.roomId());
         User user = getUser(request.userId());
 
-        if (PRESENTATION.equals(room.getType())) {
+        if (room.isPresentation()) {
             return PresentationInterviewReport.builder()
                     .room(room)
                     .user(user)
@@ -124,13 +122,5 @@ public class ReportService {
     private Article getArticle(Long id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
-    }
-
-    private Article getArticle() {
-        return Article.builder()
-                .title("기사 제목")
-                .content("기사 내용")
-                .question("기사 질문")
-                .build();
     }
 }

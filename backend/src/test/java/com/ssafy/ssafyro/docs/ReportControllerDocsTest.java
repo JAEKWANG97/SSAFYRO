@@ -19,11 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
+import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
-import com.ssafy.ssafyro.api.service.report.Expression;
-import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
@@ -35,8 +34,8 @@ import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -205,7 +204,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         Article article = Article.builder()
                 .title("기사 제목")
                 .content("기사 내용")
-                .question("기사 질문")
+                .questions(List.of("기사 질문1", "기사 질문2"))
                 .build();
 
         given(room.getId()).willReturn("roomId");
@@ -262,7 +261,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("PT 기사 제목"),
                                 fieldWithPath("response.article.content").type(JsonFieldType.STRING)
                                         .description("PT 기사 내용"),
-                                fieldWithPath("response.article.question").type(JsonFieldType.STRING)
+                                fieldWithPath("response.article.question[]").type(JsonFieldType.ARRAY)
                                         .description("PT 기사 질문"),
                                 fieldWithPath("response.reportDetails").type(JsonFieldType.ARRAY)
                                         .description("레포트 상세 정보"),

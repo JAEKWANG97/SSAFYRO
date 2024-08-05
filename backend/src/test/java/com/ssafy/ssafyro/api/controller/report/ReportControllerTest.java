@@ -50,7 +50,7 @@ class ReportControllerTest extends ControllerTestSupport {
                 Article.builder()
                         .title("")
                         .content("")
-                        .question("")
+                        .questions(List.of("", ""))
                         .build()
         );
         Mockito.when(reportService.getReport(1L))

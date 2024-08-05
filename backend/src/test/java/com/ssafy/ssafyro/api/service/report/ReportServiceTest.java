@@ -189,7 +189,7 @@ class ReportServiceTest extends IntegrationTestSupport {
         return Article.builder()
                 .title("기사 제목")
                 .content("기사 내용")
-                .question("기사 질문")
+                .questions(List.of("기사 질문1", "기사 질문2"))
                 .build();
     }
 
