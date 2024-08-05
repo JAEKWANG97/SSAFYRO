@@ -1,6 +1,7 @@
 package com.ssafy.ssafyro.api.controller.room;
 
 import com.ssafy.ssafyro.api.controller.room.request.RoomListRequest;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -18,7 +19,7 @@ public class RoomFilterArgumentResolver implements HandlerMethodArgumentResolver
     public Object resolveArgument(MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory)  {
+                                  WebDataBinderFactory binderFactory) {
         String title = webRequest.getParameter("title");
         String type = webRequest.getParameter("type");
         Integer capacity = parseInteger(webRequest.getParameter("capacity"));
@@ -34,10 +35,13 @@ public class RoomFilterArgumentResolver implements HandlerMethodArgumentResolver
     }
 
     private Integer parseInteger(String value, Integer defaultValue) {
-        try {
-            return value != null ? Integer.parseInt(value) : defaultValue;
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        if (value != null) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
         }
+        return defaultValue;
     }
 }
