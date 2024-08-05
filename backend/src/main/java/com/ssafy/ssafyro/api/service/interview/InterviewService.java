@@ -29,7 +29,7 @@ public class InterviewService {
     private final InterviewRedisRepository interviewRedisRepository;
 
     public StartResponse startInterview(String roomId) {
-        RoomRedis room = roomRedisRepository.findById(roomId)
+        RoomRedis room = roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         room.startInterview();
@@ -38,14 +38,13 @@ public class InterviewService {
     }
 
     public FinishResponse finishInterview(String roomId) {
-        RoomRedis roomRedis = roomRedisRepository.findById(roomId)
+        RoomRedis roomRedis = roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         roomRedis.finishInterview();
 
         //방 정보 RDB 저장
         Room room = roomRedis.toEntity();
-        roomRepository.save(room);
 
         return new FinishResponse(roomRedisRepository.save(roomRedis));
     }

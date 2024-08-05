@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomRedis {
+
+    private final int MAX_CAPACITY = 3;
 
     private String id;
     private String title;
@@ -66,4 +69,17 @@ public class RoomRedis {
     public void removeParticipant(Long userId) {
         userList.remove(userId);
     }
+
+    public String generateKey() {
+        return String.format("room:%s:%d:%s:%s", this.type, this.capacity, this.status, this.id);
+    }
+
+    public boolean isRecruiting() {
+        return status.isRecruiting();
+    }
+
+    public boolean isEnoughCapacity() {
+        return capacity < MAX_CAPACITY;
+    }
+
 }

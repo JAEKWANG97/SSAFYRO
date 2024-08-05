@@ -10,7 +10,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -26,32 +25,22 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<String, InterviewRedis> interviewRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        return createRedisTemplate(redisConnectionFactory);
+    }
+
+    @Bean
+    public RedisTemplate<String, RoomRedis> roomRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        return createRedisTemplate(redisConnectionFactory);
+    }
+
+    private <T> RedisTemplate<String, T> createRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, T> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
-        template.setEnableTransactionSupport(true);
-        return template;
-    }
-
-    @Bean
-    public RedisTemplate<String, InterviewRedis> interviewRedisTemplate() {
-        RedisTemplate<String, InterviewRedis> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.setEnableTransactionSupport(true);
         return template;
     }
 
-    @Bean
-    public RedisTemplate<String, RoomRedis> roomRedisTemplate() {
-        RedisTemplate<String, RoomRedis> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        template.setEnableTransactionSupport(true);
-        return template;
-    }
 }

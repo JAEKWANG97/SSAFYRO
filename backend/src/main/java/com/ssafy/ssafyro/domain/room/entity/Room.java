@@ -30,4 +30,9 @@ public class Room extends BaseEntity {
         this.title = title;
         this.type = type;
     }
+
+    public boolean isPresentation() {
+        return type.isPresentation();
+    }
+
 }

@@ -1,5 +1,4 @@
-package com.ssafy.ssafyro.domain.room.redis;
-
+package com.ssafy.ssafyro.domain.room;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,4 +12,10 @@ public enum RoomStatus {
     END("종료");
 
     private final String text;
+
+    public boolean isRecruiting() {
+        return WAIT.equals(this);
+    }
+
 }
+

@@ -51,4 +51,9 @@ public abstract class Report extends BaseEntity {
     public Long getUserId() {
         return user.getId();
     }
+
+    public boolean isPresentation() {
+        return room.isPresentation();
+    }
+    
 }
