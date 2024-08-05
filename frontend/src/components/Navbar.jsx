@@ -1,20 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useFirstStore from "../stores/FirstStore";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const setActiveTab = useFirstStore((state) => state.setActiveTab);
-
+  const isLogin = useFirstStore((state) => state.isLogin);
+  const setIsLogin = useFirstStore((state) => state.setIsLogin);
   const userId = 1; // 임의로 지정
-  const [isLogin, setIsLogin] = useState(false); // 로그인을 관리하는 상태
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
   const [dropdown2Open, setDropdown2Open] = useState(false); // 드롭다운 2 상태
+  const navigate = useNavigate();
 
   const dropdown1Ref = useRef(null);
   const dropdown2Ref = useRef(null);
-
-  const loginTrigger = () => {
-    setIsLogin(!isLogin); // 테스트를 위해 로그인 상태 토글
-  };
 
   const toggleDropdown1 = () => {
     setDropdown1Open(!dropdown1Open);
@@ -44,14 +42,34 @@ export default function Navbar() {
 
   const handleNavClick = (tab) => {
     setActiveTab(tab);
-    if (window.location.pathname !== "/first") {
-      window.location.href = "/first";
+    setDropdown1Open(false); // 드롭다운을 닫음
+    setDropdown2Open(false); // 드롭다운을 닫음
+    if (tab === "essay") {
+      navigate("/first/essay");
+    } else if (tab === "test") {
+      navigate("/first/test");
+    } else if (tab === "guide") {
+      navigate("/second/guide/personality");
+    } else if (tab === "interview") {
+      navigate("/second/interview");
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('Token')
+    setIsLogin(false); 
+  };
+
+  const handleLoginClick = () => {
+    navigate("/account/login"); 
+  };
+
   return (
-    <div className="bg-white shadow-md">
-      <div className="container mx-auto flex items-center justify-between py-8 px-64" style={{ minWidth: "1100px" }}>
+    <div className="bg-white border-b">
+      <div
+        className="container mx-auto flex items-center justify-between py-8 px-64"
+        style={{ minWidth: "1100px" }}
+      >
         {/* 로고 자리 */}
         <div className="flex-shrink-0 min-w-[200px]">
           <a className="font-extrabold text-2xl flex items-center" href="/">
@@ -74,7 +92,10 @@ export default function Navbar() {
               1차 전형 준비
             </a>
             {dropdown1Open && (
-              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
+              <div
+                className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]"
+                style={{ top: "100%", left: "0" }}
+              >
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
@@ -89,7 +110,7 @@ export default function Navbar() {
                     <a
                       href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
-                      onClick={() => handleNavClick("sw")}
+                      onClick={() => handleNavClick("test")}
                     >
                       SW 적성진단
                     </a>
@@ -107,22 +128,27 @@ export default function Navbar() {
               2차 전형 준비
             </a>
             {dropdown2Open && (
-              <div className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[130px]" style={{ top: "100%", left: "0" }}>
+              <div
+                className="absolute bg-white divide-y divide-gray-100 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform opacity-100 translate-y-1 w-[140px]"
+                style={{ top: "100%", left: "0" }}
+              >
                 <ul className="py-2 text-sm text-gray-700">
                   <li>
                     <a
-                      href="/second/guide/personality"
+                      href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("guide")}
                     >
-                      면접가이드
+                      면접 가이드
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/second/interview"
+                      href="#"
                       className="block px-6 py-3 hover:bg-gray-100"
+                      onClick={() => handleNavClick("interview")}
                     >
-                      면접연습
+                      면접 연습하기
                     </a>
                   </li>
                 </ul>
@@ -143,18 +169,18 @@ export default function Navbar() {
               </a>
               <button
                 className="mx-3 font-semibold hover:text-[#90CCF0]"
-                onClick={loginTrigger}
+                onClick={handleLogout} // 로그아웃 버튼 클릭 시 이벤트 핸들러
               >
                 로그아웃
               </button>
             </>
           ) : (
-            <a
+            <button
               className="mx-3 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
-              href="/account/login"
+              onClick={handleLoginClick} // 로그인 버튼 클릭 시 페이지 이동
             >
               로그인
-            </a>
+            </button>
           )}
         </div>
       </div>

@@ -17,7 +17,7 @@ export const users = [
     },
 ]
 
-export const currentUser = { userId: 4, name: "Jun" };
+export const currentUser = { userId: 10, name: "Alice" };
 
 // Array of dummy room data
 export let rooms = [
