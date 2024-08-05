@@ -15,6 +15,7 @@ export default function Kakao() {
       localStorage.setItem("Token", token);
       setIsLogin(true)
       nav("/");
+      
     } else {
       console.error("토큰을 찾을 수 없습니다.");
       nav("/login"); // 로그인 페이지로 이동
