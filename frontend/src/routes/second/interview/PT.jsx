@@ -15,6 +15,9 @@ import {
 import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
+// STT feature
+import useSpeechToText from "./components/useSpeechToText";
+
 export default function PT() {
   const { roomid } = useParams();
 
@@ -169,6 +172,9 @@ export default function PT() {
       joinRoom();
     }
   }, [joinRoomTrigger]);
+
+  // STT feature
+  const { transcript, listening, toggleListening } = useSpeechToText();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
