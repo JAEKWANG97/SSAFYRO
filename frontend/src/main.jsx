@@ -1,28 +1,19 @@
-// main.jsx
-
-import React from "react";
+import { useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
+import useFirstStore from './stores/FirstStore.jsx'; 
 
-// import components
+
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
-// style sheet
-import "./index.css";
-
-// router
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useLocation,
-  Outlet,
-} from "react-router-dom";
-// import routes
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
+import Kakao from "./routes/accounts/Kakao.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
 import PersonalityFeedback from "./routes/accounts/PersonalityFeedback.jsx";
 import PtFeedback from "./routes/accounts/PtFeedback.jsx";
-import First from "./routes/first/First.jsx";
+import Essay from './routes/first/Essay.jsx';
+import Test from './routes/first/Test.jsx';
 import GuidePersonality from "./routes/second/guide/GuidePersonality.jsx";
 import GuidePT from "./routes/second/guide/GuidePT.jsx";
 import GuideIT from "./routes/second/guide/GuideIT.jsx";
@@ -32,37 +23,38 @@ import Room from "./routes/second/interview/Room.jsx";
 import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
-
-import backgroundImg from "../public/main/SSAFYRO.png";
+import "./index.css";
 
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
+  const setIsLogin = useFirstStore((state) => state.setIsLogin);
 
-  // Define routes where the Navbar and Footer should be hidden
+  // 초기 렌더링 시 로그인 상태 복원
+  useEffect(() => {
+    const token = localStorage.getItem('Token');
+    if (token) {
+      setIsLogin(true);
+    }
+  }, [setIsLogin]);
+
+  // Define routes where the Navbar should be hidden
   const hideNavbarRoutes = [
     "/second/interview/room",
     "/second/interview/room/:roomid/pt",
     "/second/interview/room/:roomid/pt/survey",
   ];
 
-  const hideFooterRoutes = [
-    "/second/interview/room",
-    "/second/interview/room/:roomid/pt",
-    "/second/interview/room/:roomid/pt/survey",
-  ];
-
-  // Check if the current path matches any of the routes where the Navbar or Footer should be hidden
+  // Check if the current path matches any of the routes where the Navbar should be hidden
   const shouldHideNavbar = hideNavbarRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
 
-  const shouldHideFooter = hideFooterRoutes.some((route) =>
-    location.pathname.startsWith(route)
-  );
+  // Define the main page route where the background should not be gray
+  const isMainPage = location.pathname === "/";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className={`flex flex-col min-h-screen ${isMainPage ? "" : "bg-gray-50"}`}>
       {!shouldHideNavbar && <Navbar />}
       <div className="flex-grow">
         <div
@@ -76,7 +68,7 @@ const AppLayout = () => {
           <Outlet />
         </div>
       </div>
-      {!shouldHideFooter && <Footer />}
+      {isMainPage && <Footer />}
     </div>
   );
 };
@@ -87,6 +79,7 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: "/", element: <Home /> },
+      { path: '/signup', element: <Kakao /> },
       {
         path: "account/",
         children: [
@@ -104,7 +97,10 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: "first/", element: <First /> },
+      { path: "first/essay", element: <Essay /> },
+      { path: "first/test", element: <Test /> },
+      { path: "second/interview/:tab", element: <Interview /> },
+      { path: "second/guide/:tab", element: <GuidePersonality /> },
       {
         path: "second/",
         children: [
@@ -129,7 +125,5 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <RouterProvider router={router} />
 );

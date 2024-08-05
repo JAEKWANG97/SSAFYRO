@@ -14,10 +14,8 @@ import com.ssafy.ssafyro.api.service.room.response.RoomEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
-import com.ssafy.ssafyro.security.JwtAuthentication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,10 +31,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping("/api/v1/rooms")
-    public ApiResult<RoomListResponse> getRooms(@AuthenticationPrincipal JwtAuthentication authentication,
-                                                @RoomFiter RoomListRequest request) {
-        log.info("session id = {}", authentication.id());
-
+    public ApiResult<RoomListResponse> getRooms(@RoomFiter RoomListRequest request) {
         return success(roomService.getRooms(request.toServiceRequest()));
     }
 
