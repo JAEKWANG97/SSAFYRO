@@ -143,7 +143,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("roomId").type(JsonFieldType.STRING)
                                         .description("방 id"),
                                 fieldWithPath("articleId").type(JsonFieldType.NUMBER)
-                                        .description("방 id"),
+                                        .description("기사 id"),
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                         .description("유저 id"),
                                 fieldWithPath("totalScore").type(JsonFieldType.NUMBER)
