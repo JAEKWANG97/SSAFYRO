@@ -12,4 +12,9 @@ public enum RoomType {
     PRESENTATION("PT");
 
     private final String text;
+
+    public boolean isPresentation() {
+        return PRESENTATION.equals(this);
+    }
+
 }

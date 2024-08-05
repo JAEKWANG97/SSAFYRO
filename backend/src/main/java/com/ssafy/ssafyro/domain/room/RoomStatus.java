@@ -12,5 +12,10 @@ public enum RoomStatus {
     END("종료");
 
     private final String text;
+
+    public boolean isRecruiting() {
+        return WAIT.equals(this);
+    }
+
 }
 
