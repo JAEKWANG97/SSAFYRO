@@ -20,9 +20,7 @@ public class ItKnowledge extends BaseEntity {
     private Long id;
 
     private String title;
-
     private String thumbnailImageUrl;
-
     private String articleUrl;
 
     @Builder
