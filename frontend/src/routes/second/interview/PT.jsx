@@ -17,6 +17,7 @@ import AudioComponent from "./components/AudioComponent";
 
 // STT feature
 // import useSpeechToText from "./components/VoiceRecognitionSTT";
+import useSpeechToText from "./components/VoiceKitSTT";
 
 export default function PT() {
   const { roomid } = useParams();
@@ -25,6 +26,7 @@ export default function PT() {
 
   const handleEndInterview = () => {
     leaveRoom();
+    stop();
     navigate("/second/interview");
   };
 
@@ -174,7 +176,23 @@ export default function PT() {
   }, [joinRoomTrigger]);
 
   // STT feature
-  const { transcript, listening, restartListening } = useSpeechToText();
+  // const { transcript, listening, restartListening } = useSpeechToText();
+  const { transcript, listening, listen, stop, restart } = useSpeechToText();
+  const isRendering = useRef(true);
+  useEffect(() => {
+    return () =>{
+      isRendering.current = false;
+    }
+    // console.log(listening);
+    // console.log(transcript);
+    // try {
+    //   listen({ lang: "ko-KR" });
+    //   console.log("음성 인식을 시작합니다.");
+    // } catch (error) {
+    //   console.log("음성 인식을 시작하는 중 오류가 발생했습니다.", error.message);
+    //   restart();
+    // }
+  });
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -192,6 +210,9 @@ export default function PT() {
           >
             면접 종료
           </button>
+          {isRendering.current  ? null : <><button onClick={listen({ lang: "ko-KR" })} > 인식시작</button>
+          <button onClick={stop}> 인식종료</button></>}
+          
         </div>
         <div className="flex justify-center mb-6">
           {/* OpenVidu 화상 회의 레이아웃 */}
@@ -269,7 +290,7 @@ export default function PT() {
           </button>
         </div>
       </div>
-      {/* { transcript } */}
+      { transcript }
     </div>
   );
 }
