@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest.TotalScore;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
@@ -184,10 +183,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     @DisplayName("면접 종료 API")
     @Test
     void finishInterview() throws Exception {
-        FinishRequest request = new FinishRequest(
-                "roomId",
-                List.of(new TotalScore(1L, 100), new TotalScore(2L, 90))
-        );
+        FinishRequest request = new FinishRequest("roomId");
 
         mockMvc.perform(
                         patch("/api/v1/interview/finish")
@@ -201,13 +197,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("roomId").type(JsonFieldType.STRING)
-                                        .description("방 고유 id"),
-                                fieldWithPath("totalScores").type(JsonFieldType.ARRAY)
-                                        .description("유저 별 통합 점수"),
-                                fieldWithPath("totalScores[].userId").type(JsonFieldType.NUMBER)
-                                        .description("유저 id"),
-                                fieldWithPath("totalScores[].totalScore").type(JsonFieldType.NUMBER)
-                                        .description("통합 점수")
+                                        .description("방 고유 id")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)

@@ -37,8 +37,8 @@ class ChatGptResponseGeneratorTest extends IntegrationTestSupport {
         // then
         System.out.println(aiArticle.title());
         System.out.println(aiArticle.content());
-        System.out.println(aiArticle.question().get(0));
-        System.out.println(aiArticle.question().get(1));
+        System.out.println(aiArticle.questions().get(0));
+        System.out.println(aiArticle.questions().get(1));
     }
 
     @DisplayName("ChatGPT API를 활용해 에세이를 첨삭 받는다.")

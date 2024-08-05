@@ -48,6 +48,10 @@ public abstract class Report extends BaseEntity {
         this.pronunciationScore = pronunciationScore;
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
     public boolean isPresentation() {
         return room.isPresentation();
     }
