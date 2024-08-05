@@ -102,7 +102,7 @@ export default function Interview() {
       })
       .catch((error) => {
         console.log(error);
-        alert("빠른 입장에 실패했습니다.");
+        alert("빠른 입장할 수 있는 스터디 방이 현재 존재하지 않습니다.");
       });
   };
 
