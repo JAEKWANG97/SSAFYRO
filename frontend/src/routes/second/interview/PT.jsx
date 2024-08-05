@@ -174,7 +174,7 @@ export default function PT() {
   }, [joinRoomTrigger]);
 
   // STT feature
-  const { transcript, listening, toggleListening } = useSpeechToText();
+  const { transcript, listening, restartListening } = useSpeechToText();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
