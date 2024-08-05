@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.controller.room.dto.request;
+package com.ssafy.ssafyro.api.controller.room.request;
 
 import com.ssafy.ssafyro.api.service.room.request.RoomExitServiceRequest;
 import jakarta.validation.constraints.NotEmpty;

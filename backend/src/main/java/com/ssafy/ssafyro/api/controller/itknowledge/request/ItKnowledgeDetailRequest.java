@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.controller.itknowledge.dto;
+package com.ssafy.ssafyro.api.controller.itknowledge.request;
 
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
 import jakarta.validation.constraints.NotNull;

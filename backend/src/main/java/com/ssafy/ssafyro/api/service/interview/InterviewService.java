@@ -46,7 +46,7 @@ public class InterviewService {
     private final InterviewRedisRepository interviewRedisRepository;
 
     public StartResponse startInterview(String roomId) {
-        RoomRedis room = roomRedisRepository.findById(roomId)
+        RoomRedis room = roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         room.startInterview();
@@ -55,7 +55,7 @@ public class InterviewService {
     }
 
     public FinishResponse finishInterview(String roomId) {
-        RoomRedis roomRedis = roomRedisRepository.findById(roomId)
+        RoomRedis roomRedis = roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         roomRedis.finishInterview();
@@ -67,7 +67,7 @@ public class InterviewService {
     }
 
     public FinishResponse finishInterview(FinishServiceRequest request) {
-        RoomRedis roomRedis = roomRedisRepository.findById(request.roomId())
+        RoomRedis roomRedis = roomRedisRepository.findBy(request.roomId())
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
         roomRedis.finishInterview();

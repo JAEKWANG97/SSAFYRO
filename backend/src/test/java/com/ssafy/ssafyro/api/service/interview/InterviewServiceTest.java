@@ -7,7 +7,7 @@ import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -47,20 +47,20 @@ class InterviewServiceTest extends IntegrationTestSupport {
         RoomRedis room = createRoom();
         roomRedisRepository.save(room);
 
-        assertThat(roomRedisRepository.findById(room.getId()).get().getTitle())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getTitle())
                 .isEqualTo(createRoom().getTitle());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getType())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getType())
                 .isEqualTo(createRoom().getType());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getCapacity())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getCapacity())
                 .isEqualTo(createRoom().getCapacity());
-        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getStatus())
                 .isEqualTo(RoomStatus.WAIT);
 
         // when
         interviewService.startInterview(room.getId());
 
         // then
-        assertThat(roomRedisRepository.findById(room.getId()).get().getStatus())
+        assertThat(roomRedisRepository.findBy(room.getId()).get().getStatus())
                 .isEqualTo(RoomStatus.ING);
     }
 

@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.domain.room.redis;
+package com.ssafy.ssafyro.domain.room;
 
 
 import lombok.Getter;
