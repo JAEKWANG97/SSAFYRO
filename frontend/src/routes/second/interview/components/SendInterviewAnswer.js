@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// 면접 답변 양식 생성
 const createInterviewAnswer = function (userId, question, answer, faceExpression) {
     let interviewAnswer = {
         userId: userId,
