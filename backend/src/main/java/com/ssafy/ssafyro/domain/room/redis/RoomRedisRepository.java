@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 public class RoomRedisRepository {
     
-    String ROOM_PREFIX = "room:";
+    private static final String ROOM_PREFIX = "room:";
 
     private final RedisTemplate<String, RoomRedis> redisTemplate;
 
