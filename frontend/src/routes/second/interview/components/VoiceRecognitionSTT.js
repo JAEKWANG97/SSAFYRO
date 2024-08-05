@@ -1,20 +1,32 @@
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-import 'regenerator-runtime/runtime';
+import { useRef, useState, useEffect } from 'react';
 
-// STT 기능을 사용하기 위한 Hook입니다.
-const useSpeechToText = function () {
-  const { transcript, listening } = useSpeechRecognition();
+const recognitionRef = useRef(null);
+const [transcript, setTranscript] = useState('');
+const [isListening, setIsListening] = useState(false);
 
-  const restartListening = function () {
-    if (listening) {
-      SpeechRecognition.stopListening();
-      SpeechRecognition.startListening({ language: "ko-KR", continuous: false });
-    } else {
-      SpeechRecognition.startListening({ language: "ko-KR", continuous: false });
-    }
-  }
+useEffect(() => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+    recognitionRef.current.lang = 'ko-KR';
 
-  return { transcript, listening, restartListening };
-};
+    recognitionRef.current.onresult = (event) => {
+      const current = event.resultIndex;
+      console.log(event.results[current])
+      const transcript = event.results[current][0].transcript;
+      setTranscript(transcript);
+    };
 
-export default useSpeechToText;
+    recognitionRef.current.onerror = (event) => {
+      console.error('Speech recognition error', event.error);
+    };
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+}, []);
+
+export { transcript, isListening, setIsListening };
