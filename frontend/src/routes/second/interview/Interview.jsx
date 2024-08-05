@@ -186,7 +186,8 @@ export default function Interview() {
                         >
                           {room.status === "WAIT" ? "모집중" : "마감"}
                         </span>
-                        <span className=" bg-purple-100 text-purple-800 text-xs font-medium py-1 px-2 rounded border border-purple-400">
+                        <span className={`border ${room.type === "PERSONALITY" ? "bg-emerald-100 text-emerald-800 border-emerald-400" : "bg-violet-100 text-violet-800 border-violet-400"
+                        } text-xs font-medium py-1 px-2 rounded`}>
                           {typeKorean[room.type]}
                         </span>
                       </div>
