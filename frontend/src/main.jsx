@@ -32,6 +32,7 @@ import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
 
+
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();

@@ -1,4 +1,5 @@
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import 'regenerator-runtime/runtime';
 
 // STT 기능을 사용하기 위한 Hook입니다.
 const useSpeechToText = function () {
