@@ -16,7 +16,7 @@ import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
 // STT feature
-import useSpeechToText from "./components/useSpeechToText";
+import useSpeechToText from "./components/VoiceRecognitionSTT";
 
 export default function PT() {
   const { roomid } = useParams();
@@ -269,6 +269,7 @@ export default function PT() {
           </button>
         </div>
       </div>
+      { transcript }
     </div>
   );
 }
