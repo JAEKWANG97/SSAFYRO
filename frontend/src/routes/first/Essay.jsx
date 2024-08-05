@@ -5,7 +5,7 @@ import Ismajor from './../../components/Ismajor';
 import Button from './../../components/Button';
 import Swal from 'sweetalert2';
 import axios from "axios";
-
+import { useNavigate } from 'react-router-dom';
 
 export default function Essay() {
   const selected = useFirstStore((state) => state.selected); // 전공자, 비전공자 유무
@@ -14,14 +14,31 @@ export default function Essay() {
   const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
   const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
   const setEssayContent = useFirstStore((state) => state.setEssayContent);
+  const isLogin = useFirstStore((state) => state.isLogin); // 로그인 유무
+
+  const nav = useNavigate()
 
   const handleAiCorrection = () => {
-    if (
-      essayContent === undefined || 
-      essayContent.trim() === '' 
-    ) {
-      setShowCorrection(false)
-      
+    
+    if (!isLogin) {
+      Swal.fire({
+        title: '로그인을 해주세요',
+        text: '로그인이 필요한 기능입니다.',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: '확인',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          nav('/account/login');
+        }
+      });
+      return;
+    }
+    
+    if (!essayContent || essayContent.trim() === '') {
+      setShowCorrection(false);
+  
+      // 경고 메시지 표시
       Swal.fire({
         title: '에세이를 입력해주세요',
         text: 'AI 첨삭을 받으려면 에세이를 작성해야 합니다.',
@@ -29,31 +46,51 @@ export default function Essay() {
         confirmButtonColor: '#3085d6',
         confirmButtonText: '확인',
       });
-      
-    } else {
-      setShowCorrection(true);
-
-      const beforeEssay = {
-        essayQuestionId : essayId,
-        content : essayContent
-      }
-      
-      axios
-      .post("http://i11c201.p.ssafy.io:9999/api/v1/essays/review", beforeEssay)
+  
+      return; 
+    }
+  
+    // 에세이 내용이 있는 경우 첨삭 시작
+    setShowCorrection(true);
+  
+    const beforeEssay = {
+      essayQuestionId: essayId,
+      content: essayContent,
+    };
+  
+    // API 요청
+    axios
+      .post('http://i11c201.p.ssafy.io:9999/api/v1/essays/review', beforeEssay)
       .then((res) => {
-        console.log(res)
+        console.log(res);
       })
       .catch((error) => {
-        console.log(error)
-      })
-    }
+        console.log(error);
+      });
   };
+  
 
   const handleEssayContent = (e) => {
     setEssayContent(e.target.value);
   };
 
   const handleEssaySave = () => {
+  
+    if (!isLogin) {
+      Swal.fire({
+        title: '로그인을 해주세요',
+        text: '로그인이 필요한 기능입니다.',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: '확인',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          nav('/account/login');
+        }
+      });
+      return; 
+    }
+  
     const afterEssay = {
       userId : 1, // 임시 유저 정보
       essayQuestionId : essayId,

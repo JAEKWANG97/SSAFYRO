@@ -1,7 +1,12 @@
 import ServiceContents from "./ServiceContents";
 import maincharacter from './../../../public/main/main_characters.png'
+import { useNavigate } from "react-router-dom";
 
 export default function GuestContents() {
+
+  const nav = useNavigate()
+
+
   return (
     <div className="flex justify-center">
       <div
@@ -57,7 +62,9 @@ export default function GuestContents() {
                 원활한 서비스 이용을 위해 로그인해 주세요.
               </h5>
             </div>
-            <button className="relative text-white mt-4 mx-4 px-4 py-3 rounded-xl flex items-center justify-center w-[268px] bg-[#2090FF] hover:bg-[#1A78D6]">
+            <button className="relative text-white mt-4 mx-4 px-4 py-3 rounded-xl flex items-center justify-center w-[268px] bg-[#2090FF] hover:bg-[#1A78D6]"
+            onClick = {()=> nav('/account/login')}
+            >
               로그인
               <svg
                 xmlns="http://www.w3.org/2000/svg"
