@@ -7,10 +7,10 @@ import ssafyLogo from "../../../../public/SSAFYRO.png";
 import userImg from "../../../../public/main/user.jpg";
 // import userImg from "../../../../public/main/users.png";
 
-
 const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
   const [newMessage, setNewMessage] = useState("");
   const stompClient = useRef(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (currentRoom) {
@@ -24,6 +24,10 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       }
     };
   }, [currentRoom]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const connectToRoom = (roomId) => {
     stompClient.current = new StompClient({
@@ -112,12 +116,18 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
     });
   };
 
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="flex-grow rounded-lg p-5 bg-white shadow-md mt-4 flex flex-col h-[50%]">
+    <div className="flex-grow rounded-lg p-5 bg-white shadow-md mt-7 mr-2 flex flex-col mb-4 h-[200px]">
       <h1 className="font-bold mb-4">Chat</h1>
       <hr className="mb-4" />
 
-      <div className="flex-grow overflow-auto mb-4">
+      <div className="flex-grow overflow-y-auto mb-4">
         {messages.map((message, index) => {
           console.log("message : ", message);
           const showProfile =
@@ -167,6 +177,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
             </div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="flex items-center p-2 bg-gray-100 rounded-3xl">

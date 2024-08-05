@@ -45,7 +45,7 @@ export default function InterviewTips() {
   return (
     <div
       className="p-5 bg-white shadow-md rounded-xl ml-2 mr-2 mt-8 flex flex-col justify-between" // flex 레이아웃을 사용하여 상하단 고정
-      style={{ height: "1000px" }}
+      style={{ height: "400px" }}
     >
       <div> {/* 상단 컨텐츠 */}
         <div className="flex items-center mb-4">
@@ -71,7 +71,7 @@ export default function InterviewTips() {
               d="M14.28 18.296s-.786-8.599 9.888-9.982"
             ></path>
           </svg>
-          <h2 className="flex-grow text-2xl font-bold ml-2">면접 Tip</h2>
+          <h2 className="flex-grow text-2xl font-bold mt-2 ml-2">면접 Tip</h2>
         </div>
         <div className="mt-4 px-2">
           <div className="flex justify-center">
@@ -81,11 +81,11 @@ export default function InterviewTips() {
               style={{ width: "23px", height: "18px" }}
             />
           </div>
-          <h1 className="mt-3 mb-6 text-xl font-semibold text-center text-gray-600 italic">
+          <h1 className="mt-3 mb-8 text-xl font-semibold text-center text-gray-600 italic">
             {tips[currentPage].title}
           </h1>
           {tips[currentPage].points.map((point, index) => (
-            <div className="mt-5" key={index}>
+            <div className="mt-6" key={index}>
               <span className="text-blue-500">✔️</span>
               <span className="ml-2 px-1 text-gray-600">{point}</span>
             </div>

@@ -11,7 +11,7 @@ export default function Button({ text, type, onClick, isActive }) {
         : type === 'ESSAYSAVE'
           ? 'ml-auto text-white bg-blue-400 hover:bg-blue-800 font-medium rounded-lg text-sm mt-3 px-5 py-2.5 me-2 mb-2 focus:outline-none dark:focus:ring-blue-800'
             : type === "WAITINGROOMOUT"
-            ? "bg-red-100 text-red-800 text-base font-semibold px-5 py-2 rounded w-12 h-12"
+            ? "bg-red-100 text-red-800 text-base font-semibold px-5 py-2 rounded w-21 h-12"
               : type === "WAITINGROOMSTART"
               ? "bg-blue-100 text-blue-800 text-xl font-bold px-16 py-7 rounded-2xl w-64 h-16"
                 : type === "SEARCHROOM"
