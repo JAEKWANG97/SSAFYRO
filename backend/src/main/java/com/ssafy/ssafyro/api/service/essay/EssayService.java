@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.api.service.essay;
 
 import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
+import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
@@ -11,6 +12,7 @@ import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestionRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
+import com.ssafy.ssafyro.error.essay.EssayNotFoundException;
 import com.ssafy.ssafyro.error.essayquestion.EssayQuestionNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class EssayService {
     private final ChatGptResponseGenerator chatGptResponseGenerator;
 
     public EssayReviewResponse reviewEssay(EssayReviewServiceRequest request) {
-        EssayQuestion essayQuestion = getEssayQuestion(request.essayQuestionId());
+        EssayQuestion essayQuestion = getEssayQuestionBy(request.essayQuestionId());
 
         return new EssayReviewResponse(
                 chatGptResponseGenerator.generateNewEssay(essayQuestion.getContent(), request.content())
@@ -37,23 +39,36 @@ public class EssayService {
     }
 
     public EssaySaveResponse save(EssaySaveServiceRequest request) {
-        EssayQuestion essayQuestion = getEssayQuestion(request.essayQuestionId());
+        EssayQuestion essayQuestion = getEssayQuestionBy(request.essayQuestionId());
 
-        User user = getUser(request.userId());
+        User user = getUserBy(request.userId());
 
         return new EssaySaveResponse(
                 essayRepository.save(createEssay(essayQuestion, user, request.content())).getId()
         );
     }
 
-    private EssayQuestion getEssayQuestion(Long essayQuestionId) {
+    public EssayDetailResponse findBy(Long userId) {
+        User user = getUserBy(userId);
+
+        Essay essay = getEssayBy(user);
+
+        return new EssayDetailResponse(essay);
+    }
+
+    private EssayQuestion getEssayQuestionBy(Long essayQuestionId) {
         return essayQuestionRepository.findById(essayQuestionId)
                 .orElseThrow(() -> new EssayQuestionNotFoundException("Essay not found"));
     }
 
-    private User getUser(Long userId) {
+    private User getUserBy(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    private Essay getEssayBy(User user) {
+        return essayRepository.findByUser(user)
+                .orElseThrow(() -> new EssayNotFoundException("Essay not found"));
     }
 
     private Essay createEssay(EssayQuestion essayQuestion, User user, String content) {

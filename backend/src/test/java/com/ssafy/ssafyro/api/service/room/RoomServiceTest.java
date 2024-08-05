@@ -15,8 +15,9 @@ import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.redis.RoomStatus;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
+import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Disabled
-public class RoomServiceTest extends IntegrationTestSupport {
+class RoomServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RoomService roomService;
@@ -38,7 +39,10 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
-        redisTemplate.delete(redisTemplate.keys("room:*"));
+        Set<String> keys = redisTemplate.keys("room:*");
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys);
+        }
     }
 
     @DisplayName("방을 생성한다.")
@@ -50,7 +54,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
         // when
         RoomCreateResponse roomCreateResponse = roomService.createRoom(roomCreateServiceRequest);
-        RoomRedis savedRoom = roomRedisRepository.findById(roomCreateResponse.roomId()).orElse(null);
+        RoomRedis savedRoom = roomRedisRepository.findBy(roomCreateResponse.roomId()).orElse(null);
 
         // then
         assertThat(roomCreateResponse.roomId()).isNotNull();
@@ -85,41 +89,39 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
     @DisplayName("방 목록을 조회한다.")
     @Test
-    void getRoomListTest() {
+    void getRoomsTest() {
         // given
-        String roomType = RoomType.PERSONALITY.name();
-        int capacity = 3;
-        String status = RoomStatus.WAIT.name();
-        int page = 1;
-        int size = 10;
+        RoomListServiceRequest request = new RoomListServiceRequest("Room 1", RoomType.PERSONALITY.name(), 3,
+                RoomStatus.WAIT.name(), 1, 10);
 
-        RoomListServiceRequest request = new RoomListServiceRequest(roomType, capacity, status, page, size);
-
-        roomRedisRepository.save(createRoom("Room 1", RoomType.PERSONALITY, 3));
-        roomRedisRepository.save(createRoom("Room 2", RoomType.PERSONALITY, 3));
+        RoomRedis room1 = createRoom("Room 1", RoomType.PERSONALITY, 3);
+        RoomRedis room2 = createRoom("Room 2", RoomType.PERSONALITY, 3);
+        roomRedisRepository.save(room1);
+        roomRedisRepository.save(room2);
 
         // when
-        RoomListResponse response = roomService.getRoomList(request);
-
+        RoomListResponse response = roomService.getRooms(request);
+        System.out.println(response.rooms());
         // then
         assertThat(response).isNotNull();
-        assertThat(response.rooms()).hasSize(2);
+        assertThat(response.rooms()).hasSize(1);
         assertThat(response.rooms()).extracting("title", "type", "capacity")
                 .containsExactlyInAnyOrder(
-                        tuple("Room 1", RoomType.PERSONALITY, 3),
-                        tuple("Room 2", RoomType.PERSONALITY, 3));
+                        tuple("Room 1", RoomType.PERSONALITY, 3)
+                );
+
     }
 
     @DisplayName("type=null, capacity=null, status=null, page=1, size=10인 방 목록을 조회한다.")
     @Test
-    void getRoomListWhenParamsNullTest() {
+    void getRoomsWhenParamsNullTest() {
         //given
         for (int i = 0; i < 10; i++) {
             roomRedisRepository.save(createRoom("Room " + i, RoomType.PERSONALITY, 3));
         }
-        RoomListServiceRequest request = new RoomListServiceRequest(null, null, null, 1, 10);
+        RoomListServiceRequest request = new RoomListServiceRequest(null, null, null, null, 1, 10);
         //when
-        RoomListResponse response = roomService.getRoomList(request);
+        RoomListResponse response = roomService.getRooms(request);
 
         //then
         assertThat(response).isNotNull();
@@ -142,16 +144,17 @@ public class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyRoomListTest() {
         // given
+        String title = "Room 1";
         String roomType = RoomType.PERSONALITY.name();
         int capacity = 3;
         String status = RoomStatus.WAIT.name();
         int page = 1;
         int size = 10;
 
-        RoomListServiceRequest request = new RoomListServiceRequest(roomType, capacity, status, page, size);
+        RoomListServiceRequest request = new RoomListServiceRequest(title, roomType, capacity, status, page, size);
 
         // when
-        RoomListResponse response = roomService.getRoomList(request);
+        RoomListResponse response = roomService.getRooms(request);
 
         // then
         assertThat(response).isNotNull();
@@ -179,7 +182,7 @@ public class RoomServiceTest extends IntegrationTestSupport {
 
         // when
         roomService.enterRoom(request);
-        RoomRedis room = roomRedisRepository.findById(roomId).orElse(null);
+        RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
 
         // then
         assertThat(room).isNotNull();
@@ -219,10 +222,10 @@ public class RoomServiceTest extends IntegrationTestSupport {
         roomService.enterRoom(request);
 
         // then
-        RoomRedis room = roomRedisRepository.findById(roomId).orElse(null);
+        RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
         assertThat(room).isNotNull();
         assertThat(room.getUserList()).contains(userId);
-        assertThat(room.getUserList().size()).isEqualTo(2);
+        assertThat(room.getUserList()).hasSize(2);
     }
 
     @DisplayName("존재하지 않는 방에서 나가려고 시도하면 예외가 발생한다.")
@@ -256,10 +259,10 @@ public class RoomServiceTest extends IntegrationTestSupport {
         roomService.exitRoom(request);
 
         // then
-        RoomRedis room = roomRedisRepository.findById(roomId).orElse(null);
+        RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
         assertThat(room).isNotNull();
         assertThat(room.getUserList()).doesNotContain(userId);
-        assertThat(room.getUserList().size()).isEqualTo(1);
+        assertThat(room.getUserList()).hasSize(1);
     }
 
 }

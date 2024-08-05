@@ -1,0 +1,11 @@
+[[it-knowledge-detail]]
+=== IT 지식 상세 조회
+
+==== HTTP Request
+
+include::{snippets}/it-knowledge-detail/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/it-knowledge-detail/http-response.adoc[]
+include::{snippets}/it-knowledge-detail/response-fields.adoc[]

@@ -1,5 +1,7 @@
 package com.ssafy.ssafyro.domain.interviewresult;
 
+import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
+import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.domain.BaseEntity;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.report.Report;
@@ -10,6 +12,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,14 +77,18 @@ public class InterviewResult extends BaseEntity {
 
     public static InterviewResult create(Report report,
                                          InterviewRedis interviewRedis,
-                                         String feedback,
-                                         int pronunciationScore) {
+                                         ChatGptResponseGenerator chatGptResponseGenerator) {
+        String feedback = chatGptResponseGenerator.generateFeedbackBy(
+                interviewRedis.getQuestion(),
+                interviewRedis.getAnswer()
+        );
+
         return InterviewResult.builder()
                 .report(report)
                 .question(interviewRedis.getQuestion())
                 .answer(interviewRedis.getAnswer())
                 .feedback(feedback)
-                .pronunciationScore(pronunciationScore)
+                .pronunciationScore(interviewRedis.getPronunciationScore())
                 .happy(interviewRedis.getHappy())
                 .neutral(interviewRedis.getNeutral())
                 .sad(interviewRedis.getSad())
@@ -86,5 +97,27 @@ public class InterviewResult extends BaseEntity {
                 .fear(interviewRedis.getFear())
                 .angry(interviewRedis.getAngry())
                 .build();
+    }
+
+    public Map<Expression, Double> getTop3Expression() {
+        Map<Expression, Double> expressions = new HashMap<>();
+        expressions.put(Expression.ANGRY, angry);
+        expressions.put(Expression.FEAR, fear);
+        expressions.put(Expression.DISGUST, disgust);
+        expressions.put(Expression.HAPPY, happy);
+        expressions.put(Expression.NEUTRAL, neutral);
+        expressions.put(Expression.SAD, sad);
+        expressions.put(Expression.SURPRISE, surprise);
+
+        return expressions.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Expression, Double>comparingByValue().reversed())
+                .limit(3)
+                .collect(Collectors.toMap(
+                        Entry::getKey,
+                        Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 }

@@ -6,7 +6,6 @@ import static com.ssafy.ssafyro.config.rabbitmq.RabbitMqElement.PRESENTATION_KEY
 import static com.ssafy.ssafyro.config.rabbitmq.RabbitMqElement.PRESENTATION_QUEUE;
 import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.valueOf;
-import static com.ssafy.ssafyro.domain.room.redis.RoomStatus.WAIT;
 
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
@@ -35,21 +34,18 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class RoomService {
 
-    private final int MAX_USERS = 3;
-
     private final RoomRedisRepository roomRedisRepository;
     private final RoomRabbitMqRepository roomRabbitMqRepository;
 
-    public RoomListResponse getRoomList(RoomListServiceRequest request) {
-        List<RoomRedis> rooms = roomRedisRepository.findRooms(request.roomType(),
-                request.capacity(), request.status(), request.page(), request.size());
+    public RoomListResponse getRooms(RoomListServiceRequest request) {
+        List<RoomRedis> rooms = roomRedisRepository.findRoomsBy(request.toFilterCondition());
 
         return RoomListResponse.of(rooms);
     }
 
     public RoomDetailResponse getRoomById(String id) {
 
-        return roomRedisRepository.findById(id).map(RoomDetailResponse::of)
+        return roomRedisRepository.findBy(id).map(RoomDetailResponse::of)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 
@@ -64,7 +60,7 @@ public class RoomService {
     }
 
     public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {
-        RoomRedis room = getRoomRedis(request.roomId());
+        RoomRedis room = getRoomRedisBy(request.roomId());
         room.addParticipant(request.userId());
         roomRedisRepository.save(room);
 
@@ -72,9 +68,10 @@ public class RoomService {
     }
 
     public RoomExitResponse exitRoom(RoomExitServiceRequest request) {
-        RoomRedis room = getRoomRedis(request.roomId());
+        RoomRedis room = getRoomRedisBy(request.roomId());
         room.removeParticipant(request.userId());
         roomRedisRepository.save(room);
+
         return new RoomExitResponse();
     }
 
@@ -98,8 +95,8 @@ public class RoomService {
         }
     }
 
-    private RoomRedis getRoomRedis(String roomId) {
-        return roomRedisRepository.findById(roomId)
+    private RoomRedis getRoomRedisBy(String roomId) {
+        return roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 
@@ -112,14 +109,14 @@ public class RoomService {
     }
 
     private boolean canEnterRoom(String roomId, Set<String> remainRooms) {
-        RoomRedis roomRedis = getRoomRedis(roomId);
+        RoomRedis roomRedis = getRoomRedisBy(roomId);
 
-        if (!WAIT.equals(roomRedis.getStatus())) {
+        if (!roomRedis.isRecruiting()) {
             return false;
         }
         remainRooms.add(roomId);
 
-        return roomRedis.getUserList().size() != MAX_USERS;
+        return roomRedis.isEnoughCapacity();
     }
 
     private void resendRemainRooms(Set<String> remainRooms, String routingKey) {

@@ -5,7 +5,6 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
@@ -35,7 +34,7 @@ public class InterviewController {
     @PatchMapping("/api/v1/interview/finish")
     public ApiResult<FinishResponse> finishInterview(@RequestBody FinishRequest finishRequest) {
         return success(
-                interviewService.finishInterview(finishRequest.toServiceRequest())
+                interviewService.finishInterview(finishRequest.roomId())
         );
     }
 
@@ -52,8 +51,4 @@ public class InterviewController {
         return success(null);
     }
 
-    @PostMapping("/api/v1/interview/score")
-    public ApiResult<Void> saveScore(@RequestBody ScoreRequest scoreRequest) {
-        return success(null);
-    }
 }

@@ -1,0 +1,12 @@
+[[report-create]]
+=== 면접 레포트 생성
+
+==== HTTP Request
+
+include::{snippets}/report-create/http-request.adoc[]
+include::{snippets}/report-create/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/report-create/http-response.adoc[]
+include::{snippets}/report-create/response-fields.adoc[]

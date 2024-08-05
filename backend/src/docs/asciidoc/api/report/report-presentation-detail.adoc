@@ -1,0 +1,12 @@
+[[show-report-presentation-detail]]
+=== PT 면접 레포트 상세 조회
+
+==== HTTP Request
+
+include::{snippets}/report-presentation-detail-list/path-parameters.adoc[]
+include::{snippets}/report-presentation-detail-list/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/report-presentation-detail-list//http-response.adoc[]
+include::{snippets}/report-presentation-detail-list/response-fields.adoc[]

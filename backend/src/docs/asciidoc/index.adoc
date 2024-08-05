@@ -30,14 +30,27 @@ include::api/room/fast-enter-room.adoc[]
 include::api/interview/interview-start.adoc[]
 include::api/interview/interview-article.adoc[]
 include::api/interview/interview-question-answer-save.adoc[]
-include::api/interview/interview-score.adoc[]
 include::api/interview/interview-finish.adoc[]
+
+[[report-API]]
+== 면접 레포트 API
+
+include::api/report/reports-list.adoc[]
+include::api/report/report-create.adoc[]
+include::api/report/report-personal-detail.adoc[]
+include::api/report/report-presentation-detail.adoc[]
 
 [[essay-API]]
 == 에세이 API
 
 include::api/essay/essay-review.adoc[]
 include::api/essay/essay-save.adoc[]
+include::api/essay/get-essay-by-user-id.adoc[]
+
+[[essay-question-API]]
+== 에세이 질문 API
+
+include::api/essayquestion/get-essay-question-by-major-type-and-generation.adoc[]
 
 [[problem-API]]
 == 코딩 테스트 문제 API
@@ -45,3 +58,8 @@ include::api/essay/essay-save.adoc[]
 include::api/codingtestproblem/get-problems.adoc[]
 include::api/codingtestproblem/get-problem-by-id.adoc[]
 
+[[it-knowledge-API]]
+== IT 지식 API
+
+include::api/Itknowledge/it-knowledge-detail.adoc[]
+include::api/Itknowledge/it-knowledge-list.adoc[]
