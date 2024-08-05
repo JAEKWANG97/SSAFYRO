@@ -37,15 +37,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private String createJWT(User user) {
-        return jwt.create(Claims.of(
-                user.getId(),
-                new String[]{Role.USER.value()})
+        return jwt.create(
+                Claims.of(
+                        user.getId(),
+                        new String[]{Role.USER.value()}
+                )
         );
     }
 
     private void sendToken(HttpServletResponse response, String token) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader("content-type", "application/json");
-        response.sendRedirect(frontServerDomain + "/signup?token=" + token);
+        response.sendRedirect(frontServerDomain + "?token=" + token);
     }
 }
