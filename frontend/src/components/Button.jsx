@@ -18,7 +18,13 @@ export default function Button({ text, type, onClick, isActive }) {
                 ? "text-white bg-blue-500 hover:bg-blue-800 font-medium rounded-lg p-2 mb-4 focus:outline-none dark:focus:ring-blue-800"
                   : type === "ENTERROOM"
                     ? "text-white bg-blue-500 hover:bg-blue-800 rounded px-2 w-[60px] focus:outline-none dark:focus:ring-blue-800"
-                      : "text-white";
+                    : type === "KAKAO"
+                      ? "w-full max-w-xs bg-[#FFE812] text-yellow-800 border-yellow-300 hover:bg-opacity-70 font-semibold rounded-lg text-sm py-3 text-center inline-flex items-center justify-center"
+                      : type === "GOOGLE"
+                        ? "w-full max-w-xs bg-white text-gray-800 border border-[#B1B3B6] hover:bg-gray-50 font-semibold rounded-lg text-sm py-3 text-center inline-flex items-center justify-center"
+                        : type === "NAVER"
+                          ? "w-full max-w-xs bg-[#1EDE00] text-green-800 border-green-300 hover:bg-opacity-70 font-semibold rounded-lg text-sm py-3 text-center inline-flex items-center justify-center"
+                            : "text-white";
 
 
   return (

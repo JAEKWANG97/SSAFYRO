@@ -17,6 +17,7 @@ import {
 // import routes
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
+import Kakao from "./routes/accounts/Kakao.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
 import PersonalityFeedback from "./routes/accounts/PersonalityFeedback.jsx";
 import PtFeedback from "./routes/accounts/PtFeedback.jsx";
@@ -77,6 +78,8 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: "/", element: <Home /> },
+      // { path: '/oauth2/authorization/kakao', element: <Kakao/> },
+      { path: '/signup' , element: <Kakao/>},
       {
         path: "account/",
         children: [
