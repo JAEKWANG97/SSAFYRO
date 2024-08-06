@@ -69,23 +69,28 @@ const handleVideoPlay = async function (
             faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
             faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
         } catch (error) {
-            console.error(error)
-            console.log("오류 발생으로 표정 인식이 중지됩니다.")
-            errorCount++
-            console.log(errorCount)
+            // console.error(error)
+            // console.log("오류 발생으로 표정 인식이 중지됩니다.")
+            // errorCount++
+            // console.log(errorCount)
         }
+    }
+
+    // videoElement가 없으면 함수 종료
+    const checkAndProcessFrame = function () {
+        if (!videoElement || !videoElement.current) {
+            return
+        }
+        detectFace()
+        requestAnimationFrame(checkAndProcessFrame)
     }
 
     // 주소가 /pt로 끝나는 경우에만 표정 인식을 실행
     const url = location.pathname
     const urlCheck = url.substring(url.length - 3)
     if (urlCheck === "/pt") {
-        setInterval(detectFace, 100)
-    }
-
-    if (errorCount > 100) {
-        console.log("표정 인식이 너무 많이 실패하여 중지합니다.")
-        clearInterval(detectFace)
+        // setInterval(detectFace, 100)
+        checkAndProcessFrame()
     }
 }
 
