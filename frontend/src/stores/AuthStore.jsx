@@ -7,7 +7,10 @@ const useAuthStore = create((set) => ({
   setIsPerson : (tab) => set({isPerson : tab}),
   isPt : false, // pt면접 수행 여부
   setIsPt : (tab) => set({IsPt : tab}),
- 
+  userInfo : {
+    userId : 1,
+    userName : "이정준"
+  }
 }));
 
 export default useAuthStore;;
