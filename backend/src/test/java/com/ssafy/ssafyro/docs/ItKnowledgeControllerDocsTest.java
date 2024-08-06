@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.service.itknowledge.ItKnowledgeService;
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
@@ -92,11 +91,11 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
         Pageable pageable = PageRequest.of(0, 10);
         ItKnowledgeListResponse response = ItKnowledgeListResponse.of(List.of(itKnowledge));
 
-        given(itKnowledgeService.getItKnowledgeList(any(ItKnowledgeListServiceRequest.class)))
+        given(itKnowledgeService.getItKnowledgeList(any(Pageable.class)))
                 .willReturn(response);
 
         // when & then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/it-knowledge")
+        mockMvc.perform(get("/api/v1/it-knowledge")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))

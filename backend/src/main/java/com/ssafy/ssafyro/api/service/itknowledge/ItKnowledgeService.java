@@ -1,13 +1,13 @@
 package com.ssafy.ssafyro.api.service.itknowledge;
 
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledgeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +24,8 @@ public class ItKnowledgeService {
         return ItKnowledgeDetailResponse.of(itKnowledge);
     }
 
-    public ItKnowledgeListResponse getItKnowledgeList(ItKnowledgeListServiceRequest request) {
-        Page<ItKnowledge> itKnowledgeList = itKnowledgeRepository.findAll(request.pageable());
+    public ItKnowledgeListResponse getItKnowledgeList(Pageable pageable) {
+        Page<ItKnowledge> itKnowledgeList = itKnowledgeRepository.findAll(pageable);
 
         return ItKnowledgeListResponse.of(itKnowledgeList.getContent());
     }
