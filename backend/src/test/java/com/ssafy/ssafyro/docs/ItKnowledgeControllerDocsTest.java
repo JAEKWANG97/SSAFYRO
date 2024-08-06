@@ -101,7 +101,7 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         // when & then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/it-knowledge")
+        mockMvc.perform(get("/api/v1/it-knowledge")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
