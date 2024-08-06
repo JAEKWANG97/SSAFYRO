@@ -1,8 +1,14 @@
 package com.ssafy.ssafyro.api.service.interview;
 
+import static com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse.TurnStatus.END;
+import static com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse.TurnStatus.ING;
+
+import com.ssafy.ssafyro.api.service.interview.request.InterviewTurnServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse.TurnStatus;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
@@ -64,5 +70,25 @@ public class InterviewService {
                 article.questions()
         );
     }
+
+    public InterviewTurnResponse changeTurnInterviewer(String roomId, InterviewTurnServiceRequest request) {
+        RoomRedis room = roomRedisRepository.findBy(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+
+        int nextTurn = request.nowTurn() + 1;
+        TurnStatus turnStatus = ING;
+
+        if (nextTurn >= room.getUserList().size()) {
+            nextTurn %= room.getUserList().size();
+            turnStatus = END;
+        }
+
+        return new InterviewTurnResponse(
+                nextTurn,
+                room.getUserList().get(nextTurn),
+                turnStatus
+        );
+    }
+
 }
 
