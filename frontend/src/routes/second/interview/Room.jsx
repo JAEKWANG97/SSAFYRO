@@ -90,6 +90,8 @@ export default function WaitRoom() {
 
   // 면접 시작
   function startInterviewHandler() {
+    // 일단 임시로 들어왔던 openvidu 방을 나가게 하고
+    openviduLeaveRoom();
     // 면접 종류가 PT일 경우
     if (waitRoom.type === "PRESENTATION") {
       navigate(`/second/interview/room/${roomid}/pt_ready`);
