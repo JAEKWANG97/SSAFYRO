@@ -2,6 +2,8 @@ package com.ssafy.ssafyro.domain.codingtestproblem;
 
 import com.ssafy.ssafyro.domain.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +23,7 @@ public class CodingTestProblem extends BaseEntity {
 
     private String title;
 
+    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
     private double correctRate;
