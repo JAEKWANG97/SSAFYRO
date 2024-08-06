@@ -1,8 +1,5 @@
 // Openvidu 기능 이전 및 모듈화를 위한 ConnectOpenvidu.js
 
-// User 정보 가져오기
-import useAuthStore from "../../../../stores/AuthStore";
-
 let APPLICATION_SERVER_URL = "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/" // Application 서버 주소
 let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/" // LiveKit 서버 주소
 const configureUrls = function () {
