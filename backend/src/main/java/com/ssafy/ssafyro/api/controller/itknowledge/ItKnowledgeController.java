@@ -25,7 +25,7 @@ public class ItKnowledgeController {
     }
 
     @GetMapping("/api/v1/it-knowledge")
-    public ApiResult<ItKnowledgeListResponse> getItKnowledgeDetail(@ModelAttribute ItKnowledgeListRequest request) {
+    public ApiResult<ItKnowledgeListResponse> getItKnowledgeList(@ModelAttribute ItKnowledgeListRequest request) {
         return success(itKnowledgeService.getItKnowledgeList(request.toServiceRequest()));
     }
 }
