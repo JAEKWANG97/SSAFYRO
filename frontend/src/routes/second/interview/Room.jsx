@@ -9,6 +9,9 @@ import userImg from "../../../../public/main/user.jpg";
 // import userImg from "../../../../public/main/users.png";
 import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 
+// openvidu 연결 코드
+import { configureUrls, getToken, leaveRoom as leaveOpenviduRoom, joinRoom, localTrack, remoteTracks } from "./components/ConnectOpenvidu";
+
 export default function Room() {
   const { roomid } = useParams();
   const navigate = useNavigate();
