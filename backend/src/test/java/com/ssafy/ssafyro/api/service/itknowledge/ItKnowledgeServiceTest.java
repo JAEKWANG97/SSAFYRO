@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledgeRepository;
@@ -87,13 +86,12 @@ class ItKnowledgeServiceTest extends IntegrationTestSupport {
         itKnowledgeRepository.save(itKnowledge2);
         Pageable pageable = PageRequest.of(0, 10);
         //when
-        ItKnowledgeListServiceRequest request = new ItKnowledgeListServiceRequest(pageable);
-        itKnowledgeService.getItKnowledgeList(request);
+        itKnowledgeService.getItKnowledgeList(pageable);
 
         //then
-        assertThat(itKnowledgeService.getItKnowledgeList(request)).isNotNull();
-        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeInfos()).hasSize(2);
-        assertThat(itKnowledgeService.getItKnowledgeList(request).itKnowledgeInfos())
+        assertThat(itKnowledgeService.getItKnowledgeList(pageable)).isNotNull();
+        assertThat(itKnowledgeService.getItKnowledgeList(pageable).itKnowledgeInfos()).hasSize(2);
+        assertThat(itKnowledgeService.getItKnowledgeList(pageable).itKnowledgeInfos())
                 .extracting("title", "thumbnailImageUrl", "articleUrl")
                 .containsExactly(
                         tuple(
