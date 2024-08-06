@@ -1,26 +1,28 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import FirstdNav from './components/FirstNav';
 import useFirstStore from '../../stores/FirstStore';
 import useAuthStore from '../../stores/AuthStore';
 import Ismajor from './../../components/Ismajor';
 import Button from './../../components/Button';
 import Swal from 'sweetalert2';
-import axios from "axios";
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Essay() {
   const selected = useFirstStore((state) => state.selected); // 전공자, 비전공자 유무
-  const essayId = selected === 'major'? 1:2 
+  const essayId = selected === 'major' ? 1 : 2;
   const showCorrection = useFirstStore((state) => state.showCorrection); // AI 첨삭 버튼 클릭 유무
   const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
   const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
   const setEssayContent = useFirstStore((state) => state.setEssayContent);
+  const [essayReview, setEssayReview] = useState('');
   const isLogin = useAuthStore((state) => state.isLogin); // 로그인 유무
 
-  const nav = useNavigate()
+  const nav = useNavigate();
+  const APIURL = 'http://i11c201.p.ssafy.io:9999/api/v1/';
 
+  // AI 첨삭 요청 처리
   const handleAiCorrection = () => {
-    
     if (!isLogin) {
       Swal.fire({
         title: '로그인을 해주세요',
@@ -35,10 +37,10 @@ export default function Essay() {
       });
       return;
     }
-    
+
     if (!essayContent || essayContent.trim() === '') {
       setShowCorrection(false);
-  
+
       // 경고 메시지 표시
       Swal.fire({
         title: '에세이를 입력해주세요',
@@ -47,36 +49,37 @@ export default function Essay() {
         confirmButtonColor: '#3085d6',
         confirmButtonText: '확인',
       });
-  
-      return; 
+
+      return;
     }
-  
+
     // 에세이 내용이 있는 경우 첨삭 시작
     setShowCorrection(true);
-  
+
     const beforeEssay = {
       essayQuestionId: essayId,
       content: essayContent,
     };
-  
-    // API 요청
+
+    // 에세이 첨삭 요청
     axios
-      .post('http://i11c201.p.ssafy.io:9999/api/v1/essays/review', beforeEssay)
-      .then((res) => {
-        console.log(res);
+      .post(`${APIURL}essays/review`, beforeEssay)
+      .then((response) => {
+        console.log(response.data.content); 
+        setEssayReview(response.data.content); 
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  
 
+  // 에세이 내용 업데이트 처리
   const handleEssayContent = (e) => {
     setEssayContent(e.target.value);
   };
 
+  // 에세이 저장 요청 처리
   const handleEssaySave = () => {
-  
     if (!isLogin) {
       Swal.fire({
         title: '로그인을 해주세요',
@@ -89,19 +92,25 @@ export default function Essay() {
           nav('/account/login');
         }
       });
-      return; 
+      return;
     }
-  
+
     const afterEssay = {
-      userId : 1, // 임시 유저 정보
-      essayQuestionId : essayId,
-      content : essayContent
-    }
+      userId: 1, // 임시 유저 정보
+      essayQuestionId: essayId,
+      content: essayContent,
+    };
 
+    // 에세이 저장 요청
     axios
-    .post("http://i11c201.p.ssafy.io:9999/api/v1/essays", afterEssay)
-
-  }
+      .post(`${APIURL}essays`, afterEssay)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   // useEffect를 사용하여 컴포넌트 마운트 시 DOM 이벤트를 설정
   useEffect(() => {
@@ -237,11 +246,7 @@ export default function Essay() {
         </div>
 
         <div className="pt-6">
-          <div
-            className={`flex ${
-              showCorrection ? 'flex-row space-x-4' : 'flex-col'
-            }`}
-          >
+          <div className={`flex ${showCorrection ? 'flex-row space-x-4' : 'flex-col'}`}>
             <textarea
               className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
               placeholder="여기에 작성해주세요."
@@ -255,7 +260,7 @@ export default function Essay() {
 
             {showCorrection && (
               <div className="block p-4 w-full h-64 text-sm text-gray-900 rounded-lg border border-gray-400">
-                첨삭 내용
+                {essayReview}
               </div>
             )}
           </div>
