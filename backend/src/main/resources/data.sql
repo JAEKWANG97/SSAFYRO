@@ -4,4 +4,5 @@ VALUES (1, 'enduf768640@kakao.com', 'kakao', '김두열', 'https://sample-image.
        (3, 'yuming_cm4lx@naver.com', 'kakao', '최민규', 'https://sample-image.png', 'MAJOR', now(), now()),
        (4, 'pjh2996@naver.com', 'kakao', '박지훈', 'https://sample-image.png', 'MAJOR', now(), now()),
        (5, 'marmong@naver.com', 'kakao', '유재광', 'https://sample-image.png', 'MAJOR', now(), now()),
-       (6, 'v______v0120@naver.com', 'kakao', '고도연', 'https://sample-image.png', 'MAJOR', now(), now());
+       (6, 'v______v0120@naver.com', 'kakao', '고도연', 'https://sample-image.png', 'MAJOR', now(), now()),
+       (7, 'enduf768640@gmail.com', 'google', '김두열', 'https://sample-image.png', 'MAJOR', now(), now());
