@@ -3,6 +3,7 @@
 
 ==== HTTP Request
 
+include::{snippets}/it-knowledge-list/http-request.adoc[].adoc[]
 include::{snippets}/it-knowledge-list/query-parameters.adoc[]
 
 ==== HTTP Response
