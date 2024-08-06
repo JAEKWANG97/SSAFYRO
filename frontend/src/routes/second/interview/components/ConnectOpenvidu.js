@@ -126,3 +126,6 @@ const joinRoom = async function () {
         await leaveRoom()
     }
 }
+
+
+export { configureUrls, getToken, leaveRoom, joinRoom, localTrack, remoteTracks }
