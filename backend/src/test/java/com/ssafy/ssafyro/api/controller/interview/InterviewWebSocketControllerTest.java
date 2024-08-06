@@ -1,10 +1,10 @@
 package com.ssafy.ssafyro.api.controller.interview;
 
 import static com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse.TurnStatus.END;
-import static com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse.TurnStatus.ING;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ssafy.ssafyro.api.controller.interview.request.InterviewTurnRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest.Stage;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
@@ -72,14 +72,14 @@ class InterviewWebSocketControllerTest {
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/interview/turn/" + roomId, new InterviewTurnRequest(-1));
+        session.send("/interview/turn/" + roomId, new InterviewStageRequest(Stage.FIRST));
 
         //then
         InterviewTurnResponse response = subscribeFuture.get(5, TimeUnit.DAYS);
         assertThat(response).isNotNull()
-                .extracting("nowTurn", "turnStatus")
+                .extracting("nowStage", "nowUserId")
                 .containsExactlyInAnyOrder(
-                        0, ING
+                        Stage.FIRST, 1L
                 );
     }
 
@@ -103,7 +103,7 @@ class InterviewWebSocketControllerTest {
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/interview/turn/" + roomId, new InterviewTurnRequest(1));
+        session.send("/interview/turn/" + roomId, new InterviewStageRequest(1));
 
         //then
         InterviewTurnResponse response = subscribeFuture.get(5, TimeUnit.DAYS);

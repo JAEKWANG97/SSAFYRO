@@ -1,4 +1,6 @@
 package com.ssafy.ssafyro.api.service.interview.request;
 
-public record InterviewTurnServiceRequest(Integer nowTurn) {
+import com.ssafy.ssafyro.domain.interview.Stage;
+
+public record InterviewTurnServiceRequest(Stage nowStage) {
 }

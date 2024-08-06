@@ -3,7 +3,7 @@ package com.ssafy.ssafyro.api.controller.interview;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
-import com.ssafy.ssafyro.api.controller.interview.request.InterviewTurnRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
@@ -36,7 +36,7 @@ public class InterviewWebSocketController {
     @MessageMapping("/turn/{roomId}")
     @SendTo("/topic/interview/{roomId}")
     public InterviewTurnResponse changeTurnInterviewer(@DestinationVariable String roomId,
-                                                       @Valid InterviewTurnRequest request) {
+                                                       @Valid InterviewStageRequest request) {
         return interviewService.changeTurnInterviewer(roomId, request.toServiceRequest());
     }
 }
