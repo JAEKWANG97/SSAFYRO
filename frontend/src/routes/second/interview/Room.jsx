@@ -84,7 +84,7 @@ export default function WaitRoom() {
   // 방 나가기
   function navigateHandler() {
     leaveRoom();
-    leaveOpenviduRoom();
+    openviduLeaveRoom();
     navigate("/second/interview");
   }
 
@@ -309,27 +309,25 @@ export default function WaitRoom() {
                     </span>
                   </div>
                 ))} */}
-                {Array(waitRoom.capacity - waitRoom.userList.length)
+                {/* {Array(waitRoom.capacity - waitRoom.userList.length)
                   .fill()
                   .map((_, index) => (
                     <div
                       key={index + waitRoom.userList.length}
                       className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                     >
-                      {/* 빈자리 */}
                     </div>
-                  ))}
-                {Array(3 - Math.max(waitRoom.capacity, waitRoom.userList.length))
+                  ))} */}
+                {/* {Array(3 - Math.max(waitRoom.capacity, waitRoom.userList.length))
                   .fill()
                   .map((_, index) => (
                     <div
                       key={index + waitRoom.capacity + waitRoom.userList.length}
                       className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
                     >
-                      {/* 최대 수용 인원을 초과한 자리 X 표시 */}
                       <span className="text-2xl text-gray-400">X</span>
                     </div>
-                  ))}
+                  ))} */}
               </div>
               <InterviewTips />
             </div>
