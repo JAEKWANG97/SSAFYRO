@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.itknowledge.ItKnowledgeController;
 import com.ssafy.ssafyro.api.service.itknowledge.ItKnowledgeService;
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
-import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeListServiceRequest;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
 import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
@@ -97,7 +96,7 @@ public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
         ItKnowledgeListResponse response = ItKnowledgeListResponse.of(List.of(itKnowledge));
 
 
-        given(itKnowledgeService.getItKnowledgeList(any(ItKnowledgeListServiceRequest.class)))
+        given(itKnowledgeService.getItKnowledgeList(any(Pageable.class)))
                 .willReturn(response);
 
         // when & then
