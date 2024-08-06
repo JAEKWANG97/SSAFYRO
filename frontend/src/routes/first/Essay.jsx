@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import FirstdNav from './components/FirstNav';
 import useFirstStore from '../../stores/FirstStore';
+import useAuthStore from '../../stores/AuthStore';
 import Ismajor from './../../components/Ismajor';
 import Button from './../../components/Button';
 import Swal from 'sweetalert2';
@@ -14,7 +15,7 @@ export default function Essay() {
   const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
   const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
   const setEssayContent = useFirstStore((state) => state.setEssayContent);
-  const isLogin = useFirstStore((state) => state.isLogin); // 로그인 유무
+  const isLogin = useAuthStore((state) => state.isLogin); // 로그인 유무
 
   const nav = useNavigate()
 
