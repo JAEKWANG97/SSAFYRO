@@ -1,11 +1,14 @@
 package com.ssafy.ssafyro.api.service.interview;
 
+import com.ssafy.ssafyro.api.service.interview.request.InterviewTurnServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
+import com.ssafy.ssafyro.domain.interview.Stage;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
@@ -64,5 +67,22 @@ public class InterviewService {
                 article.questions()
         );
     }
+
+    public InterviewTurnResponse changeTurnInterviewer(String roomId, InterviewTurnServiceRequest request) {
+        RoomRedis room = roomRedisRepository.findBy(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+
+        Stage nowStage = request.nowStage();
+        if (nowStage.getStage() >= room.getUserList().size()) {
+            //TODO: 예외 던지기
+            //TODO: getRoom 빼기
+        }
+
+        return new InterviewTurnResponse(
+                nowStage,
+                room.getUserList().get(nowStage.getIndex())
+        );
+    }
+
 }
 
