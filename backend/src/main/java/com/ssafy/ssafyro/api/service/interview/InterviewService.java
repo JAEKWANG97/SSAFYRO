@@ -1,18 +1,18 @@
 package com.ssafy.ssafyro.api.service.interview;
 
-import com.ssafy.ssafyro.api.service.interview.request.InterviewTurnServiceRequest;
+import com.ssafy.ssafyro.api.service.interview.request.InterviewStageServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
-import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.interview.Stage;
 import com.ssafy.ssafyro.domain.room.entity.Room;
-import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
+import com.ssafy.ssafyro.error.interview.InterviewStageOutOfException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,25 +24,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class InterviewService {
 
     private final ChatGptResponseGenerator chatGPTFeedbackFactory;
-
-    private final RoomRepository roomRepository;
     private final ArticleRepository articleRepository;
-
     private final RoomRedisRepository roomRedisRepository;
     private final InterviewRedisRepository interviewRedisRepository;
 
     public StartResponse startInterview(String roomId) {
-        RoomRedis room = roomRedisRepository.findBy(roomId)
-                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+        RoomRedis roomRedis = getRoomRedis(roomId);
 
-        room.startInterview();
+        roomRedis.startInterview();
 
-        return new StartResponse(roomRedisRepository.save(room));
+        return new StartResponse(roomRedisRepository.save(roomRedis));
     }
 
     public FinishResponse finishInterview(String roomId) {
-        RoomRedis roomRedis = roomRedisRepository.findBy(roomId)
-                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+        RoomRedis roomRedis = getRoomRedis(roomId);
 
         roomRedis.finishInterview();
 
@@ -68,20 +63,24 @@ public class InterviewService {
         );
     }
 
-    public InterviewTurnResponse changeTurnInterviewer(String roomId, InterviewTurnServiceRequest request) {
-        RoomRedis room = roomRedisRepository.findBy(roomId)
-                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+    public InterviewStageResponse changeInterviewer(String roomId, InterviewStageServiceRequest request) {
+        RoomRedis roomRedis = getRoomRedis(roomId);
 
         Stage nowStage = request.nowStage();
-        if (nowStage.getStage() >= room.getUserList().size()) {
-            //TODO: 예외 던지기
-            //TODO: getRoom 빼기
+        if (nowStage.getStage() > roomRedis.getUserList().size()) {
+            throw new InterviewStageOutOfException("모든 순서가 끝났습니다.");
         }
 
-        return new InterviewTurnResponse(
+        return new InterviewStageResponse(
                 nowStage,
-                room.getUserList().get(nowStage.getIndex())
+                roomRedis.getNowStageUser(nowStage.getNowStageIndex())
         );
+    }
+
+
+    private RoomRedis getRoomRedis(String roomId) {
+        return roomRedisRepository.findBy(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 
 }

@@ -13,7 +13,7 @@ public enum Stage {
 
     private final int stage;
 
-    public int getIndex() {
+    public int getNowStageIndex() {
         return this.getStage() - 1;
     }
 }

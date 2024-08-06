@@ -5,6 +5,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.error;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.error.codingtestproblem.CodingTestProblemNotFoundException;
 import com.ssafy.ssafyro.error.essayquestion.EssayQuestionNotFoundException;
+import com.ssafy.ssafyro.error.interview.InterviewStageOutOfException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
@@ -67,6 +70,12 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(ReportNotFoundException.class)
     public ResponseEntity<?> handleReportNotFoundException(ReportNotFoundException e) {
         return newResponse("레포트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    @MessageExceptionHandler(InterviewStageOutOfException.class)
+    @SendTo("/topic/interview/{roomId}")
+    public InterviewStageOutOfException handleInterviewStageOutOfException(InterviewStageOutOfException ex) {
+        return new InterviewStageOutOfException("모든 순서가 끝났습니다.");
     }
 
     @ExceptionHandler({

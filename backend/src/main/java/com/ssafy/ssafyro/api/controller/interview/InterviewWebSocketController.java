@@ -6,7 +6,7 @@ import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
-import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +35,8 @@ public class InterviewWebSocketController {
 
     @MessageMapping("/turn/{roomId}")
     @SendTo("/topic/interview/{roomId}")
-    public InterviewTurnResponse changeTurnInterviewer(@DestinationVariable String roomId,
-                                                       @Valid InterviewStageRequest request) {
-        return interviewService.changeTurnInterviewer(roomId, request.toServiceRequest());
+    public InterviewStageResponse changeTurnInterviewer(@DestinationVariable String roomId,
+                                                        @Valid InterviewStageRequest request) {
+        return interviewService.changeInterviewer(roomId, request.toServiceRequest());
     }
 }

@@ -83,4 +83,8 @@ public class RoomRedis {
         return userList.size() < capacity;
     }
 
+    public Long getNowStageUser(int index) {
+        return userList.get(index);
+    }
+
 }
