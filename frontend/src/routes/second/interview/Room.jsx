@@ -8,6 +8,8 @@ import InterviewTips from "./components/InterviewTips";
 import userImg from "../../../../public/main/user.jpg";
 // import userImg from "../../../../public/main/users.png";
 import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
+// user 정보 가져오기
+import useAuthStore from "../../../stores/AuthStore";
 
 // openvidu 연결 코드
 import { configureUrls, getToken, leaveRoom as leaveOpenviduRoom, joinRoom, localTrack, remoteTracks } from "./components/ConnectOpenvidu";
@@ -71,6 +73,7 @@ export default function Room() {
   // 방 나가기
   function navigateHandler() {
     leaveRoom();
+    leaveOpenviduRoom();
     navigate("/second/interview");
   }
 
@@ -108,6 +111,16 @@ export default function Room() {
       }
     }
   }
+
+  // openvidu 연결
+  let joinRoomTrigger = 1;
+  useEffect(() => {
+    if (joinRoomTrigger === 1) {
+      joinRoomTrigger = 0;
+      configureUrls();
+      joinRoom(roomid, useAuthStore.userInfo.userName);
+    }
+  }, [joinRoomTrigger]);
 
   if (!room) return <div>로딩 중 ...</div>;
 
