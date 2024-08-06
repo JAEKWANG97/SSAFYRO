@@ -1,16 +1,14 @@
 package com.ssafy.ssafyro.api.controller.interview;
 
-import static com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse.TurnStatus.END;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest.Stage;
-import com.ssafy.ssafyro.api.service.interview.response.InterviewTurnResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
+import com.ssafy.ssafyro.domain.interview.Stage;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
-import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -38,9 +36,6 @@ class InterviewWebSocketControllerTest {
     private int port;
 
     @Autowired
-    private RoomRedisRepository roomRedisRepository;
-
-    @Autowired
     private RedisTemplate<String, RoomRedis> redisTemplate;
 
     @Autowired
@@ -54,12 +49,12 @@ class InterviewWebSocketControllerTest {
         }
     }
 
-    @DisplayName("다음 면접자의 순서를 지정해준다.")
+    @DisplayName("첫 번째 스테이지의 면접자의 순서를 지정해준다.")
     @Test
     void changeTurnInterviewerTest() throws Exception {
         //given
         StompSession session = getStompSession();
-        CompletableFuture<InterviewTurnResponse> subscribeFuture = new CompletableFuture<>();
+        CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
         String roomId = roomService.createRoom(new RoomCreateServiceRequest(
                 1L,
@@ -75,7 +70,7 @@ class InterviewWebSocketControllerTest {
         session.send("/interview/turn/" + roomId, new InterviewStageRequest(Stage.FIRST));
 
         //then
-        InterviewTurnResponse response = subscribeFuture.get(5, TimeUnit.DAYS);
+        InterviewStageResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
         assertThat(response).isNotNull()
                 .extracting("nowStage", "nowUserId")
                 .containsExactlyInAnyOrder(
@@ -83,12 +78,12 @@ class InterviewWebSocketControllerTest {
                 );
     }
 
-    @DisplayName("다음 면접자의 순서를 지정할 때, 마지막 순서 이후에는 순서가 끝난다.")
+    @DisplayName("두 번째 스테이지의 면접자의 순서를 지정해준다.")
     @Test
     void changeTurnInterviewerTest2() throws Exception {
         //given
         StompSession session = getStompSession();
-        CompletableFuture<InterviewTurnResponse> subscribeFuture = new CompletableFuture<>();
+        CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
         String roomId = roomService.createRoom(new RoomCreateServiceRequest(
                 1L,
@@ -97,22 +92,50 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
-
         roomService.enterRoom(new RoomEnterServiceRequest(2L, roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
         //when
-        session.send("/interview/turn/" + roomId, new InterviewStageRequest(1));
+        session.send("/interview/turn/" + roomId, new InterviewStageRequest(Stage.SECOND));
 
         //then
-        InterviewTurnResponse response = subscribeFuture.get(5, TimeUnit.DAYS);
+        InterviewStageResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
         assertThat(response).isNotNull()
-                .extracting("nowTurn", "turnStatus")
+                .extracting("nowStage", "nowUserId")
                 .containsExactlyInAnyOrder(
-                        0, END
+                        Stage.SECOND, 2L
                 );
 
+    }
+
+    @DisplayName("현재 스테이지의 면접자의 순서를 지정할 때, 마지막 순서 이후에는 호출할 수 없다. (현재 인원 2명)")
+    @Test
+    void changeTurnInterviewerTest3() throws Exception {
+        //given
+        StompSession session = getStompSession();
+        CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
+
+        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
+                1L,
+                "title",
+                "description",
+                "PERSONALITY",
+                3
+        )).roomId();
+        roomService.enterRoom(new RoomEnterServiceRequest(2L, roomId));
+
+        session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
+
+        //when
+        session.send("/interview/turn/" + roomId, new InterviewStageRequest(Stage.THIRD));
+
+        //then
+        subscribeFuture.exceptionally(ex -> {
+            assertThat(ex).isNotNull();
+            assertThat(ex.getMessage()).contains("모든 순서가 끝났습니다.");
+            return null;
+        }).get(5, TimeUnit.SECONDS);
     }
 
     private StompSession getStompSession() throws Exception {
@@ -128,17 +151,17 @@ class InterviewWebSocketControllerTest {
     }
 
     private StompFrameHandler createTurnResponseStompFrameHandler(
-            CompletableFuture<InterviewTurnResponse> subscribeFuture) {
+            CompletableFuture<InterviewStageResponse> subscribeFuture) {
         return new StompFrameHandler() {
 
             @Override
             public Type getPayloadType(StompHeaders headers) {
-                return InterviewTurnResponse.class;
+                return InterviewStageResponse.class;
             }
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                subscribeFuture.complete((InterviewTurnResponse) payload);
+                subscribeFuture.complete((InterviewStageResponse) payload);
             }
         };
     }
