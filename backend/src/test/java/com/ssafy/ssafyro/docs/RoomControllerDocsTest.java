@@ -2,7 +2,6 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -17,7 +16,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.controller.room.RoomController;
 import com.ssafy.ssafyro.api.controller.room.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.controller.room.request.RoomExitRequest;
@@ -35,17 +33,14 @@ import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class RoomControllerDocsTest extends RestDocsSupport {
 
-    private final RoomService roomService = mock(RoomService.class);
-
-    @Override
-    protected Object initController() {
-        return new RoomController(roomService);
-    }
+    @MockBean
+    private RoomService roomService;
 
     @DisplayName("Room 목록 조회  API")
     @Test

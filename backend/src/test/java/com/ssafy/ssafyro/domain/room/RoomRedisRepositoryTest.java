@@ -61,8 +61,8 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
         roomRedisRepository.save(room2);
         roomRedisRepository.save(room3);
 
-        RoomListServiceRequest request = new RoomListServiceRequest("Room", RoomType.PRESENTATION.name(), 3, RoomStatus.WAIT.name(), 1, 10);
-
+        RoomListServiceRequest request = new RoomListServiceRequest("Room", RoomType.PRESENTATION.name(), 3,
+                RoomStatus.WAIT.name(), 1, 10);
 
         // when
         List<RoomRedis> rooms = roomRedisRepository.findRoomsBy(request.toFilterCondition());
@@ -126,8 +126,6 @@ class RoomRedisRepositoryTest extends IntegrationTestSupport {
         // when
         List<RoomRedis> firstPage = roomRedisRepository.findRoomsBy(condition1);
         List<RoomRedis> secondPage = roomRedisRepository.findRoomsBy(condition2);
-
-
 
         // then
         assertThat(firstPage).hasSize(10);
