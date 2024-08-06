@@ -18,8 +18,15 @@ import AudioComponent from "./components/AudioComponent";
 // 발음 평가 API 모듈
 import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
 
+// AuthStore에서 사용자 정보 가져오기
+import useAuthStore from "../../../stores/AuthStore";
+
 export default function PT() {
+  // 방 정보 가져오기
   const { roomid } = useParams();
+
+  // 유저 정보 가져오기
+  const userInfo = useAuthStore((state) => state.userInfo);
 
   const navigate = useNavigate();
 
@@ -112,9 +119,9 @@ export default function PT() {
   const [remoteTracks, setRemoteTracks] = useState([]);
 
   const [participantName, setParticipantName] = useState(
-    "Participant" + Math.floor(Math.random() * 100)
+    userInfo.userName + Math.floor(Math.random() * 100)
   );
-  const [roomName, setRoomName] = useState("Test Room");
+  const [roomName, setRoomName] = useState(roomid);
 
   const joinRoom = async function () {
     const room = new Room(); // Initialize a now Room object
