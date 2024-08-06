@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -17,7 +18,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.controller.report.ReportController;
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
 import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.api.service.report.ReportService;
@@ -38,25 +38,20 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class ReportControllerDocsTest extends RestDocsSupport {
 
-    private final ReportService reportService = Mockito.mock(ReportService.class);
+    @MockBean
+    private ReportService reportService;
 
-    private final Report report = Mockito.mock(Report.class);
-    private final PresentationInterviewReport presentationInterviewReport = Mockito.mock(
-            PresentationInterviewReport.class);
-    private final Room room = Mockito.mock(Room.class);
-    private final InterviewResult interviewResult = Mockito.mock(InterviewResult.class);
-
-    @Override
-    protected Object initController() {
-        return new ReportController(reportService);
-    }
+    private final Report report = mock(Report.class);
+    private final PresentationInterviewReport presentationInterviewReport = mock(PresentationInterviewReport.class);
+    private final Room room = mock(Room.class);
+    private final InterviewResult interviewResult = mock(InterviewResult.class);
 
     @DisplayName("면접 레포트 목록 조회 API")
     @Test
@@ -111,7 +106,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("면접 총 점수"),
                                 fieldWithPath("response.reports[].pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
-                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.ARRAY)
+                                fieldWithPath("response.reports[].createdDate").type(JsonFieldType.STRING)
                                         .description("면접 날짜"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
