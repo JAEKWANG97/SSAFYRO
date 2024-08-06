@@ -15,6 +15,9 @@ import {
 import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
+// 발음 평가 API 모듈
+import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
+
 export default function PT() {
   const { roomid } = useParams();
 
