@@ -1,5 +1,10 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import ssafyLogo from "../../../../public/SSAFYRO.png";
+import botIcon from "../../../../public/main/botIcon.jpg";
+import TwoParticipantsVideo from "./components/TwoParticipantsVideo";
+// import ThreeParticipantsVideo from "./components/ThreeParticipantsVideo";
+// import useRoomStore from "../../../stores/roomStore";
 
 // OpenVidu-liveKit import
 import {
@@ -16,7 +21,10 @@ import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
 // 발음 평가 API 모듈
-import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
+import {
+  base64String,
+  pronunciationEvaluation,
+} from "./components/VoicePronunciationRecord";
 
 // AuthStore에서 사용자 정보 가져오기
 import useAuthStore from "../../../stores/AuthStore";
@@ -174,7 +182,7 @@ export default function PT() {
   // useEffect가 불필요하게 실행되는 것으로 추정되어서, joinRoomTrigger로 joinRoom 함수가 최초 한 번만 실행되도록 제어합니다.
   let joinRoomTrigger = 1;
 
-  useEffect(() => {    
+  useEffect(() => {
     if (joinRoomTrigger === 1) {
       joinRoomTrigger = 0;
       joinRoom();
@@ -182,27 +190,27 @@ export default function PT() {
   }, [joinRoomTrigger]);
 
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
+  const [transcript, setTranscript] = useState("");
 
   const recognitionRef = useRef(null);
 
-
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = true;
     recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = 'ko-KR';
+    recognitionRef.current.lang = "ko-KR";
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
-      console.log(event.results[current])
+      console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
       setTranscript(transcript);
     };
 
     recognitionRef.current.onerror = (event) => {
-      console.error('Speech recognition error', event.error);
+      console.error("Speech recognition error", event.error);
     };
 
     return () => {
@@ -224,107 +232,44 @@ export default function PT() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-5xl">
+      <div
+        className="bg-white shadow-md rounded-lg px-8 py-6 w-full max-w-6xl"
+        style={{ minHeight: "80vh" }}
+      >
         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <span className="text-2xl font-semibold">1</span>
-            <span className="text-lg ml-1">Minutes</span>
-            <span className="text-2xl font-semibold ml-4">59</span>
-            <span className="text-lg ml-1">Seconds</span>
-          </div>
-          <button
-            onClick={handleEndInterview}
-            className="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            면접 종료
-          </button>
-          <button
+          {/* <button
             onClick={isListening ? stopListening : startListening}
             className={`px-4 py-2 rounded ${isListening ? 'bg-red-500' : 'bg-green-500'} text-white`}
           >
             {isListening ? '인식 중지' : '인식 시작'}
-          </button>
-          {/* {isRendering.current  ? null : <><button onClick={listen({ lang: "ko-KR" })} > 인식시작</button>
-          <button onClick={stop}> 인식종료</button></>} */}
-          
-        </div>
-        <div className="flex justify-center mb-6">
-          {/* OpenVidu 화상 회의 레이아웃 */}
-          <div className="flex space-x-4 justify-between items-end">
-            {localTrack && (
-              <div>
-                <VideoComponent
-                  track={localTrack}
-                  participantIdentity={participantName}
-                  local={true}
-                />
-              </div>
-            )}
-            {remoteTracks.map((remoteTrack) =>
-              remoteTrack.trackPublication.kind === "video" ? (
-                <div>
-                  <VideoComponent
-                    key={remoteTrack.trackPublication.trackSid}
-                    track={remoteTrack.trackPublication.videoTrack}
-                    participantIdentity={remoteTrack.participantIdentity}
-                  />
-                </div>
-              ) : (
-                <AudioComponent
-                  key={remoteTrack.trackPublication.trackSid}
-                  track={remoteTrack.trackPublication.audioTrack}
-                />
-              )
-            )}
+          </button> */}
+          <div className="flex items-center">
+            <img src={ssafyLogo} alt="ssafylogo" className="h-[20px] mr-5" />
+            <h1 className="text-xl font-bold">Presentation Interview</h1>
+          </div>
+          <div className="flex items-center bg-black text-white rounded-full px-8 py-2 w-48 justify-center">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+            <span className="font-bold">01:20:34</span>
           </div>
         </div>
-        <div className="bg-gray-200 p-4 rounded-lg mb-4">
-          <p>안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!</p>
+        {/* 변경해야 할곳 1 */}
+        <div className="flex" style={{ height: "400px" }}>
+          {/* OpenVidu 화상 회의 레이아웃 */}
+          <TwoParticipantsVideo
+            localTrack={localTrack}
+            participantName={participantName}
+            remoteTracks={remoteTracks}
+            handleEndInterview={handleEndInterview}
+          />
         </div>
-        <div className="flex justify-between items-center mb-4">
-          <button className="bg-gray-200 px-4 py-2 rounded flex items-center">
-            <svg
-              className="w-6 h-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3 10h3v7h3v-7h3m10 0h-3v7h-3v-7h-3m10 0h-3v7h-3v-7h-3M13 7h7v7h-7z"
-              ></path>
-            </svg>
-            음소거
-          </button>
-          <button
-            onClick={handleStartSurvey}
-            className="bg-gray-200 px-4 py-2 rounded flex items-center"
-          >
-            <svg
-              className="w-6 h-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 4h16v16H4z"
-              ></path>
-            </svg>
-            평가
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">
-            답변 제출하기
-          </button>
+        <div className="bg-gray-200 p-4 rounded-lg mb-4 mt-5 h-[170px]">
+          <img src={botIcon}
+            alt="botIcon"
+            className="w-[50px] h-[50px] rounded-full" />
+          <p className="mt-4">안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!</p>
         </div>
       </div>
-      { transcript }
+      {transcript}
     </div>
   );
 }

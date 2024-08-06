@@ -47,18 +47,18 @@ export default function VideoComponent({
       {local && urlCheck === "/pt" ? (
         <img
           src={"/emotion/" + faceEmotionIcon[faceExpression]}
-          className="w-[30px] m-auto pb-5"
+          className="w-[30px] m-auto pb-5 absolute z-10"
           alt=""
         />
       ) : null}
       <div
         id={"camera-" + participantIdentity}
-        className="rounded bg-gray-300 relative"
+        className="rounded-2xl absolute top-0 left-0 w-full h-full"
       >
         <video
           ref={videoElement}
           id={track.sid}
-          className="rounded"
+          className="rounded-2xl w-full h-full object-cover"
           width={"200px"}
           height={"200px"}
           onCanPlayThrough={
@@ -73,9 +73,9 @@ export default function VideoComponent({
           ref={canvasRef}
           style={{ position: "absolute", top: 0, left: 0 }}
         />
-        <p className="text-center text-gray-600 py-4">
+        {/* <p className="text-center text-gray-600 py-4">
           {participantIdentity + (local ? " (You)" : "")}
-        </p>
+        </p> */}
       </div>
     </>
   );
