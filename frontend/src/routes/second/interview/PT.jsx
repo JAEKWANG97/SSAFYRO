@@ -167,7 +167,7 @@ export default function PT() {
   // useEffect가 불필요하게 실행되는 것으로 추정되어서, joinRoomTrigger로 joinRoom 함수가 최초 한 번만 실행되도록 제어합니다.
   let joinRoomTrigger = 1;
 
-  useEffect(() => {
+  useEffect(() => {    
     if (joinRoomTrigger === 1) {
       joinRoomTrigger = 0;
       joinRoom();
