@@ -127,7 +127,7 @@ export default function WaitRoom() {
   const [room, setRoom] = useState(undefined);
   const [localTrack, setLocalTrack] = useState(undefined);
   const [remoteTracks, setRemoteTracks] = useState([]);
-  
+
   let APPLICATION_SERVER_URL =
     "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/"; // Application 서버 주소
   let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/"; // LiveKit 서버 주소
@@ -153,7 +153,7 @@ export default function WaitRoom() {
   configureUrls();
 
   const userInfo = useAuthStore((state) => state.userInfo);
-  
+
   const getOpenviduToken = async function (roomId, userName) {
     const response = await fetch(APPLICATION_SERVER_URL + "token", {
       method: "POST",
@@ -162,7 +162,7 @@ export default function WaitRoom() {
       },
       body: JSON.stringify({
         roomName: roomId,
-        participantName: userName
+        participantName: userName,
       }),
     });
 
@@ -174,7 +174,7 @@ export default function WaitRoom() {
     const data = await response.json();
     // console.log(data.response.token);
     return data.response.token;
-  }
+  };
 
   const openviduLeaveRoom = async function () {
     await room?.disconnect();
@@ -182,7 +182,7 @@ export default function WaitRoom() {
     setRoom(undefined);
     setLocalTrack(undefined);
     setRemoteTracks([]);
-  }
+  };
 
   const joinRoom = async function (roomId, userName) {
     const room = new Room(); // Initialize a now Room object
@@ -240,7 +240,7 @@ export default function WaitRoom() {
       joinRoom(roomid, userInfo.userName + Math.floor(Math.random() * 101));
     }
   }, [joinRoomTrigger]);
-  
+
   if (!waitRoom) return <div>로딩 중 ...</div>;
 
   return (
@@ -269,31 +269,31 @@ export default function WaitRoom() {
           <div className="flex h-[95%] rounded-xl mt-4 bg-gray-50">
             <div className="w-[70%] flex flex-col p-4">
               <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
-              {localTrack && (
-              <div>
-                <VideoComponent
-                  track={localTrack}
-                  participantIdentity={userInfo.userName}
-                  local={true}
-                />
-              </div>
-            )}
-            {remoteTracks.map((remoteTrack) =>
-              remoteTrack.trackPublication.kind === "video" ? (
-                <div>
-                  <VideoComponent
-                    key={remoteTrack.trackPublication.trackSid}
-                    track={remoteTrack.trackPublication.videoTrack}
-                    participantIdentity={remoteTrack.participantIdentity}
-                  />
-                </div>
-              ) : (
-                <AudioComponent
-                  key={remoteTrack.trackPublication.trackSid}
-                  track={remoteTrack.trackPublication.audioTrack}
-                />
-              )
-            )}
+                {localTrack && (
+                  <div>
+                    <VideoComponent
+                      track={localTrack}
+                      participantIdentity={userInfo.userName}
+                      local={true}
+                    />
+                  </div>
+                )}
+                {remoteTracks.map((remoteTrack) =>
+                  remoteTrack.trackPublication.kind === "video" ? (
+                    <div>
+                      <VideoComponent
+                        key={remoteTrack.trackPublication.trackSid}
+                        track={remoteTrack.trackPublication.videoTrack}
+                        participantIdentity={remoteTrack.participantIdentity}
+                      />
+                    </div>
+                  ) : (
+                    <AudioComponent
+                      key={remoteTrack.trackPublication.trackSid}
+                      track={remoteTrack.trackPublication.audioTrack}
+                    />
+                  )
+                )}
                 {/* {room.userList.map((participant, index) => (
                   <div
                     key={index}
