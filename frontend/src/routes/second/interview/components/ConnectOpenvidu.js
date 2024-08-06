@@ -76,12 +76,12 @@ const [room, setRoom] = useState(undefined)
 const [localTrack, setLocalTrack] = useState(undefined)
 const [remoteTracks, setRemoteTracks] = useState([])
 
-const [participantName, setParticipantName] = useState(
-    "Participant" + Math.floor(Math.random() * 100)
-)
-const [roomName, setRoomName] = useState("Test Room")
+// const [participantName, setParticipantName] = useState(
+//     "Participant" + Math.floor(Math.random() * 100)
+// )
+// const [roomName, setRoomName] = useState(roomId)
 
-const joinRoom = async function () {
+const joinRoom = async function (roomId, userName) {
     const room = new Room() // Initialize a now Room object
     setRoom(room)
 
@@ -110,7 +110,7 @@ const joinRoom = async function () {
     try {
         // Get a token from your application server with the room name ane participant name
         // console.log(roomName, participantName);
-        const token = await getToken(roomName, participantName)
+        const token = await getToken(roomId, userName)
 
         // Connect to the room with the LiveKit URL and the token
         await room.connect(LIVEKIT_URL, token)
