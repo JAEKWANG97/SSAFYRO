@@ -9,6 +9,7 @@ export default function VideoComponent({
   track,
   participantIdentity,
   local = false,
+  isFullParticipants,
 }) {
   const videoElement = useRef(null);
   // 표정 표시를 위한 변수
@@ -47,6 +48,7 @@ export default function VideoComponent({
       {local && urlCheck === "/pt" ? (
         <img
           src={"/emotion/" + faceEmotionIcon[faceExpression]}
+          // 고쳐야할점 3
           className="w-[30px] m-auto pb-5 absolute z-10"
           alt=""
         />

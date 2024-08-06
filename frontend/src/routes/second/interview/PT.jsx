@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import ssafyLogo from "../../../../public/SSAFYRO.png";
 import botIcon from "../../../../public/main/botIcon.jpg";
 import TwoParticipantsVideo from "./components/TwoParticipantsVideo";
-// import ThreeParticipantsVideo from "./components/ThreeParticipantsVideo";
-// import useRoomStore from "../../../stores/roomStore";
+import ThreeParticipantsVideo from "./components/ThreeParticipantsVideo";
+import useRoomStore from "../../../stores/useRoomStore";
 
 // OpenVidu-liveKit import
 import {
@@ -47,6 +47,9 @@ export default function PT() {
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`);
   };
+
+  // zustand store에서 userList 가져오기
+  const userList = useRoomStore((state) => state.userList);
 
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
@@ -229,6 +232,7 @@ export default function PT() {
     setIsListening(false);
     recognitionRef.current.stop();
   }, []);
+  console.log(userList);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -255,18 +259,42 @@ export default function PT() {
         {/* 변경해야 할곳 1 */}
         <div className="flex" style={{ height: "400px" }}>
           {/* OpenVidu 화상 회의 레이아웃 */}
-          <TwoParticipantsVideo
-            localTrack={localTrack}
-            participantName={participantName}
-            remoteTracks={remoteTracks}
-            handleEndInterview={handleEndInterview}
-          />
+          {(() => {
+            console.log("참여자 수 : ", userList.length);
+            if (userList.length <= 2) {
+              console.log("두명 전용 방으로 이동");
+              return (
+                <TwoParticipantsVideo
+                  localTrack={localTrack}
+                  participantName={participantName}
+                  remoteTracks={remoteTracks}
+                  handleEndInterview={handleEndInterview}
+                  userList={userList}
+                />
+              );
+            } else {
+              console.log("세명 전용 방으로 이동");
+              return (
+                <ThreeParticipantsVideo
+                  localTrack={localTrack}
+                  participantName={participantName}
+                  remoteTracks={remoteTracks}
+                  handleEndInterview={handleEndInterview}
+                  userList={userList}
+                />
+              );
+            }
+          })()}
         </div>
         <div className="bg-gray-200 p-4 rounded-lg mb-4 mt-5 h-[170px]">
-          <img src={botIcon}
+          <img
+            src={botIcon}
             alt="botIcon"
-            className="w-[50px] h-[50px] rounded-full" />
-          <p className="mt-4">안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!</p>
+            className="w-[50px] h-[50px] rounded-full"
+          />
+          <p className="mt-4">
+            안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!
+          </p>
         </div>
       </div>
       {transcript}
