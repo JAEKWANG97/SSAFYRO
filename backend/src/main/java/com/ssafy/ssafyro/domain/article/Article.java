@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.domain.article;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class Article {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String question1;
