@@ -23,20 +23,20 @@ export default function Essay() {
 
   // AI 첨삭 요청 처리
   const handleAiCorrection = () => {
-    if (!isLogin) {
-      Swal.fire({
-        title: '로그인을 해주세요',
-        text: '로그인이 필요한 기능입니다.',
-        icon: 'warning',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: '확인',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          nav('/account/login');
-        }
-      });
-      return;
-    }
+    // if (!isLogin) {
+    //   Swal.fire({
+    //     title: '로그인을 해주세요',
+    //     text: '로그인이 필요한 기능입니다.',
+    //     icon: 'warning',
+    //     confirmButtonColor: '#3085d6',
+    //     confirmButtonText: '확인',
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       nav('/account/login');
+    //     }
+    //   });
+    //   return;
+    // }
 
     if (!essayContent || essayContent.trim() === '') {
       setShowCorrection(false);
@@ -96,14 +96,19 @@ export default function Essay() {
     }
 
     const afterEssay = {
-      userId: 1, // 임시 유저 정보
       essayQuestionId: essayId,
       content: essayContent,
     };
 
     // 에세이 저장 요청
+    const Token =  localStorage.getItem("Token");
+
     axios
-      .post(`${APIURL}essays`, afterEssay)
+      .post(`${APIURL}essays`, afterEssay, {
+        headers: {
+          Authorization: `Bearer ${Token}`, 
+        },
+      })
       .then((response) => {
         console.log(response);
       })
