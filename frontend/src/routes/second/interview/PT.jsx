@@ -227,6 +227,8 @@ export default function PT() {
     }
   }, [joinRoomTrigger]);
 
+  // 음성 인식 라이브러리와 변수
+
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
 
