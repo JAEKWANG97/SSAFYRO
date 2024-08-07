@@ -58,8 +58,7 @@ class InterviewWebSocketControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
-                1L,
+        String roomId = roomService.createRoom(1L, new RoomCreateServiceRequest(
                 "title",
                 "description",
                 "PERSONALITY",
@@ -87,14 +86,13 @@ class InterviewWebSocketControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
-                1L,
+        String roomId = roomService.createRoom(1L, new RoomCreateServiceRequest(
                 "title",
                 "description",
                 "PERSONALITY",
                 3
         )).roomId();
-        roomService.enterRoom(new RoomEnterServiceRequest(2L, roomId));
+        roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
@@ -118,14 +116,13 @@ class InterviewWebSocketControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
-                1L,
+        String roomId = roomService.createRoom(1L, new RoomCreateServiceRequest(
                 "title",
                 "description",
                 "PERSONALITY",
                 3
         )).roomId();
-        roomService.enterRoom(new RoomEnterServiceRequest(2L, roomId));
+        roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
