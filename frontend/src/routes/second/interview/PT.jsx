@@ -270,6 +270,15 @@ export default function PT() {
     recognitionRef.current.stop();
   }, []);
 
+  let STTTrigger = 1;
+  useEffect(() => {
+    if (STTTrigger === 1) {
+      STTTrigger = 0;
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  }, [STTTrigger]);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div
