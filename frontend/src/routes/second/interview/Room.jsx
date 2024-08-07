@@ -50,7 +50,12 @@ export default function WaitRoom() {
           // 방에 참가한 사용자 서버에 알리기
           await axios.post(
             `http://i11c201.p.ssafy.io:9999/api/v1/rooms/enter`,
-            { userId: currentUser.userId, roomId: roomid }
+            { roomId: roomid },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("Token")}`,
+              }
+            }
           );
 
           // 다시 방 정보 가져오기
@@ -101,13 +106,17 @@ export default function WaitRoom() {
     }
   }
 
+  // User Token 가져오기
+  const token = localStorage.getItem("Token");
   async function leaveRoom() {
     if (waitRoom) {
       try {
         await axios.post(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`, {
           roomId: roomid,
-          userId: currentUser.userId,
-        });
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+        }});
         console.log("Successfully left the room"); // 나가기 성공 로그
       } catch (error) {
         console.error("히히 못가:", error);

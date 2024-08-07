@@ -25,15 +25,19 @@ export default function CreateRoom() {
 
     // roomData 객체 생성
     const roomData = {
-      userId: currentUser.userId,
       title: title, // 방 이름
       description: description, // 방 설명
       type: interviewType, // 면접종류
       capacity: parseInt(participantCount), // 참여인원수
     };
 
+    // 유저 토큰 불러오기
+    const token = localStorage.getItem("Token");
+
     axios
-      .post("http://i11c201.p.ssafy.io:9999/api/v1/rooms", roomData)
+      .post("http://i11c201.p.ssafy.io:9999/api/v1/rooms", roomData, {
+        headers: { Authorization: `Bearer ${token}` },
+      }) // 방 생성 API 호출
       .then((response) => {
         const newRoomId = response.data.response.roomId; // 서버에서 반환된 roomId
 
