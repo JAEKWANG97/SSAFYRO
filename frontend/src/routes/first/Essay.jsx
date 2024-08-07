@@ -96,14 +96,19 @@ export default function Essay() {
     }
 
     const afterEssay = {
-      userId: 1, // 임시 유저 정보
       essayQuestionId: essayId,
       content: essayContent,
     };
 
     // 에세이 저장 요청
+    const Token =  localStorage.getItem("Token");
+
     axios
-      .post(`${APIURL}essays`, afterEssay)
+      .post(`${APIURL}essays`, afterEssay, {
+        headers: {
+          Authorization: `Bearer ${Token}`, 
+        },
+      })
       .then((response) => {
         console.log(response);
       })
@@ -114,6 +119,22 @@ export default function Essay() {
 
   // useEffect를 사용하여 컴포넌트 마운트 시 DOM 이벤트를 설정
   useEffect(() => {
+
+    axios
+    .get(`${APIURL}essay-questions`, {
+    params: {
+      type: 'MAJOR',        // 전공자 타입
+      generation: 11,       // 기수
+    },
+  })
+  .then((response) => {
+    console.log(response.data); 
+  })
+  .catch((error) => {
+    console.error('데이터를 가져오는 중 오류 발생:', error); 
+  });
+
+
     const infoIcon = document.getElementById('info-icon');
     const popoverDescription = document.getElementById('popover-description');
 

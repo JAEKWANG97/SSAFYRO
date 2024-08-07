@@ -15,7 +15,15 @@ const getExpression = function (obj) {
 // 참고 출처: 재광이형 샘플 프로젝트 https://github.com/JAEKWANG97/react-face-api
 
 // const canvasRef = useRef()
-let faceExpression = "netural"
+let faceExpressionData = {
+    angry: 0,
+    disgusted: 0,
+    fearful: 0,
+    happy: 0,
+    sad: 0,
+    surprised: 0,
+    neutral: 0,
+}
 
 const loadFaceAPIModels = async function () {
     const MODEL_URL = "/models"
@@ -44,7 +52,7 @@ const handleVideoPlay = async function (
     faceapi.matchDimensions(canvas, displaySize)
 
     // 주기적으로 얼굴을 감지하는 인터벌 설정
-    let errorCount = 0
+    let captureCount = 0
     const detectFace = async function () {
         try {
             const detections = await faceapi
@@ -61,8 +69,14 @@ const handleVideoPlay = async function (
             )
 
             // 출력될 사용자 표정 지정
-            // console.log(getExpression(resizedDetections[0].expressions))
-            setFaceExpression(getExpression(resizedDetections[0].expressions))
+            let currentExpression = getExpression(resizedDetections[0].expressions)
+            setFaceExpression(currentExpression)
+
+            // 누적된 표정 데이터를 저장
+            captureCount++
+            for (const expression in faceExpressionData) {
+                faceExpressionData[expression] = (faceExpressionData[expression] * (captureCount - 1) + resizedDetections[0].expressions[expression]) / captureCount
+            }
 
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
             faceapi.draw.drawDetections(canvas, resizedDetections)
@@ -94,4 +108,4 @@ const handleVideoPlay = async function (
     }
 }
 
-export { loadFaceAPIModels, handleVideoPlay }
+export { loadFaceAPIModels, handleVideoPlay, faceExpressionData }

@@ -1,5 +1,5 @@
 // import axios
-import axios from "axios";
+import axios from "axios"
 
 // 1. URL로 현재 면접 방의 roomId를 취득
 // 2. 해당 roomId의 상세 방 정보를 API 통하여 불러오기
@@ -16,5 +16,26 @@ import axios from "axios";
 
 // 10. 면접이 종료되면 면접이 종료되었음을 알리고 마이페이지로 이동시키기
 
-let roomId = location.pathname.substring("/second/interview/room/".length, location.pathname.length)
-const APIURL = `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomId}`;
+let roomId = location.pathname.substring(
+    "/second/interview/room/".length,
+    location.pathname.length - 3
+)
+const APIURL = `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomId}`
+
+let turnChange = new WebSocket(
+    `wss://i11c201.p.ssafy.io:8443/interview/turn/${roomId}`
+)
+
+turnChange.onopen = (event) => {
+    turnChange.send(
+        JSON.stringify({
+            nowStage: "FIRST", // FIRST, SECOND, THIRD 중에서 값 하나
+        })
+    )
+}
+
+turnChange.onmessage = (event) => {
+    console.log(event.data)
+}
+
+export { turnChange }
