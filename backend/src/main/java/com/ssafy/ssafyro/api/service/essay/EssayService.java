@@ -38,10 +38,10 @@ public class EssayService {
         );
     }
 
-    public EssaySaveResponse save(EssaySaveServiceRequest request) {
+    public EssaySaveResponse createEssayBy(Long userId, EssaySaveServiceRequest request) {
         EssayQuestion essayQuestion = getEssayQuestionBy(request.essayQuestionId());
 
-        User user = getUserBy(request.userId());
+        User user = getUserBy(userId);
 
         return new EssaySaveResponse(
                 essayRepository.save(createEssay(essayQuestion, user, request.content())).getId()

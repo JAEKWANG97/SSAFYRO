@@ -65,7 +65,7 @@ class EssayServiceTest extends IntegrationTestSupport {
 
     @DisplayName("에세이를 저장한다.")
     @Test
-    void saveTest() {
+    void createEssayTest() {
         //given
         User user = userRepository.save(createUser());
 
@@ -73,12 +73,11 @@ class EssayServiceTest extends IntegrationTestSupport {
 
         EssaySaveServiceRequest essaySaveServiceRequest = new EssaySaveServiceRequest(
                 1L,
-                1L,
                 "에세이"
         );
 
         //when
-        EssaySaveResponse response = essayService.save(essaySaveServiceRequest);
+        EssaySaveResponse response = essayService.createEssayBy(user.getId(), essaySaveServiceRequest);
 
         //then
         assertThat(response.essayId()).isEqualTo(1L);
