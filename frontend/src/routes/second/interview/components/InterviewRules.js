@@ -18,3 +18,5 @@ import axios from "axios";
 
 let roomId = location.pathname.substring("/second/interview/room/".length, location.pathname.length)
 const APIURL = `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomId}`;
+
+let turnChange = new WebSocket(`ws://i11c201.p.ssafy.io:9999/interview/turn/${roomId}`);
