@@ -46,6 +46,32 @@ export default function PT() {
     navigate(`/second/interview/room/${roomid}/pt/survey`);
   };
 
+  // 답변 제출 함수
+  const handleSubmitAnswer = async function (question, answer, pronunciationScore, faceExpressionData) {
+    await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
+      question: question,
+      answer: answer,
+      pronunciationScore: pronunciationScore,
+      happy: faceExpressionData.happy,
+      disgust: faceExpressionData.disgusted,
+      sad: faceExpressionData.sad,
+      surprise: faceExpressionData.surprised,
+      fear: faceExpressionData.fearful,
+      angry: faceExpressionData.angry,
+      neutral: faceExpressionData.neutral,
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      }
+    })
+    .then((response) => {
+      // 제출 성공
+    })
+    .catch((error) => {
+      // 제출 실패
+    });
+  }
+
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL =
