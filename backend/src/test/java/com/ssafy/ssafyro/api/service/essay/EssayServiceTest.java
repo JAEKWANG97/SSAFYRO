@@ -72,7 +72,7 @@ class EssayServiceTest extends IntegrationTestSupport {
         EssayQuestion essayQuestion = essayQuestionRepository.save(createEssayQuestion());
 
         EssaySaveServiceRequest essaySaveServiceRequest = new EssaySaveServiceRequest(
-                1L,
+                essayQuestion.getId(),
                 "에세이"
         );
 

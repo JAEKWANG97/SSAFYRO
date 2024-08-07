@@ -58,7 +58,7 @@ public class EssayService {
 
     private EssayQuestion getEssayQuestionBy(Long essayQuestionId) {
         return essayQuestionRepository.findById(essayQuestionId)
-                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay not found"));
+                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay question not found"));
     }
 
     private User getUserBy(Long userId) {
