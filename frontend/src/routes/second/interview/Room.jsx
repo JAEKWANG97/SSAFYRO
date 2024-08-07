@@ -101,13 +101,17 @@ export default function WaitRoom() {
     }
   }
 
+  // User Token 가져오기
+  const token = localStorage.getItem("Token");
   async function leaveRoom() {
     if (waitRoom) {
       try {
         await axios.post(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`, {
           roomId: roomid,
-          userId: currentUser.userId,
-        });
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+        }});
         console.log("Successfully left the room"); // 나가기 성공 로그
       } catch (error) {
         console.error("히히 못가:", error);
