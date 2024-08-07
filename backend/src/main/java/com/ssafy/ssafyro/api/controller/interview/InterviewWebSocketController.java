@@ -3,9 +3,12 @@ package com.ssafy.ssafyro.api.controller.interview;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
+import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
+import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,5 +31,12 @@ public class InterviewWebSocketController {
     @SendTo("/topic/interview/{roomId}")
     public ApiResult<FinishResponse> finishInterview(@DestinationVariable String roomId) {
         return success(interviewService.finishInterview(roomId));
+    }
+
+    @MessageMapping("/turn/{roomId}")
+    @SendTo("/topic/interview/{roomId}")
+    public InterviewStageResponse changeTurnInterviewer(@DestinationVariable String roomId,
+                                                        @Valid InterviewStageRequest request) {
+        return interviewService.changeInterviewer(roomId, request.toServiceRequest());
     }
 }

@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.controller.interview.InterviewController;
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
@@ -27,18 +26,14 @@ import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class InterviewControllerDocsTest extends RestDocsSupport {
 
-    private final InterviewService interviewService = Mockito.mock(InterviewService.class);
-
-    @Override
-    protected Object initController() {
-        return new InterviewController(interviewService);
-    }
+    @MockBean
+    private InterviewService interviewService;
 
     @DisplayName("면접시작 API")
     @Test

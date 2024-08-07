@@ -43,4 +43,8 @@ public class User extends BaseEntity {
         this.profileImageUrl = profileImageUrl;
         this.majorType = majorType;
     }
+
+    public void initializeMajorType(MajorType majorType) {
+        this.majorType = majorType;
+    }
 }

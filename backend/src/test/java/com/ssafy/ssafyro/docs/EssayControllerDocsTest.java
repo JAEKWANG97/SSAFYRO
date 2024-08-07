@@ -2,7 +2,6 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -17,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.controller.essay.EssayController;
 import com.ssafy.ssafyro.api.controller.essay.request.EssayReviewRequest;
 import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
 import com.ssafy.ssafyro.api.service.essay.EssayService;
@@ -28,17 +26,14 @@ import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class EssayControllerDocsTest extends RestDocsSupport {
 
-    private final EssayService essayService = mock(EssayService.class);
-
-    @Override
-    protected Object initController() {
-        return new EssayController(essayService);
-    }
+    @MockBean
+    private EssayService essayService;
 
     @DisplayName("에세이 첨삭 API")
     @Test

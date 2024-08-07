@@ -5,26 +5,32 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+@ActiveProfiles("test")
+@SpringBootTest
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class RestDocsSupport {
 
-    protected MockMvc mockMvc;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Autowired
     protected ObjectMapper objectMapper;
+
+    protected MockMvc mockMvc;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider provider) {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(provider))
                 .build();
-        this.objectMapper = new ObjectMapper();
     }
-
-    protected abstract Object initController();
 }

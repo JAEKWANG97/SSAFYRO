@@ -83,4 +83,13 @@ public class RoomRedis {
         return userList.size() < capacity;
     }
 
+    @JsonIgnore
+    public boolean isStageOver(int stageIndex) {
+        return stageIndex >= userList.size();
+    }
+
+    public Long getNowUser(int index) {
+        return userList.get(index);
+    }
+    
 }

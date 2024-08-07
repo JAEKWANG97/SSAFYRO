@@ -2,7 +2,6 @@ package com.ssafy.ssafyro.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -14,22 +13,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.controller.openvidu.OpenViduTokenController;
 import com.ssafy.ssafyro.api.controller.openvidu.OpenViduTokenFactory;
 import com.ssafy.ssafyro.api.controller.openvidu.request.TokenRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 class OpenViduTokenControllerDocsTest extends RestDocsSupport {
 
-    private final OpenViduTokenFactory tokenFactory = mock(OpenViduTokenFactory.class);
-
-    @Override
-    protected Object initController() {
-        return new OpenViduTokenController(tokenFactory);
-    }
+    @MockBean
+    private OpenViduTokenFactory tokenFactory;
 
     @DisplayName("openVidu 접속 token 발급 API")
     @Test
