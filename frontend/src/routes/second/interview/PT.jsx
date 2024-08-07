@@ -16,10 +16,13 @@ import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
 // 발음 평가 API 모듈
-import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
+// import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
 
 // AuthStore에서 사용자 정보 가져오기
 import useAuthStore from "../../../stores/AuthStore";
+
+// 룸 컨트롤 모듈
+// import { turnChange } from "./components/InterviewRules";
 
 export default function PT() {
   // 방 정보 가져오기
