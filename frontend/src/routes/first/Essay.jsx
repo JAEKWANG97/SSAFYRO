@@ -22,27 +22,30 @@ export default function Essay() {
   const nav = useNavigate();
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
+  const [isLoading, setIsLoading] = useState(false); // Loading state for spinner
+
   // AI 첨삭 요청 처리
   const handleAiCorrection = () => {
-    if (!isLogin) {
-      Swal.fire({
-        title: "로그인을 해주세요",
-        text: "로그인이 필요한 기능입니다.",
-        icon: "warning",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "확인",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          nav("/account/login");
-        }
-      });
-      return;
-    }
+    // 로그인 확인
+    // if (!isLogin) {
+    //   Swal.fire({
+    //     title: "로그인을 해주세요",
+    //     text: "로그인이 필요한 기능입니다.",
+    //     icon: "warning",
+    //     confirmButtonColor: "#3085d6",
+    //     confirmButtonText: "확인",
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       nav("/account/login");
+    //     }
+    //   });
+    //   return;
+    // }
 
+    // 에세이 내용이 없는 경우 경고 메시지 표시
     if (!essayContent || essayContent.trim() === "") {
       setShowCorrection(false);
 
-      // 경고 메시지 표시
       Swal.fire({
         title: "에세이를 입력해주세요",
         text: "AI 첨삭을 받으려면 에세이를 작성해야 합니다.",
@@ -54,23 +57,29 @@ export default function Essay() {
       return;
     }
 
-    // 에세이 내용이 있는 경우 첨삭 시작
-    setShowCorrection(true);
-
     const beforeEssay = {
       essayQuestionId: essayId,
       content: essayContent,
     };
 
+    // Start loading spinner
+    setIsLoading(true);
+
     // 에세이 첨삭 요청
     axios
       .post(`${APIURL}essays/review`, beforeEssay)
       .then((response) => {
-        console.log(response.data.content);
-        setEssayReview(response.data.content);
+        // 서버 응답 성공 시 리뷰 내용 설정
+        setEssayReview(response.data.response.content);
+        setShowCorrection(true); // 리뷰 내용을 성공적으로 받아온 경우에만 상태를 true로 설정
       })
       .catch((error) => {
         console.log(error);
+        setShowCorrection(false); // 에러 발생 시 상태를 false로 설정
+      })
+      .finally(() => {
+        // Stop loading spinner
+        setIsLoading(false);
       });
   };
 
@@ -126,10 +135,9 @@ export default function Essay() {
           generation: 11, // 기수
         },
       })
-      .then((response) => {
-        console.log(response.data);
-        setEssayId(response.data.id) // 에세이 질문 id
-        setEssayQuestion(response.data.content); // 에세이 질문 content
+      .then((res) => {
+        setEssayId(res.data.response.id); // 에세이 질문 id
+        setEssayQuestion(res.data.response.content); // 에세이 질문 content
       })
       .catch((error) => {
         console.log(error);
@@ -241,18 +249,54 @@ export default function Essay() {
         <div className="border border-gray-400 rounded-lg bg-white">
           {selected === "major" && (
             <div className="py-5 flex flex-col items-center font-bold text-center">
-              <p>{essayQuestion}</p>
+              {essayQuestion.split(",").map((question, index, array) => (
+                <p key={index}>
+                  {question}
+                  {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
+                </p>
+              ))}
             </div>
           )}
 
           {selected === "nonMajor" && (
             <div className="py-5 flex flex-col items-center font-bold text-center">
-              <p>{essayQuestion}</p>
+              {essayQuestion.split(",").map((question, index, array) => (
+                <p key={index}>
+                  {question}
+                  {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
+                </p>
+              ))}
             </div>
           )}
         </div>
 
         <div className="pt-6">
+          {isLoading && (
+            <div className="flex justify-center items-center mb-4">
+              <svg
+                className="animate-spin h-5 w-5 text-gray-700"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 4.063 2.179 7.634 5.29 9.453l.71-1.162z"
+                ></path>
+              </svg>
+              <p className="ml-2">Loading...</p>
+            </div>
+          )}
+
           <div
             className={`flex ${
               showCorrection ? "flex-row space-x-4" : "flex-col"
