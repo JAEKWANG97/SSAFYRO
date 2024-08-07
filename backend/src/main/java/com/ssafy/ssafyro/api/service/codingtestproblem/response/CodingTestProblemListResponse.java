@@ -19,12 +19,16 @@ public class CodingTestProblemListResponse {
     private record CodingTestProblemInfo(Long id,
                                          String title,
                                          Difficulty difficulty,
+                                         double correctRate,
+                                         int recommendationCount,
                                          String problemUrl) {
         public CodingTestProblemInfo(CodingTestProblem problem) {
             this(
                     problem.getId(),
                     problem.getTitle(),
                     problem.getDifficulty(),
+                    problem.getCorrectRate(),
+                    problem.getRecommendationCount(),
                     problem.getProblemUrl()
             );
         }
