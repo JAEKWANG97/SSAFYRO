@@ -14,11 +14,13 @@ public class InterviewRedisRepository {
 
     private final RedisTemplate<String, InterviewRedis> redisTemplate;
 
-    public void save(InterviewRedis interview) {
+    public Long save(InterviewRedis interview) {
         String key = INTERVIEW_PREFIX + interview.getUserId();
 
         redisTemplate.opsForList().rightPush(key, interview);
         redisTemplate.expire(key, 600, TimeUnit.SECONDS);
+
+        return interview.getUserId();
     }
 
     public List<InterviewRedis> findByUserId(Long userId) {
