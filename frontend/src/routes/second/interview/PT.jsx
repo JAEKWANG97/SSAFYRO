@@ -66,6 +66,15 @@ export default function PT() {
     })
     .then((response) => {
       // 제출 성공
+      faceExpressionData = {
+        angry: 0,
+        disgusted: 0,
+        fearful: 0,
+        happy: 0,
+        sad: 0,
+        surprised: 0,
+        neutral: 0,
+      }
     })
     .catch((error) => {
       // 제출 실패
