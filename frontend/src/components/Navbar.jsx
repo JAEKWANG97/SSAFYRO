@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import useAuthStore from "../stores/AuthStore";
 import useFirstStore from "../stores/FirstStore";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const setActiveTab = useFirstStore((state) => state.setActiveTab);
-  const isLogin = useFirstStore((state) => state.isLogin);
-  const setIsLogin = useFirstStore((state) => state.setIsLogin);
+  const isLogin = useAuthStore((state) => state.isLogin);
+  const setIsLogin = useAuthStore((state) => state.setIsLogin);
   const userId = 1; // 임의로 지정
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
   const [dropdown2Open, setDropdown2Open] = useState(false); // 드롭다운 2 상태

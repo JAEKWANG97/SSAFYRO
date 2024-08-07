@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useFirstStore from "../../stores/FirstStore";
+import useAuthStore from "./../../stores/AuthStore"
 
 export default function Kakao() {
   const nav = useNavigate();
-  const setIsLogin = useFirstStore((state) => state.setIsLogin)
+  const setIsLogin = useAuthStore((state) => state.setIsLogin)
 
   useEffect(() => {
     
