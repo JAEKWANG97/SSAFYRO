@@ -18,6 +18,9 @@ import AudioComponent from "./components/AudioComponent";
 // 발음 평가 API 모듈
 // import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
 
+// 표정 데이터 모듈
+import { faceExpressionData } from "./components/VideoFaceApi";
+
 // AuthStore에서 사용자 정보 가져오기
 import useAuthStore from "../../../stores/AuthStore";
 

@@ -78,8 +78,6 @@ const handleVideoPlay = async function (
                 faceExpressionData[expression] = (faceExpressionData[expression] * (captureCount - 1) + resizedDetections[0].expressions[expression]) / captureCount
             }
 
-            console.log(faceExpressionData)
-
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
             faceapi.draw.drawDetections(canvas, resizedDetections)
             faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
