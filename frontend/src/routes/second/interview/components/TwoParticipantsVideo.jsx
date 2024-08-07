@@ -11,7 +11,9 @@ export default function TwoParticipantsVideo({
   participantName,
   remoteTracks,
   handleEndInterview,
-  userList,
+  isListening,
+  startListening,
+  stopListening
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
@@ -51,7 +53,15 @@ export default function TwoParticipantsVideo({
               ></path>
             </svg>
           </button>
-          <button className="p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center">
+          {/* <button
+            onClick={isListening ? stopListening : startListening}
+            className={`px-4 py-2 rounded ${isListening ? 'bg-red-500' : 'bg-green-500'} text-white`}
+          >
+            {isListening ? '인식 중지' : '인식 시작'}
+          </button> */}
+          <button className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${isListening ? 'bg-green-700' : 'bg-green-500'} hover:bg-green-700`}
+            onClick={isListening ? stopListening : startListening}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.5em"

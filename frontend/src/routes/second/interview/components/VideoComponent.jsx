@@ -49,7 +49,7 @@ export default function VideoComponent({
         <img
           src={"/emotion/" + faceEmotionIcon[faceExpression]}
           // 고쳐야할점 3
-          className="w-[30px] m-auto pb-5 absolute z-10"
+          className="w-[30px] m-auto pb-5 absolute z-10 top-10 left-10"
           alt=""
         />
       ) : null}

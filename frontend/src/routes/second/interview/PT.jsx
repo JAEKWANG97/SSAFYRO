@@ -48,9 +48,6 @@ export default function PT() {
     navigate(`/second/interview/room/${roomid}/pt/survey`);
   };
 
-  // zustand store에서 userList 가져오기
-  const userList = useRoomStore((state) => state.userList);
-
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL =
@@ -240,12 +237,6 @@ export default function PT() {
         style={{ minHeight: "80vh" }}
       >
         <div className="flex justify-between items-center mb-4">
-          {/* <button
-            onClick={isListening ? stopListening : startListening}
-            className={`px-4 py-2 rounded ${isListening ? 'bg-red-500' : 'bg-green-500'} text-white`}
-          >
-            {isListening ? '인식 중지' : '인식 시작'}
-          </button> */}
           <div className="flex items-center">
             <img src={ssafyLogo} alt="ssafylogo" className="h-[20px] mr-5" />
             <h1 className="text-xl font-bold">Presentation Interview</h1>
@@ -268,7 +259,9 @@ export default function PT() {
                   participantName={participantName}
                   remoteTracks={remoteTracks}
                   handleEndInterview={handleEndInterview}
-                  userList={userList}
+                  isListening={isListening}
+                  startListening={startListening}
+                  stopListening={stopListening}
                 />
               );
             } else {
@@ -279,7 +272,9 @@ export default function PT() {
                   participantName={participantName}
                   remoteTracks={remoteTracks}
                   handleEndInterview={handleEndInterview}
-                  userList={userList}
+                  isListening={isListening}
+                  startListening={startListening}
+                  stopListening={stopListening}
                 />
               );
             }
