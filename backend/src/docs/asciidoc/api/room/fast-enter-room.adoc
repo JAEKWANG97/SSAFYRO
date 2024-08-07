@@ -1,4 +1,4 @@
-[[article-question-show]]
+[[fast-enter-room]]
 === 빠른 방 입장 요청
 
 ==== HTTP Request
