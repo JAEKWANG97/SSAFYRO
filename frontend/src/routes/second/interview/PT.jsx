@@ -261,6 +261,7 @@ export default function PT() {
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
             console.log("참여자 수 : ", userList.length);
+            console.log("remoteTracks: ", remoteTracks)
             if (userList.length <= 2) {
               console.log("두명 전용 방으로 이동");
               return (
