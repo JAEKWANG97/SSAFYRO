@@ -61,8 +61,8 @@ export default function VideoComponent({
           ref={videoElement}
           id={track.sid}
           className="rounded-2xl object-cover w-full h-full"
-          // width={"200px"}
-          // height={"200px"}
+          width={"200px"}
+          height={"200px"}
           onCanPlayThrough={
             local
               ? () =>
