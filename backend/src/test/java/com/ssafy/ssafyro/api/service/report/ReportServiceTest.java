@@ -145,8 +145,12 @@ class ReportServiceTest extends IntegrationTestSupport {
         ReportPresentationResponse response = (ReportPresentationResponse) reportService.getReport(report.getId());
 
         //then
-        //TODO: 저장된 기사 내용 테스트하기
-        assertThat(response.getArticle()).isNotNull();
+        assertThat(response.getArticle()).isNotNull()
+                .extracting("title", "content")
+                .containsExactlyInAnyOrder(
+                        article.getTitle(), article.getContent()
+                );
+
         assertThat(response.getReportDetails()).hasSize(3)
                 .extracting("question")
                 .containsExactlyInAnyOrder(
