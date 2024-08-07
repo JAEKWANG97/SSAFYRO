@@ -12,10 +12,10 @@ import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -49,11 +49,11 @@ class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void createRoomTest() {
         // given
-        RoomCreateServiceRequest roomCreateServiceRequest = new RoomCreateServiceRequest(1L, "test", "test",
+        RoomCreateServiceRequest roomCreateServiceRequest = new RoomCreateServiceRequest("test", "test",
                 "PERSONALITY", 3);
 
         // when
-        RoomCreateResponse roomCreateResponse = roomService.createRoom(roomCreateServiceRequest);
+        RoomCreateResponse roomCreateResponse = roomService.createRoom(1L, roomCreateServiceRequest);
         RoomRedis savedRoom = roomRedisRepository.findBy(roomCreateResponse.roomId()).orElse(null);
 
         // then
@@ -178,10 +178,10 @@ class RoomServiceTest extends IntegrationTestSupport {
         roomRedisRepository.save(testRoom);
         String roomId = testRoom.getId();
         Long userId = 1L;
-        RoomEnterServiceRequest request = new RoomEnterServiceRequest(userId, roomId);
+        RoomEnterServiceRequest request = new RoomEnterServiceRequest(roomId);
 
         // when
-        roomService.enterRoom(request);
+        roomService.enterRoom(userId, request);
         RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
 
         // then
@@ -198,10 +198,10 @@ class RoomServiceTest extends IntegrationTestSupport {
         roomRedisRepository.save(testRoom);
         String nonExistingRoomId = "non-existing-id";
         Long userId = 1L;
-        RoomEnterServiceRequest request = new RoomEnterServiceRequest(userId, nonExistingRoomId);
+        RoomEnterServiceRequest request = new RoomEnterServiceRequest(nonExistingRoomId);
 
         // when & then
-        assertThatThrownBy(() -> roomService.enterRoom(request))
+        assertThatThrownBy(() -> roomService.enterRoom(userId, request))
                 .isInstanceOf(RoomNotFoundException.class)
                 .hasMessage("Room not found");
     }
@@ -216,10 +216,10 @@ class RoomServiceTest extends IntegrationTestSupport {
 
         String roomId = testRoom.getId();
         Long userId = 1L;
-        RoomEnterServiceRequest request = new RoomEnterServiceRequest(userId, roomId);
+        RoomEnterServiceRequest request = new RoomEnterServiceRequest(roomId);
 
         // when
-        roomService.enterRoom(request);
+        roomService.enterRoom(userId, request);
 
         // then
         RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
@@ -234,10 +234,10 @@ class RoomServiceTest extends IntegrationTestSupport {
         // given
         String nonExistingRoomId = "non-existing-id";
         Long userId = 1L;
-        RoomExitServiceRequest request = new RoomExitServiceRequest(nonExistingRoomId, userId);
+        RoomExitServiceRequest request = new RoomExitServiceRequest(nonExistingRoomId);
 
         // when & then
-        assertThatThrownBy(() -> roomService.exitRoom(request))
+        assertThatThrownBy(() -> roomService.exitRoom(userId, request))
                 .isInstanceOf(RoomNotFoundException.class)
                 .hasMessage("Room not found");
     }
@@ -253,10 +253,10 @@ class RoomServiceTest extends IntegrationTestSupport {
 
         String roomId = testRoom.getId();
         Long userId = 1L;
-        RoomExitServiceRequest request = new RoomExitServiceRequest(roomId, userId);
+        RoomExitServiceRequest request = new RoomExitServiceRequest(roomId);
 
         // when
-        roomService.exitRoom(request);
+        roomService.exitRoom(userId, request);
 
         // then
         RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);

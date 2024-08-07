@@ -21,7 +21,10 @@ import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.rabbitmq.RoomRabbitMqRepository;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
+import com.ssafy.ssafyro.domain.user.User;
+import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
+import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +39,7 @@ public class RoomService {
 
     private final RoomRedisRepository roomRedisRepository;
     private final RoomRabbitMqRepository roomRabbitMqRepository;
+    private final UserRepository userRepository;
 
     public RoomListResponse getRooms(RoomListServiceRequest request) {
         List<RoomRedis> rooms = roomRedisRepository.findRoomsBy(request.toFilterCondition());
@@ -49,9 +53,11 @@ public class RoomService {
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 
-    public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
+    public RoomCreateResponse createRoom(Long userId, RoomCreateServiceRequest request) {
+        User user = getUser(userId);
+
         RoomRedis room = request.toEntity();
-        room.addParticipant(request.userId());
+        room.addParticipant(user.getId());
         roomRedisRepository.save(room);
 
         sendToQueue(request.type(), room.getId());
@@ -59,17 +65,21 @@ public class RoomService {
         return RoomCreateResponse.of(room.getId());
     }
 
-    public RoomEnterResponse enterRoom(RoomEnterServiceRequest request) {
+    public RoomEnterResponse enterRoom(Long userId, RoomEnterServiceRequest request) {
+        User user = getUser(userId);
+
         RoomRedis room = getRoomRedisBy(request.roomId());
-        room.addParticipant(request.userId());
+        room.addParticipant(user.getId());
         roomRedisRepository.save(room);
 
         return new RoomEnterResponse();
     }
 
-    public RoomExitResponse exitRoom(RoomExitServiceRequest request) {
+    public RoomExitResponse exitRoom(Long userId, RoomExitServiceRequest request) {
+        User user = getUser(userId);
+
         RoomRedis room = getRoomRedisBy(request.roomId());
-        room.removeParticipant(request.userId());
+        room.removeParticipant(user.getId());
         roomRedisRepository.save(room);
 
         return new RoomExitResponse();
@@ -123,4 +133,8 @@ public class RoomService {
         remainRooms.forEach(remainId -> roomRabbitMqRepository.pushQueue(routingKey, remainId));
     }
 
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
 }

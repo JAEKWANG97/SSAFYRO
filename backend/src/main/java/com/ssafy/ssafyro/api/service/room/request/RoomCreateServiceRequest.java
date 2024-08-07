@@ -4,7 +4,7 @@ import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 
 
-public record RoomCreateServiceRequest(Long userId, String title, String description, String type, int capacity) {
+public record RoomCreateServiceRequest(String title, String description, String type, int capacity) {
 
     public RoomRedis toEntity() {
         return RoomRedis.builder()
