@@ -597,3 +597,6 @@ INSERT INTO it_knowledge (thumbnail_image_url,title,article_url) VALUES ('https:
 INSERT INTO it_knowledge (thumbnail_image_url,title,article_url) VALUES ('https://image.samsungsds.com/kr/insights/__icsFiles/afieldfile/2023/01/30/cloud_experts_thumbnail.jpg?queryString=20240802014641', '2023년, 클라우드 전문가로 살아남는 법', 'https://www.samsungsds.com/kr/insights/cloud_experts.html');
 INSERT INTO it_knowledge (thumbnail_image_url,title,article_url) VALUES ('https://image.samsungsds.com/kr/insights/__icsFiles/afieldfile/2023/01/26/j_T.jpg?queryString=20240802014641', '공급망 시스템의 본질 - 통제와 유도 (2)', 'https://www.samsungsds.com/kr/insights/jhjscm_230126.html');
 INSERT INTO it_knowledge (thumbnail_image_url,title,article_url) VALUES ('https://image.samsungsds.com/kr/insights/__icsFiles/afieldfile/2023/01/25/n_T.jpg?queryString=20240802014641', '미리 예측해보는 2023년 IT 기술 트렌드', 'https://www.samsungsds.com/kr/insights/2023_it_tech_trend.html');
+
+INSERT INTO essay_question (generation, major_type, content, character_limit) VALUES (11, 'MAJOR', '향후 어떤 SW 개발자로 성장하고 싶은지 SW 관련 경험을 토대로 기술하고, SSAFY에 지원하신 동기에 대해서도 작성 바랍니다.', 600);
+INSERT INTO essay_question (generation, major_type, content, character_limit) VALUES (11, 'NON_MAJOR', '학업 및 취업준비를 하며 가장 어려웠던 경험과 이를 해결하기 위해 했던 노력을 기술하고, SSAFY에 지원하신 동기에 대해서도 작성 바랍니다.', 600);
