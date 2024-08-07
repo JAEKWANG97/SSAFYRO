@@ -15,6 +15,8 @@ import com.ssafy.ssafyro.api.service.room.response.RoomExitResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.security.JwtAuthentication;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,24 +46,24 @@ public class RoomController {
 
     @PostMapping("/api/v1/rooms")
     public ApiResult<RoomCreateResponse> createRoom(@AuthenticationPrincipal JwtAuthentication userInfo,
-                                                    @RequestBody RoomCreateRequest request) {
+                                                    @Valid @RequestBody RoomCreateRequest request) {
         return success(roomService.createRoom(userInfo.id(), request.toServiceRequest()));
     }
 
     @PostMapping("/api/v1/rooms/enter")
     public ApiResult<RoomEnterResponse> enterRoom(@AuthenticationPrincipal JwtAuthentication userInfo,
-                                                  @RequestBody RoomEnterRequest request) {
+                                                  @Valid @RequestBody RoomEnterRequest request) {
         return success(roomService.enterRoom(userInfo.id(), request.toServiceRequest()));
     }
 
     @PostMapping("/api/v1/rooms/exit")
     public ApiResult<RoomExitResponse> exitRoom(@AuthenticationPrincipal JwtAuthentication userInfo,
-                                                @RequestBody RoomExitRequest request) {
+                                                @Valid @RequestBody RoomExitRequest request) {
         return success(roomService.exitRoom(userInfo.id(), request.toServiceRequest()));
     }
 
     @GetMapping("/api/v1/rooms/fast-enter")
-    public ApiResult<RoomFastEnterResponse> fastEnterRoom(@RequestParam String type) {
+    public ApiResult<RoomFastEnterResponse> fastEnterRoom(@NotEmpty @RequestParam String type) {
         return success(roomService.fastRoomEnter(type));
     }
 
