@@ -1,6 +1,7 @@
 import React from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
+import { useEffect } from "react";
 
 const isFullParticipants = true
 
@@ -11,6 +12,9 @@ export default function TwoParticipantsVideo({
   handleEndInterview,
   userList
 }) {
+  useEffect(() => {
+    console.log("remoteTracks 재확인: ", remoteTracks);
+  }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
   return (
     <div className="w-2/3 p-2 bg-gray-300 rounded-2xl mr-2 flex justify-center items-end relative">
       <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">

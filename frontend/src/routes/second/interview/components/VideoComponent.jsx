@@ -55,14 +55,14 @@ export default function VideoComponent({
       ) : null}
       <div
         id={"camera-" + participantIdentity}
-        className="rounded-2xl absolute top-0 left-0 w-full h-full"
+        className="rounded-2xl h-full"
       >
         <video
           ref={videoElement}
           id={track.sid}
-          className="rounded-2xl w-full h-full object-cover"
-          width={"200px"}
-          height={"200px"}
+          className="rounded-2xl object-cover w-full h-full"
+          // width={"200px"}
+          // height={"200px"}
           onCanPlayThrough={
             local
               ? () =>
@@ -75,9 +75,9 @@ export default function VideoComponent({
           ref={canvasRef}
           style={{ position: "absolute", top: 0, left: 0 }}
         />
-        {/* <p className="text-center text-gray-600 py-4">
+        <p className="text-center text-gray-600 py-4">
           {participantIdentity + (local ? " (You)" : "")}
-        </p> */}
+        </p>
       </div>
     </>
   );

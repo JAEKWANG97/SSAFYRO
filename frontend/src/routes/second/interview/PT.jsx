@@ -232,7 +232,6 @@ export default function PT() {
     setIsListening(false);
     recognitionRef.current.stop();
   }, []);
-  console.log(userList);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -260,9 +259,8 @@ export default function PT() {
         <div className="flex" style={{ height: "400px" }}>
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
-            console.log("참여자 수 : ", userList.length);
             console.log("remoteTracks: ", remoteTracks)
-            if (userList.length <= 2) {
+            if (remoteTracks.length <= 2) {
               console.log("두명 전용 방으로 이동");
               return (
                 <TwoParticipantsVideo

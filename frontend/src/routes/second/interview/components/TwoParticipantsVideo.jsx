@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
 import botImg from "../../../../../public/main/botImg3.png";
@@ -13,15 +13,17 @@ export default function TwoParticipantsVideo({
   handleEndInterview,
   userList,
 }) {
-
+  useEffect(() => {
+    console.log("remoteTracks 재확인: ", remoteTracks);
+  }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
   return (
     <>
-      <div className="w-1/2 p-2 bg-gray-300 rounded-2xl mr-5 flex justify-center items-end relative">
+      <div className="w-1/2 bg-gray-300 rounded-2xl mr-5 flex justify-center items-end relative">
         <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">
           You
         </div>
         {localTrack && (
-          <div>
+          <div className="w-full h-full">
             <VideoComponent
               track={localTrack}
               participantIdentity={participantName}
@@ -99,8 +101,8 @@ export default function TwoParticipantsVideo({
           </button>
         </div>
       </div>
-      <div className="w-1/2">
-        {userList.length === 1 ? (
+      <div className="w-1/2 h-full">
+        {remoteTracks.length < 2 ? (
           <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-blue-500">
             <img
               src={botImg}
@@ -109,31 +111,26 @@ export default function TwoParticipantsVideo({
             />
           </div>
         ) : (
-          remoteTracks.map((remoteTrack) =>
-            remoteTrack.trackPublication.kind === "video" ? (
-              <div
-                key={remoteTrack.trackPublication.trackSid}
-                className=" bg-gray-400 mb-2 rounded-2xl"
-              >
+          // 추가된 부분: remoteTracks를 감싸는 외부 <div> 추가
+          <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-gray-400">
+            {remoteTracks.map((remoteTrack) =>
+              remoteTrack.trackPublication.kind === "video" ? (
                 <VideoComponent
+                  key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
                   isFullParticipants={isFullParticipants}
                 />
-              </div>
-            ) : (
-              <div
-                key={remoteTrack.trackPublication.trackSid}
-                className="h-[48%] bg-gray-400 mb-2 rounded-2xl"
-              >
+              ) : (
+                // 추가된 부분: <div> 위치 조정 및 중복 key 속성 제거
                 <AudioComponent
                   key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.audioTrack}
                 />
-              </div>
-            )
-          )
+              )
+            )}
+          </div>
         )}
       </div>
     </>
