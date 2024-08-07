@@ -1,53 +1,54 @@
-import { useState, useEffect } from 'react';
-import FirstdNav from './components/FirstNav';
-import useFirstStore from '../../stores/FirstStore';
-import useAuthStore from '../../stores/AuthStore';
-import Ismajor from './../../components/Ismajor';
-import Button from './../../components/Button';
-import Swal from 'sweetalert2';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import FirstdNav from "./components/FirstNav";
+import useFirstStore from "../../stores/FirstStore";
+import useAuthStore from "../../stores/AuthStore";
+import Ismajor from "./../../components/Ismajor";
+import Button from "./../../components/Button";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Essay() {
   const selected = useFirstStore((state) => state.selected); // 전공자, 비전공자 유무
-  const essayId = selected === 'major' ? 1 : 2;
+  const [essayId, setEssayId] = useState(1);
   const showCorrection = useFirstStore((state) => state.showCorrection); // AI 첨삭 버튼 클릭 유무
   const setShowCorrection = useFirstStore((state) => state.setShowCorrection);
   const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
   const setEssayContent = useFirstStore((state) => state.setEssayContent);
-  const [essayReview, setEssayReview] = useState('');
+  const [essayReview, setEssayReview] = useState("");
+  const [essayQuestion, setEssayQuestion] = useState(""); // 전공자/비전공자 질문 내용
   const isLogin = useAuthStore((state) => state.isLogin); // 로그인 유무
 
   const nav = useNavigate();
-  const APIURL = 'http://i11c201.p.ssafy.io:9999/api/v1/';
+  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
   // AI 첨삭 요청 처리
   const handleAiCorrection = () => {
     if (!isLogin) {
       Swal.fire({
-        title: '로그인을 해주세요',
-        text: '로그인이 필요한 기능입니다.',
-        icon: 'warning',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: '확인',
+        title: "로그인을 해주세요",
+        text: "로그인이 필요한 기능입니다.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인",
       }).then((result) => {
         if (result.isConfirmed) {
-          nav('/account/login');
+          nav("/account/login");
         }
       });
       return;
     }
 
-    if (!essayContent || essayContent.trim() === '') {
+    if (!essayContent || essayContent.trim() === "") {
       setShowCorrection(false);
 
       // 경고 메시지 표시
       Swal.fire({
-        title: '에세이를 입력해주세요',
-        text: 'AI 첨삭을 받으려면 에세이를 작성해야 합니다.',
-        icon: 'warning',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: '확인',
+        title: "에세이를 입력해주세요",
+        text: "AI 첨삭을 받으려면 에세이를 작성해야 합니다.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인",
       });
 
       return;
@@ -65,8 +66,8 @@ export default function Essay() {
     axios
       .post(`${APIURL}essays/review`, beforeEssay)
       .then((response) => {
-        console.log(response.data.content); 
-        setEssayReview(response.data.content); 
+        console.log(response.data.content);
+        setEssayReview(response.data.content);
       })
       .catch((error) => {
         console.log(error);
@@ -82,14 +83,14 @@ export default function Essay() {
   const handleEssaySave = () => {
     if (!isLogin) {
       Swal.fire({
-        title: '로그인을 해주세요',
-        text: '로그인이 필요한 기능입니다.',
-        icon: 'warning',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: '확인',
+        title: "로그인을 해주세요",
+        text: "로그인이 필요한 기능입니다.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인",
       }).then((result) => {
         if (result.isConfirmed) {
-          nav('/account/login');
+          nav("/account/login");
         }
       });
       return;
@@ -101,12 +102,12 @@ export default function Essay() {
     };
 
     // 에세이 저장 요청
-    const Token =  localStorage.getItem("Token");
+    const Token = localStorage.getItem("Token");
 
     axios
       .post(`${APIURL}essays`, afterEssay, {
         headers: {
-          Authorization: `Bearer ${Token}`, 
+          Authorization: `Bearer ${Token}`,
         },
       })
       .then((response) => {
@@ -117,55 +118,54 @@ export default function Essay() {
       });
   };
 
-  // useEffect를 사용하여 컴포넌트 마운트 시 DOM 이벤트를 설정
   useEffect(() => {
-
     axios
-    .get(`${APIURL}essay-questions`, {
-    params: {
-      type: 'MAJOR',        // 전공자 타입
-      generation: 11,       // 기수
-    },
-  })
-  .then((response) => {
-    console.log(response.data); 
-  })
-  .catch((error) => {
-    console.error('데이터를 가져오는 중 오류 발생:', error); 
-  });
+      .get(`${APIURL}essay-questions`, {
+        params: {
+          type: selected === "major" ? "MAJOR" : "NON_MAJOR", // 전공자/비전공자 타입
+          generation: 11, // 기수
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setEssayId(response.data.id) // 에세이 질문 id
+        setEssayQuestion(response.data.content); // 에세이 질문 content
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-
-    const infoIcon = document.getElementById('info-icon');
-    const popoverDescription = document.getElementById('popover-description');
+    const infoIcon = document.getElementById("info-icon");
+    const popoverDescription = document.getElementById("popover-description");
 
     if (infoIcon && popoverDescription) {
       // 마우스를 아이콘 위에 올렸을 때
-      infoIcon.addEventListener('mouseenter', () => {
-        popoverDescription.classList.remove('invisible', 'opacity-0');
-        popoverDescription.classList.add('opacity-100');
+      infoIcon.addEventListener("mouseenter", () => {
+        popoverDescription.classList.remove("invisible", "opacity-0");
+        popoverDescription.classList.add("opacity-100");
       });
 
       // 마우스를 아이콘에서 내렸을 때
-      infoIcon.addEventListener('mouseleave', () => {
-        popoverDescription.classList.add('invisible', 'opacity-0');
-        popoverDescription.classList.remove('opacity-100');
+      infoIcon.addEventListener("mouseleave", () => {
+        popoverDescription.classList.add("invisible", "opacity-0");
+        popoverDescription.classList.remove("opacity-100");
       });
     }
 
     return () => {
       if (infoIcon && popoverDescription) {
-        infoIcon.removeEventListener('mouseenter', () => {
-          popoverDescription.classList.remove('invisible', 'opacity-0');
-          popoverDescription.classList.add('opacity-100');
+        infoIcon.removeEventListener("mouseenter", () => {
+          popoverDescription.classList.remove("invisible", "opacity-0");
+          popoverDescription.classList.add("opacity-100");
         });
 
-        infoIcon.removeEventListener('mouseleave', () => {
-          popoverDescription.classList.add('invisible', 'opacity-0');
-          popoverDescription.classList.remove('opacity-100');
+        infoIcon.removeEventListener("mouseleave", () => {
+          popoverDescription.classList.add("invisible", "opacity-0");
+          popoverDescription.classList.remove("opacity-100");
         });
       }
     };
-  }, []); // 빈 배열을 사용하여 컴포넌트 마운트 시 한 번만 실행
+  }, [selected]); // selected 변경 시 API 요청 실행
 
   return (
     <>
@@ -174,7 +174,7 @@ export default function Essay() {
         className="container mx-auto p-5 max-w-4xl bg-white rounded-lg shadow-md mt-10 mb-20"
         style={{
           boxShadow:
-            '0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
+            "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
         }}
       >
         <div className="flex pb-10 items-center relative pt-4 ">
@@ -239,35 +239,25 @@ export default function Essay() {
         </div>
 
         <div className="border border-gray-400 rounded-lg bg-white">
-          {selected === 'major' && (
+          {selected === "major" && (
             <div className="py-5 flex flex-col items-center font-bold text-center">
-              <p>
-                향후 어떤 SW 개발자로 성장하고 싶은지 SW 관련 경험을 토대로
-                기술하고,
-              </p>
-              <p>
-                SSAFY에 지원하신 동기에 대해서도 작성 바랍니다. (500자 내외/ 최대
-                600자 까지)
-              </p>
+              <p>{essayQuestion}</p>
             </div>
           )}
 
-          {selected === 'nonMajor' && (
+          {selected === "nonMajor" && (
             <div className="py-5 flex flex-col items-center font-bold text-center">
-              <p>
-                학업 및 취업준비를 하며 가장 어려웠던 경험과 이를 해결하기 위해
-                했던 노력을 기술하고,
-              </p>
-              <p>
-                SSAFY에 지원하신 동기에 대해서도 작성 바랍니다. (500자 내외/ 최대
-                600자 까지)
-              </p>
+              <p>{essayQuestion}</p>
             </div>
           )}
         </div>
 
         <div className="pt-6">
-          <div className={`flex ${showCorrection ? 'flex-row space-x-4' : 'flex-col'}`}>
+          <div
+            className={`flex ${
+              showCorrection ? "flex-row space-x-4" : "flex-col"
+            }`}
+          >
             <textarea
               className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
               placeholder="여기에 작성해주세요."

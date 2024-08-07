@@ -134,7 +134,7 @@ export default function Test() {
                 </th>
                 <th
                   scope="col"
-                  className="px-2 py-3 text-center overflow-hidden"
+                  className="px-2 py-3 pl-20 text-center overflow-hidden"
                 >
                   정답률
                 </th>
@@ -164,8 +164,8 @@ export default function Test() {
                       {item.title}
                     </a>
                   </td>
-                  <td className="px-2 py-4 text-center text-base">
-                    {item.correctRate}
+                  <td className="px-2 py-4 pl-20 text-center text-base">
+                    {item.correctRate}%
                   </td>
                   <td className="px-2 py-4 text-center text-base">
                   {item.recommendationCount}
