@@ -96,14 +96,19 @@ export default function Essay() {
     }
 
     const afterEssay = {
-      userId: 1, // 임시 유저 정보
       essayQuestionId: essayId,
       content: essayContent,
     };
 
     // 에세이 저장 요청
+    const Token =  localStorage.getItem("Token");
+
     axios
-      .post(`${APIURL}essays`, afterEssay)
+      .post(`${APIURL}essays`, afterEssay, {
+        headers: {
+          Authorization: `Bearer ${Token}`, 
+        },
+      })
       .then((response) => {
         console.log(response);
       })

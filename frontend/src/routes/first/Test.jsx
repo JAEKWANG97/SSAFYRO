@@ -165,10 +165,10 @@ export default function Test() {
                     </a>
                   </td>
                   <td className="px-2 py-4 text-center text-base">
-                    정답률
+                    {item.correctRate}
                   </td>
                   <td className="px-2 py-4 text-center text-base">
-                    추천수
+                  {item.recommendationCount}
                   </td>
                 </tr>
               ))}
