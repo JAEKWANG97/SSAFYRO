@@ -16,8 +16,8 @@ export default function VideoComponent({
   const [faceExpression, setFaceExpression] = useState("neutral");
   const faceEmotionIcon = {
     angry: "angry_2274563.png",
-    disgust: "vomiting_3688154.png",
-    fear: "dead_3746935.png",
+    disgusted: "vomiting_3688154.png",
+    fearful: "dead_3746935.png",
     happy: "happy_9294644.png",
     sad: "sadness_7198866.png",
     surprised: "surprised_3898405.png",

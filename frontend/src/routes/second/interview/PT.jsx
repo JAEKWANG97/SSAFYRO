@@ -16,10 +16,16 @@ import VideoComponent from "./components/VideoComponent";
 import AudioComponent from "./components/AudioComponent";
 
 // 발음 평가 API 모듈
-import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
+// import { base64String, pronunciationEvaluation } from "./components/VoicePronunciationRecord";
+
+// 표정 데이터 모듈
+import { faceExpressionData } from "./components/VideoFaceApi";
 
 // AuthStore에서 사용자 정보 가져오기
 import useAuthStore from "../../../stores/AuthStore";
+
+// 룸 컨트롤 모듈
+// import { turnChange } from "./components/InterviewRules";
 
 export default function PT() {
   // 방 정보 가져오기
@@ -39,6 +45,41 @@ export default function PT() {
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`);
   };
+
+  // 답변 제출 함수
+  const handleSubmitAnswer = async function (question, answer, pronunciationScore, faceExpressionData) {
+    await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
+      question: question,
+      answer: answer,
+      pronunciationScore: pronunciationScore,
+      happy: faceExpressionData.happy,
+      disgust: faceExpressionData.disgusted,
+      sad: faceExpressionData.sad,
+      surprise: faceExpressionData.surprised,
+      fear: faceExpressionData.fearful,
+      angry: faceExpressionData.angry,
+      neutral: faceExpressionData.neutral,
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      }
+    })
+    .then((response) => {
+      // 제출 성공
+      faceExpressionData = {
+        angry: 0,
+        disgusted: 0,
+        fearful: 0,
+        happy: 0,
+        sad: 0,
+        surprised: 0,
+        neutral: 0,
+      }
+    })
+    .catch((error) => {
+      // 제출 실패
+    });
+  }
 
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
