@@ -38,10 +38,10 @@ public class EssayService {
         );
     }
 
-    public EssaySaveResponse save(EssaySaveServiceRequest request) {
+    public EssaySaveResponse createEssayBy(Long userId, EssaySaveServiceRequest request) {
         EssayQuestion essayQuestion = getEssayQuestionBy(request.essayQuestionId());
 
-        User user = getUserBy(request.userId());
+        User user = getUserBy(userId);
 
         return new EssaySaveResponse(
                 essayRepository.save(createEssay(essayQuestion, user, request.content())).getId()
@@ -58,7 +58,7 @@ public class EssayService {
 
     private EssayQuestion getEssayQuestionBy(Long essayQuestionId) {
         return essayQuestionRepository.findById(essayQuestionId)
-                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay not found"));
+                .orElseThrow(() -> new EssayQuestionNotFoundException("Essay question not found"));
     }
 
     private User getUserBy(Long userId) {

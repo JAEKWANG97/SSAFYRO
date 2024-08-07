@@ -24,6 +24,7 @@ import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
+import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -75,14 +76,16 @@ public class EssayControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("에세이 저장 API")
     @Test
+    @WithMockJwtAuthentication
     void save() throws Exception {
-        EssaySaveRequest essaySaveRequest = new EssaySaveRequest(1L, 1L, "에세이");
+        EssaySaveRequest essaySaveRequest = new EssaySaveRequest(1L, "에세이");
 
-        given(essayService.save(any(EssaySaveServiceRequest.class)))
+        given(essayService.createEssayBy(any(Long.class), any(EssaySaveServiceRequest.class)))
                 .willReturn(new EssaySaveResponse(1L));
 
         mockMvc.perform(
                         post("/api/v1/essays")
+                                .header("Authorization", "Bearer {JWT Token}")
                                 .content(objectMapper.writeValueAsString(essaySaveRequest))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -92,8 +95,6 @@ public class EssayControllerDocsTest extends RestDocsSupport {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestFields(
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
-                                                .description("유저 id"),
                                         fieldWithPath("essayQuestionId").type(JsonFieldType.NUMBER)
                                                 .description("에세이 질문 id"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
