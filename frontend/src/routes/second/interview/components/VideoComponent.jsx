@@ -55,7 +55,7 @@ export default function VideoComponent({
       ) : null}
       <div
         id={"camera-" + participantIdentity}
-        className="rounded-2xl h-full"
+        className="relative rounded-2xl h-full"
       >
         <video
           ref={videoElement}
@@ -71,11 +71,11 @@ export default function VideoComponent({
           }
         ></video>
         <div
-          className="hidden"
+          className="absolute top-4 left-4 hidden"
           ref={canvasRef}
           style={{ position: "absolute", top: 0, left: 0 }}
         />
-        <p className="text-center text-gray-600 py-4">
+        <p className="absolute top-0 left-0 m-2 text-center text-white py-1 px-2 bg-gray-500 bg-opacity-50 rounded-lg text-xs">
           {participantIdentity + (local ? " (You)" : "")}
         </p>
       </div>

@@ -265,6 +265,22 @@ export default function WaitRoom() {
 
   if (!waitRoom) return <div>로딩 중 ...</div>;
 
+  // 트랙을 그룹화하여 참가자별로 오디오 및 비디오 트랙을 함께 렌더링
+  const groupedTracks = remoteTracks.reduce((acc, track) => {
+    const participant = track.participantIdentity;
+    if (!acc[participant]) {
+      acc[participant] = { audio: null, video: null };
+    }
+    if (track.trackPublication.kind === "video") {
+      acc[participant].video = track;
+    } else if (track.trackPublication.kind === "audio") {
+      acc[participant].audio = track;
+    }
+    return acc;
+  }, {});
+
+  const emptyDivs = Array(2 - Object.keys(groupedTracks).length).fill(null);
+
   return (
     <div className="flex flex-col justify-center items-center">
       {/* PreventRefresh 컴포넌트를 추가하여 새로고침 방지 기능 활성화 */}
@@ -291,8 +307,9 @@ export default function WaitRoom() {
           <div className="flex h-[95%] rounded-xl mt-4 bg-gray-50">
             <div className="w-[70%] flex flex-col p-4">
               <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
+              <div className="w-[32%] h-[90%] rounded-lg flex flex-col items-center justify-center">
                 {localTrack && (
-                  <div>
+                  <div className="w-full h-full">
                     <VideoComponent
                       track={localTrack}
                       participantIdentity={userInfo.userName}
@@ -300,22 +317,31 @@ export default function WaitRoom() {
                     />
                   </div>
                 )}
-                {remoteTracks.map((remoteTrack) =>
-                  remoteTrack.trackPublication.kind === "video" ? (
-                    <div>
-                      <VideoComponent
-                        key={remoteTrack.trackPublication.trackSid}
-                        track={remoteTrack.trackPublication.videoTrack}
-                        participantIdentity={remoteTrack.participantIdentity}
-                      />
-                    </div>
-                  ) : (
-                    <AudioComponent
-                      key={remoteTrack.trackPublication.trackSid}
-                      track={remoteTrack.trackPublication.audioTrack}
+              </div>
+              {Object.entries(groupedTracks).map(([participant, tracks]) => (
+                <div key={participant} className="w-[32%] h-[90%] rounded-lg flex flex-col items-center justify-center">
+                  {tracks.video && (
+                    <VideoComponent
+                    // key={remoteTrack.trackPublication.trackSid}
+                    track={tracks.video.trackPublication.videoTrack}
+                    participantIdentity={participant}
+                    local={false}
+                  />
+                  )}
+                  {tracks.audio && (
+                    <AudioComponent track={tracks.audio.trackPublication.audioTrack}
                     />
-                  )
-                )}
+                  )}
+                </div>
+              ))}
+              {/* 참가자가 없을 때 빈 div를 렌더링 */}
+              {emptyDivs.map((_, index) => (
+                  <div key={index} className="w-[32%] h-[90%] bg-gray-200 rounded-2xl flex flex-col items-center justify-center">
+                    <div className="flex items-center justify-center h-full text-gray-400">
+                      No participant
+                    </div>
+                  </div>
+                ))}
                 {/* {room.userList.map((participant, index) => (
                   <div
                     key={index}
