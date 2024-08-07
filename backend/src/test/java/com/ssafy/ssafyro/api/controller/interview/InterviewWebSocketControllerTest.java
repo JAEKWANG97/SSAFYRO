@@ -7,7 +7,7 @@ import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
-import com.ssafy.ssafyro.domain.interview.Stage;
+import com.ssafy.ssafyro.domain.room.Stage;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import java.lang.reflect.Type;
 import java.util.Set;

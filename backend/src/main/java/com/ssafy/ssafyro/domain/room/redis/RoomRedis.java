@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
+import com.ssafy.ssafyro.error.interview.InterviewStageOutOfException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +84,14 @@ public class RoomRedis {
         return userList.size() < capacity;
     }
 
-    public Long getNowStageUser(int index) {
+    public Long getNowUser(int index) {
         return userList.get(index);
+    }
+
+    public void validStage(int stageIndex) {
+        if (stageIndex >= userList.size()) {
+            throw new InterviewStageOutOfException("모든 순서가 끝났습니다.");
+        }
     }
 
 }

@@ -8,11 +8,10 @@ import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
-import com.ssafy.ssafyro.domain.interview.Stage;
+import com.ssafy.ssafyro.domain.room.Stage;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.error.interview.InterviewStageOutOfException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,18 +64,15 @@ public class InterviewService {
 
     public InterviewStageResponse changeInterviewer(String roomId, InterviewStageServiceRequest request) {
         RoomRedis roomRedis = getRoomRedis(roomId);
-
         Stage nowStage = request.nowStage();
-        if (nowStage.getStage() > roomRedis.getUserList().size()) {
-            throw new InterviewStageOutOfException("모든 순서가 끝났습니다.");
-        }
+
+        roomRedis.validStage(nowStage.getIndex());
 
         return new InterviewStageResponse(
                 nowStage,
-                roomRedis.getNowStageUser(nowStage.getNowStageIndex())
+                roomRedis.getNowUser(nowStage.getIndex())
         );
     }
-
 
     private RoomRedis getRoomRedis(String roomId) {
         return roomRedisRepository.findBy(roomId)
