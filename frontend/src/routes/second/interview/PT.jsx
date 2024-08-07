@@ -80,6 +80,8 @@ export default function PT() {
         surprised: 0,
         neutral: 0,
       }
+
+      
     })
     .catch((error) => {
       // 제출 실패
@@ -239,14 +241,14 @@ export default function PT() {
       window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
+    recognitionRef.current.interimResults = false;
     recognitionRef.current.lang = "ko-KR";
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
       console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
-      setTranscript(transcript);
+      setTranscript(prevTranscript => prevTranscript + transcript);
     };
 
     recognitionRef.current.onerror = (event) => {
@@ -340,7 +342,6 @@ export default function PT() {
           </p>
         </div>
       </div>
-      {transcript}
     </div>
   );
 }
