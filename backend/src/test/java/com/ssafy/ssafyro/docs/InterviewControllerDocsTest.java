@@ -18,11 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
-import com.ssafy.ssafyro.api.controller.interview.request.QnAResultRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.QnAResultCreateRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
+import com.ssafy.ssafyro.api.service.interview.request.QnAResultCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
+import com.ssafy.ssafyro.api.service.interview.response.QnAResultCreateResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
+import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,7 +78,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
     void showArticle() throws Exception {
         String request = "roomId";
 
-        given(interviewService.showArticle(any()))
+        given(interviewService.getArticle(any()))
                 .willReturn(
                         new ArticleResponse(
                                 "기사 제목",
@@ -115,9 +118,9 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("면접 질문, 답변 저장 API")
     @Test
-    void saveQuestionResult() throws Exception {
-        QnAResultRequest request = QnAResultRequest.builder()
-                .userId(1L)
+    @WithMockJwtAuthentication
+    void createQuestionResult() throws Exception {
+        QnAResultCreateRequest request = QnAResultCreateRequest.builder()
                 .question("자신의 강점이 뭐라고 생각하시나요?")
                 .answer("포기할 줄 모르는 자세입니다.")
                 .pronunciationScore(3)
@@ -130,8 +133,12 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                 .neutral(0.01)
                 .build();
 
+        given(interviewService.createQnAResult(any(Long.class), any(QnAResultCreateServiceRequest.class)))
+                .willReturn(new QnAResultCreateResponse(1L));
+
         mockMvc.perform(
                         post("/api/v1/interview/question-answer-result")
+                                .header("Authorization", "Bearer {JWT Token}")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -141,8 +148,6 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("userId").type(JsonFieldType.NUMBER)
-                                        .description("면접자 고유 Id"),
                                 fieldWithPath("question").type(JsonFieldType.STRING)
                                         .description("면접 질문"),
                                 fieldWithPath("answer").type(JsonFieldType.STRING)
@@ -167,8 +172,10 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
-                                fieldWithPath("response").type(JsonFieldType.NULL)
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
+                                fieldWithPath("response.userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 id"),
                                 fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러")
                         )

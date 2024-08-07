@@ -1,11 +1,11 @@
 import GuestContents from "./components/GuestContents.jsx";
 import MemberContents from "./components/MemberContents.jsx";
-import useFirstStore from "../stores/FirstStore.jsx";
+import useAuthStore from "../stores/AuthStore";
 
 
 export default function Home() {
 
-  const isLogin = useFirstStore((state) => state.isLogin)
+  const isLogin = useAuthStore((state) => state.isLogin)
 
   return (
     <>

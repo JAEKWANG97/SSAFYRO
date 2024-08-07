@@ -48,6 +48,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private void sendToken(HttpServletResponse response, String token) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader("content-type", "application/json");
-        response.sendRedirect(FRONT_SERVER_DOMAIN + "?token=" + token);
+        response.sendRedirect(FRONT_SERVER_DOMAIN + "/signup?token=" + token);
     }
 }

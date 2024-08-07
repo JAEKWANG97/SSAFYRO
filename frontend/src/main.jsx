@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
-import useFirstStore from './stores/FirstStore.jsx'; 
+import useAuthStore from './stores/AuthStore'; 
 
 
 import Navbar from "./components/Navbar.jsx";
@@ -19,7 +19,7 @@ import GuidePT from "./routes/second/guide/GuidePT.jsx";
 import GuideIT from "./routes/second/guide/GuideIT.jsx";
 import Interview from "./routes/second/interview/Interview.jsx";
 import CreateRoom from "./routes/second/interview/CreateRoom.jsx";
-import Room from "./routes/second/interview/Room.jsx";
+import WaitRoom from "./routes/second/interview/Room.jsx";
 import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
@@ -28,7 +28,7 @@ import "./index.css";
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
-  const setIsLogin = useFirstStore((state) => state.setIsLogin);
+  const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
   // 초기 렌더링 시 로그인 상태 복원
   useEffect(() => {
@@ -114,7 +114,7 @@ const router = createBrowserRouter([
           },
           { path: "interview", element: <Interview /> },
           { path: "interview/createroom", element: <CreateRoom /> },
-          { path: "interview/room/:roomid", element: <Room /> },
+          { path: "interview/room/:roomid", element: <WaitRoom /> },
           { path: "interview/room/:roomid/pt_ready", element: <PTReady /> },
           { path: "interview/room/:roomid/pt", element: <PT /> },
           { path: "interview/room/:roomid/pt/survey", element: <Survey /> },

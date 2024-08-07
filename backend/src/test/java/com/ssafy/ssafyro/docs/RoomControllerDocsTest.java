@@ -30,6 +30,7 @@ import com.ssafy.ssafyro.api.service.room.response.RoomFastEnterResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
+import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -160,90 +161,79 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("방 생성 API")
     @Test
+    @WithMockJwtAuthentication
     void createRoom() throws Exception {
         String RoomId = "1";
-        Long userId = 1L;
 
-        RoomCreateRequest roomCreateRequest = new RoomCreateRequest(userId, "title", "description", "type", 3);
+        RoomCreateRequest roomCreateRequest = new RoomCreateRequest("title", "description", "type", 3);
 
-        given(roomService.createRoom(any(RoomCreateServiceRequest.class)))
+        given(roomService.createRoom(any(Long.class), any(RoomCreateServiceRequest.class)))
                 .willReturn(RoomCreateResponse.of(RoomId));
 
         mockMvc.perform(post("/api/v1/rooms")
+                        .header("Authorization", "Bearer {JWT Token}")
                         .content(objectMapper.writeValueAsString(roomCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("create-room", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(fieldWithPath("userId")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("유저 ID"),
-                                fieldWithPath("title").type(
-                                                JsonFieldType.STRING)
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING)
                                         .description("방 제목"),
-                                fieldWithPath("description").type(
-                                                JsonFieldType.STRING)
+                                fieldWithPath("description").type(JsonFieldType.STRING)
                                         .description("방 설명"),
-                                fieldWithPath("type").type(
-                                                JsonFieldType.STRING)
+                                fieldWithPath("type").type(JsonFieldType.STRING)
                                         .description("방 이름"),
-                                fieldWithPath("capacity").type(
-                                                JsonFieldType.NUMBER)
+                                fieldWithPath("capacity").type(JsonFieldType.NUMBER)
                                         .description("방 수용 인원")),
-                        responseFields(fieldWithPath("success")
-                                        .type(JsonFieldType.BOOLEAN)
+                        responseFields(fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
-                                fieldWithPath("response").type(
-                                                JsonFieldType.OBJECT)
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("response.roomId")
-                                        .type(JsonFieldType.STRING)
+                                fieldWithPath("response.roomId").type(JsonFieldType.STRING)
                                         .description("방 ID"),
-                                fieldWithPath("error").type(
-                                                JsonFieldType.NULL)
+                                fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러"))));
     }
 
     @DisplayName("방 입장 API")
     @Test
+    @WithMockJwtAuthentication
     void enterRoom() throws Exception {
-        RoomEnterRequest roomEnterRequest = new RoomEnterRequest(1L, "1");
+        RoomEnterRequest roomEnterRequest = new RoomEnterRequest("1");
         RoomEnterResponse roomEnterResponse = new RoomEnterResponse();
 
-        given(roomService.enterRoom(any())).willReturn(roomEnterResponse);
+        given(roomService.enterRoom(any(Long.class), any())).willReturn(roomEnterResponse);
 
         mockMvc.perform(post("/api/v1/rooms/enter")
+                        .header("Authorization", "Bearer {JWT Token}")
                         .content(objectMapper.writeValueAsString(roomEnterRequest))
                         .contentType(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("enter-room", preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(fieldWithPath("userId")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("유저 ID"),
-                                fieldWithPath("roomId").type(
-                                                JsonFieldType.STRING)
+                        requestFields(
+                                fieldWithPath("roomId").type(JsonFieldType.STRING)
                                         .description("방 ID")),
-                        responseFields(fieldWithPath("success")
-                                        .type(JsonFieldType.BOOLEAN)
+                        responseFields(fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
-                                fieldWithPath("response").type(
-                                                JsonFieldType.OBJECT)
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("error").type(
-                                                JsonFieldType.NULL)
+                                fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러"))));
     }
 
     @DisplayName("방 퇴장 API")
     @Test
+    @WithMockJwtAuthentication
     void exitRoom() throws Exception {
         RoomExitResponse roomExitResponse = new RoomExitResponse();
-        RoomExitRequest roomEnterRequest = new RoomExitRequest("1", 1L);
+        RoomExitRequest roomEnterRequest = new RoomExitRequest("1");
 
-        given(roomService.exitRoom(any())).willReturn(roomExitResponse);
+        given(roomService.exitRoom(any(), any())).willReturn(roomExitResponse);
 
         mockMvc.perform(post("/api/v1/rooms/exit")
+                        .header("Authorization", "Bearer {JWT Token}")
                         .content(objectMapper.writeValueAsString(roomEnterRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -251,22 +241,14 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                 .andDo(document("exit-room",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("userId")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("유저 ID"),
-                                fieldWithPath("roomId").type(
-                                                JsonFieldType.STRING)
-                                        .description("방 ID")),
+                        requestFields(fieldWithPath("roomId").type(JsonFieldType.STRING)
+                                .description("방 ID")),
                         responseFields(
-                                fieldWithPath("success")
-                                        .type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                         .description("성공 여부"),
-                                fieldWithPath("response").type(
-                                                JsonFieldType.OBJECT)
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
-                                fieldWithPath("error").type(
-                                                JsonFieldType.NULL)
+                                fieldWithPath("error").type(JsonFieldType.NULL)
                                         .description("에러"))));
     }
 

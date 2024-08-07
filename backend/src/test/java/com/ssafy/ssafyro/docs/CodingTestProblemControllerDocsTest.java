@@ -83,6 +83,10 @@ public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
                                                 .description("문제 제목"),
                                         fieldWithPath("response.problemInfos[].difficulty").type(JsonFieldType.STRING)
                                                 .description("문제 난이도"),
+                                        fieldWithPath("response.problemInfos[].correctRate").type(JsonFieldType.NUMBER)
+                                                .description("문제 정답률"),
+                                        fieldWithPath("response.problemInfos[].recommendationCount").type(JsonFieldType.NUMBER)
+                                                .description("문제 추천수"),
                                         fieldWithPath("response.problemInfos[].problemUrl").type(JsonFieldType.STRING)
                                                 .description("문제 URL"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)

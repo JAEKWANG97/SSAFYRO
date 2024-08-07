@@ -1,7 +1,17 @@
+import { useEffect } from "react";
 import SecondNav from "../components/SecondNav.jsx";
 import GuideNav from "./components/GuideNav.jsx";
+import axios from "axios";
+
+
 
 export default function GuideIT() {
+  useEffect(()=>{
+    axios.get("http://i11c201.p.ssafy.io:9999/api/v1/it-knowledge?page=1&size=10").then((response) =>{
+      console.log(response.data.response)
+    })
+  })
+
   return (
     <>
       <SecondNav />
