@@ -15,7 +15,16 @@ const getExpression = function (obj) {
 // 참고 출처: 재광이형 샘플 프로젝트 https://github.com/JAEKWANG97/react-face-api
 
 // const canvasRef = useRef()
-let faceExpression = "netural"
+let faceExpression = "neutral"
+let faceExpressionData = {
+    angry: 0,
+    disgust: 0,
+    fear: 0,
+    happy: 0,
+    sad: 0,
+    surprised: 0,
+    neutral: 0,
+}
 
 const loadFaceAPIModels = async function () {
     const MODEL_URL = "/models"
@@ -94,4 +103,4 @@ const handleVideoPlay = async function (
     }
 }
 
-export { loadFaceAPIModels, handleVideoPlay }
+export { loadFaceAPIModels, handleVideoPlay, faceExpressionData }
