@@ -9,6 +9,7 @@ export default function VideoComponent({
   track,
   participantIdentity,
   local = false,
+  isFullParticipants,
 }) {
   const videoElement = useRef(null);
   // 표정 표시를 위한 변수
@@ -47,18 +48,19 @@ export default function VideoComponent({
       {local && urlCheck === "/pt" ? (
         <img
           src={"/emotion/" + faceEmotionIcon[faceExpression]}
-          className="w-[30px] m-auto pb-5"
+          // 고쳐야할점 3
+          className="w-[30px] m-auto pb-5 absolute z-10 top-10 left-10"
           alt=""
         />
       ) : null}
       <div
         id={"camera-" + participantIdentity}
-        className="rounded bg-gray-300 relative"
+        className="rounded-2xl h-full"
       >
         <video
           ref={videoElement}
           id={track.sid}
-          className="rounded"
+          className="rounded-2xl object-cover w-full h-full"
           width={"200px"}
           height={"200px"}
           onCanPlayThrough={

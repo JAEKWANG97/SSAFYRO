@@ -10,6 +10,8 @@ import userImg from "../../../../public/main/user.jpg";
 import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 // user 정보 가져오기
 import useAuthStore from "../../../stores/AuthStore";
+// zustand 스토어 임포트
+import useRoomStore from "../../../stores/useRoomStore";
 
 // openvidu 연결 코드
 import {
@@ -31,6 +33,8 @@ export default function WaitRoom() {
   const [waitRoom, setWaitRoom] = useState(null);
   const [messages, setMessages] = useState([]);
 
+  // zustand store의 setUserList 사용
+  const { setUserList } = useRoomStore()
   const isInitialMount = useRef(true);
 
   useEffect(() => {
@@ -64,8 +68,13 @@ export default function WaitRoom() {
           );
           const updatedRoomData = updatedResponse.data.response;
           setWaitRoom(updatedRoomData);
+          // zustand store에 userList 저장
+          setUserList(updatedRoomData.userList)
+          console.log("참여자 정보: ", updatedRoomData.userList)
         } else {
           setWaitRoom(roomData);
+          setUserList(roomData.userList)
+          console.log("참여자 정보: ", roomData.userList)
         }
       } catch (error) {
         console.error(error);
@@ -130,6 +139,8 @@ export default function WaitRoom() {
       if (participantIndex !== -1) {
         updatedRoom.userList.splice(participantIndex, 1);
         setWaitRoom(updatedRoom);
+        // zustand store 업데이트
+        setUserList(updatedRoom.userList)
       }
     }
   }
