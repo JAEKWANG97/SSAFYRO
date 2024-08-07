@@ -10,11 +10,15 @@ export default function VideoComponent({
   participantIdentity,
   local = false,
   isFullParticipants,
+  // 표정 상태 변경을 부모에게 알림
+  onFaceExpressionChange
 }) {
   const videoElement = useRef(null);
   // 표정 표시를 위한 변수
   const canvasRef = useRef();
   const [faceExpression, setFaceExpression] = useState("neutral");
+
+  // ParticipantsVideo.jsx로 옮김
   const faceEmotionIcon = {
     angry: "angry_2274563.png",
     disgusted: "vomiting_3688154.png",
@@ -43,16 +47,23 @@ export default function VideoComponent({
     };
   }, [track]);
 
+  useEffect(() => {
+    // 표정 상태 변경 시 부모 컴포넌트에 알림
+    if (onFaceExpressionChange) {
+      onFaceExpressionChange(faceExpression)
+    }
+  }, [faceExpression, onFaceExpressionChange])
+
   return (
     <>
-      {local && urlCheck === "/pt" ? (
+      {/* {local && urlCheck === "/pt" ? (
         <img
           src={"/emotion/" + faceEmotionIcon[faceExpression]}
           // 고쳐야할점 3
           className="w-[30px] m-auto pb-5 absolute z-10 top-10 left-10"
           alt=""
         />
-      ) : null}
+      ) : null} */}
       <div
         id={"camera-" + participantIdentity}
         className="relative rounded-2xl h-full"

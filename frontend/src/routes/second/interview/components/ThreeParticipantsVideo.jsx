@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
 
@@ -18,6 +18,18 @@ export default function ThreeParticipantsVideo({
     console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
+  const [faceExpression, setFaceExpression] = useState("neutral");
+
+  const faceEmotionIcon = {
+    angry: "angry_2274563.png",
+    disgusted: "vomiting_3688154.png",
+    fearful: "dead_3746935.png",
+    happy: "happy_9294644.png",
+    sad: "sadness_7198866.png",
+    surprised: "surprised_3898405.png",
+    neutral: "neutral_3688059.png",
+  };
+
   const groupedTracks = remoteTracks.reduce((acc, track) => {
     const participant = track.participantIdentity;
     if (!acc[participant]) {
@@ -30,6 +42,10 @@ export default function ThreeParticipantsVideo({
     }
     return acc;
   }, {});
+
+  // 면접 화면일 경우에만 표정 모델 로드하도록 URL 끝값을 체크
+  const url = location.pathname;
+  const urlCheck = url.substring(url.length - 3);
 
   return (
     <>
@@ -44,6 +60,7 @@ export default function ThreeParticipantsVideo({
               participantIdentity={participantName}
               local={true}
               isFullParticipants={isFullParticipants}
+              onFaceExpressionChange={setFaceExpression}
             />
           </div>
         )}
@@ -110,21 +127,14 @@ export default function ThreeParticipantsVideo({
             </svg>
           </button>
           <button className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12">
-            {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.5em"
-                  height="1.5em"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    fill="white"
-                    d="M256 16C123.452 16 16 123.452 16 256s107.452 240 240 240s240-107.452 240-240S388.548 16 256 16m147.078 387.078a207.253 207.253 0 1 1 44.589-66.125a207.3 207.3 0 0 1-44.589 66.125"
-                  ></path>
-                  <path
-                    fill="white"
-                    d="M152 200h40v40h-40zm168 0h40v40h-40zm18.289 107.2A83.6 83.6 0 0 1 260.3 360h-8.6a83.6 83.6 0 0 1-77.992-52.8l-1.279-3.2h-34.461L144 319.081A116 116 0 0 0 251.7 392h8.6A116 116 0 0 0 368 319.081L374.032 304h-34.464Z"
-                  ></path>
-                </svg> */}
+            {/* 표정 이모티콘 */}
+            {localTrack && urlCheck === "/pt" && (
+              <img
+                src={`/emotion/${faceEmotionIcon[faceExpression]}`}
+                alt="face expression"
+                className="w-full h-full object-contain"
+              />
+            )}
           </button>
         </div>
       </div>
