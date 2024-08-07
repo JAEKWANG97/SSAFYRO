@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -68,7 +69,7 @@ public class InterviewResult extends BaseEntity {
             joinColumns = @JoinColumn(name = "interview_result_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_name")
     )
-    private List<QuestionTag> questionTags;
+    private List<QuestionTag> questionTags = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -76,7 +77,7 @@ public class InterviewResult extends BaseEntity {
             joinColumns = @JoinColumn(name = "interview_result_id"),
             inverseJoinColumns = @JoinColumn(name = "answer_tag_name")
     )
-    private List<AnswerTag> answerTags;
+    private List<AnswerTag> answerTags = new ArrayList<>();
 
     @Builder
     private InterviewResult(Report report, String question, String answer, String feedback, int pronunciationScore,
@@ -142,5 +143,9 @@ public class InterviewResult extends BaseEntity {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
+    }
+
+    public void addQuestion(List<QuestionTag> questionTags) {
+        this.questionTags.addAll(questionTags);
     }
 }

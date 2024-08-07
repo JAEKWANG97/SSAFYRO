@@ -53,7 +53,6 @@ public class ReportService {
         );
     }
 
-    //TODO: User 검증 필요 (시큐리티 후에 작업 요망)
     public ReportResponse getReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
@@ -61,7 +60,6 @@ public class ReportService {
         List<InterviewResult> interviewResult = interviewResultRepository.findByReportId(reportId);
 
         if (report.isPresentation()) {
-            //TODO: 기사 저장 완료되면 수정
             Article article = ((PresentationInterviewReport) report).getArticle();
 
             return ReportPresentationResponse.of(

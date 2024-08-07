@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.domain.tag;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +19,11 @@ public class QuestionTag {
     @Builder
     private QuestionTag(String tagName) {
         this.tagName = tagName;
+    }
+
+    public static List<QuestionTag> create(List<String> nouns) {
+        return nouns.stream()
+                .map(noun -> QuestionTag.builder().tagName(noun).build())
+                .toList();
     }
 }
