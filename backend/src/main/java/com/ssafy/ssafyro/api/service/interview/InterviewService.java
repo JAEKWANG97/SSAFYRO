@@ -12,6 +12,7 @@ import com.ssafy.ssafyro.domain.room.Stage;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
+import com.ssafy.ssafyro.error.interview.InterviewStageOutOfException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,9 @@ public class InterviewService {
         RoomRedis roomRedis = getRoomRedis(roomId);
         Stage nowStage = request.nowStage();
 
-        roomRedis.validStage(nowStage.getIndex());
+        if (roomRedis.isStageOver(nowStage.getIndex())) {
+            throw new InterviewStageOutOfException("모든 순서가 끝났습니다.");
+        }
 
         return new InterviewStageResponse(
                 nowStage,
