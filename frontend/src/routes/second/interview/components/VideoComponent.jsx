@@ -24,6 +24,10 @@ export default function VideoComponent({
     neutral: "neutral_3688059.png",
   };
 
+  // 면접 화면일 경우에만 표정 모델 로드하도록 URL 끝값을 체크
+  const url = location.pathname;
+  const urlCheck = url.substring(url.length - 3);
+
   useEffect(() => {
     if (videoElement.current) {
       track.attach(videoElement.current);
@@ -40,7 +44,7 @@ export default function VideoComponent({
 
   return (
     <>
-      {local ? (
+      {local && urlCheck === "/pt" ? (
         <img
           src={"/emotion/" + faceEmotionIcon[faceExpression]}
           className="w-[30px] m-auto pb-5"

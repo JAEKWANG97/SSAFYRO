@@ -1,17 +1,16 @@
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PersonalityFeedback from './PersonalityFeedback';
 import PtFeedback from './PtFeedback';
-import useFirstStore from '../../stores/FirstStore';
+import useAuthStore from '../../stores/AuthStore';
 
 
 export default function Profile() {
 
   const params = useParams();
-  const IsPerson = useFirstStore((state) => state.IsPerson);
-  const setIsPerson = useFirstStore((state) => state.setIsPerson);
-  const IsPt = useFirstStore((state) => state.IsPt);
-  const setIsPt = useFirstStore((state) => state.setIsPt);
+  const IsPerson = useAuthStore((state) => state.IsPerson);
+  const setIsPerson = useAuthStore((state) => state.setIsPerson);
+  const IsPt = useAuthStore((state) => state.IsPt);
+  const setIsPt = useAuthStore((state) => state.setIsPt);
 
   return (
     <>

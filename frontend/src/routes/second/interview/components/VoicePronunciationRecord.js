@@ -4,6 +4,7 @@ import axios from "axios"
 const caputerConstraint = { audio: true, video: false }
 let recorder
 let audioChunks = []
+let base64String
 
 // get user permission for record audio
 navigator.mediaDevices
@@ -19,7 +20,7 @@ navigator.mediaDevices
             const reader = new FileReader()
 
             reader.onload = () => {
-                const base64String = reader.result.split(",")[1]
+                base64String = reader.result.split(",")[1]
                 console.log(base64String)
             }
 
@@ -61,3 +62,5 @@ const pronunciationEvaluation = async function (base64String) {
             console.error(error)
         })
 }
+
+export { pronunciationEvaluation, base64String }
