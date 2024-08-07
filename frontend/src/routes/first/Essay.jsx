@@ -179,13 +179,15 @@ export default function Essay() {
     <>
       <FirstdNav />
       <div
-        className="container mx-auto p-5 max-w-4xl bg-white rounded-lg shadow-md mt-10 mb-20"
+        className={`container mx-auto p-5 bg-white rounded-lg shadow-md mt-10 mb-20 ${
+          showCorrection ? "max-w-6xl" : "max-w-4xl"
+        }`}
         style={{
           boxShadow:
             "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div className="flex pb-10 items-center relative pt-4 ">
+        <div className="flex pb-10 items-center relative pt-4">
           <p className="text-2xl font-extrabold pr-4 pl-2">에세이</p>
           <Ismajor />
 
@@ -246,82 +248,80 @@ export default function Essay() {
           </div>
         </div>
 
-        <div className="border border-gray-400 rounded-lg bg-white">
-          {selected === "major" && (
-            <div className="py-5 flex flex-col items-center font-bold text-center">
-              {essayQuestion.split(",").map((question, index, array) => (
-                <p key={index}>
-                  {question}
-                  {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
-                </p>
-              ))}
-            </div>
-          )}
+        <div className="flex space-x-4">
+          <div className="flex-1 border border-gray-400 rounded-lg bg-white p-4 mb-6">
+            {selected === "major" && (
+              <div className="flex flex-col items-center font-bold text-center mb-4">
+                {essayQuestion.split(",").map((question, index, array) => (
+                  <p key={index}>
+                    {question}
+                    {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
+                  </p>
+                ))}
+              </div>
+            )}
 
-          {selected === "nonMajor" && (
-            <div className="py-5 flex flex-col items-center font-bold text-center">
-              {essayQuestion.split(",").map((question, index, array) => (
-                <p key={index}>
-                  {question}
-                  {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
-                </p>
-              ))}
+            {selected === "nonMajor" && (
+              <div className="flex flex-col items-center font-bold text-center mb-4">
+                {essayQuestion.split(",").map((question, index, array) => (
+                  <p key={index}>
+                    {question}
+                    {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            <div className="pt-6">
+              {isLoading && (
+                <div className="flex justify-center items-center mb-4">
+                  <svg
+                    className="animate-spin h-5 w-5 text-gray-700"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 4.063 2.179 7.634 5.29 9.453l.71-1.162z"
+                    ></path>
+                  </svg>
+                  <p className="ml-2">Loading...</p>
+                </div>
+              )}
+
+              <textarea
+                className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
+                placeholder="여기에 작성해주세요."
+                spellCheck="false"
+                autoCorrect="off"
+                autoComplete="off"
+                maxLength={600}
+                value={essayContent}
+                onChange={handleEssayContent}
+              ></textarea>
+            </div>
+          </div>
+
+          {showCorrection && (
+            <div className="flex-1 border border-gray-400 rounded-lg bg-white p-4">
+              <div className="text-sm text-gray-900">
+                {essayReview}
+              </div>
             </div>
           )}
         </div>
-
-        <div className="pt-6">
-          {isLoading && (
-            <div className="flex justify-center items-center mb-4">
-              <svg
-                className="animate-spin h-5 w-5 text-gray-700"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 4.063 2.179 7.634 5.29 9.453l.71-1.162z"
-                ></path>
-              </svg>
-              <p className="ml-2">Loading...</p>
-            </div>
-          )}
-
-          <div
-            className={`flex ${
-              showCorrection ? "flex-row space-x-4" : "flex-col"
-            }`}
-          >
-            <textarea
-              className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
-              placeholder="여기에 작성해주세요."
-              spellCheck="false"
-              autoCorrect="off"
-              autoComplete="off"
-              maxLength={600}
-              value={essayContent}
-              onChange={handleEssayContent}
-            ></textarea>
-
-            {showCorrection && (
-              <div className="block p-4 w-full h-64 text-sm text-gray-900 rounded-lg border border-gray-400">
-                {essayReview}
-              </div>
-            )}
-          </div>
-          <div className="flex">
-            <Button text="저장" type="ESSAYSAVE" onClick={handleEssaySave} />
-          </div>
+        <div className="flex mt-4">
+          <Button text="저장" type="ESSAYSAVE" onClick={handleEssaySave} />
         </div>
       </div>
     </>
