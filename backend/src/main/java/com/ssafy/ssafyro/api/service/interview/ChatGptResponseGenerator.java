@@ -40,7 +40,7 @@ public class ChatGptResponseGenerator {
 
     public String generateNewEssay(String question, String content) {
         HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createFeedbackPrompt(question, content), 1000),
+                new Request(createEssayReviewPrompt(question, content), 1000),
                 setHeaders()
         );
 
