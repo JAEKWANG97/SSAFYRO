@@ -21,6 +21,7 @@
     "react-speech-recognition": "^3.10.0",
     "regenerator-runtime": "^0.14.1",
     "sweetalert2": "^11.12.3",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "tw-elements-react": "^1.0.0-alpha-end",
     "zustand": "^4.5.4"
   },
