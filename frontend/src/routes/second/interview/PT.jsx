@@ -383,9 +383,9 @@ export default function PT() {
         <div className="flex" style={{ height: "400px" }}>
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
-            console.log("remoteTracks: ", remoteTracks);
+            // console.log("remoteTracks: ", remoteTracks);
             if (remoteTracks.length <= 2) {
-              console.log("두명 전용 방으로 이동");
+              // console.log("두명 전용 방으로 이동");
               return (
                 <TwoParticipantsVideo
                   localTrack={localTrack}
