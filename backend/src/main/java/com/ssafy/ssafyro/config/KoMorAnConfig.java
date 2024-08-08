@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.service.tag;
+package com.ssafy.ssafyro.config;
 
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class KoMorAnUtils {
+public class KoMorAnConfig {
 
     public static Komoran getInstance() {
         return KoMorAnInstance.instance;

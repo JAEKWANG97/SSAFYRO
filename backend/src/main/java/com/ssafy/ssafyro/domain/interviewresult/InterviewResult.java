@@ -5,21 +5,15 @@ import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.domain.BaseEntity;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.report.Report;
-import com.ssafy.ssafyro.domain.tag.AnswerTag;
-import com.ssafy.ssafyro.domain.tag.QuestionTag;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -63,26 +57,10 @@ public class InterviewResult extends BaseEntity {
 
     private double angry;
 
-    @ManyToMany
-    @JoinTable(
-            name = "question_tag_interview_result",
-            joinColumns = @JoinColumn(name = "interview_result_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_name")
-    )
-    private List<QuestionTag> questionTags = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "answer_tag_interview_result",
-            joinColumns = @JoinColumn(name = "interview_result_id"),
-            inverseJoinColumns = @JoinColumn(name = "answer_tag_name")
-    )
-    private List<AnswerTag> answerTags = new ArrayList<>();
-
     @Builder
     private InterviewResult(Report report, String question, String answer, String feedback, int pronunciationScore,
                             double happy, double neutral, double sad, double disgust, double surprise, double fear,
-                            double angry, List<QuestionTag> questionTags, List<AnswerTag> answerTags) {
+                            double angry) {
         this.report = report;
         this.question = question;
         this.answer = answer;
@@ -95,8 +73,6 @@ public class InterviewResult extends BaseEntity {
         this.surprise = surprise;
         this.fear = fear;
         this.angry = angry;
-        this.questionTags = questionTags;
-        this.answerTags = answerTags;
     }
 
     public static InterviewResult create(Report report,
@@ -143,9 +119,5 @@ public class InterviewResult extends BaseEntity {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
-    }
-
-    public void addQuestion(List<QuestionTag> questionTags) {
-        this.questionTags.addAll(questionTags);
     }
 }

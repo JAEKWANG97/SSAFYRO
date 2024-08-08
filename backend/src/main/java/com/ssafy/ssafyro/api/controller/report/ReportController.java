@@ -8,7 +8,6 @@ import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
-import com.ssafy.ssafyro.api.service.tag.KoMorAnService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportController {
 
     private final ReportService reportService;
-    private final KoMorAnService koMorAnService;
 
     @GetMapping("/api/v1/reports")
     public ApiResult<ReportsResponse> getReports(@RequestParam @NotNull Long userId,
@@ -40,10 +38,7 @@ public class ReportController {
 
     @PostMapping("/api/v1/reports")
     public ApiResult<ReportCreateResponse> createReport(@RequestBody ReportCreateRequest request) {
-        ReportCreateResponse reportResponse = reportService.createReport(request.toServiceRequest());
-        koMorAnService.createTags(reportResponse.reportId());
-        
-        return success(reportResponse);
+        return success(reportService.createReport(request.toServiceRequest()));
     }
 
 }
