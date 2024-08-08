@@ -15,7 +15,7 @@ export default function Test() {
   const APIURL = 'http://i11c201.p.ssafy.io:9999/api/v1/'; 
 
   const [page, setPage] = useState(1); // 현재 페이지 번호 (1부터 시작)
-  const [size] = useState(10); // 페이지당 항목 수
+  const [size] = useState(5); // 페이지당 항목 수
 
   const [sortOrder, setSortOrder] = useState("asc"); // 기본 정렬 상태를 오름차순으로 설정
 
