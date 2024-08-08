@@ -98,6 +98,7 @@ export default function PT() {
     })
     .catch((error) => {
       // 제출 실패
+      console.log(error)
     });
   }
 

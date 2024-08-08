@@ -8,6 +8,7 @@ import {
   stopRecording,
   pronunciationEvaluation,
   base64String,
+  pronunciationScore
 } from "./VoicePronunciationRecord";
 
 const isFullParticipants = false;
@@ -57,7 +58,7 @@ export default function TwoParticipantsVideo({
       setIsRecording(false);
       try {
         const score = await pronunciationEvaluation(base64String);
-        handleSubmitAnswer(questions[0], answer, faceExpressionData, score);
+        handleSubmitAnswer(questions[0], answer, faceExpressionData, pronunciationScore);
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {

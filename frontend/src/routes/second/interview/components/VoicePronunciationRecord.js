@@ -11,6 +11,7 @@ let base64String;
 const API_KEY = import.meta.env.VITE_ETRI_API_KEY;
 
 // 발음 정확도 평가 API 전송-수신
+let pronunciationScore
 const pronunciationEvaluation = async function (base64String) {
     await axios
       .post(
@@ -18,7 +19,7 @@ const pronunciationEvaluation = async function (base64String) {
         {
           argument: {
             language_code: "korean",
-            audio: base64String,
+            audio: (String(base64String)),
           },
         },
         {
@@ -26,7 +27,8 @@ const pronunciationEvaluation = async function (base64String) {
         }
       )
       .then((response) => {
-        console.log(response.data.return_object.score);
+        // console.log("발음 평가 점수: ", response.data.return_object.score);
+        pronunciationScore = response.data.return_object.score;
         return response.data.return_object.score;
       })
       .catch((error) => {
@@ -54,9 +56,9 @@ const startRecording = () => {
 
         reader.onload = async () => {
           base64String = reader.result.split(",")[1];
-          console.log(base64String);
-          const score = await pronunciationEvaluation(base64String);
-          console.log("발음 평가 점수:", score)
+          // console.log(base64String);
+          await pronunciationEvaluation(base64String);
+          console.log("발음 평가 점수: ", pronunciationScore);
         };
 
         reader.readAsDataURL(audioBlob);
@@ -83,4 +85,4 @@ const stopRecording = () => {
   }
 };
 
-export { pronunciationEvaluation, base64String, startRecording, stopRecording };
+export { pronunciationEvaluation, base64String, startRecording, stopRecording, pronunciationScore };
