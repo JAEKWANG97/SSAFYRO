@@ -6,6 +6,9 @@ import Button from "./../../../components/Button";
 // import axios
 import axios from "axios";
 
+// import store
+import useInterviewStore from "../../../stores/InterviewStore";
+
 export default function PTReady() {
   const navigate = useNavigate();
   const { roomid } = useParams();
@@ -94,6 +97,7 @@ export default function PTReady() {
     .get(APIURL + `interview/pt/${roomid}`)
     .then((response) => {
       setInerviewQuestion(response.data.response);
+      useInterviewStore.setPTQuestions(response.data.response.question);
     })
     .catch((error) => {
       console.log(error);
