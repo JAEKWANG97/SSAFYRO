@@ -17,4 +17,8 @@ public class InterviewResultService {
     public InterviewResultsResponse getInterviewResultsBy(List<String> tags) {
         return InterviewResultsResponse.of(interviewResultDocumentRepository.findBy(tags));
     }
+
+    public void getInterviewResultsBy(Long userId) {
+
+    }
 }
