@@ -16,6 +16,8 @@ export default function TwoParticipantsVideo({
   stopListening,
   questions,
   answer,
+  faceExpressionData,
+  handleSubmitAnswer,
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);

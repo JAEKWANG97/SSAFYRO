@@ -327,6 +327,8 @@ export default function PT() {
                   stopListening={stopListening}
                   questions={questions}
                   answer={transcript}
+                  faceExpressionData={faceExpressionData}
+                  handleSubmitAnswer={handleSubmitAnswer}
                 />
               );
             } else {
@@ -342,6 +344,8 @@ export default function PT() {
                   stopListening={stopListening}
                   questions={questions}
                   answer={transcript}
+                  faceExpressionData={faceExpressionData}
+                  handleSubmitAnswer={handleSubmitAnswer}
                 />
               );
             }

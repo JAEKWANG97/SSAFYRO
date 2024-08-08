@@ -15,6 +15,8 @@ export default function ThreeParticipantsVideo({
   stopListening,
   questions,
   answer,
+  faceExpressionData,
+  handleSubmitAnswer,
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
