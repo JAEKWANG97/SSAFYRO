@@ -4,8 +4,13 @@ import useFirstStore from "../../stores/FirstStore";
 import useAuthStore from "../../stores/AuthStore";
 import Ismajor from "./../../components/Ismajor";
 import Button from "./../../components/Button";
+import EssayCorrectionsCarousel from "./EssayCorrectionsCarousel";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Essay() {
@@ -20,6 +25,12 @@ export default function Essay() {
   const [totalFeedback, setTotalFeedback] = useState("");
   const [essayQuestion, setEssayQuestion] = useState(""); // 전공자/비전공자 질문 내용
   const isLogin = useAuthStore((state) => state.isLogin); // 로그인 유무
+
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [selectionStart, setSelectionStart] = useState(0);
+  const [selectionEnd, setSelectionEnd] = useState(0);
+  const textareaRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const nav = useNavigate();
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
@@ -81,13 +92,12 @@ export default function Essay() {
       .then((response) => {
         // 서버 응답 성공 시 리뷰 내용 설정
         const content = response.data.response.content;
-        const parts = content.split('%%%');
+        const parts = content.split("%%%");
 
-        
         setEssayReview(parts[0].replace("newcontent:", "").trim());
         setChangedContent(parts[1].replace("changed:", "").trim());
         setTotalFeedback(parts[2].replace("totalfeedback:", "").trim());
-      
+
         setShowCorrection(true); // 리뷰 내용을 성공적으로 받아온 경우에만 상태를 true로 설정
         Swal.close(); // 로딩 완료 후 알림창 닫기
       })
@@ -196,6 +206,30 @@ export default function Essay() {
     };
   }, [selected]); // selected 변경 시 API 요청 실행
 
+  const handleTextareaSelect = (e) => {
+    setSelectionStart(e.target.selectionStart);
+    setSelectionEnd(e.target.selectionEnd);
+  };
+
+  const getCurrentSentenceIndex = () => {
+    const sentences = essayContent.split(/(?<=[.!?])\s+/);
+    let charCount = 0;
+    for (let i = 0; i < sentences.length; i++) {
+      charCount += sentences[i].length + 1; // +1 for the space
+      if (charCount > selectionStart) {
+        return i;
+      }
+    }
+    return sentences.length - 1;
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const index = getCurrentSentenceIndex();
+      setHoveredIndex(index);
+    }
+  }, [selectionStart, selectionEnd, essayContent]);
+
   return (
     <>
       <FirstdNav />
@@ -261,7 +295,8 @@ export default function Essay() {
             >
               <div className="p-3 space-y-2">
                 <p className="font-semibold text-gray-900">
-                  아이콘을 누르면 작성한 에세이에 대한 AI 첨삭 내용이 보여집니다.
+                  아이콘을 누르면 작성한 에세이에 대한 AI 첨삭 내용이
+                  보여집니다.
                 </p>
               </div>
               <div data-popper-arrow></div>
@@ -269,35 +304,28 @@ export default function Essay() {
           </div>
         </div>
 
-        <div className={`flex ${showCorrection ? "flex-row space-x-4" : "flex-col"}`}>
-          <div className="flex flex-col" style={{ width: '750px' }}>
+        <div
+          className={`flex ${
+            showCorrection ? "flex-row space-x-4" : "flex-col"
+          }`}
+        >
+          <div className="flex flex-col" style={{ width: "750px" }}>
             <div className="border border-gray-400 rounded-lg bg-white">
-              {selected === "major" && (
-                <div className="py-5 flex flex-col items-center font-bold text-center">
-                  {essayQuestion.split(",").map((question, index, array) => (
-                    <p key={index}>
-                      {question}
-                      {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
-                    </p>
-                  ))}
-                </div>
-              )}
-
-              {selected === "nonMajor" && (
-                <div className="py-5 flex flex-col items-center font-bold text-center">
-                  {essayQuestion.split(",").map((question, index, array) => (
-                    <p key={index}>
-                      {question}
-                      {index === array.length - 1 && " (500자 내외/ 최대 600자 까지)"}
-                    </p>
-                  ))}
-                </div>
-              )}
+              <div className="py-5 flex flex-col items-center font-bold text-center">
+                {essayQuestion.split(",").map((question, index, array) => (
+                  <p key={index}>
+                    {question}
+                    {index === array.length - 1 &&
+                      " (500자 내외/ 최대 600자 까지)"}
+                  </p>
+                ))}
+              </div>
             </div>
 
             <div className="pt-6">
               <div className={`flex flex-col`}>
                 <textarea
+                  ref={textareaRef}
                   className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
                   placeholder="여기에 작성해주세요."
                   spellCheck="false"
@@ -307,6 +335,7 @@ export default function Essay() {
                   maxLength={600}
                   value={essayContent}
                   onChange={handleEssayContent}
+                  onSelect={handleTextareaSelect}
                 ></textarea>
               </div>
             </div>
@@ -318,27 +347,52 @@ export default function Essay() {
               className="block p-4 w-[420px] text-sm text-gray-900 rounded-lg bg-[#D6EDF9] overflow-auto"
               style={{ lineHeight: 1.8, height: "32rem" }}
             >
-              <p className="font-bold text-lg pb-5 scrollbar-hide">에세이 첨삭 내용</p>
-              {essayReview}
+              <p className="font-bold text-lg pb-5 scrollbar-hide">
+                에세이 첨삭 내용
+              </p>
+              {essayReview.split(/(?<=[.!?])\s+/).map((sentence, index) => (
+                <span
+                  key={index}
+                  className={hoveredIndex === index ? "bg-blue-200" : ""}
+                >
+                  {sentence}{" "}
+                </span>
+              ))}
             </div>
           )}
         </div>
 
         {showCorrection && (
           <>
-          <div className="flex gap-4">
-            <div 
-            className="block p-4 w-full text-sm text-gray-900 rounded-lg mt-4 overflow-auto"
-            style={{ backgroundColor: "rgba(231, 226, 253, 0.5)", height: "20rem" }}>
-              <p className="font-bold text-lg mb-2 pb-5">📃 에세이 피드백</p>
-              <p className="text-base scrollbar-hide" style={{lineHeight: 1.8}}>{totalFeedback}</p>
+            <div className="flex gap-4">
+              <div
+                className="block p-4 w-full text-sm text-gray-900 rounded-lg mt-4 overflow-auto"
+                style={{
+                  backgroundColor: "rgba(231, 226, 253, 0.5)",
+                  height: "20rem",
+                }}
+              >
+                <p className="font-bold text-lg mb-2 pb-5">📃 에세이 피드백</p>
+                <p
+                  className="text-base scrollbar-hide"
+                  style={{ lineHeight: 1.8 }}
+                >
+                  {totalFeedback}
+                </p>
+              </div>
+              <div
+                className="block p-4 w-full text-sm text-gray-900 rounded-lg mt-4 overflow-auto"
+                style={{
+                  backgroundColor: "rgba(255, 239, 213, 0.5)",
+                  height: "20rem",
+                }}
+              >
+                <p className="font-bold text-lg mb-2 pb-5">
+                  ✏️ 에세이 수정 내용
+                </p>
+                <EssayCorrectionsCarousel changedContent={changedContent} />
+              </div>
             </div>
-            <div className="block p-4 w-full text-sm text-gray-900 rounded-lg mt-4 overflow-auto"
-            style={{ backgroundColor: "rgba(255, 239, 213, 0.5)", height: "20rem" }}>
-              <p className="font-bold text-lg mb-2 pb-5">✏️ 에세이 수정 내용</p>
-              {changedContent.split(/\)\s*/).map((part, index) => (<p className="text-base scrollbar-hide" key={index}>{part})</p>))}
-            </div>
-          </div>
           </>
         )}
 
