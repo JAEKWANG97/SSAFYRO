@@ -154,6 +154,8 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("면접 답변"),
                                 fieldWithPath("pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
+                                fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER)
+                                        .description("평가 점수"),
                                 fieldWithPath("happy").type(JsonFieldType.NUMBER)
                                         .description("행복 점수"),
                                 fieldWithPath("disgust").type(JsonFieldType.NUMBER)
