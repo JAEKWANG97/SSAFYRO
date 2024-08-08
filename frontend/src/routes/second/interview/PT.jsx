@@ -33,6 +33,9 @@ import useAuthStore from "../../../stores/AuthStore";
 // 룸 컨트롤 모듈
 // import { turnChange } from "./components/InterviewRules";
 
+// 상태 관리 모듈
+import useInterviewStore from "../../../stores/InterviewStore";
+
 export default function PT() {
   // 방 정보 가져오기
   const { roomid } = useParams();
@@ -53,49 +56,51 @@ export default function PT() {
   };
 
   // 답변 제출 함수
-  const handleSubmitAnswer = async function (
-    question,
-    answer,
-    pronunciationScore,
-    faceExpressionData
-  ) {
-    await axios
-      .post(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result",
-        {
-          question: question,
-          answer: answer,
-          pronunciationScore: pronunciationScore,
-          happy: faceExpressionData.happy,
-          disgust: faceExpressionData.disgusted,
-          sad: faceExpressionData.sad,
-          surprise: faceExpressionData.surprised,
-          fear: faceExpressionData.fearful,
-          angry: faceExpressionData.angry,
-          neutral: faceExpressionData.neutral,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      )
-      .then((response) => {
-        // 제출 성공
-        faceExpressionData = {
-          angry: 0,
-          disgusted: 0,
-          fearful: 0,
-          happy: 0,
-          sad: 0,
-          surprised: 0,
-          neutral: 0,
-        };
-      })
-      .catch((error) => {
-        // 제출 실패
-      });
-  };
+  const roomType = useInterviewStore((state) => state.roomType);
+  let questions;
+
+  if (roomType === "PRESENTATION") {
+    questions = useInterviewStore((state) => state.PTQuestions);
+  } else {
+    questions = useInterviewStore((state) => state.personalityQuestions);
+  }
+
+  const handleSubmitAnswer = async function (question, answer, faceExpressionData, pronunciationScore) {
+    await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
+      question: question,
+      answer: answer,
+      pronunciationScore: pronunciationScore,
+      happy: faceExpressionData.happy,
+      disgust: faceExpressionData.disgusted,
+      sad: faceExpressionData.sad,
+      surprise: faceExpressionData.surprised,
+      fear: faceExpressionData.fearful,
+      angry: faceExpressionData.angry,
+      neutral: faceExpressionData.neutral,
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      }
+    })
+    .then((response) => {
+      // 제출 성공
+      faceExpressionData = {
+        angry: 0,
+        disgusted: 0,
+        fearful: 0,
+        happy: 0,
+        sad: 0,
+        surprised: 0,
+        neutral: 0,
+      }
+
+      
+    })
+    .catch((error) => {
+      // 제출 실패
+    });
+  }
+
 
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
@@ -238,6 +243,8 @@ export default function PT() {
     }
   }, [joinRoomTrigger]);
 
+  // 음성 인식 라이브러리와 변수
+
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
 
@@ -248,14 +255,14 @@ export default function PT() {
       window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
+    recognitionRef.current.interimResults = false;
     recognitionRef.current.lang = "ko-KR";
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
       console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
-      setTranscript(transcript);
+      setTranscript(prevTranscript => prevTranscript + transcript);
     };
 
     recognitionRef.current.onerror = (event) => {
@@ -278,6 +285,16 @@ export default function PT() {
     setIsListening(false);
     recognitionRef.current.stop();
   }, []);
+
+
+  let STTTrigger = 1;
+  useEffect(() => {
+    if (STTTrigger === 1) {
+      STTTrigger = 0;
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  }, [STTTrigger]);
 
   // 타이머 상태 및 Ref 추가
   const [seconds, setSeconds] = useState(600);
@@ -336,6 +353,7 @@ export default function PT() {
   //   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}:${ms < 10 ? "0" : ""}${ms}`;
   // };
 
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div
@@ -377,6 +395,10 @@ export default function PT() {
                   isListening={isListening}
                   startListening={startListening}
                   stopListening={stopListening}
+                  questions={questions}
+                  answer={transcript}
+                  faceExpressionData={faceExpressionData}
+                  handleSubmitAnswer={handleSubmitAnswer}
                 />
               );
             } else {
@@ -390,6 +412,10 @@ export default function PT() {
                   isListening={isListening}
                   startListening={startListening}
                   stopListening={stopListening}
+                  questions={questions}
+                  answer={transcript}
+                  faceExpressionData={faceExpressionData}
+                  handleSubmitAnswer={handleSubmitAnswer}
                 />
               );
             }
@@ -408,7 +434,6 @@ export default function PT() {
           </div>
         </div>
       </div>
-      {transcript}
     </div>
   );
 }
