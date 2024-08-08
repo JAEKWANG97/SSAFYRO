@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
 import botImg from "../../../../../public/main/botImg3.png";
+import {
+  startRecording,
+  stopRecording,
+  pronunciationEvaluation,
+  base64String,
+} from "./VoicePronunciationRecord";
 
 const isFullParticipants = false;
 
@@ -19,11 +25,17 @@ export default function TwoParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
 }) {
+  const [faceExpression, setFaceExpression] = useState("neutral");
+  const [isRecording, setIsRecording] = useState(false);
+
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
-  const [faceExpression, setFaceExpression] = useState("neutral");
+  useEffect(() => {
+    startRecording(); // 방에 들어오자마자 녹화 시작
+    setIsRecording(true);
+  }, []);
 
   const faceEmotionIcon = {
     angry: "angry_2274563.png",
@@ -38,6 +50,22 @@ export default function TwoParticipantsVideo({
   // 면접 화면일 경우에만 표정 모델 로드하도록 URL 끝값을 체크
   const url = location.pathname;
   const urlCheck = url.substring(url.length - 3);
+
+  const handleButtonClick = async () => {
+    if (isRecording) {
+      stopRecording(); // 녹음 중지
+      setIsRecording(false);
+      try {
+        const score = await pronunciationEvaluation(base64String);
+        handleSubmitAnswer(questions[0], answer, faceExpressionData, score);
+      } catch (error) {
+        console.error("Error during pronunciation evaluation: ", error);
+      } finally {
+        startRecording(); // 평가가 끝나면 다시 녹음 시작
+        setIsRecording(true);
+      }
+    }
+  };
 
   return (
     <>
@@ -82,8 +110,12 @@ export default function TwoParticipantsVideo({
           >
             {isListening ? '인식 중지' : '인식 시작'}
           </button> */}
-          <button className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${isListening ? 'bg-green-700' : 'bg-green-500'} hover:bg-green-700`}
-            onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
+          <button
+            className={`p-3 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
+              isRecording ? "bg-green-700" : "bg-green-500"
+            } hover:bg-green-700`}
+            // onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
+            onClick={handleButtonClick}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
