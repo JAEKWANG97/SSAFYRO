@@ -32,6 +32,9 @@ import useAuthStore from "../../../stores/AuthStore";
 // 룸 컨트롤 모듈
 // import { turnChange } from "./components/InterviewRules";
 
+// 상태 관리 모듈
+import useInterviewStore from "../../../stores/InterviewStore";
+
 export default function PT() {
   // 방 정보 가져오기
   const { roomid } = useParams();
