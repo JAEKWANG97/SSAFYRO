@@ -41,6 +41,8 @@ export default function WaitRoom() {
   const isInitialMount = useRef(true);
 
   const { setRoomType } = useInterviewStore();
+  // WebSocket client 추가
+  const interviewClient = useRef(null)
 
   useEffect(() => {
     // 방 정보 가져오기
@@ -104,6 +106,7 @@ export default function WaitRoom() {
     if (isInitialMount.current) {
       fetchRoomDetails();
       isInitialMount.current = false;
+      initializeWebSocket()
     }
 
     return () => {
@@ -112,6 +115,29 @@ export default function WaitRoom() {
       }
     };
   }, []);
+
+  // 웹소켓 초기화 및 메시지 수신 처리
+  function initializeWebSocket() {
+    interviewClient.current = new WebSocket('ws://localhost:8080/ssafyro-chat')
+    interviewClient.current.onmessage = (message) => {
+      const parsedMessage = JSON.parse(message.data)
+      if (parsedMessage.nowStage === 'FIRST') {
+        startInterviewHandler()
+      }
+    }
+  }
+
+  // 면접 시작 메시지 전송
+  function sendInterviewStartMessage() {
+    if (interviewClient.current) {
+      interviewClient.current.publish({
+        destination: `/interview/turn/${roomid}`,
+        body: JSON.stringify({
+          nowStage: 'FIRST'
+        })
+      })
+    }
+  }
 
   // 방 나가기
   function navigateHandler() {
@@ -421,7 +447,7 @@ export default function WaitRoom() {
                 <Button
                   text="면접 시작"
                   type="WAITINGROOMSTART"
-                  onClick={startInterviewHandler}
+                  onClick={sendInterviewStartMessage} // 면접 시작 메시지 전달
                 />
               </div>
             </div>
