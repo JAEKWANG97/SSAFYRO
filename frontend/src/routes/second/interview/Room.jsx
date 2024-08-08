@@ -34,15 +34,23 @@ export default function WaitRoom() {
   const [messages, setMessages] = useState([]);
 
   // zustand store의 setUserList 사용
-  const { setUserList } = useRoomStore()
+  const { setUserList } = useRoomStore();
   const isInitialMount = useRef(true);
 
   useEffect(() => {
     // 방 정보 가져오기
     const fetchRoomDetails = async () => {
       try {
+        const token = localStorage.getItem("Token");
+        console.log("Retrieved Token: ", token);
+
         const response = await axios.get(
-          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`
+          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const roomData = response.data.response;
 
@@ -57,24 +65,25 @@ export default function WaitRoom() {
             { roomId: roomid },
             {
               headers: {
-                Authorization: `Bearer ${localStorage.getItem("Token")}`,
-              }
+                Authorization: `Bearer ${token}`,
+              },
             }
           );
 
           // 다시 방 정보 가져오기
           const updatedResponse = await axios.get(
-            `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`
+            `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
+            { headers: { Authorization: `Bearer ${token}` } }
           );
           const updatedRoomData = updatedResponse.data.response;
           setWaitRoom(updatedRoomData);
           // zustand store에 userList 저장
-          setUserList(updatedRoomData.userList)
-          console.log("참여자 정보: ", updatedRoomData.userList)
+          setUserList(updatedRoomData.userList);
+          console.log("참여자 정보: ", updatedRoomData.userList);
         } else {
           setWaitRoom(roomData);
-          setUserList(roomData.userList)
-          console.log("참여자 정보: ", roomData.userList)
+          setUserList(roomData.userList);
+          console.log("참여자 정보: ", roomData.userList);
         }
       } catch (error) {
         console.error(error);
@@ -117,15 +126,21 @@ export default function WaitRoom() {
 
   // User Token 가져오기
   const token = localStorage.getItem("Token");
+  console.log("Stored Token : ", token);
   async function leaveRoom() {
     if (waitRoom) {
       try {
-        await axios.post(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`, {
-          roomId: roomid,
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-        }});
+        await axios.post(
+          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+          {
+            roomId: roomid,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log("Successfully left the room"); // 나가기 성공 로그
       } catch (error) {
         console.error("히히 못가:", error);
@@ -140,7 +155,7 @@ export default function WaitRoom() {
         updatedRoom.userList.splice(participantIndex, 1);
         setWaitRoom(updatedRoom);
         // zustand store 업데이트
-        setUserList(updatedRoom.userList)
+        setUserList(updatedRoom.userList);
       }
     }
   }
@@ -265,6 +280,22 @@ export default function WaitRoom() {
 
   if (!waitRoom) return <div>로딩 중 ...</div>;
 
+  // 트랙을 그룹화하여 참가자별로 오디오 및 비디오 트랙을 함께 렌더링
+  const groupedTracks = remoteTracks.reduce((acc, track) => {
+    const participant = track.participantIdentity;
+    if (!acc[participant]) {
+      acc[participant] = { audio: null, video: null };
+    }
+    if (track.trackPublication.kind === "video") {
+      acc[participant].video = track;
+    } else if (track.trackPublication.kind === "audio") {
+      acc[participant].audio = track;
+    }
+    return acc;
+  }, {});
+
+  const emptyDivs = Array(2 - Object.keys(groupedTracks).length).fill(null);
+
   return (
     <div className="flex flex-col justify-center items-center">
       {/* PreventRefresh 컴포넌트를 추가하여 새로고침 방지 기능 활성화 */}
@@ -291,31 +322,48 @@ export default function WaitRoom() {
           <div className="flex h-[95%] rounded-xl mt-4 bg-gray-50">
             <div className="w-[70%] flex flex-col p-4">
               <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
-                {localTrack && (
-                  <div>
-                    <VideoComponent
-                      track={localTrack}
-                      participantIdentity={userInfo.userName}
-                      local={true}
-                    />
-                  </div>
-                )}
-                {remoteTracks.map((remoteTrack) =>
-                  remoteTrack.trackPublication.kind === "video" ? (
-                    <div>
+                <div className="w-[32%] h-[90%] rounded-lg flex flex-col items-center justify-center">
+                  {localTrack && (
+                    <div className="w-full h-full">
                       <VideoComponent
-                        key={remoteTrack.trackPublication.trackSid}
-                        track={remoteTrack.trackPublication.videoTrack}
-                        participantIdentity={remoteTrack.participantIdentity}
+                        track={localTrack}
+                        participantIdentity={userInfo.userName}
+                        local={true}
                       />
                     </div>
-                  ) : (
-                    <AudioComponent
-                      key={remoteTrack.trackPublication.trackSid}
-                      track={remoteTrack.trackPublication.audioTrack}
-                    />
-                  )
-                )}
+                  )}
+                </div>
+                {Object.entries(groupedTracks).map(([participant, tracks]) => (
+                  <div
+                    key={participant}
+                    className="w-[32%] h-[90%] rounded-lg flex flex-col items-center justify-center"
+                  >
+                    {tracks.video && (
+                      <VideoComponent
+                        // key={remoteTrack.trackPublication.trackSid}
+                        track={tracks.video.trackPublication.videoTrack}
+                        participantIdentity={participant}
+                        local={false}
+                      />
+                    )}
+                    {tracks.audio && (
+                      <AudioComponent
+                        track={tracks.audio.trackPublication.audioTrack}
+                      />
+                    )}
+                  </div>
+                ))}
+                {/* 참가자가 없을 때 빈 div를 렌더링 */}
+                {emptyDivs.map((_, index) => (
+                  <div
+                    key={index}
+                    className="w-[32%] h-[90%] bg-gray-200 rounded-2xl flex flex-col items-center justify-center"
+                  >
+                    <div className="flex items-center justify-center h-full text-gray-400">
+                      No participant
+                    </div>
+                  </div>
+                ))}
                 {/* {room.userList.map((participant, index) => (
                   <div
                     key={index}
