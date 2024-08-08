@@ -55,11 +55,12 @@ export default function WaitRoom() {
               Authorization: `Bearer ${token}`
             }
           }
-        )
-        .then((res) => {
-          setRoomType(res.data.response.type);
-        });
+        );
+        // .then((res) => {
+        //   setRoomType(res.data.response.type);
+        // });
 
+        setRoomType(response.data.response.type);
         const roomData = response.data.response;
 
         const isUserAlreadyInRoom = roomData.userList.some((participant) => {
