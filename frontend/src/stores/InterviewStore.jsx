@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
 const useInterviewStore = create((set) => ({
+  roomType: "PRESENTATION",
+  setRoomType: (type) => set({roomType: type}),
+  
   PTQuestions: [],
   setPTQuestions: (questions) => set({PTQuestions: questions}),
 

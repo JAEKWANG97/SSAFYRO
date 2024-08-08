@@ -27,6 +27,9 @@ import {
 import AudioComponent from "./components/AudioComponent";
 import VideoComponent from "./components/VideoComponent";
 
+// interviewStore 불러오기
+import useInterviewStore from "../../../stores/InterviewStore";
+
 export default function WaitRoom() {
   const { roomid } = useParams();
   const navigate = useNavigate();
@@ -37,13 +40,18 @@ export default function WaitRoom() {
   const { setUserList } = useRoomStore()
   const isInitialMount = useRef(true);
 
+  const { setRoomType } = useInterviewStore();
+
   useEffect(() => {
     // 방 정보 가져오기
     const fetchRoomDetails = async () => {
       try {
         const response = await axios.get(
           `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`
-        );
+        )
+        .then((res) => {
+          setRoomType(res.data.response.type);
+        });
         const roomData = response.data.response;
 
         const isUserAlreadyInRoom = roomData.userList.some((participant) => {
