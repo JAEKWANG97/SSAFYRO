@@ -40,7 +40,7 @@ public class ChatGptResponseGenerator {
 
     public String generateNewEssay(String question, String content) {
         HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createFeedbackPrompt(question, content), 1000),
+                new Request(createEssayReviewPrompt(question, content), 1000),
                 setHeaders()
         );
 
@@ -88,9 +88,20 @@ public class ChatGptResponseGenerator {
     }
 
     private String createEssayReviewPrompt(String question, String content) {
-        return "답변은 md 형식이 아닌 text로만, 질문에 대한 에세이가 적절한지 판단하고 첨삭해줘.\n"
+        return "질문에 대한 에세이를 첨삭해주고 다시 작성해줘.\n"
                 + "질문: " + question + "\n"
-                + "에세이: " + content;
+                + "에메이: " + content + "\n"
+                + "나에게 줄 답변으로 해당 답변 양식만을 채워줘 content에는 해당 에세이 첨삭하는데 문장수 동일하게 만들어주고 changed에는 무엇이 바뀌었는지 요약, totalfeedback에서는 전체적인 피드백만 알려줘 구분자로 %%% 써주고\n"
+                + "\n"
+                + "newcontent:\n"
+                + "\n"
+                + "%%%\n"
+                + "\n"
+                + "changed:\n"
+                + "\n"
+                + "%%%\n"
+                + "\n"
+                + "totalfeedback:";
     }
 
     private String getFeedback(HttpEntity<Request> request) {
