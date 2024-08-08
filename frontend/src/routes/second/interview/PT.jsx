@@ -55,6 +55,15 @@ export default function PT() {
   };
 
   // 답변 제출 함수
+  const roomType = useInterviewStore((state) => state.roomType);
+  let questions;
+
+  if (roomType === "PRESENTATION") {
+    questions = useInterviewStore((state) => state.PTQuestions);
+  } else {
+    questions = useInterviewStore((state) => state.personalityQuestions);
+  }
+
   const handleSubmitAnswer = async function (question, answer, pronunciationScore, faceExpressionData) {
     await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
       question: question,
