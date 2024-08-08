@@ -64,7 +64,7 @@ export default function PT() {
     questions = useInterviewStore((state) => state.personalityQuestions);
   }
 
-  const handleSubmitAnswer = async function (question, answer, pronunciationScore, faceExpressionData) {
+  const handleSubmitAnswer = async function (question, answer, faceExpressionData, pronunciationScore) {
     await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
       question: question,
       answer: answer,

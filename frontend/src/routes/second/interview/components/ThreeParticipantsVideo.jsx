@@ -71,7 +71,7 @@ export default function ThreeParticipantsVideo({
             </svg>
           </button>
           <button className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${isListening ? 'bg-green-700' : 'bg-green-500'} hover:bg-green-700`}
-            onClick={isListening ? stopListening : startListening}
+            onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
