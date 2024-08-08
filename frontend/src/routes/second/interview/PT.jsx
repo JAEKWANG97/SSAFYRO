@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ssafyLogo from "../../../../public/SSAFYRO.png";
-import botIcon from "../../../../public/main/botIcon.jpg";
+import botIcon from "../../../../public/main/botImg.jpg";
 import TwoParticipantsVideo from "./components/TwoParticipantsVideo";
 import ThreeParticipantsVideo from "./components/ThreeParticipantsVideo";
 import useRoomStore from "../../../stores/useRoomStore";
+import axios from "axios";
 
 // OpenVidu-liveKit import
 import {
@@ -99,6 +100,7 @@ export default function PT() {
       // 제출 실패
     });
   }
+
 
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
@@ -284,6 +286,7 @@ export default function PT() {
     recognitionRef.current.stop();
   }, []);
 
+
   let STTTrigger = 1;
   useEffect(() => {
     if (STTTrigger === 1) {
@@ -292,6 +295,64 @@ export default function PT() {
       recognitionRef.current.start();
     }
   }, [STTTrigger]);
+
+  // 타이머 상태 및 Ref 추가
+  const [seconds, setSeconds] = useState(600);
+  const timerRef = useRef();
+
+  // 타이머 시작 및 종료 처리
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setSeconds((prevSeconds) => prevSeconds - 1);
+    }, 1000);
+
+    return () => clearInterval(timerRef.current); // 컴포넌트 언마운트 시 타이머 클리어
+  }, []);
+
+  useEffect(() => {
+    if (seconds <= 0) {
+      clearInterval(timerRef.current);
+      // handleEndInterview()
+    }
+  }, [seconds]);
+
+  // 시간 형식 변환 함수
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes < 10 ? "0" : ""}${minutes}:${
+      remainingSeconds < 10 ? "0" : ""
+    }${remainingSeconds}`;
+  };
+
+  // // 타이머 상태 및 Ref 추가
+  // const [milliseconds, setMilliseconds] = useState(600000); // 10분 = 600,000밀리초
+  // const timerRef = useRef();
+
+  // // 타이머 시작 및 종료 처리
+  // useEffect(() => {
+  //   timerRef.current = setInterval(() => {
+  //     setMilliseconds((prevMilliseconds) => prevMilliseconds - 10);
+  //   }, 10);
+
+  //   return () => clearInterval(timerRef.current); // 컴포넌트 언마운트 시 타이머를 클리어
+  // }, []);
+
+  // useEffect(() => {
+  //   if (milliseconds <= 0) {
+  //     clearInterval(timerRef.current); // 시간이 0이 되면 타이머를 멈춤
+  //     handleEndInterview(); // 시간이 다 되면 인터뷰 종료
+  //   }
+  // }, [milliseconds]);
+
+  // // 시간 형식 변환 함수
+  // const formatTime = (milliseconds) => {
+  //   const minutes = Math.floor(milliseconds / 60000);
+  //   const seconds = Math.floor((milliseconds % 60000) / 1000);
+  //   const ms = Math.floor((milliseconds % 1000) / 10);
+  //   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}:${ms < 10 ? "0" : ""}${ms}`;
+  // };
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -305,15 +366,24 @@ export default function PT() {
             <h1 className="text-xl font-bold">Presentation Interview</h1>
           </div>
           <div className="flex items-center bg-black text-white rounded-full px-8 py-2 w-48 justify-center">
-            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-            <span className="font-bold">01:20:34</span>
+            <div
+              className={`w-2 h-2 rounded-full mr-2 ${
+                seconds <= 60
+                  ? "bg-red-500 animate-ping mr-3"
+                  : seconds <= 180
+                  ? "bg-yellow-500"
+                  : "bg-green-500"
+              }`}
+            ></div>
+            <span className="font-bold">{formatTime(seconds)}</span>
+            {/* <span className="font-bold">{formatTime(milliseconds)}</span> */}
           </div>
         </div>
         {/* 변경해야 할곳 1 */}
         <div className="flex" style={{ height: "400px" }}>
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
-            console.log("remoteTracks: ", remoteTracks)
+            console.log("remoteTracks: ", remoteTracks);
             if (remoteTracks.length <= 2) {
               console.log("두명 전용 방으로 이동");
               return (
@@ -351,15 +421,17 @@ export default function PT() {
             }
           })()}
         </div>
-        <div className="bg-gray-200 p-4 rounded-lg mb-4 mt-5 h-[170px]">
-          <img
-            src={botIcon}
-            alt="botIcon"
-            className="w-[50px] h-[50px] rounded-full"
-          />
-          <p className="mt-4">
-            안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!
-          </p>
+        <div className="bg-gray-200 p-4 rounded-lg mb-4 mt-5 h-[170px] flex items-center">
+          <div className="flex items-center">
+            <img
+              src={botIcon}
+              alt="botIcon"
+              className="w-[50px] h-[50px] rounded-full bg-blue-500"
+            />
+            <p className="ml-4">
+              안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!
+            </p>
+          </div>
         </div>
       </div>
     </div>

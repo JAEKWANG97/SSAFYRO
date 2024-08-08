@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
 import botImg from "../../../../../public/main/botImg3.png";
@@ -22,12 +22,29 @@ export default function TwoParticipantsVideo({
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
+
+  const [faceExpression, setFaceExpression] = useState("neutral");
+
+  const faceEmotionIcon = {
+    angry: "angry_2274563.png",
+    disgusted: "vomiting_3688154.png",
+    fearful: "dead_3746935.png",
+    happy: "happy_9294644.png",
+    sad: "sadness_7198866.png",
+    surprised: "surprised_3898405.png",
+    neutral: "neutral_3688059.png",
+  };
+
+  // 면접 화면일 경우에만 표정 모델 로드하도록 URL 끝값을 체크
+  const url = location.pathname;
+  const urlCheck = url.substring(url.length - 3);
+
   return (
     <>
       <div className="w-1/2 bg-gray-300 rounded-2xl mr-5 flex justify-center items-end relative">
-        <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">
+        {/* <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">
           You
-        </div>
+        </div> */}
         {localTrack && (
           <div className="w-full h-full">
             <VideoComponent
@@ -35,6 +52,8 @@ export default function TwoParticipantsVideo({
               participantIdentity={participantName}
               local={true}
               isFullParticipants={isFullParticipants}
+              // 표정 상태 변경을 VideoComponent로 전달
+              onFaceExpressionChange={setFaceExpression}
             />
           </div>
         )}
@@ -107,11 +126,14 @@ export default function TwoParticipantsVideo({
             </svg>
           </button>
           <button className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12">
-            {/* <img
-              src={"/emotion/" + faceExpression + ".png"} // 이모티콘 이미지
-              alt="face expression"
-              className="w-full h-full object-contain"
-            /> */}
+            {/* 표정 이모티콘 */}
+            {localTrack && urlCheck === "/pt" && (
+              <img
+                src={`/emotion/${faceEmotionIcon[faceExpression]}`}
+                alt="face expression"
+                className="w-full h-full object-contain"
+              />
+            )}
           </button>
         </div>
       </div>
