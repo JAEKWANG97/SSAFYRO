@@ -7,7 +7,6 @@ import Button from "./../../components/Button";
 import EssayCorrectionsCarousel from "./EssayCorrectionsCarousel";
 import Swal from "sweetalert2";
 import axios from "axios";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -235,7 +234,7 @@ export default function Essay() {
       <FirstdNav />
       <div
         className={`container mx-auto p-5 max-w-7xl bg-white rounded-lg shadow-md mt-10 mb-20 transition-all duration-300 ease-in-out ${
-          showCorrection ? "w-[950px] h-[1200px]" : "w-[800px] h-[800px]"
+          showCorrection ? "w-[950px] h-[950px]" : "w-[800px] h-[900px]"
         }`}
         style={{
           boxShadow:
@@ -331,7 +330,7 @@ export default function Essay() {
                   spellCheck="false"
                   autoCorrect="off"
                   autoComplete="off"
-                  style={{ lineHeight: 1.8, height: "25rem" }}
+                  style={{ lineHeight: 1.8, height: "38rem" }}
                   maxLength={600}
                   value={essayContent}
                   onChange={handleEssayContent}
@@ -342,22 +341,42 @@ export default function Essay() {
           </div>
 
           {showCorrection && (
-            <div
-              ref={correctionRef}
-              className="block p-4 w-[420px] text-sm text-gray-900 rounded-lg bg-[#D6EDF9] overflow-auto"
-              style={{ lineHeight: 1.8, height: "32rem" }}
-            >
-              <p className="font-bold text-lg pb-5 scrollbar-hide">
-                에세이 첨삭 내용
-              </p>
-              {essayReview.split(/(?<=[.!?])\s+/).map((sentence, index) => (
-                <span
-                  key={index}
-                  className={hoveredIndex === index ? "bg-blue-200" : ""}
-                >
-                  {sentence}{" "}
-                </span>
-              ))}
+            <div className="flex flex-col gap-4">
+              <div
+                className="block p-4 w-[420px] text-sm text-gray-900 rounded-lg overflow-hidden"
+                style={{
+                  backgroundColor: "rgba(255, 192, 203, 0.2)",
+                  height: "10rem",
+                  wordWrap: "break-word",
+                }}
+              >
+                <p className="font-bold text-lg mb-2">
+                  ✔️ 에세이 수정 내용
+                </p>
+                <EssayCorrectionsCarousel changedContent={changedContent} />
+              </div>
+              <div
+                ref={correctionRef}
+                className="block p-4 w-[420px] text-sm text-gray-900 rounded-lg"
+                style={{
+                  backgroundColor: "rgba(214, 237, 249, 1)",
+                  lineHeight: 1.8,
+                  height: "34rem",
+                  wordWrap: "break-word",
+                }}
+              >
+                <p className="font-bold text-lg pb-5 scrollbar-hide">
+                  📝 에세이 첨삭 내용
+                </p>
+                {essayReview.split(/(?<=[.!?])\s+/).map((sentence, index) => (
+                  <span
+                    key={index}
+                    className={hoveredIndex === index ? "bg-blue-200" : ""}
+                  >
+                    {sentence}{" "}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -365,33 +384,8 @@ export default function Essay() {
         {showCorrection && (
           <>
             <div className="flex gap-4">
-              <div
-                className="block p-4 w-full text-sm text-gray-900 rounded-lg mt-4 overflow-auto"
-                style={{
-                  backgroundColor: "rgba(231, 226, 253, 0.5)",
-                  height: "20rem",
-                }}
-              >
-                <p className="font-bold text-lg mb-2 pb-5">📃 에세이 피드백</p>
-                <p
-                  className="text-base scrollbar-hide"
-                  style={{ lineHeight: 1.8 }}
-                >
-                  {totalFeedback}
-                </p>
-              </div>
-              <div
-                className="block p-4 w-full text-sm text-gray-900 rounded-lg mt-4 overflow-auto"
-                style={{
-                  backgroundColor: "rgba(255, 239, 213, 0.5)",
-                  height: "20rem",
-                }}
-              >
-                <p className="font-bold text-lg mb-2 pb-5">
-                  ✏️ 에세이 수정 내용
-                </p>
-                <EssayCorrectionsCarousel changedContent={changedContent} />
-              </div>
+              
+              
             </div>
           </>
         )}
