@@ -325,6 +325,8 @@ export default function PT() {
                   isListening={isListening}
                   startListening={startListening}
                   stopListening={stopListening}
+                  questions={questions}
+                  answer={transcript}
                 />
               );
             } else {
@@ -338,6 +340,8 @@ export default function PT() {
                   isListening={isListening}
                   startListening={startListening}
                   stopListening={stopListening}
+                  questions={questions}
+                  answer={transcript}
                 />
               );
             }
