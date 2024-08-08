@@ -2,9 +2,9 @@ package com.ssafy.ssafyro.api.service.interviewresult.response;
 
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocument;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class InterviewResultsResponse {
 
     private final List<InterviewResultInfo> interviewResultInfos;
