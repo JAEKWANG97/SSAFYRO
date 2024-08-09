@@ -73,9 +73,9 @@ export default function PTReady() {
   // 테스트용 더미 데이터
 
   const initData = {
-    title: "Test Title",
-    content: "Test Content",
-    question: ["Question 1", "Question 2"],
+    title: "로딩 중입니다...",
+    content: "현재 질문 정보를 불러오는 중입니다. 잠시만 기다려주세요.",
+    question: ["", ""],
   };
 
   const dummyData = {
