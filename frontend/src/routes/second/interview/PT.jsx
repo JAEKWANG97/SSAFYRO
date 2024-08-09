@@ -6,6 +6,7 @@ import TwoParticipantsVideo from "./components/TwoParticipantsVideo";
 import ThreeParticipantsVideo from "./components/ThreeParticipantsVideo";
 import useRoomStore from "../../../stores/useRoomStore";
 import axios from "axios";
+import { Client } from '@stomp/stompjs'
 
 // OpenVidu-liveKit import
 import {
@@ -51,8 +52,11 @@ export default function PT() {
     navigate("/second/interview");
   };
 
-  const userList = useRoomStore((state) => state.userList);
-  const userTurn = useRoomStore((state) => state.userTurn);
+  const userList = useRoomStore((state) => state.userList)
+  const userTurn = useRoomStore((state) => state.userTurn)
+
+  console.log("Current userList: ", userList)
+  console.log("Current userTurn: ", userTurn)
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
       state: {targetUser: userList[userTurn]}
@@ -192,6 +196,9 @@ export default function PT() {
   );
   const [roomName, setRoomName] = useState(roomid);
 
+  // STOMP 클라이언트 상태
+  const interviewClient = useRef(null)
+
   const joinRoom = async function () {
     const room = new Room(); // Initialize a now Room object
     setRoom(room);
@@ -302,6 +309,34 @@ export default function PT() {
       recognitionRef.current.start();
     }
   }, [STTTrigger]);
+
+  // STOMP 클라이언트 초기화 및 메시지 구독
+  useEffect(() => {
+    const client = new Client({
+      brokerURL: `ws://i11c201.p.ssafy.io:9999/ssafyro-chat`,
+      onConnect: () => {
+        console.log("STOMP client connected")
+        client.subscribe(`/topic/interview/${roomid}`, (message) => {
+          const parsedMessage = JSON.parse(message.body)
+          if (parsedMessage.nowStage === "FIRST") {
+            startTimer()
+          }
+        })
+      },
+      onDisconnect: () => {
+        console.log("STOMP Client disconnected")
+      }
+    })
+
+    client.activate()
+    interviewClient.current = client
+
+    return () => {
+      if (interviewClient.current) {
+        interviewClient.current.deactivate()
+      }
+    }
+  }, [roomid])
 
   // 타이머 상태 및 Ref 추가
   const [seconds, setSeconds] = useState(600);
