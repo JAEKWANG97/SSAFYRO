@@ -84,7 +84,7 @@ export default function PT() {
     })
     .then((response) => {
       // 제출 성공
-      console.log("제출되었습니다.", response.data);
+      // console.log("제출되었습니다.", response.data);
       faceExpressionData = {
         angry: 0,
         disgusted: 0,
