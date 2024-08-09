@@ -6,5 +6,5 @@ public interface InterviewResultDocumentOperationRepository {
 
     List<InterviewResultDocument> findBy(Long userId);
 
-    List<InterviewResultDocument> findBy(List<String> tags);
+    List<InterviewResultDocument> findBestInterviewResultBy(List<String> tags, Long userId);
 }

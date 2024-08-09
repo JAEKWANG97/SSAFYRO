@@ -32,6 +32,11 @@ include::api/interview/interview-article.adoc[]
 include::api/interview/interview-question-answer-save.adoc[]
 include::api/interview/interview-finish.adoc[]
 
+[[interview-result-API]]
+== 면접 결과 API
+
+include::api/interviewresult/get-best-interview-result.adoc[]
+
 [[report-API]]
 == 면접 레포트 API
 

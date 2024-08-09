@@ -33,8 +33,9 @@ public class InterviewResultDocumentOperationRepositoryImpl implements Interview
     }
 
     @Override
-    public List<InterviewResultDocument> findBy(List<String> tags) {
-        Query query = new CriteriaQuery(whereQuestionTagsIn(tags))
+    public List<InterviewResultDocument> findBestInterviewResultBy(List<String> tags, Long userId) {
+        Query query = new CriteriaQuery(whereQuestionTagsInAndUserIdIsNot(tags, userId))
+                .addSort(Sort.by(DESC, "_score"))
                 .addSort(sortByEvaluationScoreDesc())
                 .setPageable(ofSize(5));
 
@@ -47,12 +48,20 @@ public class InterviewResultDocumentOperationRepositoryImpl implements Interview
         return where("userId").is(userId);
     }
 
-    private Criteria whereQuestionTagsIn(List<String> tags) {
-        return where("questionTags").in(tags);
-    }
-
     private Sort sortByEvaluationScoreAsc() {
         return Sort.by(ASC, "evaluationScore");
+    }
+
+    private Criteria whereQuestionTagsInAndUserIdIsNot(List<String> tags, Long userId) {
+        return whereQuestionTagsIn(tags).and(whereUserIdIsNot(userId));
+    }
+
+    private Criteria whereUserIdIsNot(Long userId) {
+        return where("userId").not().is(userId);
+    }
+
+    private Criteria whereQuestionTagsIn(List<String> tags) {
+        return where("questionTags").in(tags);
     }
 
     private Sort sortByEvaluationScoreDesc() {
