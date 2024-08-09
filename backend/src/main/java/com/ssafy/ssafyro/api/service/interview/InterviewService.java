@@ -7,6 +7,7 @@ import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.QnAResultCreateResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
+import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.room.Stage;
@@ -16,6 +17,7 @@ import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
 import com.ssafy.ssafyro.error.interview.InterviewStageOutOfException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,14 +57,15 @@ public class InterviewService {
     }
 
     public ArticleResponse getArticle(String roomId) {
-        AiArticle article = chatGPTFeedbackFactory.generateArticle();
-
-        articleRepository.save(article.toEntity());
+        Article article = articleRepository.save(
+                chatGPTFeedbackFactory.generateArticle().toEntity()
+        );
 
         return new ArticleResponse(
-                article.title(),
-                article.content(),
-                article.questions()
+                article.getId(),
+                article.getTitle(),
+                article.getContent(),
+                List.of(article.getQuestion1(), article.getQuestion2())
         );
     }
 
