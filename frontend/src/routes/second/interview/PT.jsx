@@ -77,7 +77,7 @@ export default function PT() {
     await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
       question: question,
       answer: answer,
-      pronunciationScore: pronunciationScore,
+      pronunciationScore: parseInt(pronunciationScore),
       happy: faceExpressionData.happy,
       disgust: faceExpressionData.disgusted,
       sad: faceExpressionData.sad,
@@ -87,11 +87,13 @@ export default function PT() {
       neutral: faceExpressionData.neutral,
     }, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${localStorage.getItem("Token")}`,
       }
     })
     .then((response) => {
       // 제출 성공
+      // console.log("제출되었습니다.", response.data);
+      setQuestionCount((prev) => prev + 1);
       faceExpressionData = {
         angry: 0,
         disgusted: 0,
@@ -365,34 +367,8 @@ export default function PT() {
     }${remainingSeconds}`;
   };
 
-  // // 타이머 상태 및 Ref 추가
-  // const [milliseconds, setMilliseconds] = useState(600000); // 10분 = 600,000밀리초
-  // const timerRef = useRef();
-
-  // // 타이머 시작 및 종료 처리
-  // useEffect(() => {
-  //   timerRef.current = setInterval(() => {
-  //     setMilliseconds((prevMilliseconds) => prevMilliseconds - 10);
-  //   }, 10);
-
-  //   return () => clearInterval(timerRef.current); // 컴포넌트 언마운트 시 타이머를 클리어
-  // }, []);
-
-  // useEffect(() => {
-  //   if (milliseconds <= 0) {
-  //     clearInterval(timerRef.current); // 시간이 0이 되면 타이머를 멈춤
-  //     handleEndInterview(); // 시간이 다 되면 인터뷰 종료
-  //   }
-  // }, [milliseconds]);
-
-  // // 시간 형식 변환 함수
-  // const formatTime = (milliseconds) => {
-  //   const minutes = Math.floor(milliseconds / 60000);
-  //   const seconds = Math.floor((milliseconds % 60000) / 1000);
-  //   const ms = Math.floor((milliseconds % 1000) / 10);
-  //   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}:${ms < 10 ? "0" : ""}${ms}`;
-  // };
-
+  // 면접 컨트롤을 위한 함수와 변수들
+  const [questionCount, setQuestionCount] = useState(0);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -439,6 +415,7 @@ export default function PT() {
                   answer={transcript}
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
+                  handleStartSurvey={handleStartSurvey}
                 />
               );
             } else {
@@ -456,6 +433,7 @@ export default function PT() {
                   answer={transcript}
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
+                  handleStartSurvey={handleStartSurvey}
                 />
               );
             }
@@ -469,7 +447,8 @@ export default function PT() {
               className="w-[50px] h-[50px] rounded-full bg-blue-500"
             />
             <p className="ml-4">
-              안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!
+              안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요! <br />
+              {questionCount < 2 ? questions[questionCount] : "본인 질문이 종료되었습니다."}
             </p>
           </div>
         </div>
