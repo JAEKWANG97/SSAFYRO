@@ -1,6 +1,11 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 export default function Survey() {
+  const roomId = useParams().roomid;
+  const { targetUser } = location.state || {};
+  
   const [answers, setAnswers] = useState({
     q1: '',
     q2: '',
@@ -18,7 +23,24 @@ export default function Survey() {
 
   const handleSubmit = () => {
     console.log('Survey Answers:', answers);
+    console.log(roomId)
     // 여기에 제출 로직을 추가하세요
+    let totalScore = Number(answers.q1) + Number(answers.q2) + Number(answers.q3) + Number(answers.q4) + Number(answers.q5);
+    const requestBody = {
+      roomId: roomId,
+      articleId: null, // articleId가 어디서 오는지 모르겠음. docs 기준으로 articleId 획득처가 없는 것으로 추정됨.
+      userId: targetUser,
+      totalScore: totalScore,
+    }
+
+    axios.post("http://i11c201.p.ssafy.io:9999/api/v1/reports", requestBody)
+    .then((response) => {
+      alert('평가 제출이 완료되었습니다.');
+      Navigate(`/second/interview/${roomId}/pt`); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
 
   return (
@@ -39,7 +61,7 @@ export default function Survey() {
                 <input
                   type="radio"
                   name={item.id}
-                  value={idx + 1}
+                  value={(idx + 1) * 4}
                   checked={answers[item.id] === String(idx + 1)}
                   onChange={handleChange}
                   className="mb-1"
