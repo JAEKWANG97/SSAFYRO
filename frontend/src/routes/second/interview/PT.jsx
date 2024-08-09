@@ -430,7 +430,7 @@ export default function PT() {
               className="w-[50px] h-[50px] rounded-full bg-blue-500"
             />
             <p className="ml-4">
-              안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!
+              안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요!
             </p>
           </div>
         </div>
