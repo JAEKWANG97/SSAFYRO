@@ -62,7 +62,7 @@ export default function Survey() {
                   type="radio"
                   name={item.id}
                   value={(idx + 1) * 4}
-                  checked={answers[item.id] === String(idx + 1)}
+                  // checked={answers[item.id] === String(idx + 1)}
                   onChange={handleChange}
                   className="mb-1"
                 />
