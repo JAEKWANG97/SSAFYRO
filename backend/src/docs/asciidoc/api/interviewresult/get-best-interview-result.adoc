@@ -1,0 +1,11 @@
+[[get-best-interview-result]]
+=== 유저 맞춤 베스트 질문 답변 조회
+
+==== HTTP Request
+
+include::{snippets}/get-best-interview-result/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-best-interview-result/http-response.adoc[]
+include::{snippets}/get-best-interview-result/response-fields.adoc[]
