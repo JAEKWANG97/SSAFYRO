@@ -6,6 +6,7 @@ import com.ssafy.ssafyro.security.Jwt.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -28,7 +29,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String username = getUsername(authentication);
 
         User user = userService.loginOAuth(username);
-        sendToken(response, createJWT(user));
+        sendToken(response, createJWT(user), user);
     }
 
     private String getUsername(Authentication authentication) {
@@ -45,9 +46,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         );
     }
 
-    private void sendToken(HttpServletResponse response, String token) throws IOException {
+    private void sendToken(HttpServletResponse response, String token, User user) throws IOException {
+        String encodedNickname = URLEncoder.encode(user.getNickname(), "UTF-8");
+
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader("content-type", "application/json");
-        response.sendRedirect(FRONT_SERVER_DOMAIN + "/signup?token=" + token);
+        response.sendRedirect(FRONT_SERVER_DOMAIN + "/signup?token=" + token +
+                "&nickname=" + encodedNickname +
+                "&userId=" + user.getId());
     }
 }
