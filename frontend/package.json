@@ -23,6 +23,7 @@
     "regenerator-runtime": "^0.14.1",
     "sweetalert2": "^11.12.3",
     "tw-elements-react": "^1.0.0-alpha-end",
+    "websocket": "^1.0.35",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
