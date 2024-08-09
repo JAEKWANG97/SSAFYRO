@@ -85,7 +85,7 @@ export default function PT() {
     .then((response) => {
       // 제출 성공
       // console.log("제출되었습니다.", response.data);
-      questionCount += 1;
+      setQuestionCount((prev) => prev + 1);
       faceExpressionData = {
         angry: 0,
         disgusted: 0,
@@ -357,7 +357,7 @@ export default function PT() {
   // };
 
   // 면접 컨트롤을 위한 함수와 변수들
-  let questionCount = 0;
+  const [questionCount, setQuestionCount] = useState(0);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -435,7 +435,7 @@ export default function PT() {
             />
             <p className="ml-4">
               안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요! <br />
-              {questionCount < 2 ? questions[questionCount] : ""}
+              {questionCount < 2 ? questions[questionCount] : "본인 질문이 종료되었습니다."}
             </p>
           </div>
         </div>
