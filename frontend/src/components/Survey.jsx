@@ -34,8 +34,7 @@ export default function Survey() {
 
     axios.post("http://i11c201.p.ssafy.io:9999/api/v1/reports", requestBody)
     .then((response) => {
-      alert('평가 제출이 완료되었습니다.');
-      Navigate(`/second/interview/${roomId}/pt`); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
+      alert('평가 제출이 완료되었습니다.'); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
     })
     .catch((error) => {
       console.log(error);
