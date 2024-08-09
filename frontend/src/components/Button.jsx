@@ -29,7 +29,11 @@ export default function Button({ text, type, onClick, isActive }) {
                             ? "w-64 h-30 bg-pink-50 p-4 rounded-lg text-center hover:bg-pink-100 hover:shadow-lg text-base text-pink-600 font-semibold"
                             : type === "PT"
                               ? "w-64 h-30 bg-blue-50 p-4 rounded-lg text-center hover:bg-blue-100 hover:shadow-lg text-base text-blue-600 font-semibold" 
-                                : "text-white";
+                              : type === "MAJOR"
+                                ? "bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded" 
+                                : type === "NONMAJOR"
+                                  ? "bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded" 
+                                    : "text-white";
 
   return (
     <button

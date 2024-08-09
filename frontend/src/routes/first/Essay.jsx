@@ -323,19 +323,20 @@ export default function Essay() {
 
             <div className="pt-6">
               <div className={`flex flex-col`}>
-                <textarea
-                  ref={textareaRef}
-                  className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
-                  placeholder="여기에 작성해주세요."
-                  spellCheck="false"
-                  autoCorrect="off"
-                  autoComplete="off"
-                  style={{ lineHeight: 1.8, height: "38rem" }}
-                  maxLength={600}
-                  value={essayContent}
-                  onChange={handleEssayContent}
-                  onSelect={handleTextareaSelect}
-                ></textarea>
+              <textarea
+                ref={textareaRef}
+                className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:border-black focus:outline-none"
+                placeholder="여기에 작성해주세요."
+                spellCheck="false"
+                autoCorrect="off"
+                autoComplete="off"
+                style={{ lineHeight: 1.8, height: "38rem" }}
+                maxLength={600}
+                value={essayContent}
+                onChange={handleEssayContent}
+                onSelect={handleTextareaSelect}
+              ></textarea>
+                                
               </div>
             </div>
           </div>
