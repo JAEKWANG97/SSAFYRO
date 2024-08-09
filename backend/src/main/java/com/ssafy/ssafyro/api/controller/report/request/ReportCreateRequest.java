@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record ReportCreateRequest(@NotEmpty String roomId,
-                                  @NotNull Long articleId,
+                                  Long articleId,
                                   @NotNull Long userId,
                                   @NotNull Integer totalScore) {
 

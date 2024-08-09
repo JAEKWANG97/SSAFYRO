@@ -119,14 +119,16 @@ public class RoomService {
     }
 
     private boolean canEnterRoom(String roomId, Set<String> remainRooms) {
-        RoomRedis roomRedis = getRoomRedisBy(roomId);
+        return roomRedisRepository.findBy(roomId)
+                .map(roomRedis -> {
+                    if (!roomRedis.isRecruiting()) {
+                        return false;
+                    }
+                    remainRooms.add(roomId);
 
-        if (!roomRedis.isRecruiting()) {
-            return false;
-        }
-        remainRooms.add(roomId);
-
-        return roomRedis.isEnoughCapacity();
+                    return roomRedis.isEnoughCapacity();
+                })
+                .orElse(false);
     }
 
     private void resendRemainRooms(Set<String> remainRooms, String routingKey) {

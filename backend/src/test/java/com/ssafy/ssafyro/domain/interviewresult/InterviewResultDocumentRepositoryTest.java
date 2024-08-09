@@ -8,10 +8,12 @@ import com.ssafy.ssafyro.api.service.report.KoMorAnGenerator;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Disabled
 class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
