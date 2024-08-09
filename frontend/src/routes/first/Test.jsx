@@ -29,7 +29,7 @@ export default function Test() {
         },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
 
         // 데이터를 오름차순으로 정렬하여 설정
         const sortedData = response.data.response.problemInfos.sort((a, b) =>
