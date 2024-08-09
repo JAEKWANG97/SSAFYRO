@@ -4,13 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
 @Disabled
 class InterviewRedisRepositoryTest extends IntegrationTestSupport {
@@ -18,18 +16,9 @@ class InterviewRedisRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private InterviewRedisRepository interviewRedisRepository;
 
-    @Autowired
-    private RedisTemplate<String, InterviewRedis> redisTemplate;
-
     @AfterEach
     void tearDown() {
-        Set<String> keys = redisTemplate.keys("interview:*");
-
-        if (keys == null || keys.isEmpty()) {
-            return;
-        }
-
-        redisTemplate.delete(keys);
+        interviewRedisRepository.deleteAll();
     }
 
     @DisplayName("면접 답변에 대한 질문, 답변, 표정, 발음에 대한 점수를 Json 으로 직렬화한 후 Redis에 List형식으로 저장한다.")
@@ -49,7 +38,7 @@ class InterviewRedisRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    private static InterviewRedis createInterview(Long userId) {
+    private InterviewRedis createInterview(Long userId) {
         return InterviewRedis.builder()
                 .userId(userId)
                 .question("질문" + userId)

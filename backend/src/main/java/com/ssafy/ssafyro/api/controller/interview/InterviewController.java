@@ -49,8 +49,8 @@ public class InterviewController {
     }
 
     @PostMapping("/api/v1/interview/question-answer-result")
-    public ApiResult<QnAResultCreateResponse> saveQnAResult(@AuthenticationPrincipal JwtAuthentication userInfo,
-                                                            @RequestBody QnAResultCreateRequest request) {
+    public ApiResult<QnAResultCreateResponse> createQnAResult(@AuthenticationPrincipal JwtAuthentication userInfo,
+                                                              @RequestBody QnAResultCreateRequest request) {
         return success(
                 interviewService.createQnAResult(userInfo.id(), request.toServiceRequest())
         );

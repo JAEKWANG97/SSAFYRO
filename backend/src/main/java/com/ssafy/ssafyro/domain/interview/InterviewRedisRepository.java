@@ -1,6 +1,7 @@
 package com.ssafy.ssafyro.domain.interview;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,7 +36,8 @@ public class InterviewRedisRepository {
         return new InterviewInfos(redisTemplate.opsForList().range(key, 0, -1));
     }
 
-    public void delete(Long userId) {
-        redisTemplate.delete(INTERVIEW_PREFIX + userId);
+    public void deleteAll() {
+        Set<String> keys = redisTemplate.keys(INTERVIEW_PREFIX + "*");
+        redisTemplate.delete(keys);
     }
 }

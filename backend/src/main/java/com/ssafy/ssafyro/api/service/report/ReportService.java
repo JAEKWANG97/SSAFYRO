@@ -11,6 +11,7 @@ import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewInfos;
 import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
+import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocumentRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
 import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
@@ -35,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ReportService {
 
+    private final KoMorAnGenerator koMorAnGenerator;
     private final ChatGptResponseGenerator chatGptResponseGenerator;
 
     private final RoomRepository roomRepository;
@@ -44,6 +46,7 @@ public class ReportService {
     private final InterviewResultRepository interviewResultRepository;
 
     private final InterviewRedisRepository interviewRedisRepository;
+    private final InterviewResultDocumentRepository interviewResultDocumentRepository;
 
     public ReportsResponse getReports(Long userId, Pageable pageable) {
         User user = getUser(userId);
@@ -53,7 +56,6 @@ public class ReportService {
         );
     }
 
-    //TODO: User 검증 필요 (시큐리티 후에 작업 요망)
     public ReportResponse getReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
@@ -61,7 +63,6 @@ public class ReportService {
         List<InterviewResult> interviewResult = interviewResultRepository.findByReportId(reportId);
 
         if (report.isPresentation()) {
-            //TODO: 기사 저장 완료되면 수정
             Article article = ((PresentationInterviewReport) report).getArticle();
 
             return ReportPresentationResponse.of(
@@ -84,6 +85,10 @@ public class ReportService {
                 interviewInfos.generateInterviewResults(chatGptResponseGenerator, report)
         );
 
+        interviewResultDocumentRepository.saveAll(
+                interviewInfos.generateInterviewResultDocuments(koMorAnGenerator)
+        );
+        
         return ReportCreateResponse.of(report);
     }
 

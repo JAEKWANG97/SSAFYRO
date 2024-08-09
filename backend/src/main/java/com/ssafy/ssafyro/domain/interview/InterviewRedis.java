@@ -13,6 +13,7 @@ public class InterviewRedis {
     private String question;
     private String answer;
     private int pronunciationScore;
+    private int evaluationScore;
     private double happy;
     private double disgust;
     private double sad;
@@ -22,14 +23,23 @@ public class InterviewRedis {
     private double neutral;
 
     @Builder
-    private InterviewRedis(Long userId, String question, String answer,
+    private InterviewRedis(Long userId,
+                           String question,
+                           String answer,
                            int pronunciationScore,
-                           double happy, double disgust, double sad, double surprise,
-                           double fear, double angry, double neutral) {
+                           int evaluationScore,
+                           double happy,
+                           double disgust,
+                           double sad,
+                           double surprise,
+                           double fear,
+                           double angry,
+                           double neutral) {
         this.userId = userId;
         this.question = question;
         this.answer = answer;
         this.pronunciationScore = pronunciationScore;
+        this.evaluationScore = evaluationScore;
         this.happy = happy;
         this.disgust = disgust;
         this.sad = sad;

@@ -4,15 +4,23 @@ import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.tuple;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
+import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
+import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
+import com.ssafy.ssafyro.domain.interview.InterviewRedis;
+import com.ssafy.ssafyro.domain.interview.InterviewRedisRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
+import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocumentRepository;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
 import com.ssafy.ssafyro.domain.report.PersonalityInterviewReport;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
@@ -24,14 +32,17 @@ import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 class ReportServiceTest extends IntegrationTestSupport {
+
+    @MockBean
+    private ChatGptResponseGenerator chatGptResponseGenerator;
 
     @Autowired
     private ReportService reportService;
@@ -46,10 +57,27 @@ class ReportServiceTest extends IntegrationTestSupport {
     private RoomRepository roomRepository;
 
     @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
     private InterviewResultRepository interviewResultRepository;
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private InterviewRedisRepository interviewRedisRepository;
+
+    @Autowired
+    private InterviewResultDocumentRepository interviewResultDocumentRepository;
+
+    @AfterEach
+    void tearDown() {
+        interviewResultRepository.deleteAllInBatch();
+        reportRepository.deleteAllInBatch();
+        roomRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+        articleRepository.deleteAllInBatch();
+        interviewRedisRepository.deleteAll();
+        interviewResultDocumentRepository.deleteAll();
+    }
 
     @DisplayName("유저와 페이지의 정보를 통해 면접 레포트를 조회한다.")
     @Test
@@ -145,14 +173,61 @@ class ReportServiceTest extends IntegrationTestSupport {
         ReportPresentationResponse response = (ReportPresentationResponse) reportService.getReport(report.getId());
 
         //then
-        //TODO: 저장된 기사 내용 테스트하기
-        assertThat(response.getArticle()).isNotNull();
+        assertThat(response.getArticle()).isNotNull()
+                .extracting("title", "content")
+                .containsExactlyInAnyOrder(
+                        article.getTitle(), article.getContent()
+                );
+
         assertThat(response.getReportDetails()).hasSize(3)
                 .extracting("question")
                 .containsExactlyInAnyOrder(
                         interviewResult1.getQuestion(),
                         interviewResult2.getQuestion(),
                         interviewResult3.getQuestion()
+                );
+    }
+
+    @DisplayName("면접을 종료하고 면접 내용에 대한 레포트를 작성한다.")
+    @Test
+    void createReport() {
+        //given
+        User user = createUser();
+        userRepository.save(user);
+
+        Room room = createRoom(PRESENTATION, 1);
+        roomRepository.save(room);
+
+        Article article = createArticle();
+        articleRepository.save(article);
+
+        InterviewRedis interviewRedis1 = createInterview(user.getId(), 1);
+        interviewRedisRepository.save(interviewRedis1);
+
+        InterviewRedis interviewRedis2 = createInterview(user.getId(), 2);
+        interviewRedisRepository.save(interviewRedis2);
+
+        ReportCreateServiceRequest request = new ReportCreateServiceRequest(
+                room.getId(), article.getId(), user.getId(), 100
+        );
+
+        given(chatGptResponseGenerator.generateFeedbackBy(any(String.class), any(String.class)))
+                .willReturn("피드백");
+
+        //when
+        ReportCreateResponse response = reportService.createReport(request);
+        Report report = reportRepository.findById(response.reportId()).get();
+
+        //then
+        assertThat(response).isNotNull()
+                .extracting("userId", "reportId")
+                .containsExactly(user.getId(), report.getId());
+
+        assertThat(interviewResultDocumentRepository.findBy(user.getId())).isNotNull()
+                .extracting("userId", "question", "answer")
+                .containsExactlyInAnyOrder(
+                        tuple(user.getId(), "질문1", "답변1"),
+                        tuple(user.getId(), "질문2", "답변2")
                 );
     }
 
@@ -198,6 +273,22 @@ class ReportServiceTest extends IntegrationTestSupport {
                 .id("roomId" + num)
                 .title("제목")
                 .type(roomType)
+                .build();
+    }
+
+    private InterviewRedis createInterview(Long userId, int number) {
+        return InterviewRedis.builder()
+                .userId(userId)
+                .question("질문" + number)
+                .answer("답변" + number)
+                .pronunciationScore(100)
+                .happy(100)
+                .disgust(0)
+                .sad(0)
+                .surprise(0)
+                .fear(0)
+                .angry(0)
+                .neutral(0)
                 .build();
     }
 
