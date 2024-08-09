@@ -4,5 +4,5 @@ export default {
     theme: {
         extend: {},
     },
-    plugins:  [require("tailwind-scrollbar-hide")],
+    plugins:  [require('flowbite/plugin')],
 }
