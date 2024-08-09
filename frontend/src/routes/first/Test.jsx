@@ -12,7 +12,7 @@ export default function Test() {
   const [allProblems, setAllProblems] = useState([]); // 전체 데이터를 저장할 상태
   const [filteredProblems, setFilteredProblems] = useState([]); // 필터링된 데이터를 저장할 상태
 
-  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
+  const APIURL = 'http://i11c201.p.ssafy.io:9999/api/v1/'; 
 
   const [page, setPage] = useState(1); // 현재 페이지 번호 (1부터 시작)
   const [size] = useState(10); // 페이지당 항목 수
@@ -134,7 +134,7 @@ export default function Test() {
                 </th>
                 <th
                   scope="col"
-                  className="px-2 py-3 text-center overflow-hidden"
+                  className="px-2 py-3 pl-20 text-center overflow-hidden"
                 >
                   정답률
                 </th>
@@ -164,11 +164,11 @@ export default function Test() {
                       {item.title}
                     </a>
                   </td>
-                  <td className="px-2 py-4 text-center text-base">
-                    정답률
+                  <td className="px-2 py-4 pl-20 text-center text-base">
+                    {item.correctRate}%
                   </td>
                   <td className="px-2 py-4 text-center text-base">
-                    추천수
+                  {item.recommendationCount}
                   </td>
                 </tr>
               ))}

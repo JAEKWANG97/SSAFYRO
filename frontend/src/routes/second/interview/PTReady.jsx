@@ -6,6 +6,9 @@ import Button from "./../../../components/Button";
 // import axios
 import axios from "axios";
 
+// import store
+import useInterviewStore from "../../../stores/InterviewStore";
+
 export default function PTReady() {
   const navigate = useNavigate();
   const { roomid } = useParams();
@@ -93,7 +96,8 @@ export default function PTReady() {
   axios
     .get(APIURL + `interview/pt/${roomid}`)
     .then((response) => {
-      setInerviewQuestion(response.data);
+      setInerviewQuestion(response.data.response);
+      useInterviewStore.setPTQuestions(response.data.response.question);
     })
     .catch((error) => {
       console.log(error);
@@ -120,6 +124,8 @@ export default function PTReady() {
         <div className="bg-gray-200 p-6 rounded-lg mb-6">
           <h3 className="text-xl font-bold mb-4">{interviewQuestion.title}</h3>
           <p className="mb-4">{interviewQuestion.question[0]}</p>
+          {interviewQuestion.question.length > 1 && 
+            <p className="mb-4">{interviewQuestion.question[1]}</p>}
           <p className="mb-2">{interviewQuestion.content}</p>
         </div>
         <div className="flex">
