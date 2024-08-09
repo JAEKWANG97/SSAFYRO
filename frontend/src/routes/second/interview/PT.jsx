@@ -69,7 +69,7 @@ export default function PT() {
     await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
       question: question,
       answer: answer,
-      pronunciationScore: pronunciationScore,
+      pronunciationScore: parseInt(pronunciationScore),
       happy: faceExpressionData.happy,
       disgust: faceExpressionData.disgusted,
       sad: faceExpressionData.sad,
@@ -355,6 +355,8 @@ export default function PT() {
   //   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}:${ms < 10 ? "0" : ""}${ms}`;
   // };
 
+  // 면접 컨트롤을 위한 함수와 변수들
+  const [questionNo, setQuestionNo] = useState(0);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -431,7 +433,8 @@ export default function PT() {
               className="w-[50px] h-[50px] rounded-full bg-blue-500"
             />
             <p className="ml-4">
-              안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요!
+              안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요! <br />
+              {questionNo < 2 ? "" : ""}
             </p>
           </div>
         </div>
