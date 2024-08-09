@@ -9,8 +9,6 @@ import java.lang.reflect.Type;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +22,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Disabled("Elasticsearch 문제로 인해 일시적으로 비활성화")
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChatControllerTest {
 
     @LocalServerPort
