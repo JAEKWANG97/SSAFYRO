@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 export default function Survey() {
   const roomId = useParams().roomid;
-  const { targetUser } = location.state || {};
+  const location = useLocation();
+  const { targetUser } = location.state;
   
   const [answers, setAnswers] = useState({
     q1: '',
@@ -22,8 +23,6 @@ export default function Survey() {
   };
 
   const handleSubmit = () => {
-    console.log('Survey Answers:', answers);
-    console.log(roomId)
     // 여기에 제출 로직을 추가하세요
     let totalScore = Number(answers.q1) + Number(answers.q2) + Number(answers.q3) + Number(answers.q4) + Number(answers.q5);
     const requestBody = {
