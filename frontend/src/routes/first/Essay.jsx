@@ -164,7 +164,7 @@ export default function Essay() {
           type: selected === "major" ? "MAJOR" : "NON_MAJOR", // 전공자/비전공자 타입
           generation: 11, // 기수
         },
-      })
+      })         
       .then((res) => {
         setEssayId(res.data.response.id); // 에세이 질문 id
         setEssayQuestion(res.data.response.content); // 에세이 질문 content

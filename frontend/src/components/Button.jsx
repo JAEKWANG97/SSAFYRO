@@ -1,11 +1,12 @@
 export default function Button({ text, type, onClick, isActive }) {
-  const baseClass = "cursor-pointer flex items-center justify-center";
+  const baseClass = "cursor-pointer flex items-center justify-center transition duration-300 ease-in-out";
+
   const typeClass = type === 'GUIDENAV'
     ? `w-30 h-10 rounded-xl px-2 py-2 mx-2 text-base border border-blue-400 font-extrabold ${
         isActive ? 'bg-blue-400 text-white' : 'bg-white text-blue-400 hover:bg-blue-400 hover:text-white'
       }`
     : type === 'INTERVIEWCLOSE'
-      ?  'bg-red-100 text-red-800 text-base font-semibold px-4 py-2 rounded ml-auto'
+      ? 'bg-red-100 text-red-800 text-base font-semibold px-4 py-2 rounded ml-auto'
       : type === 'INTERVIEWSTART'
         ? 'bg-blue-100 text-blue-800 text-base font-semibold px-4 py-2 rounded ml-auto'
         : type === 'ESSAYSAVE'
@@ -24,8 +25,11 @@ export default function Button({ text, type, onClick, isActive }) {
                         ? "w-full max-w-xs bg-white text-gray-800 border border-[#B1B3B6] hover:bg-gray-50 font-semibold rounded-lg text-sm py-3 text-center inline-flex items-center justify-center"
                         : type === "NAVER"
                           ? "w-full max-w-xs bg-[#1EDE00] text-green-800 border-green-300 hover:bg-opacity-70 font-semibold rounded-lg text-sm py-3 text-center inline-flex items-center justify-center"
-                            : "text-white";
-
+                          : type === "PERSONALITY"
+                            ? "w-64 h-30 bg-pink-50 p-4 rounded-lg text-center hover:bg-pink-100 hover:shadow-lg text-base text-pink-600 font-semibold"
+                            : type === "PT"
+                              ? "w-64 h-30 bg-blue-50 p-4 rounded-lg text-center hover:bg-blue-100 hover:shadow-lg text-base text-blue-600 font-semibold" 
+                                : "text-white";
 
   return (
     <button
