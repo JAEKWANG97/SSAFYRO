@@ -2,6 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
+import {
+  startRecording,
+  stopRecording,
+  pronunciationEvaluation,
+  base64String,
+  pronunciationScore
+} from "./VoicePronunciationRecord";
 
 const isFullParticipants = true;
 
@@ -17,12 +24,19 @@ export default function ThreeParticipantsVideo({
   answer,
   faceExpressionData,
   handleSubmitAnswer,
-}) {
+  handleStartSurvey,
+}) {  
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
-
+  
   const [faceExpression, setFaceExpression] = useState("neutral");
+  const [isRecording, setIsRecording] = useState(false);
+
+  useEffect(() => {
+    startRecording(); // 방에 들어오자마자 녹화 시작
+    setIsRecording(true);
+  }, []);
 
   const faceEmotionIcon = {
     angry: "angry_2274563.png",
@@ -51,6 +65,22 @@ export default function ThreeParticipantsVideo({
   const url = location.pathname;
   const urlCheck = url.substring(url.length - 3);
 
+  const handleButtonClick = async () => {
+    if (isRecording) {
+      stopRecording(); // 녹음 중지
+      setIsRecording(false);
+      try {
+        const score = await pronunciationEvaluation(base64String);
+        handleSubmitAnswer(questions[0], answer, faceExpressionData, pronunciationScore);
+      } catch (error) {
+        console.error("Error during pronunciation evaluation: ", error);
+      } finally {
+        startRecording(); // 평가가 끝나면 다시 녹음 시작
+        setIsRecording(true);
+      }
+    }
+  };
+
   return (
     <>
       <div className="w-2/3 bg-gray-300 rounded-2xl mr-2 flex justify-center items-end relative">
@@ -72,7 +102,7 @@ export default function ThreeParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            // onClick={handleStartSurvey}
+            onClick={handleStartSurvey}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +118,7 @@ export default function ThreeParticipantsVideo({
             </svg>
           </button>
           <button className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${isListening ? 'bg-green-700' : 'bg-green-500'} hover:bg-green-700`}
-            onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
+            onClick={handleButtonClick}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
