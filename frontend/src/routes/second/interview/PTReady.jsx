@@ -90,19 +90,32 @@ export default function PTReady() {
 
   // axios 데이터 요청
   const [interviewQuestion, setInerviewQuestion] = useState(initData);
+  const setPTQuestions = (questions) => useInterviewStore.setState({ PTQuestions: questions });
 
-  const APIURL = "http://i11c201.p.ssafy.io:8080/api/v1/";
+  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
-  axios
-    .get(APIURL + `interview/pt/${roomid}`)
-    .then((response) => {
-      setInerviewQuestion(response.data.response);
-      useInterviewStore.setPTQuestions(response.data.response.question);
-    })
-    .catch((error) => {
-      console.log(error);
-      setInerviewQuestion(dummyData);
-    });
+  const getQuestion = function () {
+    axios
+      .get(APIURL + `interview/pt/${roomid}`, {
+        timeout: 300000
+      })
+      .then((response) => {
+        setInerviewQuestion(response.data.response);
+        setPTQuestions(response.data.response.question);
+      })
+      .catch((error) => {
+        console.log(error);
+        setInerviewQuestion(dummyData);
+      });
+  }
+
+  let getQuestionTrigger = 1;
+  useEffect(() => {
+    if (getQuestionTrigger) {
+      getQuestionTrigger = 0;
+      getQuestion();
+    }
+  }, [getQuestionTrigger]);
 
   // axios 데이터 요청 끝
 
