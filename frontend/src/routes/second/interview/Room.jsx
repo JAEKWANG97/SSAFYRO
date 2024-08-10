@@ -412,7 +412,7 @@ export default function WaitRoom() {
                   </div>
                 ))}
               </div>
-              <InterviewTips />
+              <InterviewTips interviewType={waitRoom.type}/>
             </div>
             <div className="w-[30%] flex flex-col justify-between">
               <Chat

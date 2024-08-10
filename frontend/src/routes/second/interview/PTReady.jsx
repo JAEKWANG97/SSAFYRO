@@ -13,6 +13,26 @@ export default function PTReady() {
   const navigate = useNavigate();
   const { roomid } = useParams();
 
+  async function leaveRoom() {
+    const token = localStorage.getItem("Token")
+    try {
+      await axios.post(
+        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+        {
+          roomId: roomid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      console.log("Successfully left the room")
+    } catch (error) {
+      console.error("Error leaving the room: ", error)
+    }
+  }
+
   // 면접 종료 버튼 클릭 시
   const handleEndInterview = async () => {
     const result = await Swal.fire({
@@ -28,6 +48,7 @@ export default function PTReady() {
     });
 
     if (result.isConfirmed) {
+      await leaveRoom(); 
       Swal.fire("면접 종료", "면접이 종료되었습니다.", "success");
       navigate("/second/interview");
     } else if (result.isDismissed) {
