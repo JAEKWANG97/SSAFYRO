@@ -28,7 +28,7 @@ export default function WaitRoom() {
   const navigate = useNavigate();
   const [waitRoom, setWaitRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-  const { setUserList } = useRoomStore(); // zustand store의 setUserList 사용
+  const { userList, setUserList, addUser, removeUser, clearUserList } = useRoomStore(); // zustand store의 setUserList 사용
   const isInitialMount = useRef(true);
   const { setRoomType } = useInterviewStore();
   const interviewClient = useRef(null); // WebSocket client 추가

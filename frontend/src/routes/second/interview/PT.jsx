@@ -180,6 +180,23 @@ export default function PT() {
     // Leave the room by calling 'disconnect' method over the Room object
     await room?.disconnect();
 
+    try {
+      await axios.post(
+        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+        {
+          roomId: roomid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        }
+      )
+      console.log("Successfully left the room")
+    } catch (error) {
+      console.error("Error leaving the room:", error)
+    }
+    
     // Reset the state
     setRoom(undefined);
     setLocalTrack(undefined);
