@@ -325,7 +325,7 @@ export default function Essay() {
               <div className={`flex flex-col`}>
               <textarea
                 ref={textareaRef}
-                className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:border-black focus:outline-none"
+                className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:border-black focus:outline-none focus:ring-0"
                 placeholder="여기에 작성해주세요."
                 spellCheck="false"
                 autoCorrect="off"
@@ -336,6 +336,7 @@ export default function Essay() {
                 onChange={handleEssayContent}
                 onSelect={handleTextareaSelect}
               ></textarea>
+
                                 
               </div>
             </div>

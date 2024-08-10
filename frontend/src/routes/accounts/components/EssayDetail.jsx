@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card } from 'flowbite-react';
+import Button from './../../../components/Button';
 
 export default function EssayDetail() {
   const [essayQuestion, setEssayQuestion] = useState(null);
   const [essayData, setEssayData] = useState(null); // 불러온 에세이 데이터 
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+  const [editedEssayData, setEditedEssayData] = useState(""); // 수정된 에세이 데이터
+  const [essayId, setEssayId] = useState(1);
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/essays";
 
   const mockquestion = '향후 어떤 SW 개발자로 성장하고 싶은지 SW 관련 경험을 토대로 기술하고, SSAFY에 지원하신 동기에 대해서도 작성 바랍니다.';
@@ -17,9 +21,10 @@ export default function EssayDetail() {
     // Token 값을 URL의 파라미터로 전달
     axios
       .get(`${APIURL}/${Token}`)
-      .then((response) => {
-        console.log(response.data);
-        // setEssayQuestion(response.data) // 에세이 질문 저장
+      .then((res) => {
+        console.log(res.data);
+        // setEssayId(res.data) // 에세이 질문 id 저장
+        // setEssayQuestion(res.data) // 에세이 질문 내용 저장
         setEssayData(response.data.content); // 에세이 내용 저장
       })
       .catch((error) => {
@@ -34,22 +39,86 @@ export default function EssayDetail() {
     </span>
   ));
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditedEssayData(essayData || mockdata); // 현재 에세이 데이터를 수정할 데이터로 설정
+                                              // api 연결 후, mockdata 삭제
+  };
+
+  const handleSaveClick = () => {
+    setEssayData(editedEssayData);
+    setIsEditing(false);
+
+    const afterEssay = {
+      essayQuestionId: essayId,
+      content: essayData,
+    };
+
+    // 에세이 저장 요청
+    const Token = localStorage.getItem("Token");
+
+    axios
+      .post(`${APIURL}essays`, afterEssay, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleTextareaChange = (event) => {
+    setEditedEssayData(event.target.value);
+  };
+
   return (
-    // <div className="border-t mt-4 py-10">
-      <div>
-        <p className="text-2xl font-extrabold  pb-1 mb-4 border-gray-400 px-10">
-          {/* 에세이 */}
-        </p>
-        <Card className="mb-5">
-          <div className="w-full border-b-2 border-gray-400 pb-1 flex flex-col items-center gap-2">
-            <span className="font-bold text-gray-900">{formattedQuestion}</span>
-          </div>
-          
-          <div className="w-full">
-            <div className="ml-3 text-gray-700">{mockdata}</div>
-          </div>
-        </Card>
-      </div>
-    // </div>
+    <div>
+      <p className="text-2xl font-extrabold pb-1 mb-4 border-gray-400 px-10">
+        {/* 에세이 */}
+      </p>
+      <Card className="mb-5">
+        <div className="w-full border-b-2 border-gray-400 pb-1 flex flex-col items-center gap-2">
+          <span className="font-bold text-gray-900">{formattedQuestion}</span>
+        </div>
+        
+        <div className="w-full">
+          {isEditing ? (
+            <textarea
+            className="w-full p-2 border border-black rounded-lg outline-none focus:border-black focus:ring-0"
+            rows="10"
+            spellCheck="false"
+            autoCorrect="off"
+            autoComplete="off"
+            style={{ lineHeight: 1.8, height: "25rem", width: "100%", resize: 'none' }}
+            value={editedEssayData}
+            onChange={handleTextareaChange}
+          />
+          ) : (
+            <div 
+              className="ml-3 text-gray-700"
+              style={{ lineHeight: 1.8 }}>
+                {essayData || mockdata}</div>
+          )} 
+          {/* api 연결 후 mockData 삭제 */}
+        </div>
+      </Card>
+      {isEditing ? (
+        <Button
+          type='ESSAYSAVE'
+          text='저장'
+          onClick={handleSaveClick}
+        />
+      ) : (
+        <Button
+          type='ESSAYUPDATE'
+          text='수정'
+          onClick={handleEditClick}
+        />
+      )}
+    </div>
   );
 }
