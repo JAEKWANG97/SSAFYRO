@@ -12,6 +12,7 @@ import Kakao from "./routes/accounts/Kakao.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
 import PersonalityFeedback from "./routes/accounts/PersonalityFeedback.jsx";
 import PtFeedback from "./routes/accounts/PtFeedback.jsx";
+import QuestionFeedback from "./routes/accounts/QuestionFeedback.jsx";
 import Essay from './routes/first/Essay.jsx';
 import Test from './routes/first/Test.jsx';
 import GuidePersonality from "./routes/second/guide/GuidePersonality.jsx";
@@ -93,6 +94,8 @@ const router = createBrowserRouter([
                 element: <PersonalityFeedback />,
               },
               { path: "pt_feedback", element: <PtFeedback /> },
+              { path: "question_feedback", element: <QuestionFeedback /> },
+
             ],
           },
         ],

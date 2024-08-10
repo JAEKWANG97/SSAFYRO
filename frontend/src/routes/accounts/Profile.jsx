@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import useFirstStore from "../../stores/FirstStore";
+import { useNavigate } from "react-router-dom";
 import EssayDetail from './components/EssayDetail';
 import InterviewResult from './components/InterviewResult';
 import UserImg from './../../../public/main/user.jpg';
+import PersonaltyImg from './../../../public/profile/personality.png';
+import PtImg from './../../../public/profile/pt.png';
 import useAuthStore from '../../stores/AuthStore';
 import Button from './../../../src/components/Button';
-import { Card } from 'flowbite-react';
-import happyImg from './../../../public/emotion/happy_9294644.png';
 import {
   TETabs,
   TETabsContent,
@@ -16,29 +15,16 @@ import {
 } from "tw-elements-react";
 
 export default function Profile() {
-  const nav = useNavigate();
-  const isPerson = useAuthStore((state) => state.isPerson);
-  const isPt = useAuthStore((state) => state.isPt);
+  const nav = useNavigate()
   const userInfo = useAuthStore((state) => state.userInfo);
-  const [totalScore, settotalScore] = useState(93);
-
-  const onHandlePT = () => {
-    if (isPt) {
-      nav('pt_feedback');
-    } else {
-      nav('/second/interview');
-    }
-  };
-
-  const onHandlePersonality = () => {
-    if (isPerson) {
-      nav('personality_feedback');
-    } else {
-      nav('/second/interview');
-    }
-  };
-  
   const [fillActive, setFillActive] = useState("tab1");
+  const interviewInfo = [
+    {type: 1, title: '0810', room : 1},
+    {type: 2, title: '0810', room : 2},
+    {type: 1, title: '0810', room : 3},
+    {type: 2, title: '0810', room : 4},
+    {type: 2, title: '0810', room : 5}
+  ]; // 인터뷰 정보를 나타내는 배열 (1은 인성, 2는 PT라고 가정) + 각 인터뷰에 대한 정보를 구분할 수 있는 변수도 포함되어야 함 
   
   const handleFillClick = (value) => {
     if (value === fillActive) {
@@ -66,10 +52,9 @@ export default function Profile() {
                 <div className="flex items-center gap-3 pb-3">
                   <h2 className="text-2xl font-semibold text-center">{`${userInfo.userName}`}</h2>
                   <Button
-                    text = '전공자' // 전공자 or 비전공자 알맞게 버튼 렌더링
+                    text = {userInfo.isMajor ? '전공자' : '비전공자'} // 전공자 or 비전공자 알맞게 버튼 렌더링
                     type ='MAJOR'/>
                 </div>
-                {/* 면접 횟수 각각 카운트해서 렌더링 */}
                 <div className="flex flex-col">
                   <span className="text-sm text-gray-500">인성 모의 면접 N번 </span> 
                   <span className="text-sm text-gray-500">PT 모의 면접 N번</span>
@@ -78,97 +63,30 @@ export default function Profile() {
             </div>
           </div>
 
-          <hr className="borer-t-10 pb-5"/>
-          <div className="pl-4 pb-5">
-            {/* <span className="text-base text-gray-500">모의 면접 결과 한 눈에 보기</span> */}
-          </div>
-          <div className="flex justify-center gap-8">
-          {isPerson ? (<div 
-            className="w-[300px] h-[180px] rounded-xl flex flex-col items-start justify-start p-4"
-            style={{ backgroundColor: "rgba(173, 216, 230, 0.2)" }}>
-            <span className="mb-2 text-gray-500 text-sm">인성면접</span>
-            <div className="flex flex-col items-center justify-center space-y-2 w-full">
-              <div className="flex items-center">
-                <span className="mr-2">점수</span>
-                <span> {totalScore}점</span>
-              </div>
-              <div className="flex items-center">
-                <span className="mr-2">표정</span>
-                <div className="flex space-x-1">
-                  <img 
-                    src={happyImg} 
-                    alt="happy"
-                    style={{ width: '20px', height: '20px' }} 
-                  />
-                  <img 
-                    src={happyImg} 
-                    alt="happy"
-                    style={{ width: '20px', height: '20px' }} 
-                  />                
-                  <img 
-                    src={happyImg} 
-                    alt="happy"
-                    style={{ width: '20px', height: '20px' }} 
-                  />
-                </div> 
-              </div>
-              <div className="flex items-center">
-                <span className="mr-2">발음</span>
-                <div>히스토그램</div>
-              </div>
-            </div>
-          </div>
-          ):(<div 
-            className="w-[300px] h-[180px] rounded-xl flex flex-col items-center justify-center p-4 cursor-pointer"
-            style={{ backgroundColor: "rgba(173, 216, 230, 0.2)" }}
-            onClick={onHandlePersonality}>
-            <span className="text-xl text-gray-500 font-semibold text-center pb-1">인성 모의 면접</span>
-            <span className="text-xl text-gray-500 font-semibold text-center">참여하러 가기 </span>
-          </div>)}
-          
-          {isPt ? (
-            <div 
-              className="w-[300px] h-[180px] rounded-xl flex flex-col items-start justify-start p-4"
-              style={{ backgroundColor: "rgba(173, 216, 230, 0.2)" }}>
-              <span className="mb-2 text-gray-500 text-sm">PT면접</span>
-              <div className="flex flex-col items-center justify-center space-y-2 w-full">
-                <span>Total 93 점</span>
-                <span>표정</span>
-                <span>발음</span>
-              </div>
-            </div>
-          ) : (
-            <div 
-              className="w-[300px] h-[180px] rounded-xl flex flex-col items-center justify-center p-4 cursor-pointer"
-              style={{ backgroundColor: "rgba(173, 216, 230, 0.2)" }}
-              onClick={onHandlePT}>
-              <span className="text-xl text-gray-500 font-semibold text-center pb-1">PT 모의 면접</span>
-              <span className="text-xl text-gray-500 font-semibold text-center">참여하러 가기 </span>
-            </div>
-          )}
-        </div>
-        <hr className="borer-t-10 mt-5"/>
+          <hr className="border-t-10 pb-5"/>
+          <InterviewResult/>
+          <hr className="border-t-10 mt-5"/>
 
         <div className="mt-10 mb-3">
           <TETabs fill>
             <TETabsItem
               onClick={() => handleFillClick("tab1")}
               active={fillActive === "tab1"}
-              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab1" ? 'border-b-2 border-blue-400 text-blue-400' : 'text-gray-400'}`}
+              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab1" ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'}`}
             >
               에세이
             </TETabsItem>
             <TETabsItem
               onClick={() => handleFillClick("tab2")}
               active={fillActive === "tab2"}
-              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab2" ? 'border-b-2 border-blue-400 text-blue-400' : 'text-gray-400'}`}
+              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab2" ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'}`}
             >
               적성진단
             </TETabsItem>
             <TETabsItem
               onClick={() => handleFillClick("tab3")}
               active={fillActive === "tab3"}
-              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab3" ? 'border-b-2 border-blue-400 text-blue-400' : 'text-gray-400'}`}
+              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab3" ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'}`}
             >
               면접
             </TETabsItem>
@@ -182,7 +100,47 @@ export default function Profile() {
               {/* Dashboard content */}
             </TETabsPane>
             <TETabsPane show={fillActive === "tab3"}>
-              {/* Settings content */}
+              <div className="pl-7">
+                <div 
+                  className="max-w-xl h-[80px] border rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
+                  onClick={() => nav('question_feedback')}>
+                  이 질문들에서 점수를 높일 방법은?
+                  <span className="text-sm font-medium pt-1">구체적인 피드백을 받아보세요</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-4 pl-6">
+                {interviewInfo.map((info, index) => (
+                  <div
+                    key={index}
+                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg"
+                    style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
+                    onClick={()=>info.type === 1? nav('personality_feedback', { state: { info } }) : nav('pt_feedback', { state: { info } })}
+                  >
+                    <img 
+                      src={info.type === 1 ? PersonaltyImg : PtImg} 
+                      alt={info.type === 1 ? "Personality Interview" : "PT Interview"} 
+                      className="w-10 h-10 mb-2" 
+                    />
+                    <p className="font-medium text-sm text-center">{info.title}</p>
+                  </div>
+                ))}
+              </div>
+
             </TETabsPane>
           </TETabsContent>
         </div>
