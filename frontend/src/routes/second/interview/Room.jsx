@@ -135,7 +135,6 @@ export default function WaitRoom() {
     // console.log("1. interviewClient.current 값 확인 : ", interviewClient.current)
     if (interviewClient.current) {
       interviewClient.current.publish({
-        // 정확한 destination url이 뭔가
         destination: `/interview/turn/${roomid}`,
         body: JSON.stringify({
           nowStage: "FIRST",
