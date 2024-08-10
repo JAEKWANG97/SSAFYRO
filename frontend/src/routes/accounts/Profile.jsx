@@ -57,46 +57,47 @@ export default function Profile() {
                 }}
               />
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 pb-3">
                   <h2 className="text-2xl font-semibold text-center">{`${userInfo.userName}`}</h2>
                   <Button
                     text = '전공자' // 전공자 or 비전공자 알맞게 버튼 렌더링
                     type ='MAJOR'/>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-          <Card className="mb-5">
-          <div className="w-full border-gray-400 pb-1 text-center">
-            모의 면접 점수 한눈에 보기
-            <div className="flex gap-4 mt-2">
-              <div className="text-center m-auto">
+                {/* 면접 횟수 각각 카운트해서 렌더링 */}
                 <div className="flex flex-col">
-                  <span>인성면접 점수</span>
-                  <span>상위 표정 3개</span>
-                  <span>발음점수 히스토그램</span>
+                  <span className="text-sm text-gray-500">인성 모의 면접 N번 </span> 
+                  <span className="text-sm text-gray-500">PT 모의 면접 N번</span>
                 </div>
               </div>
-              <div className="text-center m-auto">
-              <div className="flex flex-col">
-                  <span>pt면접 점수</span>
-                  <span>상위 표정 3개</span>
-                  <span>발음점수 히스토그램</span>
-                </div>
-              </div>
-
             </div>
-            {/* <span className="font-bold text-gray-900 flex-1">인성면접 점수</span> */}
-            {/* <span className="font-bold text-gray-900 flex-1">pt면접 점수</span> */}
+          </div>
 
-          </div>
           
-       
-        </Card>
-          </div>
-        <div className="mb-3">
+          <div className="flex justify-center gap-8">
+            <div 
+              className="w-[300px] h-[180px] rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: "rgba(211, 211, 211, 0.2)" }}>
+              <div className="flex flex-col items-center justify-center space-y-2">
+                <span>Total 93 점</span>
+                <span>표정</span>
+                <span>발음</span>
+              </div>
+            </div>
+            <div 
+              className="w-[300px] h-[180px] rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: "rgba(211, 211, 211, 0.2)" }}>
+              <div className="flex flex-col items-center justify-center space-y-2">
+                <span>PT 면접 점수</span>
+                <span>상위 표정 3개</span>
+                <span>발음점수 히스토그램</span>
+              </div>
+            </div>
+            </div>
+
+   
+          
+        
+        <div className="mt-10 mb-3">
           <TETabs fill>
             <TETabsItem
               onClick={() => handleFillClick("tab1")}
