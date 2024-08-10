@@ -36,8 +36,10 @@ public class InterviewResult extends BaseEntity {
     @JoinColumn(name = "report_id")
     private Report report;
 
+    @Column(columnDefinition = "TEXT")
     private String question;
 
+    @Column(columnDefinition = "TEXT")
     private String answer;
 
     @Column(columnDefinition = "TEXT")
