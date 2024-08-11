@@ -167,7 +167,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
 
         RoomCreateRequest roomCreateRequest = new RoomCreateRequest("title", "description", "type", 3);
 
-        given(roomService.createRoom(any(Long.class), any(RoomCreateServiceRequest.class)))
+        given(roomService.createRoom(any(RoomCreateServiceRequest.class)))
                 .willReturn(RoomCreateResponse.of(RoomId));
 
         mockMvc.perform(post("/api/v1/rooms")

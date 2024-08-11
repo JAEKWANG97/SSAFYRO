@@ -47,7 +47,7 @@ public class RoomController {
     @PostMapping("/api/v1/rooms")
     public ApiResult<RoomCreateResponse> createRoom(@AuthenticationPrincipal JwtAuthentication userInfo,
                                                     @Valid @RequestBody RoomCreateRequest request) {
-        return success(roomService.createRoom(userInfo.id(), request.toServiceRequest()));
+        return success(roomService.createRoom(request.toServiceRequest()));
     }
 
     @PostMapping("/api/v1/rooms/enter")
