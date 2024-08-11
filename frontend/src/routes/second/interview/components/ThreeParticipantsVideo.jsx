@@ -7,10 +7,8 @@ import {
   stopRecording,
   pronunciationEvaluation,
   base64String,
-  pronunciationScore
+  pronunciationScore,
 } from "./VoicePronunciationRecord";
-
-const isFullParticipants = true;
 
 export default function ThreeParticipantsVideo({
   localTrack,
@@ -25,11 +23,13 @@ export default function ThreeParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
   handleStartSurvey,
-}) {  
+  userList,
+  userTurn,
+}) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
-  
+
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
 
@@ -71,7 +71,12 @@ export default function ThreeParticipantsVideo({
       setIsRecording(false);
       try {
         const score = await pronunciationEvaluation(base64String);
-        handleSubmitAnswer(questions[0], answer, faceExpressionData, pronunciationScore);
+        handleSubmitAnswer(
+          questions[0],
+          answer,
+          faceExpressionData,
+          pronunciationScore
+        );
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {
@@ -81,8 +86,32 @@ export default function ThreeParticipantsVideo({
     }
   };
 
+  // 카카오 유저데이터 보완 시 userList[userTurn] 수정
+  const targetUser = userList[userTurn];
+  const isSurveyTarget = (identity) => identity === targetUser;
+
+  const styles = `
+  @keyframes indigoBlink {
+    0% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(75, 0, 130, 0.8), 0 0 30px rgba(75, 0, 130, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+  }
+
+  .current-turn {
+    animation: indigoBlink 1s infinite;
+    padding: 5px;
+  }
+  `;
+
   return (
     <>
+      <style>{styles}</style>
       <div className="w-2/3 bg-gray-300 rounded-2xl mr-2 flex justify-center items-end relative">
         {/* <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">
           You
@@ -93,8 +122,8 @@ export default function ThreeParticipantsVideo({
               track={localTrack}
               participantIdentity={participantName}
               local={true}
-              isFullParticipants={isFullParticipants}
               onFaceExpressionChange={setFaceExpression}
+              isSurveyTarget={isSurveyTarget(participantName)}
             />
           </div>
         )}
@@ -117,7 +146,10 @@ export default function ThreeParticipantsVideo({
               ></path>
             </svg>
           </button>
-          <button className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${isListening ? 'bg-green-700' : 'bg-green-500'} hover:bg-green-700`}
+          <button
+            className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
+              isListening ? "bg-green-700" : "bg-green-500"
+            } hover:bg-green-700`}
             onClick={handleButtonClick}
           >
             <svg
@@ -183,7 +215,7 @@ export default function ThreeParticipantsVideo({
                 track={tracks.video.trackPublication.videoTrack}
                 participantIdentity={participant}
                 local={false}
-                isFullParticipants={isFullParticipants}
+                isSurveyTarget={isSurveyTarget(participant)}
               />
             )}
             {tracks.audio && ( // 변경된 부분: 오디오 트랙 렌더링

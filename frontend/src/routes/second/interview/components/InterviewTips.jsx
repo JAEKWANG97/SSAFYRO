@@ -82,7 +82,8 @@ export default function InterviewTips({ interviewType }) {
   return (
     <div
       className="p-5 bg-white shadow-md rounded-xl ml-2 mr-2 mt-3 flex flex-col justify-between" // flex 레이아웃을 사용하여 상하단 고정
-      style={{ height: "300px", maxHeight: "300px" }}
+      // style={{ height: "300px", maxHeight: "300px" }}
+      style={{ height: "50%", maxHeight: "380px" }}
     >
       <div style={{ overflowY: "auto", flexGrow: 1, height: "100%"}}> {/* 상단 컨텐츠 */}
         <div className="flex items-center mb-2">

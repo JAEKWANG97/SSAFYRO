@@ -5,7 +5,7 @@ import axios from "axios";
 import Button from "../../../components/Button";
 import PreventRefresh from "../../components/PreventRefresh";
 import InterviewTips from "./components/InterviewTips";
-import userImg from "../../../../public/main/user.jpg";
+import interviewIcon from "../../../../public/main/interviewIcon.png";
 import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 import useAuthStore from "../../../stores/AuthStore"; // user 정보 가져오기
 import useRoomStore from "../../../stores/useRoomStore"; // zustand 스토어 임포트
@@ -50,6 +50,8 @@ export default function WaitRoom() {
 
         setRoomType(response.data.response.type);
         const roomData = response.data.response;
+        console.log("roomData : ", roomData);
+        console.log("userInfo.userId : ", userInfo.userId);
 
         const isUserAlreadyInRoom = roomData.userList.some((participant) => {
           return participant === currentUser.userId;
@@ -73,14 +75,13 @@ export default function WaitRoom() {
           const updatedRoomData = updatedResponse.data.response;
           setWaitRoom(updatedRoomData);
           setUserList(updatedRoomData.userList);
-          console.log(updatedRoomData);
+          console.log("updatedRoomData : ", updatedRoomData);
           console.log("참여자 정보: ", updatedRoomData.userList);
         } else {
           setWaitRoom(roomData);
           setUserList(roomData.userList);
           console.log("참여자 정보: ", roomData.userList);
         }
-
       } catch (error) {
         console.error(error);
         alert("방 정보를 불러오는데 실패했습니다.");
@@ -105,9 +106,9 @@ export default function WaitRoom() {
 
   useEffect(() => {
     if (waitRoom) {
-      initializeStompClient()
+      initializeStompClient();
     }
-  }, [waitRoom])
+  }, [waitRoom]);
 
   function initializeStompClient() {
     const client = new Client({
@@ -206,8 +207,9 @@ export default function WaitRoom() {
       }
 
       const updatedRoom = { ...waitRoom };
+      console.log("updatedRoom: ", updatedRoom);
       const participantIndex = updatedRoom.userList.findIndex(
-        (participant) => participant.userId === currentUser.userId
+        (participant) => participant === currentUser.userId
       );
 
       if (participantIndex !== -1) {
@@ -354,9 +356,12 @@ export default function WaitRoom() {
       >
         <div className="w-full h-[85vh] mx-auto mt-6 p-6 rounded-xl bg-white shadow-2xl">
           <div className="flex justify-between items-center mb-2">
-            <span className=" text-indigo-800 text-2xl font-extrabold px-6 pt-2 pb-1 rounded  dark:text-indigo-300 border border-indigo-300">
-              {waitRoom.type === "PRESENTATION" ? "PT" : "인성"}
-            </span>
+            <div className="flex">
+              <img src={interviewIcon} alt="" className="h-10 w-10"/>
+              <span className=" text-indigo-300 text-2xl font-extrabold px-4 pt-2 pb-1 rounded dark:text-indigo-300">
+                {waitRoom.type === "PRESENTATION" ? "PT" : "인성"}
+              </span>
+            </div>
             <div className="items-center">
               <h1 className="font-extrabold text-2xl">{waitRoom.title}</h1>
             </div>
@@ -411,7 +416,7 @@ export default function WaitRoom() {
                   </div>
                 ))}
               </div>
-              <InterviewTips interviewType={waitRoom.type}/>
+              <InterviewTips interviewType={waitRoom.type} />
             </div>
             <div className="w-[30%] flex flex-col justify-between">
               <Chat

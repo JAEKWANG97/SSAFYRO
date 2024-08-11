@@ -390,6 +390,15 @@ export default function PT() {
   }, [STTTrigger]);
 
   const startTimer = (stage) => {
+    // 10분 타이머가 끝나면 2분 타이머로 전환되도록 설계
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    if (twoMinuteTimerRef.current) {
+      clearInterval(twoMinuteTimerRef.current);
+    }
+    
     if (stage === "FIRST") {
       setTenMinuteTimer(600);
     } else if (stage === "SECOND" || stage === "THIRD") {
@@ -466,7 +475,7 @@ export default function PT() {
         interviewClient.current.deactivate();
       }
       clearInterval(timerRef.current);
-      clearInterval(twoMinuteTimerRef.current)
+      clearInterval(twoMinuteTimerRef.current);
     };
   }, [roomid]);
 
@@ -493,7 +502,8 @@ export default function PT() {
 
       // 면접을 종료하거나 다음 면접자 준비
       if (interviewTurnCounter.current >= userList.length) {
-        // 면접 종료 함수 작성
+        handleEndInterview();
+      } else if (userList.length === 1) {
         handleEndInterview();
       } else {
         handleStartSurvey();
@@ -580,6 +590,8 @@ export default function PT() {
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
+                  userList={userList}
+                  userTurn={userTurn}
                 />
               );
             } else {
@@ -598,6 +610,8 @@ export default function PT() {
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
+                  userList={userList}
+                  userTurn={userTurn}
                 />
               );
             }
