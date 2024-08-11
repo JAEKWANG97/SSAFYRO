@@ -53,13 +53,9 @@ public class RoomService {
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
 
-    public RoomCreateResponse createRoom(Long userId, RoomCreateServiceRequest request) {
-        User user = getUser(userId);
-
+    public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {
         RoomRedis room = request.toEntity();
-        room.addParticipant(user.getId());
         roomRedisRepository.save(room);
-
         sendToQueue(request.type(), room.getId());
 
         return RoomCreateResponse.of(room.getId());

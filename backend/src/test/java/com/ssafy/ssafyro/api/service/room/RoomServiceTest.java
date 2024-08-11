@@ -3,6 +3,8 @@ package com.ssafy.ssafyro.api.service.room;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.BDDMockito.given;
+import static reactor.core.publisher.Mono.when;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
@@ -12,16 +14,21 @@ import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomDetailResponse;
 import com.ssafy.ssafyro.api.service.room.response.RoomListResponse;
+import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
+import com.ssafy.ssafyro.domain.user.User;
+import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -36,6 +43,9 @@ class RoomServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RedisTemplate<String, RoomRedis> redisTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @AfterEach
     void tearDown() {
@@ -53,7 +63,7 @@ class RoomServiceTest extends IntegrationTestSupport {
                 "PERSONALITY", 3);
 
         // when
-        RoomCreateResponse roomCreateResponse = roomService.createRoom(1L, roomCreateServiceRequest);
+        RoomCreateResponse roomCreateResponse = roomService.createRoom(roomCreateServiceRequest);
         RoomRedis savedRoom = roomRedisRepository.findBy(roomCreateResponse.roomId()).orElse(null);
 
         // then
@@ -174,10 +184,16 @@ class RoomServiceTest extends IntegrationTestSupport {
     void enterExistingRoom() {
         // given
         RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
-        testRoom.addParticipant(123L);
+        User user = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
         roomRedisRepository.save(testRoom);
         String roomId = testRoom.getId();
-        Long userId = 1L;
+        Long userId = user.getId();
         RoomEnterServiceRequest request = new RoomEnterServiceRequest(roomId);
 
         // when
@@ -194,10 +210,17 @@ class RoomServiceTest extends IntegrationTestSupport {
     void enterNonExistingRoom() {
         // given
         RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
-        testRoom.addParticipant(123L);
+        User user = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
+
         roomRedisRepository.save(testRoom);
         String nonExistingRoomId = "non-existing-id";
-        Long userId = 1L;
+        Long userId = user.getId();
         RoomEnterServiceRequest request = new RoomEnterServiceRequest(nonExistingRoomId);
 
         // when & then
@@ -211,21 +234,29 @@ class RoomServiceTest extends IntegrationTestSupport {
     void updateUserListAfterEnteringRoom() {
         // given
         RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
-        testRoom.addParticipant(123L);
+
+
+        User user1 = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
         roomRedisRepository.save(testRoom);
 
         String roomId = testRoom.getId();
-        Long userId = 1L;
+        Long userId = user1.getId();
         RoomEnterServiceRequest request = new RoomEnterServiceRequest(roomId);
 
         // when
-        roomService.enterRoom(userId, request);
+        roomService.enterRoom(user1.getId(), request);
 
         // then
         RoomRedis room = roomRedisRepository.findBy(roomId).orElse(null);
         assertThat(room).isNotNull();
         assertThat(room.getUserList()).contains(userId);
-        assertThat(room.getUserList()).hasSize(2);
+        assertThat(room.getUserList()).hasSize(1);
     }
 
     @DisplayName("존재하지 않는 방에서 나가려고 시도하면 예외가 발생한다.")
@@ -233,7 +264,14 @@ class RoomServiceTest extends IntegrationTestSupport {
     void exitNonExistingRoomTest() {
         // given
         String nonExistingRoomId = "non-existing-id";
-        Long userId = 1L;
+        User user = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
+        Long userId = user.getId();
         RoomExitServiceRequest request = new RoomExitServiceRequest(nonExistingRoomId);
 
         // when & then
@@ -247,12 +285,30 @@ class RoomServiceTest extends IntegrationTestSupport {
     void updateUserListAfterExitingRoom() {
         // given
         RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
-        testRoom.addParticipant(123L);
-        testRoom.addParticipant(1L);
+
+        User user1 = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
+
+        User user2 = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
+
+        testRoom.addParticipant(user1.getId());
+        testRoom.addParticipant(user2.getId());
+
         roomRedisRepository.save(testRoom);
 
         String roomId = testRoom.getId();
-        Long userId = 1L;
+        Long userId = user2.getId();
         RoomExitServiceRequest request = new RoomExitServiceRequest(roomId);
 
         // when

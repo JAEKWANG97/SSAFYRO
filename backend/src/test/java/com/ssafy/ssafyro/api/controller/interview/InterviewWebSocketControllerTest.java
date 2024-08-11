@@ -58,7 +58,7 @@ class InterviewWebSocketControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = roomService.createRoom(1L, new RoomCreateServiceRequest(
+        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
                 "title",
                 "description",
                 "PERSONALITY",
@@ -86,7 +86,7 @@ class InterviewWebSocketControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = roomService.createRoom(1L, new RoomCreateServiceRequest(
+        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
                 "title",
                 "description",
                 "PERSONALITY",
@@ -116,7 +116,7 @@ class InterviewWebSocketControllerTest {
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
-        String roomId = roomService.createRoom(1L, new RoomCreateServiceRequest(
+        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
                 "title",
                 "description",
                 "PERSONALITY",
