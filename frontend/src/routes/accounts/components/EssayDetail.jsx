@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card } from 'flowbite-react';
-import Button from './../../../components/Button';
+import Button from "../../../components/Button";
 
 export default function EssayDetail() {
   const [essayQuestion, setEssayQuestion] = useState(null);

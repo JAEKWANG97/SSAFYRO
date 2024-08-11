@@ -10,9 +10,9 @@ export default function Button({ text, type, onClick, isActive }) {
       : type === 'INTERVIEWSTART'
         ? 'bg-blue-100 text-blue-800 text-base font-semibold px-4 py-2 rounded ml-auto'
         : type === 'ESSAYSAVE'
-          ? 'ml-auto text-white bg-blue-400 hover:bg-blue-800 font-medium rounded-lg text-sm mt-3 px-5 py-2.5 me-2 mb-2 focus:outline-none dark:focus:ring-blue-800'
+          ? 'ml-auto text-white bg-blue-400 hover:bg-blue-800 font-medium rounded-lg text-sm mt-3 px-5 py-2.5 me-2 mb-2 focus:outline-none'
           : type === 'ESSAYUPDATE'
-            ? 'ml-auto text-white bg-red-400 hover:bg-red-800 font-medium rounded-lg text-sm mt-3 px-5 py-2.5 me-2 mb-2 focus:outline-none dark:focus:ring-red-800'  
+            ? 'ml-auto text-white bg-gray-600 hover:bg-gray-800 font-medium rounded-lg text-sm mt-3 px-5 py-2.5 me-2 mb-2 focus:outline-none'
             : type === "WAITINGROOMOUT"
               ? "bg-red-100 text-red-800 text-base font-semibold px-5 py-2 rounded w-21 h-12"
                 : type === "WAITINGROOMSTART"
