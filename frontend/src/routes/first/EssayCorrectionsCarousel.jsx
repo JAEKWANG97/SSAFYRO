@@ -10,16 +10,18 @@ function EssayCorrectionsCarousel({ changedContent }) {
     slidesToShow: 1,
     slidesToScroll: 1,
     adaptiveHeight: true,
+    arrows: false, 
   };
 
   const correctionItems = changedContent
     .split(/(?<!\d)[.?!]\s+/)
     .map((sentence, index) => (
-      <div key={index} className="p-4 text-sm text-gray-900">
+      <div key={index} className="p-4 text-sm text-gray-900 ">
         {sentence}
       </div>
     ));
 
   return <Slider {...settings}>{correctionItems}</Slider>;
 }
+
 export default EssayCorrectionsCarousel;

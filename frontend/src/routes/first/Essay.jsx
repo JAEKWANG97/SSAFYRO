@@ -304,40 +304,42 @@ export default function Essay() {
         </div>
 
         <div
-          className={`flex ${
-            showCorrection ? "flex-row space-x-4" : "flex-col"
-          }`}
+          className={`flex ${showCorrection ? "flex-row space-x-4" : "flex-col"}`}
         >
           <div className="flex flex-col" style={{ width: "750px" }}>
             <div className="border border-gray-400 rounded-lg bg-white">
               <div className="py-5 flex flex-col items-center font-bold text-center">
-                {essayQuestion.split(",").map((question, index, array) => (
-                  <p key={index}>
-                    {question}
-                    {index === array.length - 1 &&
-                      " (500자 내외/ 최대 600자 까지)"}
+                {showCorrection ? (
+                  <p className="whitespace-pre-wrap px-4">
+                    {essayQuestion} (500자 내외/ 최대 600자 까지)
                   </p>
-                ))}
+                ) : (
+                  essayQuestion.split(",").map((question, index, array) => (
+                    <p key={index}>
+                      {question}
+                      {index === array.length - 1 &&
+                        " (500자 내외/ 최대 600자 까지)"}
+                    </p>
+                  ))
+                )}
               </div>
             </div>
 
             <div className="pt-6">
-              <div className={`flex flex-col`}>
-              <textarea
-                ref={textareaRef}
-                className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:border-black focus:outline-none focus:ring-0"
-                placeholder="여기에 작성해주세요."
-                spellCheck="false"
-                autoCorrect="off"
-                autoComplete="off"
-                style={{ lineHeight: 1.8, height: "38rem" }}
-                maxLength={600}
-                value={essayContent}
-                onChange={handleEssayContent}
-                onSelect={handleTextareaSelect}
-              ></textarea>
-
-                                
+              <div className="flex flex-col">
+                <textarea
+                  ref={textareaRef}
+                  className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:border-black focus:outline-none focus:ring-0"
+                  placeholder="여기에 작성해주세요."
+                  spellCheck="false"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  style={{ lineHeight: 1.8, height: "38rem" }}
+                  maxLength={600}
+                  value={essayContent}
+                  onChange={handleEssayContent}
+                  onSelect={handleTextareaSelect}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -352,9 +354,24 @@ export default function Essay() {
                   wordWrap: "break-word",
                 }}
               >
-                <p className="font-bold text-lg mb-2">
-                  ✔️ 에세이 수정 내용
+                <p className="font-bold text-lg mb-2 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="rgba(255, 182, 193, 0.8)"
+                    className="w-6 h-6 mr-2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                    />
+                  </svg>
+                  에세이 수정 내용
                 </p>
+
                 <EssayCorrectionsCarousel changedContent={changedContent} />
               </div>
               <div
@@ -367,14 +384,26 @@ export default function Essay() {
                   wordWrap: "break-word",
                 }}
               >
-                <p className="font-bold text-lg pb-5 scrollbar-hide">
-                  📝 에세이 첨삭 내용
-                </p>
-                {essayReview.split(/(?<=[.!?])\s+/).map((sentence, index) => (
-                  <span
-                    key={index}
-                    className={hoveredIndex === index ? "bg-blue-200" : ""}
+                <p className="font-bold text-lg pb-5 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="rgba(174, 207, 219, 1)"
+                    className="w-6 h-6 mr-2"
                   >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 0 1 9 9v.375M10.125 2.25A3.375 3.375 0 0 1 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 1 3.375 3.375M9 15l2.25 2.25L15 12"
+                    />
+                  </svg>
+                  에세이 첨삭 내용
+                </p>
+
+                {essayReview.split(/(?<=[.!?])\s+/).map((sentence, index) => (
+                  <span key={index} className={hoveredIndex === index ? "bg-blue-200" : ""}>
                     {sentence}{" "}
                   </span>
                 ))}
