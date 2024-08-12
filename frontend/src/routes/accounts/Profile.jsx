@@ -63,7 +63,7 @@ export default function Profile() {
         },
         })
         .then((res) => {
-          console.log(res.data.response.reports);
+          console.log(res.data.response);
           setInterviewInfo(res.data.response.reports)
         })
         .catch((error) => {
@@ -180,7 +180,7 @@ export default function Profile() {
               <div className="pl-7">
                 <div 
                   className="max-w-xl h-[80px] border rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
-                  onClick={() => nav('question_feedback', { state: { activeTab: "tab3" } })}
+                  onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
                 >
                   이 질문들에서 점수를 높일 방법은?
                   <span className="text-sm font-medium pt-1">구체적인 피드백을 받아보세요</span>
