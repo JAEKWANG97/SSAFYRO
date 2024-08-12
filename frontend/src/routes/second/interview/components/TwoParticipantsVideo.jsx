@@ -231,7 +231,7 @@ export default function TwoParticipantsVideo({
             {remoteTracks.map((remoteTrack) => {
               // 콘솔 로그 출력
               console.log(
-                "이 화면 참여자 이름 :",
+                "타 화면 참여자 이름 :",
                 remoteTrack.participantIdentity
               );
               console.log("로그인 사용자 이름 :", userInfo.userName);
