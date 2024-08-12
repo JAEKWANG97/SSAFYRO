@@ -220,9 +220,7 @@ export default function TwoParticipantsVideo({
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={isSurveyTarget(
-                    remoteTrack.participantIdentity
-                  )}
+                  isSurveyTarget={isSurveyTarget(userInfo.userId)}
                 />
               ) : (
                 // 추가된 부분: <div> 위치 조정 및 중복 key 속성 제거

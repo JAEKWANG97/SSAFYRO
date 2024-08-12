@@ -216,7 +216,7 @@ export default function ThreeParticipantsVideo({
                 track={tracks.video.trackPublication.videoTrack}
                 participantIdentity={participant}
                 local={false}
-                isSurveyTarget={isSurveyTarget(participant)}
+                isSurveyTarget={isSurveyTarget(userInfo.userId)}
               />
             )}
             {tracks.audio && ( // 변경된 부분: 오디오 트랙 렌더링
