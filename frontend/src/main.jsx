@@ -22,6 +22,7 @@ import WaitRoom from "./routes/second/interview/Room.jsx";
 import PTReady from "./routes/second/interview/PTReady.jsx";
 import PT from "./routes/second/interview/PT.jsx";
 import Survey from "./components/Survey.jsx";
+import { jwtDecode } from 'jwt-decode';
 import "./index.css";
 
 // Custom layout component for conditional Navbar and Footer rendering
@@ -31,18 +32,31 @@ const AppLayout = () => {
   const setUserInfo = useAuthStore((state) => state.setUserInfo);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
-
-  // 초기 렌더링 시 로그인 상태 복원
   useEffect(() => {
-
     const token = localStorage.getItem('Token');
-    const storedUserInfo = localStorage.getItem('userInfo');
-    
-    if (token && storedUserInfo) {
+    if (token) {
       setIsLogin(true);
-      setUserInfo(JSON.parse(storedUserInfo));
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      setUserInfo({
+        userId: decodedToken.userId,
+        nickname: decodedToken.nickname,
+        profileImage: decodedToken.profileImage,
+      });
     }
   }, [setIsLogin, setUserInfo]);
+
+  // 초기 렌더링 시 로그인 상태 복원
+  // useEffect(() => {
+
+  //   const token = localStorage.getItem('Token');
+  //   const storedUserInfo = localStorage.getItem('userInfo');
+    
+  //   if (token && storedUserInfo) {
+  //     setIsLogin(true);
+  //     setUserInfo(JSON.parse(storedUserInfo));
+  //   }
+  // }, [setIsLogin, setUserInfo]);
 
 
   // Define routes where the Navbar should be hidden

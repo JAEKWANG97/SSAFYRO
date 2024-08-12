@@ -18,7 +18,9 @@ const useAuthStore = create((set) => ({
       ...newUserInfo
     }
   }))
-}));
+}
+
+));
 
   
 
