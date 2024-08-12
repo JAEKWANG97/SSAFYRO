@@ -15,11 +15,15 @@ export default function Kakao() {
 
     if (token) {
       localStorage.setItem("Token", token);
-      setIsLogin(true);
-      setUserInfo({
+
+      const userInfo = {
         userId: userId,
         userName: nickname
-      });
+      };
+      
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      setUserInfo(userInfo);
+      setIsLogin(true);
       nav("/");
     } else {
       console.error("토큰을 찾을 수 없습니다.");
