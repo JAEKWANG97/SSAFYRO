@@ -14,7 +14,7 @@ import { useState } from "react";
 
 function ConnectOpenvidu() {
 
-    let APPLICATION_SERVER_URL = "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/" // Application 서버 주소
+    let APPLICATION_SERVER_URL = "https://i11c201.p.ssafy.io:8443/api/v1/openvidu/" // Application 서버 주소
     let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/" // LiveKit 서버 주소
     const configureUrls = function () {
         if (!APPLICATION_SERVER_URL) {

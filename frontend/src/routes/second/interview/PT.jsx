@@ -47,15 +47,25 @@ export default function PT() {
   const navigate = useNavigate();
 
   // 타이머 상태 및 Ref 추가
-  const [tenMinuteTimer, setTenMinuteTimer] = useState(600);
-  const [twoMinuteTimer, setTwoMinuteTimer] = useState(120);
+  const [tenMinuteTimer, setTenMinuteTimer] = useState(60);
+  const [twoMinuteTimer, setTwoMinuteTimer] = useState(30);
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
+  const { userList, setUserList, userTurn, setUserTurn } = useRoomStore(
+    (state) => ({
+      userList: state.userList,
+      setUserList: state.setUserList,
+      userTurn: state.userTurn,
+      setUserTurn: state.setUserTurn,
+    })
+  );
+
   const handleStartInterview = async () => {
     try {
+      // 면접 시작 요청
       await axios.patch(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/start",
+        "https://i11c201.p.ssafy.io:8443/api/v1/interview/start",
         { roomId: roomid },
         {
           headers: {
@@ -64,6 +74,22 @@ export default function PT() {
         }
       );
       console.log("Interview started successfully");
+
+      // 방의 최신 정보 불러오기
+      await axios
+        .get(`https://i11c201.p.ssafy.io:8443/api/v1/rooms/${roomid}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        })
+        .then((response) => {
+          const roomData = response.data.response;
+          setUserList(roomData.userList);
+          console.log("updated userList: ", roomData.userList);
+        })
+        .catch((error) => {
+          console.log("Error! : ", error);
+        });
 
       // FIRST 메시지 전송
       if (interviewClient.current) {
@@ -82,7 +108,7 @@ export default function PT() {
     try {
       // 면접 종료 요청 api 호출
       await axios.patch(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/finish",
+        "https://i11c201.p.ssafy.io:8443/api/v1/interview/finish",
         { roomId: roomid },
         {
           headers: {
@@ -97,21 +123,18 @@ export default function PT() {
       stop();
       navigate("/second/interview");
     } catch (error) {
-      console.errer("Error finishing the interview: ", error);
+      console.error("Error finishing the interview: ", error);
     }
   };
 
   const interviewTurnCounter = useRef(0);
   // const userList = useRoomStore((state) => state.userList);
   // const userTurn = useRoomStore((state) => state.userTurn);
-  const { userList, userTurn, setUserTurn } = useRoomStore((state) => ({
-    userList: state.userList,
-    userTurn: state.userTurn,
-    setUserTurn: state.setUserTurn,
-  }));
 
-  console.log("Current userList: ", userList);
-  console.log("Current userTurn: ", userTurn);
+  useEffect(() => {
+    console.log("Current userList: ", userList);
+    console.log("Current userTurn: ", userTurn);
+  }, [userList, userTurn]);
 
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
@@ -137,7 +160,7 @@ export default function PT() {
   ) {
     await axios
       .post(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result",
+        "https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result",
         {
           question: question,
           answer: answer,
@@ -179,7 +202,7 @@ export default function PT() {
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL =
-    "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/"; // Application 서버 주소
+    "https://i11c201.p.ssafy.io:8443/api/v1/openvidu/"; // Application 서버 주소
   let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/"; // LiveKit 서버 주소
   const configureUrls = function () {
     if (!APPLICATION_SERVER_URL) {
@@ -245,7 +268,7 @@ export default function PT() {
 
     try {
       await axios.post(
-        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+        `https://i11c201.p.ssafy.io:8443/api/v1/rooms/exit`,
         {
           roomId: roomid,
         },
@@ -398,11 +421,11 @@ export default function PT() {
     if (twoMinuteTimerRef.current) {
       clearInterval(twoMinuteTimerRef.current);
     }
-    
+
     if (stage === "FIRST") {
-      setTenMinuteTimer(600);
+      setTenMinuteTimer(60);
     } else if (stage === "SECOND" || stage === "THIRD") {
-      setTenMinuteTimer(600);
+      setTenMinuteTimer(60);
     }
 
     timerRef.current = setInterval(() => {
@@ -497,16 +520,22 @@ export default function PT() {
       interviewTurnCounter.current += 1;
 
       // 다음 사용자를 위해 userTurn을 증가시켜 다음 면접자의 Survey를 설정
-      const nextTurn = (userTurn + 1) % userTurn.length;
+      const nextTurn = (userTurn + 1) % userList.length;
       setUserTurn(nextTurn);
 
       // 면접을 종료하거나 다음 면접자 준비
       if (interviewTurnCounter.current >= userList.length) {
         handleEndInterview();
-      } else if (userList.length === 1) {
-        handleEndInterview();
-      } else {
-        handleStartSurvey();
+      }
+      // else if (userList.length === 1) {
+      //   handleEndInterview();
+      // } else {
+      //   handleStartSurvey();
+      // }
+      else {
+        if (userList.length === 1) {
+          handleEndInterview();
+        }
       }
     }
   }, [twoMinuteTimer]);

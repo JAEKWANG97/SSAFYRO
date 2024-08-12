@@ -35,7 +35,7 @@ export default function CreateRoom() {
     const token = localStorage.getItem("Token");
 
     axios
-      .post("http://i11c201.p.ssafy.io:9999/api/v1/rooms", roomData, {
+      .post("https://i11c201.p.ssafy.io:8443/api/v1/rooms", roomData, {
         headers: { Authorization: `Bearer ${token}` },
       }) // 방 생성 API 호출
       .then((response) => {

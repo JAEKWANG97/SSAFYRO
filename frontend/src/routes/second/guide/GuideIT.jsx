@@ -8,7 +8,7 @@ export default function GuideIT() {
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   const itemsPerPage = 6; // 페이지당 항목 수
   const maxItems = 60; // 최대 항목 수
-  const APIURL = 'http://i11c201.p.ssafy.io:9999/api/v1/';
+  const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/';
   
   useEffect(() => {
     axios

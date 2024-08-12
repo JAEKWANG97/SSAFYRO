@@ -32,7 +32,7 @@ export default function Survey() {
       totalScore: totalScore,
     }
 
-    axios.post("http://i11c201.p.ssafy.io:9999/api/v1/reports", requestBody)
+    axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
     .then((response) => {
       alert('평가 제출이 완료되었습니다.'); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
     })
