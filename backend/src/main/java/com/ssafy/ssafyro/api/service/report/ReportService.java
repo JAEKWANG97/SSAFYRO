@@ -2,9 +2,11 @@ package com.ssafy.ssafyro.api.service.report;
 
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
@@ -88,8 +90,13 @@ public class ReportService {
         interviewResultDocumentRepository.saveAll(
                 interviewInfos.generateInterviewResultDocuments(koMorAnGenerator)
         );
-        
+
         return ReportCreateResponse.of(report);
+    }
+
+    public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsAverageServiceRequest request) {
+        User user = getUser(userId);
+        return null;
     }
 
     private User getUser(Long userId) {
