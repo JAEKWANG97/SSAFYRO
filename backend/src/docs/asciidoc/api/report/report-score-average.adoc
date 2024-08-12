@@ -1,0 +1,12 @@
+[[report-average]]
+=== 레포트 평균 점수
+
+==== HTTP Request
+
+include::{snippets}/reports-average/query-parameters.adoc[]
+include::{snippets}/reports-average/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/reports-average/http-response.adoc[]
+include::{snippets}/reports-average/response-fields.adoc[]
