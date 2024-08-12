@@ -503,10 +503,16 @@ export default function PT() {
       // 면접을 종료하거나 다음 면접자 준비
       if (interviewTurnCounter.current >= userList.length) {
         handleEndInterview();
-      } else if (userList.length === 1) {
-        handleEndInterview();
-      } else {
-        handleStartSurvey();
+      }
+      // else if (userList.length === 1) {
+      //   handleEndInterview();
+      // } else {
+      //   handleStartSurvey();
+      // }
+      else {
+        if (userList.length === 1) {
+          handleEndInterview();
+        }
       }
     }
   }, [twoMinuteTimer]);
