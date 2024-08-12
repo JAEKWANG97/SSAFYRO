@@ -8,14 +8,17 @@ import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomEnterServiceRequest;
+import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.room.Stage;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
+import com.ssafy.ssafyro.domain.user.User;
+import com.ssafy.ssafyro.domain.user.UserRepository;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.simp.stomp.ConnectionLostException;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -33,12 +34,14 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-@Disabled
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class InterviewWebSocketControllerTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private RedisTemplate<String, RoomRedis> redisTemplate;
@@ -52,12 +55,17 @@ class InterviewWebSocketControllerTest {
         if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
         }
+
+        userRepository.deleteAllInBatch();
     }
 
     @DisplayName("첫 번째 스테이지의 면접자의 순서를 지정해준다.")
     @Test
     void changeTurnInterviewerTest() throws Exception {
         //given
+        User user = createUser();
+        userRepository.save(user);
+
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
@@ -67,7 +75,7 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
-        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user.getId(), new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
@@ -79,7 +87,7 @@ class InterviewWebSocketControllerTest {
         assertThat(response).isNotNull()
                 .extracting("nowStage", "nowUserId")
                 .containsExactlyInAnyOrder(
-                        Stage.FIRST, 1L
+                        Stage.FIRST, user.getId()
                 );
     }
 
@@ -87,6 +95,10 @@ class InterviewWebSocketControllerTest {
     @Test
     void changeTurnInterviewerTest2() throws Exception {
         //given
+        User user1 = createUser();
+        User user2 = createUser();
+        userRepository.saveAll(List.of(user1, user2));
+
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
@@ -96,8 +108,8 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
-        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
-        roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user1.getId(), new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user2.getId(), new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
@@ -109,7 +121,7 @@ class InterviewWebSocketControllerTest {
         assertThat(response).isNotNull()
                 .extracting("nowStage", "nowUserId")
                 .containsExactlyInAnyOrder(
-                        Stage.SECOND, 2L
+                        Stage.SECOND, user2.getId()
                 );
 
     }
@@ -118,6 +130,10 @@ class InterviewWebSocketControllerTest {
     @Test
     void changeTurnInterviewerTest3() throws Exception {
         //given
+        User user1 = createUser();
+        User user2 = createUser();
+        userRepository.saveAll(List.of(user1, user2));
+
         StompSession session = getStompSession();
         CompletableFuture<InterviewStageResponse> subscribeFuture = new CompletableFuture<>();
 
@@ -127,8 +143,8 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
-        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
-        roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user1.getId(), new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user2.getId(), new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
@@ -147,6 +163,11 @@ class InterviewWebSocketControllerTest {
     @Test
     void exitInterviewerTest() throws Exception {
         // given
+        User user1 = createUser();
+        User user2 = createUser();
+        User user3 = createUser();
+        userRepository.saveAll(List.of(user1, user2, user3));
+
         StompSession session = getStompSession();
         CompletableFuture<ExitResponse> subscribeFuture = new CompletableFuture<>();
 
@@ -157,18 +178,18 @@ class InterviewWebSocketControllerTest {
                 3
         )).roomId();
 
-        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
-        roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
-        roomService.enterRoom(3L, new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user1.getId(), new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user2.getId(), new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(user3.getId(), new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, createExitResponseStompFrameHandler(subscribeFuture));
 
         // when
-        session.send("/interview/exit/" + roomId, 1L);
+        session.send("/interview/exit/" + roomId, user1.getId());
 
         // then
         ExitResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
-        assertThat(response.userList()).doesNotContain(1L);
+        assertThat(response.userList()).doesNotContain(user1.getId());
         assertThat(response.userList()).hasSize(2);
     }
 
@@ -216,5 +237,15 @@ class InterviewWebSocketControllerTest {
                 }
             }
         };
+    }
+
+    private User createUser() {
+        return User.builder()
+                .username("ssafyro@gmail.com")
+                .nickname("ssafyRo")
+                .providerId("providerId")
+                .profileImageUrl("www.image.url")
+                .majorType(MajorType.MAJOR)
+                .build();
     }
 }

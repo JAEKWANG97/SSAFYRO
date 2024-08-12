@@ -3,8 +3,6 @@ package com.ssafy.ssafyro.api.service.room;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.mockito.BDDMockito.given;
-import static reactor.core.publisher.Mono.when;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
@@ -24,15 +22,11 @@ import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-//@Disabled
 class RoomServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -234,7 +228,6 @@ class RoomServiceTest extends IntegrationTestSupport {
     void updateUserListAfterEnteringRoom() {
         // given
         RoomRedis testRoom = createRoom("Test Room", RoomType.PERSONALITY, 3);
-
 
         User user1 = userRepository.save(User.builder()
                 .majorType(MajorType.valueOf("MAJOR"))
