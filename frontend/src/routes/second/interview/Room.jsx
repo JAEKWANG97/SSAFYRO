@@ -6,7 +6,6 @@ import Button from "../../../components/Button";
 import PreventRefresh from "../../components/PreventRefresh";
 import InterviewTips from "./components/InterviewTips";
 import interviewIcon from "../../../../public/main/interviewIcon.png";
-import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
 import useAuthStore from "../../../stores/AuthStore"; // user 정보 가져오기
 import useRoomStore from "../../../stores/useRoomStore"; // zustand 스토어 임포트
 import {
@@ -54,7 +53,7 @@ export default function WaitRoom() {
         console.log("userInfo.userId : ", userInfo.userId);
 
         const isUserAlreadyInRoom = roomData.userList.some((participant) => {
-          return participant === currentUser.userId;
+          return participant === userInfo.userId;
         });
 
         if (!isUserAlreadyInRoom) {
@@ -209,7 +208,7 @@ export default function WaitRoom() {
       const updatedRoom = { ...waitRoom };
       console.log("updatedRoom: ", updatedRoom);
       const participantIndex = updatedRoom.userList.findIndex(
-        (participant) => participant === currentUser.userId
+        (participant) => participant === userInfo.userId
       );
 
       if (participantIndex !== -1) {
@@ -420,7 +419,7 @@ export default function WaitRoom() {
             </div>
             <div className="w-[30%] flex flex-col justify-between">
               <Chat
-                currentUser={currentUser}
+                currentUser={userInfo}
                 currentRoom={roomid}
                 messages={messages}
                 setMessages={setMessages}
