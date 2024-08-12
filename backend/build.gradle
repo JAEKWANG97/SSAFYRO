@@ -96,9 +96,8 @@ test {
         systemProperty 'spring.profiles.active', 'test'
     }
 
-    testLogging {
-        events "passed"
-        showStandardStreams = true // 표준 출력과 에러를 로그에 포함
+    doFirst {
+        println 'Using profile: ' + project.property('profile')
     }
 }
 
