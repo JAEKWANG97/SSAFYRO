@@ -90,7 +90,11 @@ ext {
 test {
     outputs.dir snippetsDir
 
-    systemProperty 'spring.profiles.active', ext.profile = (!project.hasProperty('profile') || !profile) ? 'test' : profile
+    if (project.hasProperty('profile')) {
+        systemProperty 'spring.profiles.active', project.property('profile')
+    } else {
+        systemProperty 'spring.profiles.active', 'test'
+    }
 }
 
 asciidoctor {
