@@ -10,19 +10,20 @@ public record RoomDetailResponse(String title,
                                  RoomType type,
                                  RoomStatus status,
                                  int capacity,
-                                 List<Long> userList
+                                 List<Long> userList,
+                                 List<String> userNameList
 ) {
-    public static RoomDetailResponse of(RoomRedis room) {
+    public static RoomDetailResponse of(RoomRedis room , List<String> userNameList) {
         return new RoomDetailResponse(
                 room.getTitle(),
                 room.getDescription(),
                 room.getType(),
                 room.getStatus(),
                 room.getCapacity(),
-                room.getUserList()
+                room.getUserList(),
+                userNameList
         );
     }
-
 }
 
 

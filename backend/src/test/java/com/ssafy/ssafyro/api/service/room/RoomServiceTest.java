@@ -72,12 +72,35 @@ class RoomServiceTest extends IntegrationTestSupport {
     @Test
     void getRoomByIdTest() {
         // given
+        User user = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test")
+                .profileImageUrl("test")
+                .providerId("test")
+                .username("test")
+                .build());
+
+        User user2 = userRepository.save(User.builder()
+                .majorType(MajorType.valueOf("MAJOR"))
+                .nickname("test2")
+                .profileImageUrl("test2")
+                .providerId("test2")
+                .username("test2")
+                .build());
+
+
+
+
         RoomRedis room = RoomRedis.builder()
                 .title("test")
                 .description("test description")
                 .type(RoomType.PERSONALITY)
                 .capacity(3)
                 .build();
+
+        room.addParticipant(userRepository.save(user).getId());
+        room.addParticipant(userRepository.save(user2).getId());
+
 
         String savedRoomId = roomRedisRepository.save(room);
 
@@ -89,6 +112,8 @@ class RoomServiceTest extends IntegrationTestSupport {
         assertThat(roomDetailResponse.title()).isEqualTo(room.getTitle());
         assertThat(roomDetailResponse.type()).isEqualTo(room.getType());
         assertThat(roomDetailResponse.capacity()).isEqualTo(room.getCapacity());
+        assertThat(roomDetailResponse.userList()).containsExactlyInAnyOrder(user.getId(), user2.getId());
+        assertThat(roomDetailResponse.userNameList()).containsExactlyInAnyOrder(user.getNickname(), user2.getNickname());
     }
 
     @DisplayName("방 목록을 조회한다.")
