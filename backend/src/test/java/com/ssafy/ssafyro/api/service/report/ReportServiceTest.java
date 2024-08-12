@@ -216,7 +216,7 @@ class ReportServiceTest extends IntegrationTestSupport {
                 .extracting("userId", "reportId")
                 .containsExactly(user.getId(), report.getId());
 
-        assertThat(interviewResultDocumentRepository.findBy(user.getId())).isNotNull()
+        assertThat(interviewResultDocumentRepository.findTop5ByUserIdOrderByEvaluationScore(user.getId())).isNotNull()
                 .extracting("userId", "question", "answer")
                 .containsExactlyInAnyOrder(
                         tuple(user.getId(), "질문1", "답변1"),

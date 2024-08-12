@@ -36,6 +36,7 @@ include::api/interview/interview-finish.adoc[]
 == 면접 결과 API
 
 include::api/interviewresult/get-best-interview-result.adoc[]
+include::api/interviewresult/get-interview-result-by-user-id.adoc[]
 
 [[report-API]]
 == 면접 레포트 API
