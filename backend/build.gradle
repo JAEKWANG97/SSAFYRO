@@ -27,11 +27,6 @@ repositories {
     maven { url 'https://repo.spring.io/milestone' }
 }
 
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
-    springAiVersion = "1.0.0-M1"
-}
-
 dependencies {
     //Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -88,12 +83,15 @@ tasks.named('test') {
 }
 
 ext {
+    set('snippetsDir', file("build/generated-snippets"))
     set('springAiVersion', "1.0.0-M1")
-    snippetsDir = file('build/generated-snippets')
+
+    profile = (!project.hasProperty('profile') || !profile) ? 'test' : profile
 }
 
 test {
     outputs.dir snippetsDir
+    systemProperty 'spring.profiles.active', "${profile}"
 }
 
 asciidoctor {
