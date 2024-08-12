@@ -4,20 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedisRepository;
-import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-@Disabled
 class InterviewServiceTest extends IntegrationTestSupport {
 
     @Autowired
