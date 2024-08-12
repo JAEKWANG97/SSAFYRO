@@ -105,9 +105,9 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                                 .description("MAJOR/NON_MAJOR"),
                                         fieldWithPath("response.profileImageUrl").type(JsonFieldType.STRING)
                                                 .description("이미지 url(임시)"),
-                                        fieldWithPath("response.personalCnt").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.personalCount").type(JsonFieldType.NUMBER)
                                                 .description("인성 모의 면접 횟수"),
-                                        fieldWithPath("response.presentationCnt").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.presentationCount").type(JsonFieldType.NUMBER)
                                                 .description("PT 모의 면접 횟수"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
