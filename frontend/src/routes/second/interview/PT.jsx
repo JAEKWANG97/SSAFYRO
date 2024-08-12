@@ -52,8 +52,16 @@ export default function PT() {
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
+  const { userList, setUserList, userTurn, setUserTurn } = useRoomStore((state) => ({
+    userList: state.userList,
+    setUserList: state.setUserList,
+    userTurn: state.userTurn,
+    setUserTurn: state.setUserTurn,
+  }));
+
   const handleStartInterview = async () => {
     try {
+      // 면접 시작 요청
       await axios.patch(
         "http://i11c201.p.ssafy.io:9999/api/v1/interview/start",
         { roomId: roomid },
@@ -64,6 +72,20 @@ export default function PT() {
         }
       );
       console.log("Interview started successfully");
+
+      // 방의 최신 정보 불러오기
+      const response = await axios.get(
+        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const roomData = response.data.response
+      setUserList(roomData.userList)
+      console.log("updated userList: ", roomData.userList)
 
       // FIRST 메시지 전송
       if (interviewClient.current) {
@@ -97,23 +119,18 @@ export default function PT() {
       stop();
       navigate("/second/interview");
     } catch (error) {
-      console.errer("Error finishing the interview: ", error);
+      console.error("Error finishing the interview: ", error);
     }
   };
 
   const interviewTurnCounter = useRef(0);
   // const userList = useRoomStore((state) => state.userList);
   // const userTurn = useRoomStore((state) => state.userTurn);
-  const { userList, userTurn, setUserTurn } = useRoomStore((state) => ({
-    userList: state.userList,
-    userTurn: state.userTurn,
-    setUserTurn: state.setUserTurn,
-  }));
 
   useEffect(() => {
     console.log("Current userList: ", userList);
     console.log("Current userTurn: ", userTurn);
-  }, [userList, userTurn])
+  }, [userList, userTurn]);
 
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
@@ -400,7 +417,7 @@ export default function PT() {
     if (twoMinuteTimerRef.current) {
       clearInterval(twoMinuteTimerRef.current);
     }
-    
+
     if (stage === "FIRST") {
       setTenMinuteTimer(60);
     } else if (stage === "SECOND" || stage === "THIRD") {
@@ -499,7 +516,7 @@ export default function PT() {
       interviewTurnCounter.current += 1;
 
       // 다음 사용자를 위해 userTurn을 증가시켜 다음 면접자의 Survey를 설정
-      const nextTurn = (userTurn + 1) % userTurn.length;
+      const nextTurn = (userTurn + 1) % userList.length;
       setUserTurn(nextTurn);
 
       // 면접을 종료하거나 다음 면접자 준비
