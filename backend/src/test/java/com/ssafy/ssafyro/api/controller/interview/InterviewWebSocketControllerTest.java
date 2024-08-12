@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.api.controller.interview;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
+import com.ssafy.ssafyro.api.service.interview.response.ExitResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
@@ -23,6 +24,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.ConnectionLostException;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -64,6 +67,7 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
+        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
 
@@ -92,6 +96,7 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
+        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
         roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
@@ -122,6 +127,7 @@ class InterviewWebSocketControllerTest {
                 "PERSONALITY",
                 3
         )).roomId();
+        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
         roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
 
         session.subscribe("/topic/interview/" + roomId, this.createTurnResponseStompFrameHandler(subscribeFuture));
@@ -135,6 +141,35 @@ class InterviewWebSocketControllerTest {
             assertThat(ex.getMessage()).contains("모든 순서가 끝났습니다.");
             return null;
         }).get(5, TimeUnit.SECONDS);
+    }
+
+    @DisplayName("면접 중 면접자가 나간다.")
+    @Test
+    void exitInterviewerTest() throws Exception {
+        // given
+        StompSession session = getStompSession();
+        CompletableFuture<ExitResponse> subscribeFuture = new CompletableFuture<>();
+
+        String roomId = roomService.createRoom(new RoomCreateServiceRequest(
+                "title",
+                "description",
+                "PERSONALITY",
+                3
+        )).roomId();
+
+        roomService.enterRoom(1L, new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(2L, new RoomEnterServiceRequest(roomId));
+        roomService.enterRoom(3L, new RoomEnterServiceRequest(roomId));
+
+        session.subscribe("/topic/interview/" + roomId, createExitResponseStompFrameHandler(subscribeFuture));
+
+        // when
+        session.send("/interview/exit/" + roomId, 1L);
+
+        // then
+        ExitResponse response = subscribeFuture.get(5, TimeUnit.SECONDS);
+        assertThat(response.userList()).doesNotContain(1L);
+        assertThat(response.userList()).hasSize(2);
     }
 
     private StompSession getStompSession() throws Exception {
@@ -165,4 +200,21 @@ class InterviewWebSocketControllerTest {
         };
     }
 
+    private StompFrameHandler createExitResponseStompFrameHandler(CompletableFuture<ExitResponse> subscribeFuture) {
+        return new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return ExitResponse.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                if (payload instanceof ExitResponse) {
+                    subscribeFuture.complete((ExitResponse) payload);
+                } else {
+                    subscribeFuture.completeExceptionally(new RuntimeException("Invalid response type received"));
+                }
+            }
+        };
+    }
 }
