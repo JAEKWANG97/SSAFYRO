@@ -52,10 +52,12 @@ export default function PT() {
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
-  const { userList, setUserList, userTurn, setUserTurn } = useRoomStore(
+  const { userList, setUserList, userNameList, setUserNameList, userTurn, setUserTurn } = useRoomStore(
     (state) => ({
       userList: state.userList,
       setUserList: state.setUserList,
+      userNameList: state.userNameList,
+      setUserNameList: state.setUserNameList,
       userTurn: state.userTurn,
       setUserTurn: state.setUserTurn,
     })
@@ -85,6 +87,7 @@ export default function PT() {
         .then((response) => {
           const roomData = response.data.response;
           setUserList(roomData.userList);
+          setUserNameList(roomData.userNameList)
           // console.log("updated userList: ", roomData.userList);
         })
         .catch((error) => {
@@ -133,11 +136,12 @@ export default function PT() {
 
   useEffect(() => {
     console.log("Current userList: ", userList);
+    console.log("Current userNameList: ", userNameList);
     console.log("Current userTurn: ", userTurn);
     // console.log("Target User: ", userList[userTurn])
     // console.log("Current User: ", userInfo.userId)
     // console.log("IsSameUser: ", Number(userList[userTurn]) === Number(userInfo.userId))
-  }, [userList, userTurn]);
+  }, [userList, userTurn, userNameList]);
 
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
@@ -626,6 +630,7 @@ export default function PT() {
                   userInfo={userInfo}
                   userList={userList}
                   userTurn={userTurn}
+                  userNameList={userNameList}
                 />
               );
             } else {
@@ -647,6 +652,7 @@ export default function PT() {
                   userInfo={userInfo}
                   userList={userList}
                   userTurn={userTurn}
+                  userNameList={userNameList}
                 />
               );
             }

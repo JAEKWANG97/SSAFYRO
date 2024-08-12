@@ -25,7 +25,8 @@ export default function ThreeParticipantsVideo({
   handleStartSurvey,
   userInfo,
   userList,
-  userTurn
+  userTurn,
+  userNameList
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
@@ -87,10 +88,6 @@ export default function ThreeParticipantsVideo({
     }
   };
 
-  // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userList[userTurn]
-  const isSurveyTarget = (identity) => Number(identity) === Number(targetUser);
-
   const styles = `
   @keyframes indigoBlink {
     0% {
@@ -110,6 +107,12 @@ export default function ThreeParticipantsVideo({
   }
   `;
 
+  const currentTurnId = userList[userTurn]
+  const currentTurnUserName = userNameList[userTurn]
+  console.log("현재 면접 순서인 ID :", currentTurnId)
+  console.log("현재 면접 순서인 사람 :", currentTurnUserName)
+
+
   return (
     <>
       <style>{styles}</style>
@@ -124,7 +127,7 @@ export default function ThreeParticipantsVideo({
               participantIdentity={participantName}
               local={true}
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={isSurveyTarget(userInfo.userId)}
+              isSurveyTarget={participantName === currentTurnUserName}
             />
           </div>
         )}
@@ -216,7 +219,7 @@ export default function ThreeParticipantsVideo({
                 track={tracks.video.trackPublication.videoTrack}
                 participantIdentity={participant}
                 local={false}
-                isSurveyTarget={isSurveyTarget(userInfo.userId)}
+                isSurveyTarget={participant === currentTurnUserName}
               />
             )}
             {tracks.audio && ( // 변경된 부분: 오디오 트랙 렌더링

@@ -28,6 +28,7 @@ export default function TwoParticipantsVideo({
   userInfo,
   userList,
   userTurn,
+  userNameList,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -76,9 +77,10 @@ export default function TwoParticipantsVideo({
     }
   };
 
-  // // 현재 턴인 유저의 id
-  // const targetUser = userList.userTurn
-  // const isSurveyTarget = (identity) => identity === targetUser;
+  const currentTurnId = userList[userTurn];
+  const currentTurnUserName = userNameList[userTurn];
+  console.log("현재 면접 순서인 ID :", currentTurnId);
+  console.log("현재 면접 순서인 사람 :", currentTurnUserName);
 
   const styles = `
   @keyframes indigoBlink {
@@ -98,6 +100,7 @@ export default function TwoParticipantsVideo({
     padding: 5px;
   }
   `;
+  // 내 차례일 때에는 불빛을 비칠 수 있지만, 다른 참여자의 경우에는 Name이 없으므로 할 수 없다.
   return (
     <>
       <style>{styles}</style> {/* 애니메이션 스타일 추가 */}
@@ -107,21 +110,14 @@ export default function TwoParticipantsVideo({
         </div> */}
         {localTrack && (
           <div className="w-full h-full">
-            {(() => {
-              const currentTurnId = userList[userTurn]
-              const isSurveyTarget = Number(userInfo.userId) === Number(currentTurnId) && participantName === userInfo.userName
-
-              return (
-                <VideoComponent
-                  track={localTrack}
-                  participantIdentity={participantName}
-                  local={true}
-                  // 표정 상태 변경을 VideoComponent로 전달
-                  onFaceExpressionChange={setFaceExpression}
-                  isSurveyTarget={isSurveyTarget}
-                />
-              );
-            })()}
+            <VideoComponent
+              track={localTrack}
+              participantIdentity={participantName}
+              local={true}
+              // 표정 상태 변경을 VideoComponent로 전달
+              onFaceExpressionChange={setFaceExpression}
+              isSurveyTarget={participantName === currentTurnUserName}
+            />
           </div>
         )}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
@@ -221,16 +217,13 @@ export default function TwoParticipantsVideo({
           // 추가된 부분: remoteTracks를 감싸는 외부 <div> 추가
           <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-gray-400">
             {remoteTracks.map((remoteTrack) => {
-              const currentTurnId = userList[userTurn]
-              const isSurveyTarget = Number(userInfo.userId) === Number(currentTurnId) && remoteTrack.participantIdentity === userInfo.userName
-
               return remoteTrack.trackPublication.kind === "video" ? (
                 <VideoComponent
                   key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={isSurveyTarget}
+                  isSurveyTarget={remoteTrack.participantIdentity === currentTurnUserName}
                 />
               ) : (
                 <AudioComponent

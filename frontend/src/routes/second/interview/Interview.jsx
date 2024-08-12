@@ -123,7 +123,7 @@ export default function Interview() {
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow p-4">
           <div className="container mx-auto">
-            <div className="flex items-center mb-2">
+            {/* <div className="flex items-center mb-2">
               <h1 className="text-3xl font-bold mr-4">면접 스터디 모집</h1>
               <svg
                 onClick={handleRefreshClick}
@@ -141,7 +141,7 @@ export default function Interview() {
                 ></path>
               </svg>
             </div>
-            <div className="flex gap-4 mb-4"> {/* 빠른 시작 및 방 생성 버튼들을 flex 컨테이너로 묶음 */}
+            <div className="flex gap-4 mb-4 justify-end ">
               <button
                 className="bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
                 onClick={() => handleQuickStart("PRESENTATION")}
@@ -160,7 +160,49 @@ export default function Interview() {
               >
                 + 방 생성
               </button>
+            </div> */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center">
+                <h1 className="text-3xl font-bold mr-4">면접 스터디 모집</h1>
+                <svg
+                  onClick={handleRefreshClick}
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`refresh-icon ${isRotating ? "rotating" : ""}`}
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4.75 10.75h-3m12.5-2c0 3-2.798 5.5-6.25 5.5c-3.75 0-6.25-3.5-6.25-3.5v3.5m9.5-9h3m-12.5 2c0-3 2.798-5.5 6.25-5.5c3.75 0 6.25 3.5 6.25 3.5v-3.5"
+                  ></path>
+                </svg>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  className="bg-violet-300 shadow rounded p-4 flex items-center justify-center text-white hover:bg-violet-400 hover:text-white"
+                  onClick={() => handleQuickStart("PRESENTATION")}
+                >
+                  PT면접 빠른 시작
+                </button>
+                <button
+                  className="bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-white hover:bg-emerald-400 hover:text-white"
+                  onClick={() => handleQuickStart("PERSONALITY")}
+                >
+                  인성면접 빠른 시작
+                </button>
+                <button
+                  onClick={() => navigate("/second/interview/createroom")}
+                  className="rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
+                >
+                  + 방 생성
+                </button>
+              </div>
             </div>
+
             <div className="bg-white p-2 shadow-2xl">
               <Filter onSearchClick={handleSearchClick} />
               <div className="flex justify-center">
@@ -186,8 +228,13 @@ export default function Interview() {
                         >
                           {room.status === "WAIT" ? "모집중" : "마감"}
                         </span>
-                        <span className={`border ${room.type === "PERSONALITY" ? "bg-emerald-100 text-emerald-800 border-emerald-400" : "bg-violet-100 text-violet-800 border-violet-400"
-                        } text-xs font-medium py-1 px-2 rounded`}>
+                        <span
+                          className={`border ${
+                            room.type === "PERSONALITY"
+                              ? "bg-emerald-100 text-emerald-800 border-emerald-400"
+                              : "bg-violet-100 text-violet-800 border-violet-400"
+                          } text-xs font-medium py-1 px-2 rounded`}
+                        >
                           {typeKorean[room.type]}
                         </span>
                       </div>
