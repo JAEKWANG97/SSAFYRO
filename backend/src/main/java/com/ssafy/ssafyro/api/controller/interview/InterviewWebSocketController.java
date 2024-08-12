@@ -48,6 +48,6 @@ public class InterviewWebSocketController {
     @SendTo("/topic/interview/{roomId}")
     public ExitResponse exitInterview(@Valid @NotNull Long userId,
                                       @DestinationVariable String roomId) {
-        return interviewService.exitInterview(roomId , userId);
+        return interviewService.exitInterview(roomId, userId);
     }
 }

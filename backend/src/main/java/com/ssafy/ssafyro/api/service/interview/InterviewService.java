@@ -84,7 +84,7 @@ public class InterviewService {
         );
     }
 
-    public ExitResponse exitInterview(String roomId ,Long userId) {
+    public ExitResponse exitInterview(String roomId, Long userId) {
         RoomRedis roomRedis = getRoomRedis(roomId);
         roomRedis.removeParticipant(userId);
         roomRedisRepository.save(roomRedis);
