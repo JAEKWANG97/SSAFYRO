@@ -18,18 +18,16 @@ import {
 export default function Profile() {
   const nav = useNavigate();
   const location = useLocation();
-  const userId = location.state?.userId;
+  // const userId = location.state?.userId;
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
-
   
+  const [userInfo, setUserInfo] = useState({})  // 유저정보(닉네임, 전공유무, 이미지, 인성면접 횟수, pt면접 횟수)
   const [fillActive, setFillActive] = useState("tab1");
 
-
-  // 페이지가 처음 로드될 때 첫 번째 탭을 선택 (새로고침 시 포함)
   useEffect(() => {
-    
     const Token = localStorage.getItem("Token");
 
+    // 유저 정보 불러오기
     axios
       .get(`${APIURL}users`, 
         {headers: {
@@ -37,8 +35,7 @@ export default function Profile() {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        
+        setUserInfo(response.data.response);
       })
       .catch((error) => {
         console.log(error);
@@ -49,6 +46,9 @@ export default function Profile() {
       }
   }, []);
 
+  useEffect(() => {
+    console.log('Updated userInfo:', userInfo); // userInfo가 업데이트될 때 로그를 출력
+  }, [userInfo]);
   // 뒤로 가기 또는 페이지 이동 시, location.state에 저장된 탭 상태를 불러옴
   useEffect(() => {
     if (location.state?.activeTab) {
@@ -63,7 +63,7 @@ export default function Profile() {
     }
   }, [fillActive]);
 
-  const userInfo = useAuthStore((state) => state.userInfo); 
+  // const userInfo = useAuthStore((state) => state.userInfo); 
   const interviewInfo = [
     {type: 1, title: '전공자 인성 면접', room : 1},
     {type: 2, title: '전공자 PT 면접', room : 2},
@@ -99,15 +99,20 @@ export default function Profile() {
             />
             <div>
               <div className="flex items-center gap-3 pb-3">
-                <h2 className="text-2xl font-semibold text-center">{`${userInfo.userName}`}</h2>
+                <h2 className="text-2xl font-semibold text-center">{userInfo.nickname}</h2>
                 <Button
-                  text={userInfo.isMajor ? '전공자' : '비전공자'} 
-                  type={userInfo.isMajor ? 'MAJOR' : 'NONMAJOR'} />
+                  text={userInfo.type === 'MAJOR' ? '전공자' : '비전공자'} 
+                  type={userInfo.type === 'MAJOR' ? 'MAJOR' : 'NONMAJOR'} />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm text-gray-500">인성 모의 면접 N번 </span> 
-                <span className="text-sm text-gray-500">PT 모의 면접 N번</span>
+                <span className="text-sm text-gray-500">
+                  인성 모의 면접 <span className="font-bold text-gray-900">{userInfo.personalCount}</span> 번
+                </span> 
+                <span className="text-sm text-gray-500">
+                  PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 번
+                </span>
               </div>
+
             </div>
           </div>
         </div>
