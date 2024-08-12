@@ -8,6 +8,6 @@ public interface ReportQueryRepository {
 
     List<Report> findReports();
 
-    long countReportsType(RoomType type, User user);
+    int countReportsType(RoomType type, User user);
 
 }

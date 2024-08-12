@@ -26,7 +26,7 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
     }
 
     @Override
-    public long countReportsType(RoomType type, User user) {
+    public int countReportsType(RoomType type, User user) {
         return jpaQueryFactory.select(report)
                 .from(report)
                 .join(report.room, room)
