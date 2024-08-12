@@ -9,8 +9,8 @@ import com.ssafy.ssafyro.api.service.report.dto.QReportScoreAverageDto;
 import com.ssafy.ssafyro.api.service.report.dto.ReportScoreAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.user.User;
-import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -42,35 +42,32 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
     }
 
     @Override
-    public ReportScoreAverageDto findTotalAvgBy(RoomType type, User user) {
-        ReportScoreAverageDto result = jpaQueryFactory
-                .select(
-                        new QReportScoreAverageDto(
-                                report.totalScore.avg(),
-                                report.pronunciationScore.avg(),
-                                interviewResult.happy.avg(),
-                                interviewResult.disgust.avg(),
-                                interviewResult.sad.avg(),
-                                interviewResult.surprise.avg(),
-                                interviewResult.fear.avg(),
-                                interviewResult.angry.avg(),
-                                interviewResult.neutral.avg()
+    public Optional<ReportScoreAverageDto> findTotalAvgBy(RoomType type, User user) {
+        return Optional.ofNullable(
+                jpaQueryFactory
+                        .select(
+                                new QReportScoreAverageDto(
+                                        report.totalScore.avg(),
+                                        report.pronunciationScore.avg(),
+                                        interviewResult.happy.avg(),
+                                        interviewResult.disgust.avg(),
+                                        interviewResult.sad.avg(),
+                                        interviewResult.surprise.avg(),
+                                        interviewResult.fear.avg(),
+                                        interviewResult.angry.avg(),
+                                        interviewResult.neutral.avg()
+                                )
                         )
-                )
-                .from(interviewResult)
-                .join(interviewResult.report, report)
-                .join(report.room, room)
-                .where(
-                        report.user.eq(user)
-                                .and(room.type.eq(type))
-                )
-                .groupBy(report.user)
-                .fetchOne();
-
-        if (result == null) {
-            throw new ReportNotFoundException("Report not found");
-        }
-
-        return result;
+                        .from(interviewResult)
+                        .join(interviewResult.report, report)
+                        .join(report.room, room)
+                        .where(
+                                report.user.eq(user)
+                                        .and(room.type.eq(type))
+                        )
+                        .groupBy(report.user)
+                        .fetchOne()
+        );
     }
+
 }

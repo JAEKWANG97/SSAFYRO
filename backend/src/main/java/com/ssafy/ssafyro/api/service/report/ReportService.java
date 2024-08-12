@@ -98,9 +98,10 @@ public class ReportService {
 
     public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsAverageServiceRequest request) {
         return reportRepository.findTotalAvgBy(request.roomType(), getUser(userId))
+                .orElseThrow(() -> new ReportNotFoundException("Report not found"))
                 .toResponse(request.roomType());
     }
-
+    
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));

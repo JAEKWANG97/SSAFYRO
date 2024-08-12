@@ -135,8 +135,8 @@ class ReportRepositoryTest extends IntegrationTestSupport {
         interviewResultRepository.saveAll(List.of(interviewResult1, interviewResult2, interviewResult3));
 
         //when
-        ReportScoreAverageDto resultPersonal = reportRepository.findTotalAvgBy(PERSONALITY, user);
-        ReportScoreAverageDto resultPresentation = reportRepository.findTotalAvgBy(PRESENTATION, user);
+        ReportScoreAverageDto resultPersonal = reportRepository.findTotalAvgBy(PERSONALITY, user).get();
+        ReportScoreAverageDto resultPresentation = reportRepository.findTotalAvgBy(PRESENTATION, user).get();
 
         //then
         assertThat(resultPersonal).isNotNull()
