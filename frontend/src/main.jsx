@@ -28,6 +28,7 @@ import "./index.css";
 const AppLayout = () => {
   const location = useLocation();
   const userInfo = useAuthStore((state) => state.setIsLogin);
+  const setUserInfo = useAuthStore((state) => state.setUserInfo);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
 
