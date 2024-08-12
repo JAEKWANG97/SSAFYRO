@@ -20,13 +20,19 @@ public class InterviewResultService {
         List<String> tags = getWorstQuestionTagsFor(userId);
 
         return InterviewResultsResponse.of(
-                interviewResultDocumentRepository.findBestInterviewResultBy(tags, userId, pageable)
+                interviewResultDocumentRepository.findBestInterviewResultsBy(tags, userId, pageable)
         );
     }
 
     public InterviewResultsResponse getInterviewResultsBy(Long userId, Pageable pageable) {
         return InterviewResultsResponse.of(
                 interviewResultDocumentRepository.findBy(userId, pageable)
+        );
+    }
+
+    public InterviewResultsResponse getInterviewResultsBy(List<String> tags, Pageable pageable) {
+        return InterviewResultsResponse.of(
+                interviewResultDocumentRepository.findInterviewResultsBy(tags, pageable)
         );
     }
 

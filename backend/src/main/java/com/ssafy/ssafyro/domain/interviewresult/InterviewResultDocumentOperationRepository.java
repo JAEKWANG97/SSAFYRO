@@ -7,5 +7,7 @@ public interface InterviewResultDocumentOperationRepository {
 
     List<InterviewResultDocument> findBy(Long userId, Pageable pageable);
 
-    List<InterviewResultDocument> findBestInterviewResultBy(List<String> tags, Long userId, Pageable pageable);
+    List<InterviewResultDocument> findBestInterviewResultsBy(List<String> tags, Long userId, Pageable pageable);
+
+    List<InterviewResultDocument> findInterviewResultsBy(List<String> tags, Pageable pageable);
 }

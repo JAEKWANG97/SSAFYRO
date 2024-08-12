@@ -102,7 +102,7 @@ class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
         );
 
         //when
-        List<InterviewResultDocument> interviewResult = interviewResultDocumentRepository.findBestInterviewResultBy(
+        List<InterviewResultDocument> interviewResult = interviewResultDocumentRepository.findBestInterviewResultsBy(
                 List.of("후회", "인생", "왜"), 100L, Pageable.ofSize(5)
         );
 
