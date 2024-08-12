@@ -526,6 +526,16 @@ export default function PT() {
     if (tenMinuteTimer <= 0) {
       clearInterval(timerRef.current); // 10분 타이머가 끝나면 정지
 
+      Swal.fire({
+        title: "면접 차례가 종료되었습니다.",
+        text: "2분동안 상호평가가 진행됩니다.",
+        icon: "info",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setModalOpen();
+        }
+      });
+
       // 2분 타이머 시작
       twoMinuteTimerRef.current = setInterval(() => {
         setTwoMinuteTimer((prevSeconds) => prevSeconds - 1);
