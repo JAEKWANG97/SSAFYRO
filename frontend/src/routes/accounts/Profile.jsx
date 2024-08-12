@@ -20,13 +20,12 @@ export default function Profile() {
   const location = useLocation();
   // const userId = location.state?.userId;
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
-  
+  const Token = localStorage.getItem("Token");
   const [userInfo, setUserInfo] = useState({})  // 유저정보(닉네임, 전공유무, 이미지, 인성면접 횟수, pt면접 횟수)
   const [fillActive, setFillActive] = useState("tab1");
+  const [interviewInfo, setInterviewInfo] = useState([]) // 면접정보[{레포트ID, 면접종류, 총점, 발음점수, 면접일시}]
 
   useEffect(() => {
-    const Token = localStorage.getItem("Token");
-
     // 유저 정보 불러오기
     axios
       .get(`${APIURL}users`, 
@@ -34,8 +33,8 @@ export default function Profile() {
           Authorization: `Bearer ${Token}`,
         },
       })
-      .then((response) => {
-        setUserInfo(response.data.response);
+      .then((res) => {
+        setUserInfo(res.data.response);
       })
       .catch((error) => {
         console.log(error);
@@ -47,9 +46,33 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-    console.log('Updated userInfo:', userInfo); // userInfo가 업데이트될 때 로그를 출력
-  }, [userInfo]);
-  // 뒤로 가기 또는 페이지 이동 시, location.state에 저장된 탭 상태를 불러옴
+   
+    const Info = localStorage.getItem('userInfo')
+    const parsedInfo = JSON.parse(Info);
+
+    // 유저 정보 불러오기
+    axios
+      .get(`${APIURL}reports`, {
+        params: {
+          userId: parsedInfo.userId,  // userId를 parsedInfo 객체에서 가져옵니다.
+          page: 1,
+          size: 10,
+        }, 
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+        })
+        .then((res) => {
+          console.log(res.data.response.reports);
+          setInterviewInfo(res.data.response.reports)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      }, []);
+
+
   useEffect(() => {
     if (location.state?.activeTab) {
       setFillActive(location.state.activeTab);
@@ -64,13 +87,13 @@ export default function Profile() {
   }, [fillActive]);
 
   // const userInfo = useAuthStore((state) => state.userInfo); 
-  const interviewInfo = [
-    {type: 1, title: '전공자 인성 면접', room : 1},
-    {type: 2, title: '전공자 PT 면접', room : 2},
-    {type: 1, title: '0810', room : 3},
-    {type: 2, title: '0810', room : 4},
-    {type: 2, title: '0810', room : 5}
-  ];
+  // const interviewInfo = [
+  //   {type: 1, title: '전공자 인성 면접', room : 1},
+  //   {type: 2, title: '전공자 PT 면접', room : 2},
+  //   {type: 1, title: '0810', room : 3},
+  //   {type: 2, title: '0810', room : 4},
+  //   {type: 2, title: '0810', room : 5}
+  // ];
 
   const handleFillClick = (value) => {
     if (value === fillActive) {
@@ -184,11 +207,11 @@ export default function Profile() {
                     key={index}
                     className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg"
                     style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
-                    onClick={() => info.type === 1 ? nav('personality_feedback', { state: { info, activeTab: "tab3" } }) : nav('pt_feedback', { state: { info, activeTab: "tab3" } })}
+                    onClick={() => info.type === "PERSONALITY" ? nav('personality_feedback', { state: { info, activeTab: "tab3" } }) : nav('pt_feedback', { state: { info, activeTab: "tab3" } })}
                   >
                     <img 
-                      src={info.type === 1 ? PersonaltyImg : PtImg} 
-                      alt={info.type === 1 ? "Personality Interview" : "PT Interview"} 
+                      src={info.type === "PERSONALITY" ? PersonaltyImg : PtImg} 
+                      alt={info.type === "PERSONALITY" ? "Personality Interview" : "PT Interview"} 
                       className="w-10 h-10 mb-2" 
                     />
                     <p className="font-medium text-sm text-center">{info.title}</p>
