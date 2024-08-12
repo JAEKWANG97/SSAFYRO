@@ -110,8 +110,10 @@ export default function PT() {
     setUserTurn: state.setUserTurn,
   }));
 
-  console.log("Current userList: ", userList);
-  console.log("Current userTurn: ", userTurn);
+  useEffect(() => {
+    console.log("Current userList: ", userList);
+    console.log("Current userTurn: ", userTurn);
+  }, [userList, userTurn])
 
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
