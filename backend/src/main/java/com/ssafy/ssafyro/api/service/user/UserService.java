@@ -3,6 +3,8 @@ package com.ssafy.ssafyro.api.service.user;
 import com.ssafy.ssafyro.api.service.user.response.UserInfoResponse;
 import com.ssafy.ssafyro.api.service.user.response.UserInitSettingResponse;
 import com.ssafy.ssafyro.domain.MajorType;
+import com.ssafy.ssafyro.domain.report.ReportRepository;
+import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ReportRepository reportRepository;
 
     public User loginOAuth(String username) {
         return userRepository.findByUsername(username)
@@ -25,8 +28,7 @@ public class UserService {
 
     @Transactional
     public UserInitSettingResponse initMajorTypeFor(Long userId, MajorType majorType) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = getUser(userId);
 
         user.initializeMajorType(majorType);
 
@@ -34,6 +36,17 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(Long userId) {
-        return null;
+        User user = getUser(userId);
+
+        return UserInfoResponse.of(
+                user,
+                reportRepository.countReportsType(RoomType.PERSONALITY, user),
+                reportRepository.countReportsType(RoomType.PRESENTATION, user)
+        );
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }
