@@ -24,6 +24,7 @@ import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.article.ArticleNotFoundException;
+import com.ssafy.ssafyro.error.interviewResult.InterviewResultNotFoundException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
@@ -59,11 +60,12 @@ public class ReportService {
     }
 
     public ReportResponse getReport(Long reportId) {
-        Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new ReportNotFoundException("Report not found"));
+        Report report = getReportBy(reportId);
 
         List<InterviewResult> interviewResult = interviewResultRepository.findByReportId(reportId);
+        validInterviewResult(interviewResult);
 
+        //TODO: 형변환 리펙토링 고려하기
         if (report.isPresentation()) {
             Article article = ((PresentationInterviewReport) report).getArticle();
 
@@ -133,8 +135,19 @@ public class ReportService {
                 .build();
     }
 
+    private Report getReportBy(Long reportId) {
+        return reportRepository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException("Report not found"));
+    }
+
     private Article getArticle(Long id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
+    }
+
+    private static void validInterviewResult(List<InterviewResult> interviewResult) {
+        if (interviewResult.isEmpty()) {
+            throw new InterviewResultNotFoundException("InterviewResult not found");
+        }
     }
 }
