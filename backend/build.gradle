@@ -28,9 +28,8 @@ repositories {
 }
 
 ext {
-
-    springAiVersion = "1.0.0-M1"
     set('snippetsDir', file("build/generated-snippets"))
+    springAiVersion = "1.0.0-M1"
 }
 
 dependencies {
@@ -42,12 +41,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'com.github.shin285:KOMORAN:3.3.9'
 
+    //AI
+    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+
     //JWT
     implementation 'com.auth0:java-jwt:4.4.0'
 
     //OpenVidu
     implementation 'io.livekit:livekit-server:0.5.11'
-    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 
     //DevTools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -59,6 +60,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
     //Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -111,4 +118,8 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
     }
+}
+
+clean {
+    delete file('src/main/generated')
 }
