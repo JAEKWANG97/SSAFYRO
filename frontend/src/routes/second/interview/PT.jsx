@@ -40,6 +40,9 @@ import useInterviewStore from "../../../stores/InterviewStore";
 // Survey 모달창
 import Survey from "../../../components/Survey";
 
+// 알림창 라이브러리
+import Swal from "sweetalert2";
+
 export default function PT() {
   // 방 정보 가져오기
   const { roomid } = useParams();
@@ -542,12 +545,26 @@ export default function PT() {
 
       // 면접을 종료하거나 다음 면접자 준비
       if (interviewTurnCounter.current >= userList.length) {
-        handleEndInterview();
+        Swal.fire({
+          title: "면접이 종료되었습니다.",
+          text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleEndInterview();
+          }
+        })
       }
       else if (userList.length === 1) {
-        handleEndInterview();
-      } else {
-        setModalOpen();
+        Swal.fire({
+          title: "면접이 종료되었습니다.",
+          text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleEndInterview();
+          }
+        })
       }
     }
   }, [twoMinuteTimer]);
