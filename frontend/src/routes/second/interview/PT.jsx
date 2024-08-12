@@ -474,7 +474,7 @@ export default function PT() {
   // STOMP 클라이언트 초기화 및 메시지 구독
   useEffect(() => {
     const client = new Client({
-      brokerURL: `ws://i11c201.p.ssafy.io:9999/ssafyro-chat`,
+      brokerURL: `wss://i11c201.p.ssafy.io:8443/ssafyro-chat`,
       onConnect: async () => {
         console.log("STOMP client connected");
 
