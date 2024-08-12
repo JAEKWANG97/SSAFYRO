@@ -32,7 +32,7 @@ export default function Essay() {
   const overlayRef = useRef(null);
 
   const nav = useNavigate();
-  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
 
   const correctionRef = useRef(null); // AI 첨삭 내용의 높이를 참조하기 위한 ref
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태

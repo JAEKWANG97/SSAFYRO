@@ -9,7 +9,7 @@ export default function EssayDetail() {
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [editedEssayData, setEditedEssayData] = useState(""); // 수정된 에세이 데이터
   const [essayId, setEssayId] = useState(1);
-  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/essays";
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/essays";
 
   const mockquestion = '향후 어떤 SW 개발자로 성장하고 싶은지 SW 관련 경험을 토대로 기술하고, SSAFY에 지원하신 동기에 대해서도 작성 바랍니다.';
   const mockdata =

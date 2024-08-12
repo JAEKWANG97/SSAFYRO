@@ -65,7 +65,7 @@ export default function PT() {
     try {
       // 면접 시작 요청
       await axios.patch(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/start",
+        "https://i11c201.p.ssafy.io:8443/api/v1/interview/start",
         { roomId: roomid },
         {
           headers: {
@@ -77,7 +77,7 @@ export default function PT() {
 
       // 방의 최신 정보 불러오기
       await axios
-        .get(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`, {
+        .get(`https://i11c201.p.ssafy.io:8443/api/v1/rooms/${roomid}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },
@@ -108,7 +108,7 @@ export default function PT() {
     try {
       // 면접 종료 요청 api 호출
       await axios.patch(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/finish",
+        "https://i11c201.p.ssafy.io:8443/api/v1/interview/finish",
         { roomId: roomid },
         {
           headers: {
@@ -160,7 +160,7 @@ export default function PT() {
   ) {
     await axios
       .post(
-        "http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result",
+        "https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result",
         {
           question: question,
           answer: answer,
@@ -202,7 +202,7 @@ export default function PT() {
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL =
-    "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/"; // Application 서버 주소
+    "https://i11c201.p.ssafy.io:8443/api/v1/openvidu/"; // Application 서버 주소
   let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/"; // LiveKit 서버 주소
   const configureUrls = function () {
     if (!APPLICATION_SERVER_URL) {
@@ -268,7 +268,7 @@ export default function PT() {
 
     try {
       await axios.post(
-        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+        `https://i11c201.p.ssafy.io:8443/api/v1/rooms/exit`,
         {
           roomId: roomid,
         },

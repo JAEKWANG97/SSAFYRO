@@ -40,7 +40,7 @@ export default function WaitRoom() {
         // console.log("Retrieved Token: ", token);
 
         const response = await axios.get(
-          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
+          `https://i11c201.p.ssafy.io:8443/api/v1/rooms/${roomid}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ export default function WaitRoom() {
 
         if (!isUserAlreadyInRoom) {
           await axios.post(
-            `http://i11c201.p.ssafy.io:9999/api/v1/rooms/enter`,
+            `https://i11c201.p.ssafy.io:8443/api/v1/rooms/enter`,
             { roomId: roomid },
             {
               headers: {
@@ -69,7 +69,7 @@ export default function WaitRoom() {
           );
 
           const updatedResponse = await axios.get(
-            `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
+            `https://i11c201.p.ssafy.io:8443/api/v1/rooms/${roomid}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const updatedRoomData = updatedResponse.data.response;
@@ -191,7 +191,7 @@ export default function WaitRoom() {
     if (waitRoom) {
       try {
         await axios.post(
-          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+          `https://i11c201.p.ssafy.io:8443/api/v1/rooms/exit`,
           {
             roomId: roomid,
           },
@@ -225,7 +225,7 @@ export default function WaitRoom() {
   const [remoteTracks, setRemoteTracks] = useState([]);
 
   let APPLICATION_SERVER_URL =
-    "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/"; // Application 서버 주소
+    "https://i11c201.p.ssafy.io:8443/api/v1/openvidu/"; // Application 서버 주소
   let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/"; // LiveKit 서버 주소
 
   const configureUrls = function () {

@@ -17,7 +17,7 @@ export default function PTReady() {
     const token = localStorage.getItem("Token")
     try {
       await axios.post(
-        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+        `https://i11c201.p.ssafy.io:8443/api/v1/rooms/exit`,
         {
           roomId: roomid,
         },
@@ -113,7 +113,7 @@ export default function PTReady() {
   const [interviewQuestion, setInerviewQuestion] = useState(initData);
   const setPTQuestions = (questions) => useInterviewStore.setState({ PTQuestions: questions });
 
-  const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
 
   const getQuestion = function () {
     axios
