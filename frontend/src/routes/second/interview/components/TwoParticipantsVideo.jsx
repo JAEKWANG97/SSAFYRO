@@ -25,7 +25,9 @@ export default function TwoParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
   handleStartSurvey,
-  userInfo
+  userInfo,
+  userList,
+  userTurn
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -75,8 +77,8 @@ export default function TwoParticipantsVideo({
   };
 
   // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userInfo.userName;
-  const isSurveyTarget = (identity) => identity === targetUser;
+  const targetUser = userList[userTurn]
+  const isSurveyTarget = (identity) => Number(identity) === Number(targetUser);
 
   const styles = `
   @keyframes indigoBlink {
@@ -111,7 +113,7 @@ export default function TwoParticipantsVideo({
               local={true}
               // 표정 상태 변경을 VideoComponent로 전달
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={isSurveyTarget(participantName)}
+              isSurveyTarget={isSurveyTarget(userInfo.userId)}
             />
           </div>
         )}

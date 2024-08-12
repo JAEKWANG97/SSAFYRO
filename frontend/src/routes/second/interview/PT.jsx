@@ -85,7 +85,7 @@ export default function PT() {
         .then((response) => {
           const roomData = response.data.response;
           setUserList(roomData.userList);
-          console.log("updated userList: ", roomData.userList);
+          // console.log("updated userList: ", roomData.userList);
         })
         .catch((error) => {
           console.log("Error! : ", error);
@@ -134,6 +134,9 @@ export default function PT() {
   useEffect(() => {
     console.log("Current userList: ", userList);
     console.log("Current userTurn: ", userTurn);
+    // console.log("Target User: ", userList[userTurn])
+    // console.log("Current User: ", userInfo.userId)
+    // console.log("IsSameUser: ", Number(userList[userTurn]) === Number(userInfo.userId))
   }, [userList, userTurn]);
 
   const handleStartSurvey = () => {
@@ -621,10 +624,12 @@ export default function PT() {
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
                   userInfo={userInfo}
+                  userList={userList}
+                  userTurn={userTurn}
                 />
               );
             } else {
-              console.log("세명 전용 방으로 이동");
+              // console.log("세명 전용 방으로 이동");
               return (
                 <ThreeParticipantsVideo
                   localTrack={localTrack}
@@ -640,6 +645,8 @@ export default function PT() {
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
                   userInfo={userInfo}
+                  userList={userList}
+                  userTurn={userTurn}
                 />
               );
             }

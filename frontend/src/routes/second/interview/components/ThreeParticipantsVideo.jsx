@@ -23,7 +23,9 @@ export default function ThreeParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
   handleStartSurvey,
-  userInfo
+  userInfo,
+  userList,
+  userTurn
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
@@ -86,8 +88,8 @@ export default function ThreeParticipantsVideo({
   };
 
   // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userInfo.userName
-  const isSurveyTarget = (identity) => identity === targetUser;
+  const targetUser = userList[userTurn]
+  const isSurveyTarget = (identity) => Number(identity) === Number(targetUser);
 
   const styles = `
   @keyframes indigoBlink {
@@ -122,7 +124,7 @@ export default function ThreeParticipantsVideo({
               participantIdentity={participantName}
               local={true}
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={isSurveyTarget(participantName)}
+              isSurveyTarget={isSurveyTarget(userInfo.userId)}
             />
           </div>
         )}
