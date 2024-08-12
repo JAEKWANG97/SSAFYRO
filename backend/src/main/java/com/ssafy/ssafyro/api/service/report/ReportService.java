@@ -60,7 +60,7 @@ public class ReportService {
 
     public ReportResponse getReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
-                .orElseThrow(ReportNotFoundException::new);
+                .orElseThrow(() -> new ReportNotFoundException("Report not found"));
 
         List<InterviewResult> interviewResult = interviewResultRepository.findByReportId(reportId);
 
@@ -96,7 +96,9 @@ public class ReportService {
 
     public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsAverageServiceRequest request) {
         User user = getUser(userId);
-        return null;
+
+        return reportRepository.findTotalAvgBy(request.roomType(), user)
+                .toResponse(request.roomType());
     }
 
     private User getUser(Long userId) {
