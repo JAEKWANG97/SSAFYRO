@@ -691,6 +691,7 @@ export default function PT() {
             <Survey
               targetUser={userList[userTurn]}
               setModalClose={setModalClose}
+              setTotalResult={setTotalResult}
              />
           </div>
         </div>

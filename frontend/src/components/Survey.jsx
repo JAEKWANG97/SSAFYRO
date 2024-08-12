@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 
-export default function Survey({ targetUser, setModalClose }) {
+export default function Survey({ targetUser, setModalClose, setTotalResult }) {
   const roomId = useParams().roomid;
   // const location = useLocation();
   // const { targetUser } = location.state;
@@ -32,15 +32,18 @@ export default function Survey({ targetUser, setModalClose }) {
       totalScore: totalScore,
     }
 
-    axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
-    .then((response) => {
-      alert('평가 제출이 완료되었습니다.'); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
-      setModalClose();
-    })
-    .catch((error) => {
-      console.log(error);
-      setModalClose();
-    });
+    setTotalResult(totalScore);
+    setModalClose();
+
+    // axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
+    // .then((response) => {
+    //   alert('평가 제출이 완료되었습니다.'); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
+    //   setModalClose();
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    //   setModalClose();
+    // });
   };
 
   return (
