@@ -90,14 +90,14 @@ ext {
 test {
     outputs.dir snippetsDir
 
-    testLogging {
-        events "failed"
-    }
-
     if (project.hasProperty('profile')) {
         systemProperty 'spring.profiles.active', project.property('profile')
     } else {
         systemProperty 'spring.profiles.active', 'test'
+    }
+    
+    testLogging {
+        events "failed"
     }
 }
 
