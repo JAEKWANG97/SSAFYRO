@@ -1,8 +1,11 @@
 import ServiceContents from "./ServiceContents";
 import maincharacter from './../../../public/main/main_characters.png'
-
+import useAuthStore from "../../stores/AuthStore";
 
 export default function MemberContents() {
+
+  const userInfo = useAuthStore((state) => state.userInfo);
+
   return (
     <div className="flex justify-center">
       <div
@@ -50,7 +53,7 @@ export default function MemberContents() {
             </div>
             <div className="text-center mt-8 mb-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                UserName 님의 합격 지수
+                {userInfo.userName} 님의 합격 지수
               </h2>
               <p className="font-bold">
                 <span className="text-3xl text-cyan-600">Score</span>{" "}
