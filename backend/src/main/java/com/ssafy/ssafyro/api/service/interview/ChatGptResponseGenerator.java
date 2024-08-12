@@ -1,50 +1,36 @@
 package com.ssafy.ssafyro.api.service.interview;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
 public class ChatGptResponseGenerator {
 
-    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
-
-    @Value("${openai.api.key}")
-    private String apiKey;
-
-    private final RestTemplate restTemplate;
+    private final ChatClient chatClient;
 
     public String generateFeedbackBy(String question, String answer) {
-        HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createFeedbackPrompt(question, answer), 1000),
-                setHeaders()
-        );
-
-        return getFeedback(request);
+        return chatClient.prompt()
+                .user(createFeedbackPrompt(question, answer))
+                .call()
+                .content();
     }
 
     public AiArticle generateArticle() {
-        HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createArticlePrompt(), 1000),
-                setHeaders()
-        );
+        String content = chatClient.prompt()
+                .user(createArticlePrompt())
+                .call()
+                .content();
 
-        return getArticle(request);
+        return getArticle(content);
     }
 
     public String generateNewEssay(String question, String content) {
-        HttpEntity<Request> request = new HttpEntity<>(
-                new Request(createEssayReviewPrompt(question, content), 1000),
-                setHeaders()
-        );
-
-        return getNewEssay(request);
+        return chatClient.prompt()
+                .user(createEssayReviewPrompt(question, content))
+                .call()
+                .content();
     }
 
     private String createFeedbackPrompt(String question, String answer) {
@@ -106,64 +92,7 @@ public class ChatGptResponseGenerator {
                 + "totalfeedback:";
     }
 
-    private String getFeedback(HttpEntity<Request> request) {
-        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
-                .getBody()
-                .choices()
-                .get(0)
-                .message()
-                .content();
-    }
-
-    private AiArticle getArticle(HttpEntity<Request> request) {
-        String[] result = restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
-                .getBody()
-                .choices()
-                .get(0)
-                .message()
-                .content()
-                .split("-------------");
-
-        return new AiArticle(result);
-    }
-
-    private String getNewEssay(HttpEntity<Request> request) {
-        return restTemplate.exchange(API_URL, HttpMethod.POST, request, Response.class)
-                .getBody()
-                .choices()
-                .get(0)
-                .message()
-                .content();
-    }
-
-    private HttpHeaders setHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + apiKey);
-        headers.set("Content-Type", "application/json");
-        return headers;
-    }
-
-    private record Request(String model, List<Message> messages, int max_tokens) {
-
-        private Request(String messages, int max_tokens) {
-            this(
-                    "gpt-4o-mini",
-                    List.of(new Message("user", messages)),
-                    max_tokens
-            );
-        }
-
-        private record Message(String role, String content) {
-        }
-    }
-
-    public record Response(List<Choice> choices) {
-
-        public record Choice(Message message) {
-
-            public record Message(String role,
-                                  String content) {
-            }
-        }
+    private AiArticle getArticle(String content) {
+        return new AiArticle(content.split("-------------"));
     }
 }
