@@ -141,7 +141,7 @@ export default function PT() {
       // OpenVidu 연결 종료 및 페이지 이동
       leaveRoom();
       stop();
-      navigate("/second/interview");
+      navigate("/account/profile");
     } catch (error) {
       console.error("Error finishing the interview: ", error);
     }
