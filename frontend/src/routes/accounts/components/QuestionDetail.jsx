@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { EMOTIONS, SCORE_RANGES } from "./constants";
 
 export default function QuestionDetail({ detailItem }) {
   const [item, setItem] = useState(null);
@@ -18,16 +19,37 @@ export default function QuestionDetail({ detailItem }) {
   }
 
   const getScoreColor = (score) => {
-    if (score >= 80) return "bg-green-100 text-green-800 border-green-300";
-    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-300";
-    return "bg-red-100 text-red-800 border-red-300";
+    return SCORE_RANGES.find((range) => score >= range.min).color;
   };
 
   return (
     <div className="mb-8 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
-        질문 상세 정보
-      </h2>
+      <div className="flex justify-between items-start mb-6 pb-2 border-b">
+        <h2 className="text-2xl font-bold text-gray-800">질문 상세 정보</h2>
+        <div className="flex items-end gap-2">
+          <div
+            className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(
+              item.totalScore
+            )}`}
+          >
+            총점: {item.totalScore}
+          </div>
+          <div className="flex flex-wrap justify-end gap-2 mt-2">
+            {Object.entries(EMOTIONS).map(([key, emotion]) => {
+              const value = item.expressions[key.toLowerCase()];
+              if (value !== undefined) {
+                return (
+                  <div key={key} className="flex items-center space-x-1">
+                    <span className={emotion.color}>{emotion.emoji}</span>
+                    <span className="text-xs">{(value * 100).toFixed(1)}%</span>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+        </div>
+      </div>
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-2 text-blue-600">질문</h3>
@@ -40,41 +62,6 @@ export default function QuestionDetail({ detailItem }) {
           <p className="text-gray-700 bg-green-50 p-4 rounded-md border border-green-200 tracking-wide leading-loose">
             {item.answer}
           </p>
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-2 text-purple-600">
-            점수 정보
-          </h3>
-          <div
-            className={`p-4 rounded-md border ${getScoreColor(
-              item.totalScore
-            )}`}
-          >
-            <p className="mb-2">
-              <strong>총점:</strong> {item.totalScore}
-            </p>
-            <p>
-              <strong>발음 점수:</strong> {item.pronounce_score}
-            </p>
-          </div>
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-2 text-orange-600">
-            감정 표현
-          </h3>
-          <div className="bg-orange-50 p-4 rounded-md border border-orange-200">
-            <p className="mb-2">
-              <strong>행복:</strong> {(item.expressions.happy * 100).toFixed(1)}
-              %
-            </p>
-            <p className="mb-2">
-              <strong>슬픔:</strong> {(item.expressions.sad * 100).toFixed(1)}%
-            </p>
-            <p>
-              <strong>중립:</strong>{" "}
-              {(item.expressions.neutral * 100).toFixed(1)}%
-            </p>
-          </div>
         </div>
       </div>
     </div>

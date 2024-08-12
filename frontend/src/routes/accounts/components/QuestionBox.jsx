@@ -1,4 +1,5 @@
 import letterQ from "../../../../public/interview_result/letter-q.png";
+import freeIconLetterQ from "../../../../public/interview_result/free-icon-letter-q-7548487.png";
 import { useNavigate } from "react-router-dom";
 
 export default function QuestionBox({ item, selectedItem }) {
@@ -25,16 +26,9 @@ export default function QuestionBox({ item, selectedItem }) {
       >
         <div className={`h-2 ${getScoreColor(item.totalScore)}`}></div>
         <div className="p-4">
-          <div className="flex gap-2 mb-2">
-            <img src={letterQ} alt="letter-q" className="w-4 h-4" />
+          <div className="flex gap-2 mb-2 ">
+            <img src={freeIconLetterQ} alt="letter-q" className="w-4 h-4" />
             <h3 className="font-bold">{item.question}</h3>
-          </div>
-          <div
-            className={`text-sm font-medium ${getScoreColor(
-              item.totalScore
-            )} inline-block px-2 py-1 rounded-full`}
-          >
-            총점: {item.totalScore}
           </div>
         </div>
       </div>

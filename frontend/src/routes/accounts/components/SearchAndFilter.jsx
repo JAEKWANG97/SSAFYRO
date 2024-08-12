@@ -24,10 +24,10 @@ function SearchAndFilter({
             onChange={onFilterChange}
             className="p-3 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-150 ease-in-out"
           >
-            <option value="all">최신순</option>
+            <option value="recent">최신순</option>
             <option value="oldest">오래된순</option>
-            <option value="best">Best</option>
-            <option value="worst">Worst</option>
+            <option value="highest_score">고득점순</option>
+            <option value="lowest_score">저득점순</option>
           </select>
           <button className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-150 ease-in-out">
             검색
