@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import EssayDetail from './components/EssayDetail';
@@ -18,9 +19,35 @@ export default function Profile() {
   const nav = useNavigate();
   const location = useLocation();
   const userId = location.state?.userId;
-  console.log(userId)
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
+
   
   const [fillActive, setFillActive] = useState("tab1");
+
+
+  // 페이지가 처음 로드될 때 첫 번째 탭을 선택 (새로고침 시 포함)
+  useEffect(() => {
+    
+    const Token = localStorage.getItem("Token");
+
+    axios
+      .get(`${APIURL}users`, 
+        {headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      if (!location.state?.activeTab) {
+        setFillActive("tab1");
+      }
+  }, []);
 
   // 뒤로 가기 또는 페이지 이동 시, location.state에 저장된 탭 상태를 불러옴
   useEffect(() => {
@@ -29,13 +56,7 @@ export default function Profile() {
     }
   }, [location.state]);
 
-  // 페이지가 처음 로드될 때 첫 번째 탭을 선택 (새로고침 시 포함)
-  useEffect(() => {
-    if (!location.state?.activeTab) {
-      setFillActive("tab1");
-    }
-  }, []);
-
+  
   useEffect(() => {
     if (fillActive === "tab2" || fillActive === "tab3") {
       window.scrollTo(0, document.body.scrollHeight);
