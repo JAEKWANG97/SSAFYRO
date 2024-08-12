@@ -37,6 +37,9 @@ import useAuthStore from "../../../stores/AuthStore";
 // 상태 관리 모듈
 import useInterviewStore from "../../../stores/InterviewStore";
 
+// Survey 모달창
+import Survey from "../../../components/Survey";
+
 export default function PT() {
   // 방 정보 가져오기
   const { roomid } = useParams();
@@ -565,6 +568,17 @@ export default function PT() {
   // 면접 컨트롤을 위한 함수와 변수들
   const [questionCount, setQuestionCount] = useState(0);
 
+  // 면접 평가 modal 창
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const setModalOpen = function () {
+    setIsModalOpen(true);
+  };
+
+  const setModalClose = function () {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div
@@ -621,6 +635,7 @@ export default function PT() {
                   handleStartSurvey={handleStartSurvey}
                   userList={userList}
                   userTurn={userTurn}
+                  setModalOpen={setModalOpen}
                 />
               );
             } else {
@@ -641,6 +656,7 @@ export default function PT() {
                   handleStartSurvey={handleStartSurvey}
                   userList={userList}
                   userTurn={userTurn}
+                  setModalOpen={setModalOpen}
                 />
               );
             }
@@ -663,6 +679,17 @@ export default function PT() {
           </div>
         </div>
       </div>
+      {/* survey 모달창 */}
+      { isModalOpen && <>
+        <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
+          <div className="w-4/5 bg-white border rounded-lg py-5 px-5">
+            <Survey
+              targetUser={userList[userTurn]}
+              setModalClose={setModalClose}
+             />
+          </div>
+        </div>
+      </>}
     </div>
   );
 }
