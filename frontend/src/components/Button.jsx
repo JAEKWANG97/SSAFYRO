@@ -38,7 +38,7 @@ export default function Button({ text, type, onClick, isActive }) {
                                     : type === "WORST"
                                       ? "ml-auto bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-2 rounded" 
                                       : type === "BEST"
-                                        ? "bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"
+                                        ? "ml-auto bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-2 rounded"
                                           : "text-white";
     return (
     <button
