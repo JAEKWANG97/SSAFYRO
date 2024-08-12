@@ -17,6 +17,8 @@ import {
 export default function Profile() {
   const nav = useNavigate();
   const location = useLocation();
+  const userId = location.state?.userId;
+  console.log(userId)
   
   const [fillActive, setFillActive] = useState("tab1");
 
@@ -41,7 +43,6 @@ export default function Profile() {
   }, [fillActive]);
 
   const userInfo = useAuthStore((state) => state.userInfo); 
-  console.log(userInfo)
   const interviewInfo = [
     {type: 1, title: '전공자 인성 면접', room : 1},
     {type: 2, title: '전공자 PT 면접', room : 2},
