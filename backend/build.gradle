@@ -85,17 +85,12 @@ tasks.named('test') {
 ext {
     set('snippetsDir', file("build/generated-snippets"))
     set('springAiVersion', "1.0.0-M1")
-
-    profile = (!project.hasProperty('profile') || !profile) ? 'test' : profile
 }
 
 test {
     outputs.dir snippetsDir
-    systemProperty 'spring.profiles.active', profile
 
-    doFirst {
-        println "Using profile: ${profile}"
-    }
+    systemProperty 'spring.profiles.active', ext.profile = (!project.hasProperty('profile') || !profile) ? 'test' : profile
 }
 
 asciidoctor {
