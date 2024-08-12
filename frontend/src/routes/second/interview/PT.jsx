@@ -108,6 +108,7 @@ export default function PT() {
   };
 
   const handleEndInterview = async () => {
+    
     try {
       // 면접 종료 요청 api 호출
       await axios.patch(
@@ -120,6 +121,19 @@ export default function PT() {
         }
       );
       console.log("Interview finished successfully");
+      
+      // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
+      totalResult.forEach(result => {
+        axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", result, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          }
+        })
+        .then((response) => {
+          console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
+        })
+        .catch((error) => console.log(error))
+      });
 
       // OpenVidu 연결 종료 및 페이지 이동
       leaveRoom();
@@ -582,7 +596,7 @@ export default function PT() {
   // 면접 평가 데이터
   const [totalResult, setTotalResult] = useState([]);
 
-  setTotalResult((prev) => [...prev, newResult]);
+  const renewTotalResult = function (newResult) {setTotalResult((prev) => [...prev, newResult])};
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -691,7 +705,7 @@ export default function PT() {
             <Survey
               targetUser={userList[userTurn]}
               setModalClose={setModalClose}
-              setTotalResult={setTotalResult}
+              setTotalResult={renewTotalResult}
              />
           </div>
         </div>

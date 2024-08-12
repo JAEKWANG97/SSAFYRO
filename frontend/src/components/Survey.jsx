@@ -23,16 +23,17 @@ export default function Survey({ targetUser, setModalClose, setTotalResult }) {
   };
 
   const handleSubmit = () => {
+    console.log(targetUser);
     // 여기에 제출 로직을 추가하세요
     let totalScore = Number(answers.q1) + Number(answers.q2) + Number(answers.q3) + Number(answers.q4) + Number(answers.q5);
     const requestBody = {
       roomId: roomId,
       articleId: null, // articleId가 어디서 오는지 모르겠음. docs 기준으로 articleId 획득처가 없는 것으로 추정됨.
-      userId: targetUser.targetUser,
+      userId: targetUser,
       totalScore: totalScore,
     }
 
-    setTotalResult(totalScore);
+    setTotalResult(requestBody);
     setModalClose();
 
     // axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
