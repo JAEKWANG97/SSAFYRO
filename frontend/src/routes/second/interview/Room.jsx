@@ -5,15 +5,10 @@ import axios from "axios";
 import Button from "../../../components/Button";
 import PreventRefresh from "../../components/PreventRefresh";
 import InterviewTips from "./components/InterviewTips";
-import userImg from "../../../../public/main/user.jpg";
-// import userImg from "../../../../public/main/users.png";
+import interviewIcon from "../../../../public/main/interviewIcon.png";
 import { currentUser } from "./data"; // 더미 사용자 정보: 실제 유저 정보로 대체 필요
-// user 정보 가져오기
-import useAuthStore from "../../../stores/AuthStore";
-// zustand 스토어 임포트
-import useRoomStore from "../../../stores/useRoomStore";
-
-// openvidu 연결 코드
+import useAuthStore from "../../../stores/AuthStore"; // user 정보 가져오기
+import useRoomStore from "../../../stores/useRoomStore"; // zustand 스토어 임포트
 import {
   LocalVideoTrack,
   RemoteParticipant,
@@ -22,53 +17,47 @@ import {
   Room,
   RoomEvent,
   TrackPublication,
-} from "livekit-client";
-// openvidu video, audio component 불러오기
-import AudioComponent from "./components/AudioComponent";
+} from "livekit-client"; // openvidu 연결 코드
+import AudioComponent from "./components/AudioComponent"; // openvidu video, audio component 불러오기
 import VideoComponent from "./components/VideoComponent";
-
-// interviewStore 불러오기
-import useInterviewStore from "../../../stores/InterviewStore";
+import useInterviewStore from "../../../stores/InterviewStore"; // interviewStore 불러오기
+import { Client } from "@stomp/stompjs";
 
 export default function WaitRoom() {
   const { roomid } = useParams();
   const navigate = useNavigate();
   const [waitRoom, setWaitRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-
-  // zustand store의 setUserList 사용
-  const { setUserList } = useRoomStore();
+  const { setUserList } = useRoomStore(); // zustand store의 setUserList 사용
   const isInitialMount = useRef(true);
-
   const { setRoomType } = useInterviewStore();
+  const interviewClient = useRef(null); // WebSocket client 추가
 
   useEffect(() => {
-    // 방 정보 가져오기
     const fetchRoomDetails = async () => {
       try {
         const token = localStorage.getItem("Token");
-        console.log("Retrieved Token: ", token);
+        // console.log("Retrieved Token: ", token);
 
         const response = await axios.get(
-          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`, {
+          `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
+          {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
-        // .then((res) => {
-        //   setRoomType(res.data.response.type);
-        // });
 
         setRoomType(response.data.response.type);
         const roomData = response.data.response;
+        console.log("roomData : ", roomData);
+        console.log("userInfo.userId : ", userInfo.userId);
 
         const isUserAlreadyInRoom = roomData.userList.some((participant) => {
           return participant === currentUser.userId;
         });
 
         if (!isUserAlreadyInRoom) {
-          // 방에 참가한 사용자 서버에 알리기
           await axios.post(
             `http://i11c201.p.ssafy.io:9999/api/v1/rooms/enter`,
             { roomId: roomid },
@@ -79,15 +68,14 @@ export default function WaitRoom() {
             }
           );
 
-          // 다시 방 정보 가져오기
           const updatedResponse = await axios.get(
             `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const updatedRoomData = updatedResponse.data.response;
           setWaitRoom(updatedRoomData);
-          // zustand store에 userList 저장
           setUserList(updatedRoomData.userList);
+          console.log("updatedRoomData : ", updatedRoomData);
           console.log("참여자 정보: ", updatedRoomData.userList);
         } else {
           setWaitRoom(roomData);
@@ -107,35 +95,98 @@ export default function WaitRoom() {
     }
 
     return () => {
+      if (interviewClient.current) {
+        interviewClient.current.deactivate(); // 컴포넌트 언마운트 시 webSocket 연결 종료
+      }
       if (waitRoom) {
         leaveRoom();
       }
     };
   }, []);
 
+  useEffect(() => {
+    if (waitRoom) {
+      initializeStompClient();
+    }
+  }, [waitRoom]);
+
+  function initializeStompClient() {
+    const client = new Client({
+      brokerURL: "ws://i11c201.p.ssafy.io:9999/ssafyro-chat", // STOMP 서버 URL
+      onConnect: () => {
+        // console.log("STOMP client connected");
+
+        client.subscribe(`/topic/interview/${roomid}`, (message) => {
+          const parsedMessage = JSON.parse(message.body);
+          if (parsedMessage.nowStage === "FIRST") {
+            startInterviewHandler();
+          }
+        });
+      },
+      onDisconnect: () => {
+        // console.log("STOMP client disconnected");
+      },
+    });
+    client.activate();
+    interviewClient.current = client;
+  }
+
+  const sendInterviewStartMessage = () => {
+    // console.log("1. sendInterviewStartMessage 실행")
+    // console.log("1. interviewClient.current 값 확인 : ", interviewClient.current)
+    if (interviewClient.current) {
+      interviewClient.current.publish({
+        destination: `/interview/turn/${roomid}`,
+        body: JSON.stringify({
+          nowStage: "FIRST",
+        }),
+      });
+    }
+  };
+
   // 방 나가기
   function navigateHandler() {
     leaveRoom();
     openviduLeaveRoom();
+
+    // STOPM 클라이언트 연결 종료
+    if (interviewClient.current) {
+      interviewClient.current.deactivate();
+    }
+
     navigate("/second/interview");
   }
 
   // 면접 시작
   function startInterviewHandler() {
-    // 일단 임시로 들어왔던 openvidu 방을 나가게 하고
+    // waitRoom이 null인지 확인
+    if (!waitRoom) {
+      console.error("startInterviewHandler 호출 시 waitRoom이 null입니다.");
+      // 일정 시간 대기 후 다시 시도
+      // setTimeout(startInterviewHandler, 100); // 100ms 대기 후 다시 시도
+      return;
+    }
+
+    // waitRoom.type이 정의되지 않은 경우
+    if (!waitRoom.type) {
+      console.error(
+        "startInterviewHandler 호출 시 waitRoom.type이 정의되지 않았습니다."
+      );
+      return;
+    }
+
     openviduLeaveRoom();
-    // 면접 종류가 PT일 경우
     if (waitRoom.type === "PRESENTATION") {
       navigate(`/second/interview/room/${roomid}/pt_ready`);
     } else {
-      // 면접 종류가 인성일 경우
       navigate(`/second/interview/room/${roomid}/pt`);
     }
   }
 
   // User Token 가져오기
   const token = localStorage.getItem("Token");
-  console.log("Stored Token : ", token);
+  // console.log("Stored Token : ", token);
+
   async function leaveRoom() {
     if (waitRoom) {
       try {
@@ -150,26 +201,25 @@ export default function WaitRoom() {
             },
           }
         );
-        console.log("Successfully left the room"); // 나가기 성공 로그
+        // console.log("Successfully left the room"); // 나가기 성공 로그
       } catch (error) {
         console.error("히히 못가:", error);
       }
 
       const updatedRoom = { ...waitRoom };
+      console.log("updatedRoom: ", updatedRoom);
       const participantIndex = updatedRoom.userList.findIndex(
-        (participant) => participant.userId === currentUser.userId
+        (participant) => participant === currentUser.userId
       );
 
       if (participantIndex !== -1) {
         updatedRoom.userList.splice(participantIndex, 1);
         setWaitRoom(updatedRoom);
-        // zustand store 업데이트
         setUserList(updatedRoom.userList);
       }
     }
   }
 
-  // openvidu 연결
   const [room, setRoom] = useState(undefined);
   const [localTrack, setLocalTrack] = useState(undefined);
   const [remoteTracks, setRemoteTracks] = useState([]);
@@ -177,6 +227,7 @@ export default function WaitRoom() {
   let APPLICATION_SERVER_URL =
     "http://i11c201.p.ssafy.io:9999/api/v1/openvidu/"; // Application 서버 주소
   let LIVEKIT_URL = "wss://i11c201.p.ssafy.io/"; // LiveKit 서버 주소
+
   const configureUrls = function () {
     if (!APPLICATION_SERVER_URL) {
       if (window.location.hostname === "localhost") {
@@ -218,13 +269,11 @@ export default function WaitRoom() {
     }
 
     const data = await response.json();
-    // console.log(data.response.token);
     return data.response.token;
   };
 
   const openviduLeaveRoom = async function () {
     await room?.disconnect();
-
     setRoom(undefined);
     setLocalTrack(undefined);
     setRemoteTracks([]);
@@ -256,14 +305,8 @@ export default function WaitRoom() {
     });
 
     try {
-      // Get a token from your application server with the room name ane participant name
-      // console.log(roomName, participantName);
       const token = await getOpenviduToken(roomId, userName);
-
-      // Connect to the room with the LiveKit URL and the token
       await room.connect(LIVEKIT_URL, token);
-      // console.log("Connected to the room", room.name);
-      // Publish your camera and microphone
       await room.localParticipant.enableCameraAndMicrophone();
       setLocalTrack(
         room.localParticipant.videoTrackPublications.values().next().value
@@ -289,7 +332,6 @@ export default function WaitRoom() {
 
   if (!waitRoom) return <div>로딩 중 ...</div>;
 
-  // 트랙을 그룹화하여 참가자별로 오디오 및 비디오 트랙을 함께 렌더링
   const groupedTracks = remoteTracks.reduce((acc, track) => {
     const participant = track.participantIdentity;
     if (!acc[participant]) {
@@ -307,7 +349,6 @@ export default function WaitRoom() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {/* PreventRefresh 컴포넌트를 추가하여 새로고침 방지 기능 활성화 */}
       <PreventRefresh />
       <div
         className="w-full mt-8 mb-8 overflow-hidden"
@@ -315,9 +356,12 @@ export default function WaitRoom() {
       >
         <div className="w-full h-[85vh] mx-auto mt-6 p-6 rounded-xl bg-white shadow-2xl">
           <div className="flex justify-between items-center mb-2">
-            <span className=" text-indigo-800 text-2xl font-extrabold px-6 pt-2 pb-1 rounded  dark:text-indigo-300 border border-indigo-300">
-              {waitRoom.type === "PRESENTATION" ? "PT" : "인성"}
-            </span>
+            <div className="flex">
+              <img src={interviewIcon} alt="" className="h-10 w-10"/>
+              <span className=" text-indigo-300 text-2xl font-extrabold px-4 pt-2 pb-1 rounded dark:text-indigo-300">
+                {waitRoom.type === "PRESENTATION" ? "PT" : "인성"}
+              </span>
+            </div>
             <div className="items-center">
               <h1 className="font-extrabold text-2xl">{waitRoom.title}</h1>
             </div>
@@ -349,7 +393,6 @@ export default function WaitRoom() {
                   >
                     {tracks.video && (
                       <VideoComponent
-                        // key={remoteTrack.trackPublication.trackSid}
                         track={tracks.video.trackPublication.videoTrack}
                         participantIdentity={participant}
                         local={false}
@@ -362,7 +405,6 @@ export default function WaitRoom() {
                     )}
                   </div>
                 ))}
-                {/* 참가자가 없을 때 빈 div를 렌더링 */}
                 {emptyDivs.map((_, index) => (
                   <div
                     key={index}
@@ -373,42 +415,8 @@ export default function WaitRoom() {
                     </div>
                   </div>
                 ))}
-                {/* {room.userList.map((participant, index) => (
-                  <div
-                    key={index}
-                    className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
-                  >
-                    <img
-                      src={userImg}
-                      alt="User"
-                      className="h-2/3 object-contain rounded-full"
-                    />
-                    <span className="text-sm font-bold mt-2">
-                      {participant}
-                    </span>
-                  </div>
-                ))} */}
-                {/* {Array(waitRoom.capacity - waitRoom.userList.length)
-                  .fill()
-                  .map((_, index) => (
-                    <div
-                      key={index + waitRoom.userList.length}
-                      className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
-                    >
-                    </div>
-                  ))} */}
-                {/* {Array(3 - Math.max(waitRoom.capacity, waitRoom.userList.length))
-                  .fill()
-                  .map((_, index) => (
-                    <div
-                      key={index + waitRoom.capacity + waitRoom.userList.length}
-                      className="w-[32%] h-[90%] bg-gray-200 rounded-lg flex flex-col items-center justify-center px-5"
-                    >
-                      <span className="text-2xl text-gray-400">X</span>
-                    </div>
-                  ))} */}
               </div>
-              <InterviewTips />
+              <InterviewTips interviewType={waitRoom.type} />
             </div>
             <div className="w-[30%] flex flex-col justify-between">
               <Chat
@@ -421,7 +429,7 @@ export default function WaitRoom() {
                 <Button
                   text="면접 시작"
                   type="WAITINGROOMSTART"
-                  onClick={startInterviewHandler}
+                  onClick={sendInterviewStartMessage} // 면접 시작 메시지 전송
                 />
               </div>
             </div>

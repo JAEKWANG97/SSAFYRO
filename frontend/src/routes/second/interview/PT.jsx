@@ -6,6 +6,7 @@ import TwoParticipantsVideo from "./components/TwoParticipantsVideo";
 import ThreeParticipantsVideo from "./components/ThreeParticipantsVideo";
 import useRoomStore from "../../../stores/useRoomStore";
 import axios from "axios";
+import { Client } from "@stomp/stompjs";
 
 // OpenVidu-liveKit import
 import {
@@ -45,14 +46,77 @@ export default function PT() {
 
   const navigate = useNavigate();
 
-  const handleEndInterview = () => {
-    leaveRoom();
-    stop();
-    navigate("/second/interview");
+  // 타이머 상태 및 Ref 추가
+  const [tenMinuteTimer, setTenMinuteTimer] = useState(600);
+  const [twoMinuteTimer, setTwoMinuteTimer] = useState(120);
+  const timerRef = useRef();
+  const twoMinuteTimerRef = useRef();
+
+  const handleStartInterview = async () => {
+    try {
+      await axios.patch(
+        "http://i11c201.p.ssafy.io:9999/api/v1/interview/start",
+        { roomId: roomid },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        }
+      );
+      console.log("Interview started successfully");
+
+      // FIRST 메시지 전송
+      if (interviewClient.current) {
+        interviewClient.current.publish({
+          destination: `/interview/turn/${roomid}`,
+          body: JSON.stringify({ nowStage: "FIRST" }),
+        });
+        console.log("Sent message via STOMP");
+      }
+    } catch (error) {
+      console.error("Error starting the interview:", error);
+    }
   };
 
+  const handleEndInterview = async () => {
+    try {
+      // 면접 종료 요청 api 호출
+      await axios.patch(
+        "http://i11c201.p.ssafy.io:9999/api/v1/interview/finish",
+        { roomId: roomid },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        }
+      );
+      console.log("Interview finished successfully");
+
+      // OpenVidu 연결 종료 및 페이지 이동
+      leaveRoom();
+      stop();
+      navigate("/second/interview");
+    } catch (error) {
+      console.errer("Error finishing the interview: ", error);
+    }
+  };
+
+  const interviewTurnCounter = useRef(0);
+  // const userList = useRoomStore((state) => state.userList);
+  // const userTurn = useRoomStore((state) => state.userTurn);
+  const { userList, userTurn, setUserTurn } = useRoomStore((state) => ({
+    userList: state.userList,
+    userTurn: state.userTurn,
+    setUserTurn: state.setUserTurn,
+  }));
+
+  console.log("Current userList: ", userList);
+  console.log("Current userTurn: ", userTurn);
+
   const handleStartSurvey = () => {
-    navigate(`/second/interview/room/${roomid}/pt/survey`);
+    navigate(`/second/interview/room/${roomid}/pt/survey`, {
+      state: { targetUser: userList[userTurn] },
+    });
   };
 
   // 답변 제출 함수
@@ -65,43 +129,52 @@ export default function PT() {
     questions = useInterviewStore((state) => state.personalityQuestions);
   }
 
-  const handleSubmitAnswer = async function (question, answer, faceExpressionData, pronunciationScore) {
-    await axios.post("http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result", {
-      question: question,
-      answer: answer,
-      pronunciationScore: pronunciationScore,
-      happy: faceExpressionData.happy,
-      disgust: faceExpressionData.disgusted,
-      sad: faceExpressionData.sad,
-      surprise: faceExpressionData.surprised,
-      fear: faceExpressionData.fearful,
-      angry: faceExpressionData.angry,
-      neutral: faceExpressionData.neutral,
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      }
-    })
-    .then((response) => {
-      // 제출 성공
-      faceExpressionData = {
-        angry: 0,
-        disgusted: 0,
-        fearful: 0,
-        happy: 0,
-        sad: 0,
-        surprised: 0,
-        neutral: 0,
-      }
-
-      
-    })
-    .catch((error) => {
-      // 제출 실패
-      console.log(error)
-    });
-  }
-
+  const handleSubmitAnswer = async function (
+    question,
+    answer,
+    faceExpressionData,
+    pronunciationScore
+  ) {
+    await axios
+      .post(
+        "http://i11c201.p.ssafy.io:9999/api/v1/interview/question-answer-result",
+        {
+          question: question,
+          answer: answer,
+          pronunciationScore: parseInt(pronunciationScore),
+          happy: faceExpressionData.happy,
+          disgust: faceExpressionData.disgusted,
+          sad: faceExpressionData.sad,
+          surprise: faceExpressionData.surprised,
+          fear: faceExpressionData.fearful,
+          angry: faceExpressionData.angry,
+          neutral: faceExpressionData.neutral,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        }
+      )
+      .then((response) => {
+        // 제출 성공
+        // console.log("제출되었습니다.", response.data);
+        setQuestionCount((prev) => prev + 1);
+        faceExpressionData = {
+          angry: 0,
+          disgusted: 0,
+          fearful: 0,
+          happy: 0,
+          sad: 0,
+          surprised: 0,
+          neutral: 0,
+        };
+      })
+      .catch((error) => {
+        // 제출 실패
+        console.log(error);
+      });
+  };
 
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
@@ -170,6 +243,23 @@ export default function PT() {
     // Leave the room by calling 'disconnect' method over the Room object
     await room?.disconnect();
 
+    try {
+      await axios.post(
+        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/exit`,
+        {
+          roomId: roomid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          },
+        }
+      );
+      console.log("Successfully left the room");
+    } catch (error) {
+      console.error("Error leaving the room:", error);
+    }
+
     // Reset the state
     setRoom(undefined);
     setLocalTrack(undefined);
@@ -185,6 +275,9 @@ export default function PT() {
     userInfo.userName + Math.floor(Math.random() * 100)
   );
   const [roomName, setRoomName] = useState(roomid);
+
+  // STOMP 클라이언트 상태
+  const interviewClient = useRef(null);
 
   const joinRoom = async function () {
     const room = new Room(); // Initialize a now Room object
@@ -263,7 +356,7 @@ export default function PT() {
       const current = event.resultIndex;
       console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
-      setTranscript(prevTranscript => prevTranscript + transcript);
+      setTranscript((prevTranscript) => prevTranscript + transcript);
     };
 
     recognitionRef.current.onerror = (event) => {
@@ -287,7 +380,6 @@ export default function PT() {
     recognitionRef.current.stop();
   }, []);
 
-
   let STTTrigger = 1;
   useEffect(() => {
     if (STTTrigger === 1) {
@@ -297,25 +389,140 @@ export default function PT() {
     }
   }, [STTTrigger]);
 
-  // 타이머 상태 및 Ref 추가
-  const [seconds, setSeconds] = useState(600);
-  const timerRef = useRef();
+  const startTimer = (stage) => {
+    // 10분 타이머가 끝나면 2분 타이머로 전환되도록 설계
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
 
-  // 타이머 시작 및 종료 처리
-  useEffect(() => {
+    if (twoMinuteTimerRef.current) {
+      clearInterval(twoMinuteTimerRef.current);
+    }
+    
+    if (stage === "FIRST") {
+      setTenMinuteTimer(600);
+    } else if (stage === "SECOND" || stage === "THIRD") {
+      setTenMinuteTimer(600);
+    }
+
     timerRef.current = setInterval(() => {
-      setSeconds((prevSeconds) => prevSeconds - 1);
+      setTenMinuteTimer((prevSeconds) => prevSeconds - 1);
     }, 1000);
 
-    return () => clearInterval(timerRef.current); // 컴포넌트 언마운트 시 타이머 클리어
-  }, []);
+    console.log(`${stage} 단계 타이머가 시작되었습니다.`);
+  };
 
   useEffect(() => {
-    if (seconds <= 0) {
-      clearInterval(timerRef.current);
-      // handleEndInterview()
+    if (interviewClient.current) {
+      let stage;
+      if (userTurn === 1) {
+        stage = "SECOND";
+      } else if (userTurn === 2) {
+        stage = "THIRD";
+      }
+
+      if (stage) {
+        interviewClient.current.publish({
+          destination: `/interview/turn/${roomid}`,
+          body: JSON.stringify({ nowStage: stage }),
+        });
+        console.log(`${stage} 메시지를 서버로 전송했습니다.`);
+      }
     }
-  }, [seconds]);
+  }, [userTurn]);
+
+  // STOMP 클라이언트 초기화 및 메시지 구독
+  useEffect(() => {
+    const client = new Client({
+      brokerURL: `ws://i11c201.p.ssafy.io:9999/ssafyro-chat`,
+      onConnect: async () => {
+        console.log("STOMP client connected");
+
+        client.subscribe(`/topic/interview/${roomid}`, (message) => {
+          const parsedMessage = JSON.parse(message.body);
+
+          if (parsedMessage.nowStage) {
+            console.log(
+              `${parsedMessage.nowStage} 파일을 받았으므로 타이머를 시작합니다.`
+            );
+            startTimer(parsedMessage.nowStage);
+          }
+        });
+
+        // STOMP 연결이 완료된 후에 면접 시작 요청 및 메시지 전송
+        await handleStartInterview();
+
+        // 타이머가 중복 설정되지 않도록 clearInterval
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+
+        // // 10분 타이머 시작
+        // timerRef.current = setInterval(() => {
+        //   setTenMinuteTimer((prevSeconds) => prevSeconds - 1);
+        // }, 1000);
+      },
+      onDisconnect: () => {
+        console.log("STOMP Client disconnected");
+      },
+    });
+
+    client.activate();
+    interviewClient.current = client;
+
+    return () => {
+      if (interviewClient.current) {
+        interviewClient.current.deactivate();
+      }
+      clearInterval(timerRef.current);
+      clearInterval(twoMinuteTimerRef.current);
+    };
+  }, [roomid]);
+
+  useEffect(() => {
+    if (tenMinuteTimer <= 0) {
+      clearInterval(timerRef.current); // 10분 타이머가 끝나면 정지
+
+      // 2분 타이머 시작
+      twoMinuteTimerRef.current = setInterval(() => {
+        setTwoMinuteTimer((prevSeconds) => prevSeconds - 1);
+      }, 1000);
+    }
+  }, [tenMinuteTimer]);
+
+  useEffect(() => {
+    if (twoMinuteTimer <= 0) {
+      clearInterval(twoMinuteTimerRef.current);
+      // 면접 턴 카운터 증가
+      interviewTurnCounter.current += 1;
+
+      // 다음 사용자를 위해 userTurn을 증가시켜 다음 면접자의 Survey를 설정
+      const nextTurn = (userTurn + 1) % userTurn.length;
+      setUserTurn(nextTurn);
+
+      // 면접을 종료하거나 다음 면접자 준비
+      if (interviewTurnCounter.current >= userList.length) {
+        handleEndInterview();
+      } else if (userList.length === 1) {
+        handleEndInterview();
+      } else {
+        handleStartSurvey();
+      }
+    }
+  }, [twoMinuteTimer]);
+
+  // // 타이머 시작 및 종료 처리
+  // useEffect(() => {
+  //   // 면접 시작 요청 API 호출
+  //   handleStartInterview()
+
+  //   // 10분 타이머 시작
+  //   timerRef.current = setInterval(() => {
+  //     setTenMinuteTimer((prevSeconds) => prevSeconds - 1);
+  //   }, 1000);
+
+  //   return () => clearInterval(timerRef.current); // 컴포넌트 언마운트 시 타이머 클리어
+  // }, []);
 
   // 시간 형식 변환 함수
   const formatTime = (seconds) => {
@@ -326,34 +533,8 @@ export default function PT() {
     }${remainingSeconds}`;
   };
 
-  // // 타이머 상태 및 Ref 추가
-  // const [milliseconds, setMilliseconds] = useState(600000); // 10분 = 600,000밀리초
-  // const timerRef = useRef();
-
-  // // 타이머 시작 및 종료 처리
-  // useEffect(() => {
-  //   timerRef.current = setInterval(() => {
-  //     setMilliseconds((prevMilliseconds) => prevMilliseconds - 10);
-  //   }, 10);
-
-  //   return () => clearInterval(timerRef.current); // 컴포넌트 언마운트 시 타이머를 클리어
-  // }, []);
-
-  // useEffect(() => {
-  //   if (milliseconds <= 0) {
-  //     clearInterval(timerRef.current); // 시간이 0이 되면 타이머를 멈춤
-  //     handleEndInterview(); // 시간이 다 되면 인터뷰 종료
-  //   }
-  // }, [milliseconds]);
-
-  // // 시간 형식 변환 함수
-  // const formatTime = (milliseconds) => {
-  //   const minutes = Math.floor(milliseconds / 60000);
-  //   const seconds = Math.floor((milliseconds % 60000) / 1000);
-  //   const ms = Math.floor((milliseconds % 1000) / 10);
-  //   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}:${ms < 10 ? "0" : ""}${ms}`;
-  // };
-
+  // 면접 컨트롤을 위한 함수와 변수들
+  const [questionCount, setQuestionCount] = useState(0);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -369,15 +550,23 @@ export default function PT() {
           <div className="flex items-center bg-black text-white rounded-full px-8 py-2 w-48 justify-center">
             <div
               className={`w-2 h-2 rounded-full mr-2 ${
-                seconds <= 60
+                tenMinuteTimer > 0
+                  ? tenMinuteTimer <= 60
+                    ? "bg-red-500 animate-ping mr-3"
+                    : tenMinuteTimer <= 180
+                    ? "bg-yellow-500"
+                    : "bg-green-500"
+                  : twoMinuteTimer <= 60
                   ? "bg-red-500 animate-ping mr-3"
-                  : seconds <= 180
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
+                  : "bg-yellow-500"
               }`}
             ></div>
-            <span className="font-bold">{formatTime(seconds)}</span>
-            {/* <span className="font-bold">{formatTime(milliseconds)}</span> */}
+            <span className="font-bold">
+              {tenMinuteTimer > 0
+                ? formatTime(tenMinuteTimer)
+                : formatTime(twoMinuteTimer)}
+            </span>
+            {/* <span className="font-bold">{formatTime(millitenMinuteTimer)}</span> */}
           </div>
         </div>
         {/* 변경해야 할곳 1 */}
@@ -400,6 +589,9 @@ export default function PT() {
                   answer={transcript}
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
+                  handleStartSurvey={handleStartSurvey}
+                  userList={userList}
+                  userTurn={userTurn}
                 />
               );
             } else {
@@ -417,6 +609,9 @@ export default function PT() {
                   answer={transcript}
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
+                  handleStartSurvey={handleStartSurvey}
+                  userList={userList}
+                  userTurn={userTurn}
                 />
               );
             }
@@ -430,7 +625,11 @@ export default function PT() {
               className="w-[50px] h-[50px] rounded-full bg-blue-500"
             />
             <p className="ml-4">
-              안녕하세요! 이정준 님에 대한 면접 질문을 추천해 드릴게요!
+              안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
+              드릴게요! <br />
+              {questionCount < 2
+                ? questions[questionCount]
+                : "본인 질문이 종료되었습니다."}
             </p>
           </div>
         </div>

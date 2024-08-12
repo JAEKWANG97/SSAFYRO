@@ -87,14 +87,14 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       return;
     }
 
-    const message = `${currentUser.name}님이 입장하셨습니다.`
+    const message = `${currentUser.name}님이 입장하셨습니다.`;
 
     stompClient.current.publish({
       destination: `/chat/enter/${roomId}`,
       body: JSON.stringify({
         userId: currentUser.userId,
         name: currentUser.name,
-        content: message,
+        message: message,
       }),
     });
   };
@@ -104,7 +104,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       return;
     }
 
-    const message = `${currentUser.name}님이 퇴장하셨습니다.`
+    const message = `${currentUser.name}님이 퇴장하셨습니다.`;
 
     stompClient.current.publish({
       destination: `/chat/leave/${roomId}`,
@@ -134,12 +134,12 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
             index === 0 || messages[index - 1].name !== message.name;
           const isCurrentUser = message.name === currentUser.name;
 
-          if (message.name === undefined) {
+          if (message.content) {
             return (
               <div key={index} className="text-center mb-4 text-gray-500">
                 {message.content}
               </div>
-            )
+            );
           }
 
           return (
@@ -181,11 +181,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       </div>
 
       <div className="flex items-center p-2 bg-gray-100 rounded-3xl">
-        <img
-          src={userImg}
-          alt="User"
-          className="w-8 h-8 rounded-full mr-3"
-        />
+        <img src={userImg} alt="User" className="w-8 h-8 rounded-full mr-3" />
         <input
           type="text"
           placeholder="내용을 입력하세요."

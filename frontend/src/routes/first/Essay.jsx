@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import FirstdNav from "./components/FirstNav";
 import useFirstStore from "../../stores/FirstStore";
 import useAuthStore from "../../stores/AuthStore";
 import Ismajor from "./../../components/Ismajor";
 import Button from "./../../components/Button";
+import EssayCorrectionsCarousel from "./EssayCorrectionsCarousel";
 import Swal from "sweetalert2";
 import axios from "axios";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Essay() {
@@ -16,33 +20,45 @@ export default function Essay() {
   const essayContent = useFirstStore((state) => state.essayContent); // 에세이 작성 내용
   const setEssayContent = useFirstStore((state) => state.setEssayContent);
   const [essayReview, setEssayReview] = useState("");
+  const [changedContent, setChangedContent] = useState("");
+  const [totalFeedback, setTotalFeedback] = useState("");
   const [essayQuestion, setEssayQuestion] = useState(""); // 전공자/비전공자 질문 내용
   const isLogin = useAuthStore((state) => state.isLogin); // 로그인 유무
+
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [selectionStart, setSelectionStart] = useState(0);
+  const [selectionEnd, setSelectionEnd] = useState(0);
+  const textareaRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const nav = useNavigate();
   const APIURL = "http://i11c201.p.ssafy.io:9999/api/v1/";
 
+  const correctionRef = useRef(null); // AI 첨삭 내용의 높이를 참조하기 위한 ref
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+
   // AI 첨삭 요청 처리
   const handleAiCorrection = () => {
-    if (!isLogin) {
-      Swal.fire({
-        title: "로그인을 해주세요",
-        text: "로그인이 필요한 기능입니다.",
-        icon: "warning",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "확인",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          nav("/account/login");
-        }
-      });
-      return;
-    }
+    // 로그인 확인
+    // if (!isLogin) {
+    //   Swal.fire({
+    //     title: "로그인을 해주세요",
+    //     text: "로그인이 필요한 기능입니다.",
+    //     icon: "warning",
+    //     confirmButtonColor: "#3085d6",
+    //     confirmButtonText: "확인",
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       nav("/account/login");
+    //     }
+    //   });
+    //   return;
+    // }
 
+    // 에세이 내용이 없는 경우 경고 메시지 표시
     if (!essayContent || essayContent.trim() === "") {
       setShowCorrection(false);
 
-      // 경고 메시지 표시
       Swal.fire({
         title: "에세이를 입력해주세요",
         text: "AI 첨삭을 받으려면 에세이를 작성해야 합니다.",
@@ -54,23 +70,46 @@ export default function Essay() {
       return;
     }
 
-    // 에세이 내용이 있는 경우 첨삭 시작
-    setShowCorrection(true);
-
     const beforeEssay = {
       essayQuestionId: essayId,
       content: essayContent,
     };
 
+    // Start loading spinner
+    Swal.fire({
+      title: "로딩 중...",
+      text: "에세이 첨삭 중입니다.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     // 에세이 첨삭 요청
     axios
       .post(`${APIURL}essays/review`, beforeEssay)
       .then((response) => {
-        console.log(response.data.content);
-        setEssayReview(response.data.content);
+        // 서버 응답 성공 시 리뷰 내용 설정
+        const content = response.data.response.content;
+        const parts = content.split("%%%");
+
+        setEssayReview(parts[0].replace("newcontent:", "").trim());
+        setChangedContent(parts[1].replace("changed:", "").trim());
+        setTotalFeedback(parts[2].replace("totalfeedback:", "").trim());
+
+        setShowCorrection(true); // 리뷰 내용을 성공적으로 받아온 경우에만 상태를 true로 설정
+        Swal.close(); // 로딩 완료 후 알림창 닫기
       })
       .catch((error) => {
         console.log(error);
+        setShowCorrection(false); // 에러 발생 시 상태를 false로 설정
+        Swal.fire({
+          title: "에러 발생",
+          text: "에세이 첨삭 요청 중 에러가 발생했습니다.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "확인",
+        });
       });
   };
 
@@ -125,11 +164,10 @@ export default function Essay() {
           type: selected === "major" ? "MAJOR" : "NON_MAJOR", // 전공자/비전공자 타입
           generation: 11, // 기수
         },
-      })
-      .then((response) => {
-        console.log(response.data);
-        setEssayId(response.data.id) // 에세이 질문 id
-        setEssayQuestion(response.data.content); // 에세이 질문 content
+      })         
+      .then((res) => {
+        setEssayId(res.data.response.id); // 에세이 질문 id
+        setEssayQuestion(res.data.response.content); // 에세이 질문 content
       })
       .catch((error) => {
         console.log(error);
@@ -167,11 +205,37 @@ export default function Essay() {
     };
   }, [selected]); // selected 변경 시 API 요청 실행
 
+  const handleTextareaSelect = (e) => {
+    setSelectionStart(e.target.selectionStart);
+    setSelectionEnd(e.target.selectionEnd);
+  };
+
+  const getCurrentSentenceIndex = () => {
+    const sentences = essayContent.split(/(?<=[.!?])\s+/);
+    let charCount = 0;
+    for (let i = 0; i < sentences.length; i++) {
+      charCount += sentences[i].length + 1; // +1 for the space
+      if (charCount > selectionStart) {
+        return i;
+      }
+    }
+    return sentences.length - 1;
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const index = getCurrentSentenceIndex();
+      setHoveredIndex(index);
+    }
+  }, [selectionStart, selectionEnd, essayContent]);
+
   return (
     <>
       <FirstdNav />
       <div
-        className="container mx-auto p-5 max-w-4xl bg-white rounded-lg shadow-md mt-10 mb-20"
+        className={`container mx-auto p-5 max-w-7xl bg-white rounded-lg shadow-md mt-10 mb-20 transition-all duration-300 ease-in-out ${
+          showCorrection ? "w-[950px] h-[950px]" : "w-[800px] h-[900px]"
+        }`}
         style={{
           boxShadow:
             "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
@@ -230,7 +294,8 @@ export default function Essay() {
             >
               <div className="p-3 space-y-2">
                 <p className="font-semibold text-gray-900">
-                  아이콘을 누르면 작성한 에세이에 대한 AI 첨삭 내용이 보여집니다.
+                  아이콘을 누르면 작성한 에세이에 대한 AI 첨삭 내용이
+                  보여집니다.
                 </p>
               </div>
               <div data-popper-arrow></div>
@@ -238,46 +303,126 @@ export default function Essay() {
           </div>
         </div>
 
-        <div className="border border-gray-400 rounded-lg bg-white">
-          {selected === "major" && (
-            <div className="py-5 flex flex-col items-center font-bold text-center">
-              <p>{essayQuestion}</p>
+        <div
+          className={`flex ${showCorrection ? "flex-row space-x-4" : "flex-col"}`}
+        >
+          <div className="flex flex-col" style={{ width: "750px" }}>
+            <div className="border border-gray-400 rounded-lg bg-white">
+              <div className="py-5 flex flex-col items-center font-bold text-center">
+                {showCorrection ? (
+                  <p className="whitespace-pre-wrap px-4">
+                    {essayQuestion} (500자 내외/ 최대 600자 까지)
+                  </p>
+                ) : (
+                  essayQuestion.split(",").map((question, index, array) => (
+                    <p key={index}>
+                      {question}
+                      {index === array.length - 1 &&
+                        " (500자 내외/ 최대 600자 까지)"}
+                    </p>
+                  ))
+                )}
+              </div>
             </div>
-          )}
 
-          {selected === "nonMajor" && (
-            <div className="py-5 flex flex-col items-center font-bold text-center">
-              <p>{essayQuestion}</p>
+            <div className="pt-6">
+              <div className="flex flex-col">
+                <textarea
+                  ref={textareaRef}
+                  className="block p-4 w-full resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:border-black focus:outline-none focus:ring-0"
+                  placeholder="여기에 작성해주세요."
+                  spellCheck="false"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  style={{ lineHeight: 1.8, height: "38rem" }}
+                  maxLength={600}
+                  value={essayContent}
+                  onChange={handleEssayContent}
+                  onSelect={handleTextareaSelect}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          {showCorrection && (
+            <div className="flex flex-col gap-4">
+              <div
+                className="block p-4 w-[420px] text-sm text-gray-900 rounded-lg overflow-hidden"
+                style={{
+                  backgroundColor: "rgba(255, 192, 203, 0.2)",
+                  height: "10rem",
+                  wordWrap: "break-word",
+                }}
+              >
+                <p className="font-bold text-lg mb-2 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="rgba(255, 182, 193, 0.8)"
+                    className="w-6 h-6 mr-2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                    />
+                  </svg>
+                  에세이 수정 내용
+                </p>
+
+                <EssayCorrectionsCarousel changedContent={changedContent} />
+              </div>
+              <div
+                ref={correctionRef}
+                className="block p-4 w-[420px] text-sm text-gray-900 rounded-lg"
+                style={{
+                  backgroundColor: "rgba(214, 237, 249, 1)",
+                  lineHeight: 1.8,
+                  height: "34rem",
+                  wordWrap: "break-word",
+                }}
+              >
+                <p className="font-bold text-lg pb-5 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="rgba(174, 207, 219, 1)"
+                    className="w-6 h-6 mr-2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 0 1 9 9v.375M10.125 2.25A3.375 3.375 0 0 1 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 1 3.375 3.375M9 15l2.25 2.25L15 12"
+                    />
+                  </svg>
+                  에세이 첨삭 내용
+                </p>
+
+                {essayReview.split(/(?<=[.!?])\s+/).map((sentence, index) => (
+                  <span key={index} className={hoveredIndex === index ? "bg-blue-200" : ""}>
+                    {sentence}{" "}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        <div className="pt-6">
-          <div
-            className={`flex ${
-              showCorrection ? "flex-row space-x-4" : "flex-col"
-            }`}
-          >
-            <textarea
-              className="block p-4 w-full h-64 resize-none text-sm text-gray-900 rounded-lg border border-gray-400 focus:ring-[#90CCF0] focus:border-[#90CCF0]"
-              placeholder="여기에 작성해주세요."
-              spellCheck="false"
-              autoCorrect="off"
-              autoComplete="off"
-              maxLength={600}
-              value={essayContent}
-              onChange={handleEssayContent}
-            ></textarea>
+        {showCorrection && (
+          <>
+            <div className="flex gap-4">
+              
+              
+            </div>
+          </>
+        )}
 
-            {showCorrection && (
-              <div className="block p-4 w-full h-64 text-sm text-gray-900 rounded-lg border border-gray-400">
-                {essayReview}
-              </div>
-            )}
-          </div>
-          <div className="flex">
-            <Button text="저장" type="ESSAYSAVE" onClick={handleEssaySave} />
-          </div>
+        <div className="flex">
+          <Button text="저장" type="ESSAYSAVE" onClick={handleEssaySave} />
         </div>
       </div>
     </>
