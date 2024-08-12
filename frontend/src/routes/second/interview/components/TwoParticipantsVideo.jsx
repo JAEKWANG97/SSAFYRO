@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
 // import botImg from "../../../../../public/main/botImg3.png";
-import botImg from "../../../../../public/main/botImg.jpg"
+import botImg from "../../../../../public/main/botImg.jpg";
 import {
   startRecording,
   stopRecording,
@@ -27,7 +27,7 @@ export default function TwoParticipantsVideo({
   handleStartSurvey,
   userInfo,
   userList,
-  userTurn
+  userTurn,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -107,14 +107,29 @@ export default function TwoParticipantsVideo({
         </div> */}
         {localTrack && (
           <div className="w-full h-full">
-            <VideoComponent
-              track={localTrack}
-              participantIdentity={participantName}
-              local={true}
-              // 표정 상태 변경을 VideoComponent로 전달
-              onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={participantName === userInfo.userName && Number(userInfo.userId) === userList[userTurn]}
-            />
+            {(() => {
+              // 콘솔 로그 출력
+              console.log("이 화면 참여자 이름 :", participantName);
+              console.log("로그인 사용자 이름 :", userInfo.userName);
+              console.log("로그인 사용자 아이디 :", userInfo.userId);
+              console.log("현재 턴 아이디 :", userList[userTurn]);
+
+              // isSurveyTarget 값을 계산
+              const isSurveyTarget =
+                participantName === userInfo.userName &&
+                Number(userInfo.userId) === userList[userTurn];
+
+              return (
+                <VideoComponent
+                  track={localTrack}
+                  participantIdentity={participantName}
+                  local={true}
+                  // 표정 상태 변경을 VideoComponent로 전달
+                  onFaceExpressionChange={setFaceExpression}
+                  isSurveyTarget={isSurveyTarget}
+                />
+              );
+            })()}
           </div>
         )}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
@@ -213,23 +228,36 @@ export default function TwoParticipantsVideo({
         ) : (
           // 추가된 부분: remoteTracks를 감싸는 외부 <div> 추가
           <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-gray-400">
-            {remoteTracks.map((remoteTrack) =>
-              remoteTrack.trackPublication.kind === "video" ? (
+            {remoteTracks.map((remoteTrack) => {
+              // 콘솔 로그 출력
+              console.log(
+                "이 화면 참여자 이름 :",
+                remoteTrack.participantIdentity
+              );
+              console.log("로그인 사용자 이름 :", userInfo.userName);
+              console.log("로그인 사용자 아이디 :", userInfo.userId);
+              console.log("현재 턴 아이디 :", userList[userTurn]);
+
+              // isSurveyTarget 값을 계산
+              const isSurveyTarget =
+                remoteTrack.participantIdentity === userInfo.userName &&
+                Number(userInfo.userId) === userList[userTurn];
+
+              return remoteTrack.trackPublication.kind === "video" ? (
                 <VideoComponent
                   key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={remoteTrack.participantIdentity === userInfo.userName && Number(userInfo.userId) === userList[userTurn]}
+                  isSurveyTarget={isSurveyTarget}
                 />
               ) : (
-                // 추가된 부분: <div> 위치 조정 및 중복 key 속성 제거
                 <AudioComponent
                   key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.audioTrack}
                 />
-              )
-            )}
+              );
+            })}
           </div>
         )}
       </div>
