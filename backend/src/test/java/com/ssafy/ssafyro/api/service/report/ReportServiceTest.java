@@ -135,6 +135,7 @@ class ReportServiceTest extends IntegrationTestSupport {
         ReportResponse response = reportService.getReport(report.getId());
 
         // then
+        assertThat(response.getQnaCount()).isEqualTo(3);
         assertThat(response.getReportDetails()).hasSize(3)
                 .extracting("question")
                 .containsExactlyInAnyOrder(
@@ -169,6 +170,7 @@ class ReportServiceTest extends IntegrationTestSupport {
         ReportPresentationResponse response = (ReportPresentationResponse) reportService.getReport(report.getId());
 
         // then
+        assertThat(response.getQnaCount()).isEqualTo(3);
         assertThat(response.getArticle()).isNotNull()
                 .extracting("title", "content")
                 .containsExactlyInAnyOrder(

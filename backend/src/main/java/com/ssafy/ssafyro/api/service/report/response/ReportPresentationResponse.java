@@ -12,7 +12,7 @@ public class ReportPresentationResponse extends ReportResponse {
     private final ArticleResponse article;
 
     public ReportPresentationResponse(List<ReportDetailInfo> reportDetails, ArticleResponse article) {
-        super(reportDetails);
+        super(reportDetails.size(), reportDetails);
         this.article = article;
     }
 
