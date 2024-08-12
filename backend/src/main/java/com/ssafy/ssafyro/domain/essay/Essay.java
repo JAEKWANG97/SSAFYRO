@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.domain.essay;
 import com.ssafy.ssafyro.domain.BaseEntity;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
 import com.ssafy.ssafyro.domain.user.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ public class Essay extends BaseEntity {
     @JoinColumn(name = "essay_question_id")
     private EssayQuestion question;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Builder
