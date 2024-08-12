@@ -108,16 +108,8 @@ export default function TwoParticipantsVideo({
         {localTrack && (
           <div className="w-full h-full">
             {(() => {
-              // 콘솔 로그 출력
-              console.log("이 화면 참여자 이름 :", participantName);
-              console.log("로그인 사용자 이름 :", userInfo.userName);
-              console.log("로그인 사용자 아이디 :", userInfo.userId);
-              console.log("현재 턴 아이디 :", userList[userTurn]);
-
-              // isSurveyTarget 값을 계산
-              const isSurveyTarget =
-                participantName === userInfo.userName &&
-                Number(userInfo.userId) === userList[userTurn];
+              const currentTurnId = userList[userTurn]
+              const isSurveyTarget = Number(userInfo.userId) === Number(currentTurnId) && participantName === userInfo.userName
 
               return (
                 <VideoComponent
@@ -229,19 +221,8 @@ export default function TwoParticipantsVideo({
           // 추가된 부분: remoteTracks를 감싸는 외부 <div> 추가
           <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-gray-400">
             {remoteTracks.map((remoteTrack) => {
-              // 콘솔 로그 출력
-              console.log(
-                "타 화면 참여자 이름 :",
-                remoteTrack.participantIdentity
-              );
-              console.log("로그인 사용자 이름 :", userInfo.userName);
-              console.log("로그인 사용자 아이디 :", userInfo.userId);
-              console.log("현재 턴 아이디 :", userList[userTurn]);
-
-              // isSurveyTarget 값을 계산
-              const isSurveyTarget =
-                remoteTrack.participantIdentity === userInfo.userName &&
-                Number(userInfo.userId) === userList[userTurn];
+              const currentTurnId = userList[userTurn]
+              const isSurveyTarget = Number(userInfo.userId) === Number(currentTurnId) && remoteTrack.participantIdentity === userInfo.userName
 
               return remoteTrack.trackPublication.kind === "video" ? (
                 <VideoComponent
