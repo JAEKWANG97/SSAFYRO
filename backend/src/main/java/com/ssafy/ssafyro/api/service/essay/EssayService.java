@@ -43,8 +43,10 @@ public class EssayService {
 
         User user = getUserBy(userId);
 
+        Essay essay = createEssayIfNotExist(request, user, essayQuestion);
+
         return new EssaySaveResponse(
-                essayRepository.save(createEssay(essayQuestion, user, request.content())).getId()
+                essayRepository.save(essay).getId()
         );
     }
 
@@ -69,6 +71,11 @@ public class EssayService {
     private Essay getEssayBy(User user) {
         return essayRepository.findByUser(user)
                 .orElseThrow(() -> new EssayNotFoundException("Essay not found"));
+    }
+
+    private Essay createEssayIfNotExist(EssaySaveServiceRequest request, User user, EssayQuestion essayQuestion) {
+        return essayRepository.findByUser(user)
+                .orElse(createEssay(essayQuestion, user, request.content()));
     }
 
     private Essay createEssay(EssayQuestion essayQuestion, User user, String content) {
