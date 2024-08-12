@@ -25,8 +25,7 @@ export default function TwoParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
   handleStartSurvey,
-  userList,
-  userTurn,
+  userInfo
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -76,7 +75,7 @@ export default function TwoParticipantsVideo({
   };
 
   // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userList[userTurn];
+  const targetUser = userInfo.userName;
   const isSurveyTarget = (identity) => identity === targetUser;
 
   const styles = `

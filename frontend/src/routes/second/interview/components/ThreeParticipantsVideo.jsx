@@ -23,8 +23,7 @@ export default function ThreeParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
   handleStartSurvey,
-  userList,
-  userTurn,
+  userInfo
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
@@ -87,7 +86,7 @@ export default function ThreeParticipantsVideo({
   };
 
   // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userList[userTurn];
+  const targetUser = userInfo.userName
   const isSurveyTarget = (identity) => identity === targetUser;
 
   const styles = `

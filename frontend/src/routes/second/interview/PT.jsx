@@ -295,7 +295,8 @@ export default function PT() {
   const [remoteTracks, setRemoteTracks] = useState([]);
 
   const [participantName, setParticipantName] = useState(
-    userInfo.userName + Math.floor(Math.random() * 100)
+    // userInfo.userName + Math.floor(Math.random() * 100)
+    userInfo.userName
   );
   const [roomName, setRoomName] = useState(roomid);
 
@@ -619,8 +620,7 @@ export default function PT() {
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
-                  userList={userList}
-                  userTurn={userTurn}
+                  userInfo={userInfo}
                 />
               );
             } else {
@@ -639,8 +639,7 @@ export default function PT() {
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
-                  userList={userList}
-                  userTurn={userTurn}
+                  userInfo={userInfo}
                 />
               );
             }
