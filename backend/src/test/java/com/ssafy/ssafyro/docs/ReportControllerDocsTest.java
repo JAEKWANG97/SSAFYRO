@@ -163,6 +163,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
+                                fieldWithPath("response.qnaCount").type(JsonFieldType.NUMBER)
+                                        .description("질답 횟수"),
                                 fieldWithPath("response.reportDetails").type(JsonFieldType.ARRAY)
                                         .description("레포트 상세 정보"),
                                 fieldWithPath("response.reportDetails[].question").type(JsonFieldType.STRING)
@@ -250,6 +252,8 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("성공 여부"),
                                 fieldWithPath("response").type(JsonFieldType.OBJECT)
                                         .description("응답"),
+                                fieldWithPath("response.qnaCount").type(JsonFieldType.NUMBER)
+                                        .description("질답 횟수"),
                                 fieldWithPath("response.article").type(JsonFieldType.OBJECT)
                                         .description("PT 기사 정보"),
                                 fieldWithPath("response.article.title").type(JsonFieldType.STRING)
