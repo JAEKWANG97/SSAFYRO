@@ -9,8 +9,6 @@ import java.lang.reflect.Type;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +22,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Disabled
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChatControllerTest {
 
     @LocalServerPort
@@ -127,9 +124,9 @@ class ChatControllerTest {
         webSocketStompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
         return webSocketStompClient.connectAsync(
-                String.format("ws://localhost:%s/ssafyro-chat", port),
-                new StompSessionHandlerAdapter() {
-                })
+                        String.format("ws://localhost:%s/ssafyro-chat", port),
+                        new StompSessionHandlerAdapter() {
+                        })
                 .get(5, TimeUnit.SECONDS);
     }
 

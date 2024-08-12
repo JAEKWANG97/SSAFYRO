@@ -123,9 +123,16 @@ public class RoomControllerDocsTest extends RestDocsSupport {
     void getRoomByIdTest() throws Exception {
         int requestRoomId = 1;
 
-        given(roomService.getRoomById(any(String.class))).willReturn(RoomDetailResponse
-                .of(RoomRedis.builder().title("title").description("description")
-                        .type(RoomType.PRESENTATION).capacity(3).build()));
+        RoomRedis roomRedis = RoomRedis.builder()
+                .title("title")
+                .description("description")
+                .type(RoomType.PRESENTATION)
+                .capacity(3).build();
+
+        roomRedis.addParticipant(1L);
+        roomRedis.addParticipant(2L);
+
+        given(roomService.getRoomById(any(String.class))).willReturn(RoomDetailResponse.of(roomRedis , List.of("user1", "user2")));
 
         mockMvc.perform(get("/api/v1/rooms/{id}", requestRoomId)).andDo(print())
                 .andExpect(status().isOk())
@@ -147,7 +154,10 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                         .description("방 상태"),
                                 fieldWithPath("response.userList")
                                         .type(JsonFieldType.ARRAY)
-                                        .description("방 참가자 목록"),
+                                        .description("방 참가자 ID 목록"),
+                                fieldWithPath("response.userNameList")
+                                        .type(JsonFieldType.ARRAY)
+                                        .description("방 참가자 이름 목록"),
                                 fieldWithPath("response.type").type(
                                                 JsonFieldType.STRING)
                                         .description("방 타입"),
