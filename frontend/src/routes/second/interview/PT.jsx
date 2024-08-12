@@ -544,15 +544,10 @@ export default function PT() {
       if (interviewTurnCounter.current >= userList.length) {
         handleEndInterview();
       }
-      // else if (userList.length === 1) {
-      //   handleEndInterview();
-      // } else {
-      //   handleStartSurvey();
-      // }
-      else {
-        if (userList.length === 1) {
-          handleEndInterview();
-        }
+      else if (userList.length === 1) {
+        handleEndInterview();
+      } else {
+        setModalOpen();
       }
     }
   }, [twoMinuteTimer]);
