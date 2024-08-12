@@ -47,8 +47,8 @@ export default function PT() {
   const navigate = useNavigate();
 
   // 타이머 상태 및 Ref 추가
-  const [tenMinuteTimer, setTenMinuteTimer] = useState(600);
-  const [twoMinuteTimer, setTwoMinuteTimer] = useState(120);
+  const [tenMinuteTimer, setTenMinuteTimer] = useState(60);
+  const [twoMinuteTimer, setTwoMinuteTimer] = useState(30);
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
@@ -400,9 +400,9 @@ export default function PT() {
     }
     
     if (stage === "FIRST") {
-      setTenMinuteTimer(600);
+      setTenMinuteTimer(60);
     } else if (stage === "SECOND" || stage === "THIRD") {
-      setTenMinuteTimer(600);
+      setTenMinuteTimer(60);
     }
 
     timerRef.current = setInterval(() => {
