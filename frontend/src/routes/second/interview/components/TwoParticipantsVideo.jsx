@@ -2,16 +2,15 @@ import React from "react";
 import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
-import botImg from "../../../../../public/main/botImg3.png";
+// import botImg from "../../../../../public/main/botImg3.png";
+import botImg from "../../../../../public/main/botImg.jpg"
 import {
   startRecording,
   stopRecording,
   pronunciationEvaluation,
   base64String,
-  pronunciationScore
+  pronunciationScore,
 } from "./VoicePronunciationRecord";
-
-const isFullParticipants = false;
 
 export default function TwoParticipantsVideo({
   localTrack,
@@ -25,6 +24,9 @@ export default function TwoParticipantsVideo({
   answer,
   faceExpressionData,
   handleSubmitAnswer,
+  handleStartSurvey,
+  userList,
+  userTurn,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -58,7 +60,12 @@ export default function TwoParticipantsVideo({
       setIsRecording(false);
       try {
         const score = await pronunciationEvaluation(base64String);
-        handleSubmitAnswer(questions[0], answer, faceExpressionData, pronunciationScore);
+        handleSubmitAnswer(
+          questions[0],
+          answer,
+          faceExpressionData,
+          pronunciationScore
+        );
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {
@@ -68,8 +75,31 @@ export default function TwoParticipantsVideo({
     }
   };
 
+  // 카카오 유저데이터 보완 시 userList[userTurn] 수정
+  const targetUser = userList[userTurn];
+  const isSurveyTarget = (identity) => identity === targetUser;
+
+  const styles = `
+  @keyframes indigoBlink {
+    0% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(75, 0, 130, 0.8), 0 0 30px rgba(75, 0, 130, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+  }
+
+  .current-turn {
+    animation: indigoBlink 1s infinite;
+    padding: 5px;
+  }
+  `;
   return (
     <>
+      <style>{styles}</style> {/* 애니메이션 스타일 추가 */}
       <div className="w-1/2 bg-gray-300 rounded-2xl mr-5 flex justify-center items-end relative">
         {/* <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">
           You
@@ -80,9 +110,9 @@ export default function TwoParticipantsVideo({
               track={localTrack}
               participantIdentity={participantName}
               local={true}
-              isFullParticipants={isFullParticipants}
               // 표정 상태 변경을 VideoComponent로 전달
               onFaceExpressionChange={setFaceExpression}
+              isSurveyTarget={isSurveyTarget(participantName)}
             />
           </div>
         )}
@@ -90,7 +120,7 @@ export default function TwoParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            // onClick={handleStartSurvey}
+            onClick={handleStartSurvey}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -170,13 +200,13 @@ export default function TwoParticipantsVideo({
           </button>
         </div>
       </div>
-      <div className="w-1/2 h-full">
+      <div className={"w-1/2 h-full"}>
         {remoteTracks.length < 2 ? (
-          <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-blue-500">
+          <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-gray-300">
             <img
               src={botImg}
               alt="Bot"
-              className="w-full h-full object-contain rounded-2xl"
+              className="w-44 h-44 rounded-full object-contain bg-blue-500"
             />
           </div>
         ) : (
@@ -189,7 +219,9 @@ export default function TwoParticipantsVideo({
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isFullParticipants={isFullParticipants}
+                  isSurveyTarget={isSurveyTarget(
+                    remoteTrack.participantIdentity
+                  )}
                 />
               ) : (
                 // 추가된 부분: <div> 위치 조정 및 중복 key 속성 제거

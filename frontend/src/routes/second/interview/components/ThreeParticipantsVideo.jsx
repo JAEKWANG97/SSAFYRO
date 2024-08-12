@@ -2,8 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
-
-const isFullParticipants = true;
+import {
+  startRecording,
+  stopRecording,
+  pronunciationEvaluation,
+  base64String,
+  pronunciationScore,
+} from "./VoicePronunciationRecord";
 
 export default function ThreeParticipantsVideo({
   localTrack,
@@ -17,12 +22,21 @@ export default function ThreeParticipantsVideo({
   answer,
   faceExpressionData,
   handleSubmitAnswer,
+  handleStartSurvey,
+  userList,
+  userTurn,
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
   const [faceExpression, setFaceExpression] = useState("neutral");
+  const [isRecording, setIsRecording] = useState(false);
+
+  useEffect(() => {
+    startRecording(); // 방에 들어오자마자 녹화 시작
+    setIsRecording(true);
+  }, []);
 
   const faceEmotionIcon = {
     angry: "angry_2274563.png",
@@ -51,8 +65,53 @@ export default function ThreeParticipantsVideo({
   const url = location.pathname;
   const urlCheck = url.substring(url.length - 3);
 
+  const handleButtonClick = async () => {
+    if (isRecording) {
+      stopRecording(); // 녹음 중지
+      setIsRecording(false);
+      try {
+        const score = await pronunciationEvaluation(base64String);
+        handleSubmitAnswer(
+          questions[0],
+          answer,
+          faceExpressionData,
+          pronunciationScore
+        );
+      } catch (error) {
+        console.error("Error during pronunciation evaluation: ", error);
+      } finally {
+        startRecording(); // 평가가 끝나면 다시 녹음 시작
+        setIsRecording(true);
+      }
+    }
+  };
+
+  // 카카오 유저데이터 보완 시 userList[userTurn] 수정
+  const targetUser = userList[userTurn];
+  const isSurveyTarget = (identity) => identity === targetUser;
+
+  const styles = `
+  @keyframes indigoBlink {
+    0% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(75, 0, 130, 0.8), 0 0 30px rgba(75, 0, 130, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+  }
+
+  .current-turn {
+    animation: indigoBlink 1s infinite;
+    padding: 5px;
+  }
+  `;
+
   return (
     <>
+      <style>{styles}</style>
       <div className="w-2/3 bg-gray-300 rounded-2xl mr-2 flex justify-center items-end relative">
         {/* <div className="absolute top-4 left-4 bg-gray-500 bg-opacity-50 text-white rounded-xl px-4 py-2 text-xs z-10">
           You
@@ -63,8 +122,8 @@ export default function ThreeParticipantsVideo({
               track={localTrack}
               participantIdentity={participantName}
               local={true}
-              isFullParticipants={isFullParticipants}
               onFaceExpressionChange={setFaceExpression}
+              isSurveyTarget={isSurveyTarget(participantName)}
             />
           </div>
         )}
@@ -72,7 +131,7 @@ export default function ThreeParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            // onClick={handleStartSurvey}
+            onClick={handleStartSurvey}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,8 +146,11 @@ export default function ThreeParticipantsVideo({
               ></path>
             </svg>
           </button>
-          <button className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${isListening ? 'bg-green-700' : 'bg-green-500'} hover:bg-green-700`}
-            onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
+          <button
+            className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
+              isListening ? "bg-green-700" : "bg-green-500"
+            } hover:bg-green-700`}
+            onClick={handleButtonClick}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +215,7 @@ export default function ThreeParticipantsVideo({
                 track={tracks.video.trackPublication.videoTrack}
                 participantIdentity={participant}
                 local={false}
-                isFullParticipants={isFullParticipants}
+                isSurveyTarget={isSurveyTarget(participant)}
               />
             )}
             {tracks.audio && ( // 변경된 부분: 오디오 트랙 렌더링

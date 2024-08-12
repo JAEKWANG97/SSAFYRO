@@ -2,16 +2,15 @@ import { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
 import useAuthStore from './stores/AuthStore'; 
-
-
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
-import Kakao from "./routes/accounts/Kakao.jsx";
+import Kakao from "./routes/accounts/components/Kakao.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
-import PersonalityFeedback from "./routes/accounts/PersonalityFeedback.jsx";
-import PtFeedback from "./routes/accounts/PtFeedback.jsx";
+import PersonalityFeedback from "./routes/accounts/components/PersonalityFeedback.jsx";
+import PtFeedback from "./routes/accounts/components/PtFeedback.jsx";
+import QuestionFeedback from "./routes/accounts/components/QuestionFeedback.jsx";
 import Essay from './routes/first/Essay.jsx';
 import Test from './routes/first/Test.jsx';
 import GuidePersonality from "./routes/second/guide/GuidePersonality.jsx";
@@ -28,15 +27,23 @@ import "./index.css";
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
+  const userInfo = useAuthStore((state) => state.setIsLogin);
+  const setUserInfo = useAuthStore((state) => state.setUserInfo);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
+
 
   // 초기 렌더링 시 로그인 상태 복원
   useEffect(() => {
+
     const token = localStorage.getItem('Token');
-    if (token) {
+    const storedUserInfo = localStorage.getItem('userInfo');
+    
+    if (token && storedUserInfo) {
       setIsLogin(true);
+      setUserInfo(JSON.parse(storedUserInfo));
     }
-  }, [setIsLogin]);
+  }, [setIsLogin, setUserInfo]);
+
 
   // Define routes where the Navbar should be hidden
   const hideNavbarRoutes = [
@@ -52,7 +59,8 @@ const AppLayout = () => {
 
   // Define the main page route where the background should not be gray
   const isMainPage = location.pathname === "/";
-
+  const isPersonalityFeedbackPage = location.pathname.includes("/account/profile/") && location.pathname.includes("personality_feedback");
+  const isPtFeedbackPage = location.pathname.includes("/account/profile/") && location.pathname.includes("pt_feedback");
   return (
     <div className={`flex flex-col min-h-screen ${isMainPage ? "" : "bg-gray-50"}`}>
       {!shouldHideNavbar && <Navbar />}
@@ -60,7 +68,7 @@ const AppLayout = () => {
         <div
           className="container mx-auto"
           style={{
-            maxWidth: "1100px",
+            maxWidth: isPersonalityFeedbackPage ||  isPtFeedbackPage ? "100%" : "1100px", // PersonalityFeedback 페이지에서는 제어를 풀거나 다르게 설정
             paddingLeft: "4rem",
             paddingRight: "4rem",
           }}
@@ -85,7 +93,7 @@ const router = createBrowserRouter([
         children: [
           { path: "login", element: <Login /> },
           {
-            path: "profile/:userId",
+            path: "profile",
             children: [
               { path: "", element: <Profile /> },
               {
@@ -93,6 +101,8 @@ const router = createBrowserRouter([
                 element: <PersonalityFeedback />,
               },
               { path: "pt_feedback", element: <PtFeedback /> },
+              { path: "question_feedback", element: <QuestionFeedback /> },
+
             ],
           },
         ],

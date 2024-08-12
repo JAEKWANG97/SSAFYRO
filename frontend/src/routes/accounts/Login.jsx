@@ -28,7 +28,7 @@ export default function Login() {
                 카카오 계정으로 로그인
               </span>
             }
-            onClick={()=> window.location.href = 'http://i11c201.p.ssafy.io:9999/oauth2/authorization/kakao'}
+            onClick={()=> window.location.href = 'https://i11c201.p.ssafy.io:8443/oauth2/authorization/kakao'}
           />
           <Button
             type="GOOGLE"

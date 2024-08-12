@@ -9,9 +9,9 @@ export default function VideoComponent({
   track,
   participantIdentity,
   local = false,
-  isFullParticipants,
   // 표정 상태 변경을 부모에게 알림
-  onFaceExpressionChange
+  onFaceExpressionChange,
+  isSurveyTarget
 }) {
   const videoElement = useRef(null);
   // 표정 표시를 위한 변수
@@ -54,6 +54,26 @@ export default function VideoComponent({
     }
   }, [faceExpression, onFaceExpressionChange])
 
+  // CSS 애니메이션 정의 (인디고 색상의 그라데이션 깜빡임)
+  const styles = `
+  @keyframes indigoBlink {
+    0% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(75, 0, 130, 0.8), 0 0 30px rgba(75, 0, 130, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+    }
+  }
+
+  .current-turn {
+    animation: indigoBlink 1s infinite;
+    padding: 5px;
+  }
+  `;
+
   return (
     <>
       {/* {local && urlCheck === "/pt" ? (
@@ -66,7 +86,7 @@ export default function VideoComponent({
       ) : null} */}
       <div
         id={"camera-" + participantIdentity}
-        className="relative rounded-2xl h-full"
+        className={`relative rounded-2xl h-full ${isSurveyTarget ? "current-turn" : ""}`}
       >
         <video
           ref={videoElement}
