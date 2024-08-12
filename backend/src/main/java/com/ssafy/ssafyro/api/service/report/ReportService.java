@@ -97,9 +97,7 @@ public class ReportService {
     }
 
     public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsAverageServiceRequest request) {
-        User user = getUser(userId);
-
-        return reportRepository.findTotalAvgBy(request.roomType(), user)
+        return reportRepository.findTotalAvgBy(request.roomType(), getUser(userId))
                 .toResponse(request.roomType());
     }
 
