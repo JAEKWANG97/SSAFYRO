@@ -6,16 +6,16 @@ import com.ssafy.ssafyro.domain.user.User;
 public record UserInfoResponse(String nickname,
                                MajorType type,
                                String profileImageUrl,
-                               long personalCnt,
-                               long presentationCnt) {
+                               int personalCount,
+                               int presentationCount) {
 
-    public static UserInfoResponse of(User user, long personalCnt, long presentationCnt) {
+    public static UserInfoResponse of(User user, int personalCount, int presentationCount) {
         return new UserInfoResponse(
                 user.getNickname(),
                 user.getMajorType(),
                 user.getProfileImageUrl(),
-                personalCnt,
-                presentationCnt
+                personalCount,
+                presentationCount
         );
     }
 }
