@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 
 class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
 
@@ -49,7 +50,8 @@ class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
         );
 
         //when
-        List<InterviewResultDocument> interviewResultDocuments = interviewResultDocumentRepository.findBy(1L);
+        List<InterviewResultDocument> interviewResultDocuments = interviewResultDocumentRepository.findTop5ByUserIdOrderByEvaluationScore(
+                1L);
 
         //then
         assertThat(interviewResultDocuments)
@@ -64,7 +66,7 @@ class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("")
+    @DisplayName("태그 기반으로 가장 점수가 높은 인터뷰 결과를 찾는다.")
     @Test
     void findBestInterviewResultByTags() {
         //given
@@ -101,7 +103,7 @@ class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
 
         //when
         List<InterviewResultDocument> interviewResult = interviewResultDocumentRepository.findBestInterviewResultBy(
-                List.of("후회", "인생", "왜"), 100L
+                List.of("후회", "인생", "왜"), 100L, Pageable.ofSize(5)
         );
 
         //then

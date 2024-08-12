@@ -1,0 +1,11 @@
+[[get-interview-result-by-user-id]]
+=== 유저 별 인터뷰 결과 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/get-interview-result-by-user-id/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-interview-result-by-user-id/http-response.adoc[]
+include::{snippets}/get-interview-result-by-user-id/response-fields.adoc[]
