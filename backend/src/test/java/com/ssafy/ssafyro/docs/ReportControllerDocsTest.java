@@ -1,6 +1,5 @@
 package com.ssafy.ssafyro.docs;
 
-import static com.ssafy.ssafyro.api.service.report.Expression.ANGRY;
 import static com.ssafy.ssafyro.api.service.report.Expression.DISGUST;
 import static com.ssafy.ssafyro.api.service.report.Expression.HAPPY;
 import static com.ssafy.ssafyro.api.service.report.Expression.SAD;
@@ -363,9 +362,11 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 PERSONALITY,
                 93,
                 80,
-                HAPPY,
-                SAD,
-                ANGRY
+                Map.of(
+                        HAPPY, 0.8,
+                        SAD, 0.15,
+                        DISGUST, 0.05
+                )
         );
 
         given(reportService.getReportsScoreAverage(any(Long.class), any(ReportsAverageServiceRequest.class)))
@@ -396,12 +397,20 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                                 .description("해당 타입 전체 평균 점수"),
                                         fieldWithPath("response.pronunciationScore").type(JsonFieldType.NUMBER)
                                                 .description("해당 타입 전체 발음 평균 점수"),
-                                        fieldWithPath("response.expression1").type(JsonFieldType.STRING)
-                                                .description("해당 타입 전체 1등 표정"),
-                                        fieldWithPath("response.expression2").type(JsonFieldType.STRING)
-                                                .description("해당 타입 전체 2등 표정"),
-                                        fieldWithPath("response.expression3").type(JsonFieldType.STRING)
-                                                .description("해당 타입 전체 3등 표정"),
+                                        fieldWithPath("response.expressions").type(JsonFieldType.OBJECT)
+                                                .description("표정 점수 상위 3개 \n (HAPPY,\n"
+                                                        + "    DISGUST,\n"
+                                                        + "    SAD,\n"
+                                                        + "    SURPRISE,\n"
+                                                        + "    FEAR,\n"
+                                                        + "    ANGRY,\n"
+                                                        + "    NEUTRAL)"),
+                                        fieldWithPath("response.expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 행복"),
+                                        fieldWithPath("response.expressions.SAD").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 슬픔"),
+                                        fieldWithPath("response.expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 역겨움"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
                                 )
