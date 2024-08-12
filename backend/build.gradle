@@ -85,16 +85,19 @@ tasks.named('test') {
 ext {
     set('snippetsDir', file("build/generated-snippets"))
     set('springAiVersion', "1.0.0-M1")
-
-    profile = (!project.hasProperty('profile') || !profile) ? 'test' : profile
 }
 
 test {
     outputs.dir snippetsDir
-    systemProperty 'spring.profiles.active', profile
 
-    doFirst {
-        println "Using profile: ${profile}"
+    if (project.hasProperty('profile')) {
+        systemProperty 'spring.profiles.active', project.property('profile')
+    } else {
+        systemProperty 'spring.profiles.active', 'test'
+    }
+    
+    testLogging {
+        events "failed"
     }
 }
 
