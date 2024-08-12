@@ -35,9 +35,12 @@ export default function Button({ text, type, onClick, isActive }) {
                                   ? "bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded" 
                                   : type === "NONMAJOR"
                                     ? "bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded" 
-                                      : "text-white";
-
-  return (
+                                    : type === "WORST"
+                                      ? "ml-auto bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-2 rounded" 
+                                      : type === "BEST"
+                                        ? "bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"
+                                          : "text-white";
+    return (
     <button
       onClick={onClick}
       className={`${baseClass} ${typeClass}`}

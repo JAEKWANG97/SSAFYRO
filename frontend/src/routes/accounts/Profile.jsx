@@ -183,7 +183,7 @@ export default function Profile() {
                   onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
                 >
                   이 질문들에서 점수를 높일 방법은?
-                  <span className="text-sm font-medium pt-1">구체적인 피드백을 받아보세요</span>
+                  <span className="text-sm font-medium pt-1">WORST & BEST 질문을 확인해보세요</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
