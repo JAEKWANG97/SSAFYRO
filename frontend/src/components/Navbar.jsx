@@ -4,13 +4,15 @@ import useFirstStore from "../stores/FirstStore";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+  const info = localStorage.getItem('userInfo')
   const setActiveTab = useFirstStore((state) => state.setActiveTab);
   const isLogin = useAuthStore((state) => state.isLogin);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
-  const userId = 1; // 임의로 지정
+  const userInfo = useAuthStore((state) => state.userInfo); // userInfo에서 userId 가져오기
   const [dropdown1Open, setDropdown1Open] = useState(false); // 드롭다운 1 상태
   const [dropdown2Open, setDropdown2Open] = useState(false); // 드롭다운 2 상태
   const navigate = useNavigate();
+
 
   const dropdown1Ref = useRef(null);
   const dropdown2Ref = useRef(null);
@@ -57,13 +59,21 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('Token')
-    localStorage.removeItem('userInfo')
+    localStorage.removeItem('Token');
+    localStorage.removeItem('userInfo');
     setIsLogin(false); 
   };
 
   const handleLoginClick = () => {
     navigate("/account/login"); 
+  };
+
+  const handleProfileClick = () => {
+    if (userInfo && userInfo.userId) {
+      navigate('/account/profile', { state: { userId: userInfo.userId } });
+    } else {
+      console.error("User info가 없습니다.");
+    }
   };
 
   return (
@@ -163,12 +173,12 @@ export default function Navbar() {
         <div className="flex-shrink-0 min-w-[200px] text-end">
           {isLogin ? (
             <>
-              <a
+              <button
                 className="mx-8 font-semibold hover:text-[#90CCF0] whitespace-nowrap"
-                href={`/account/profile/${userId}`}
+                onClick={handleProfileClick}
               >
                 프로필
-              </a>
+              </button>
               <button
                 className="mx-3 font-semibold hover:text-[#90CCF0]"
                 onClick={handleLogout} // 로그아웃 버튼 클릭 시 이벤트 핸들러
