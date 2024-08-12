@@ -52,12 +52,14 @@ export default function PT() {
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
-  const { userList, setUserList, userTurn, setUserTurn } = useRoomStore((state) => ({
-    userList: state.userList,
-    setUserList: state.setUserList,
-    userTurn: state.userTurn,
-    setUserTurn: state.setUserTurn,
-  }));
+  const { userList, setUserList, userTurn, setUserTurn } = useRoomStore(
+    (state) => ({
+      userList: state.userList,
+      setUserList: state.setUserList,
+      userTurn: state.userTurn,
+      setUserTurn: state.setUserTurn,
+    })
+  );
 
   const handleStartInterview = async () => {
     try {
@@ -74,18 +76,20 @@ export default function PT() {
       console.log("Interview started successfully");
 
       // 방의 최신 정보 불러오기
-      const response = await axios.get(
-        `http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`,
-        {
+      await axios
+        .get(`http://i11c201.p.ssafy.io:9999/api/v1/rooms/${roomid}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
           },
-        }
-      );
-
-      const roomData = response.data.response
-      setUserList(roomData.userList)
-      console.log("updated userList: ", roomData.userList)
+        })
+        .then((response) => {
+          const roomData = response.data.response;
+          setUserList(roomData.userList);
+          console.log("updated userList: ", roomData.userList);
+        })
+        .catch((error) => {
+          console.log("Error! : ", error);
+        });
 
       // FIRST 메시지 전송
       if (interviewClient.current) {
