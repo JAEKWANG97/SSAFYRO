@@ -50,8 +50,7 @@ class InterviewResultDocumentRepositoryTest extends IntegrationTestSupport {
         );
 
         //when
-        List<InterviewResultDocument> interviewResultDocuments = interviewResultDocumentRepository.findTop5ByUserIdOrderByEvaluationScore(
-                1L);
+        List<InterviewResultDocument> interviewResultDocuments = interviewResultDocumentRepository.findTop5ByUserIdOrderByEvaluationScore(1L);
 
         //then
         assertThat(interviewResultDocuments)
