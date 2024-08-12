@@ -42,7 +42,7 @@ public class InterviewResultDocumentOperationRepositoryImpl implements Interview
     }
 
     @Override
-    public List<InterviewResultDocument> findInterviewResultsBy(List<String> tags, Pageable pageable) {
+    public List<InterviewResultDocument> findBestInterviewResultsBy(List<String> tags, Pageable pageable) {
         Query query = new CriteriaQuery(whereQuestionTagsIn(tags))
                 .addSort(Sort.by(DESC, "_score"))
                 .setPageable(pageable);

@@ -9,6 +9,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +21,7 @@ import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocument;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -111,6 +113,60 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andDo(document("get-interview-result-by-user-id",
                                 preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.interviewResultInfos").type(JsonFieldType.ARRAY)
+                                                .description("베스트 질문, 답변"),
+                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(JsonFieldType.STRING)
+                                                .description("인터뷰 결과 id"),
+                                        fieldWithPath("response.interviewResultInfos[].question").type(JsonFieldType.STRING)
+                                                .description("질문"),
+                                        fieldWithPath("response.interviewResultInfos[].answer").type(JsonFieldType.STRING)
+                                                .description("답변"),
+                                        fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
+                                                .description("표정 점수"),
+                                        fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                                .description("표정1"),
+                                        fieldWithPath("response.interviewResultInfos[].expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                                .description("표정2"),
+                                        fieldWithPath("response.interviewResultInfos[].expressions.SAD").type(JsonFieldType.NUMBER)
+                                                .description("표정3"),
+                                        fieldWithPath("response.interviewResultInfos[].createdDate").type(JsonFieldType.STRING)
+                                                .description("생성 날짜"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("특정 인터뷰 결과 연관 베스트 질문 답변 조회 API")
+    @Test
+    void getBestInterviewResultsById() throws Exception {
+        given(koMorAnGenerator.createTags(any(String.class)))
+                .willReturn(List.of("태그1", "태그2"));
+
+        InterviewResultsResponse response = InterviewResultsResponse.of(
+                List.of(createInterviewResultDocument(1L, "질문", "답변", 100))
+        );
+
+        given(interviewResultService.getBestInterviewResultsFor(any(String.class), any(Pageable.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/interview-result/{id}/best", UUID.randomUUID().toString())
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-best-interview-result-by-id",
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("id").description("인터뷰 결과 id")
+                                ),
                                 responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN)
                                                 .description("성공 여부"),

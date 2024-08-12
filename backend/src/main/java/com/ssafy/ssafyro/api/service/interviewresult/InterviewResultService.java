@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.api.service.interviewresult;
 import com.ssafy.ssafyro.api.service.interviewresult.response.InterviewResultsResponse;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocument;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocumentRepository;
+import com.ssafy.ssafyro.error.interviewresult.InterviewResultNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +31,17 @@ public class InterviewResultService {
         );
     }
 
+    public InterviewResultsResponse getBestInterviewResultsFor(String id, Pageable pageable) {
+        InterviewResultDocument interviewResult = getInterviewResult(id);
+
+        return InterviewResultsResponse.of(
+                interviewResultDocumentRepository.findBestInterviewResultsBy(interviewResult.getQuestionTags(), pageable)
+        );
+    }
+
     public InterviewResultsResponse getInterviewResultsBy(List<String> tags, Pageable pageable) {
         return InterviewResultsResponse.of(
-                interviewResultDocumentRepository.findInterviewResultsBy(tags, pageable)
+                interviewResultDocumentRepository.findBestInterviewResultsBy(tags, pageable)
         );
     }
 
@@ -41,5 +50,10 @@ public class InterviewResultService {
                 .map(InterviewResultDocument::getQuestionTags)
                 .flatMap(List::stream)
                 .toList();
+    }
+
+    private InterviewResultDocument getInterviewResult(String id) {
+        return interviewResultDocumentRepository.findById(id)
+                .orElseThrow(() -> new InterviewResultNotFoundException("Interview result not found"));
     }
 }
