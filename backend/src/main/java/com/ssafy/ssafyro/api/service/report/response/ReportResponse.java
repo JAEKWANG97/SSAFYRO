@@ -11,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReportResponse {
 
+    private final int qnaCount;
     private final List<ReportDetailInfo> reportDetails;
 
     public static ReportResponse of(List<InterviewResult> reportDetails) {
         return new ReportResponse(
+                reportDetails.size(),
                 reportDetails.stream()
                         .map(ReportDetailInfo::new)
                         .toList()

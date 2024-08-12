@@ -68,3 +68,8 @@ include::api/codingtestproblem/get-problem-by-id.adoc[]
 
 include::api/Itknowledge/it-knowledge-detail.adoc[]
 include::api/Itknowledge/it-knowledge-list.adoc[]
+
+[[user-API]]
+== 유저 정보 API
+
+include::api/user/user-info.adoc[]
