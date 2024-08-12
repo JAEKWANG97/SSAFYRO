@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.api.service.user;
 
+import com.ssafy.ssafyro.api.service.user.response.UserInfoResponse;
 import com.ssafy.ssafyro.api.service.user.response.UserInitSettingResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.user.User;
@@ -30,5 +31,9 @@ public class UserService {
         user.initializeMajorType(majorType);
 
         return UserInitSettingResponse.of(user.getId(), user.getMajorType());
+    }
+
+    public UserInfoResponse getUserInfo(Long userId) {
+        return null;
     }
 }
