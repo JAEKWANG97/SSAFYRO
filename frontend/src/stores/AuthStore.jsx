@@ -10,7 +10,7 @@ const useAuthStore = create((set) => ({
   setIsPt : (tab) => set({IsPt : tab}),
   userInfo : {
     userId : 1,
-    userName : "이정준"
+    userName : "asfdag"
   },
   setUserInfo: (newUserInfo) => set((state) => ({
     userInfo: {
