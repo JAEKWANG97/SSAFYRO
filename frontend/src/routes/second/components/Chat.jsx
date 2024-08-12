@@ -64,7 +64,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       destination: `/chat/${currentRoom}`,
       body: JSON.stringify({
         userId: currentUser.userId,
-        name: currentUser.name,
+        name: currentUser.userName,
         message: newMessage,
       }),
     });
@@ -87,13 +87,13 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       return;
     }
 
-    const message = `${currentUser.name}님이 입장하셨습니다.`;
+    const message = `${currentUser.userName}님이 입장하셨습니다.`;
 
     stompClient.current.publish({
       destination: `/chat/enter/${roomId}`,
       body: JSON.stringify({
         userId: currentUser.userId,
-        name: currentUser.name,
+        name: currentUser.userName,
         message: message,
       }),
     });
@@ -104,14 +104,14 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       return;
     }
 
-    const message = `${currentUser.name}님이 퇴장하셨습니다.`;
+    const message = `${currentUser.userName}님이 퇴장하셨습니다.`;
 
     stompClient.current.publish({
       destination: `/chat/leave/${roomId}`,
       body: JSON.stringify({
         userId: currentUser.userId,
-        name: currentUser.name,
-        content: message,
+        name: currentUser.userName,
+        message: message,
       }),
     });
   };
@@ -132,7 +132,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
           console.log("message : ", message);
           const showProfile =
             index === 0 || messages[index - 1].name !== message.name;
-          const isCurrentUser = message.name === currentUser.name;
+          const isCurrentUser = message.name === currentUser.userName;
 
           if (message.content) {
             return (
