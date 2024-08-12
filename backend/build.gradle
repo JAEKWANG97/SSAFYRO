@@ -92,6 +92,10 @@ ext {
 test {
     outputs.dir snippetsDir
     systemProperty 'spring.profiles.active', profile
+
+    doFirst {
+        println "Using profile: ${profile}"
+    }
 }
 
 asciidoctor {
