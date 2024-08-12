@@ -90,14 +90,14 @@ ext {
 test {
     outputs.dir snippetsDir
 
-    if (project.hasProperty('profile')) {
-        systemProperty 'spring.profiles.active', project.property('profile')
-    } else {
-        systemProperty 'spring.profiles.active', 'test'
-    }
-
     doFirst {
         println 'Using profile: ' + project.property('profile')
+
+        if (project.hasProperty('profile')) {
+            systemProperty 'spring.profiles.active', project.property('profile')
+        } else {
+            systemProperty 'spring.profiles.active', 'test'
+        }
     }
 }
 
