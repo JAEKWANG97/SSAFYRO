@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, useLocation, Outlet } from "react-router-dom";
 import useAuthStore from './stores/AuthStore'; 
-
-
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./routes/Home.jsx";
@@ -29,15 +27,22 @@ import "./index.css";
 // Custom layout component for conditional Navbar and Footer rendering
 const AppLayout = () => {
   const location = useLocation();
+  const userInfo = useAuthStore((state) => state.setIsLogin);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
+
 
   // 초기 렌더링 시 로그인 상태 복원
   useEffect(() => {
+
     const token = localStorage.getItem('Token');
-    if (token) {
+    const storedUserInfo = localStorage.getItem('userInfo');
+    
+    if (token && storedUserInfo) {
       setIsLogin(true);
+      setUserInfo(JSON.parse(storedUserInfo));
     }
-  }, [setIsLogin]);
+  }, [setIsLogin, setUserInfo]);
+
 
   // Define routes where the Navbar should be hidden
   const hideNavbarRoutes = [
