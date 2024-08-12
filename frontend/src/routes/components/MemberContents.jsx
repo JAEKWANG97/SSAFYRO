@@ -5,6 +5,7 @@ import useAuthStore from "../../stores/AuthStore";
 export default function MemberContents() {
 
   const userInfo = useAuthStore((state) => state.userInfo);
+  console.log(userInfo.userName)
 
   return (
     <div className="flex justify-center">
