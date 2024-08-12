@@ -76,9 +76,9 @@ export default function TwoParticipantsVideo({
     }
   };
 
-  // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userInfo.userName
-  const isSurveyTarget = (identity) => identity === targetUser;
+  // // 현재 턴인 유저의 id
+  // const targetUser = userList.userTurn
+  // const isSurveyTarget = (identity) => identity === targetUser;
 
   const styles = `
   @keyframes indigoBlink {
@@ -113,7 +113,7 @@ export default function TwoParticipantsVideo({
               local={true}
               // 표정 상태 변경을 VideoComponent로 전달
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={isSurveyTarget(participantName)}
+              isSurveyTarget={participantName === userInfo.userName && Number(userInfo.userId) === userList[userTurn]}
             />
           </div>
         )}
@@ -220,7 +220,7 @@ export default function TwoParticipantsVideo({
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={isSurveyTarget(remoteTrack.participantIdentity)}
+                  isSurveyTarget={remoteTrack.participantIdentity === userInfo.userName && Number(userInfo.userId) === userList[userTurn]}
                 />
               ) : (
                 // 추가된 부분: <div> 위치 조정 및 중복 key 속성 제거
