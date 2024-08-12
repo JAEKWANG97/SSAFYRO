@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-@Disabled
+//@Disabled
 class RoomServiceTest extends IntegrationTestSupport {
 
     @Autowired
