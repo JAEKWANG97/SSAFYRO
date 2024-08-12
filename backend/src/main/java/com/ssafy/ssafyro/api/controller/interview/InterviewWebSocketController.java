@@ -5,14 +5,18 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
 import com.ssafy.ssafyro.api.service.interview.InterviewService;
+import com.ssafy.ssafyro.api.service.interview.response.ExitResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
+import com.ssafy.ssafyro.security.JwtAuthentication;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -38,5 +42,12 @@ public class InterviewWebSocketController {
     public InterviewStageResponse changeTurnInterviewer(@DestinationVariable String roomId,
                                                         @Valid InterviewStageRequest request) {
         return interviewService.changeInterviewer(roomId, request.toServiceRequest());
+    }
+
+    @MessageMapping("/exit/{roomId}")
+    @SendTo("/topic/interview/{roomId}")
+    public ExitResponse exitInterview(@Valid @NotNull Long userId,
+                                      @DestinationVariable String roomId) {
+        return interviewService.exitInterview(roomId , userId);
     }
 }

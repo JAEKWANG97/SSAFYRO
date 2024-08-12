@@ -3,6 +3,7 @@ package com.ssafy.ssafyro.api.service.interview;
 import com.ssafy.ssafyro.api.service.interview.request.InterviewStageServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
+import com.ssafy.ssafyro.api.service.interview.response.ExitResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.QnAResultCreateResponse;
@@ -83,10 +84,16 @@ public class InterviewService {
         );
     }
 
+    public ExitResponse exitInterview(String roomId ,Long userId) {
+        RoomRedis roomRedis = getRoomRedis(roomId);
+        roomRedis.removeParticipant(userId);
+        roomRedisRepository.save(roomRedis);
+        return ExitResponse.of(roomRedis.getUserList());
+    }
+
     private RoomRedis getRoomRedis(String roomId) {
         return roomRedisRepository.findBy(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
     }
-
 }
 
