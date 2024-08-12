@@ -579,6 +579,11 @@ export default function PT() {
     setIsModalOpen(false);
   };
 
+  // 면접 평가 데이터
+  const [totalResult, setTotalResult] = useState([]);
+
+  setTotalResult((prev) => [...prev, newResult]);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div
