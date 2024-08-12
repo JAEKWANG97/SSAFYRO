@@ -10,19 +10,19 @@ export default function Kakao() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
-    const nickname = urlParams.get("nickname");
-    const userId = urlParams.get("userId");
+    // const nickname = urlParams.get("nickname");
+    // const userId = urlParams.get("userId");
 
     if (token) {
       localStorage.setItem("Token", token);
 
-      const userInfo = {
-        userId: userId,
-        userName: nickname
-      };
-      
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      setUserInfo(userInfo);
+      // const userInfo = {
+      //   userId: userId,
+      //   userName: nickname
+      // };
+
+      // localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      // setUserInfo(userInfo);
       setIsLogin(true);
       nav("/");
     } else {
