@@ -11,7 +11,15 @@ const useAuthStore = create((set) => ({
   userInfo : {
     userId : 1,
     userName : "이정준"
-  }
+  },
+  setUserInfo: (newUserInfo) => set((state) => ({
+    userInfo: {
+      ...state.userInfo,
+      ...newUserInfo
+    }
+  }))
 }));
+
+  
 
 export default useAuthStore;;
