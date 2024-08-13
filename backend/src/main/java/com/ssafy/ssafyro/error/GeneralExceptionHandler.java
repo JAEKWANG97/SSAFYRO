@@ -5,6 +5,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.error;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.error.codingtestproblem.CodingTestProblemNotFoundException;
 import com.ssafy.ssafyro.error.essayquestion.EssayQuestionNotFoundException;
+import com.ssafy.ssafyro.error.interviewResult.InterviewResultNotFoundException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -67,6 +68,11 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(ReportNotFoundException.class)
     public ResponseEntity<?> handleReportNotFoundException(ReportNotFoundException e) {
         return newResponse("레포트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InterviewResultNotFoundException.class)
+    public ResponseEntity<?> handleInterviewResultNotFoundException(InterviewResultNotFoundException e) {
+        return newResponse("인터뷰 결과를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({
