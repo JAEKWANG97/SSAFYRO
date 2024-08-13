@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card } from 'flowbite-react';
 import Button from "../../../components/Button";
 
+
 export default function EssayDetail() {
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const Token = localStorage.getItem("Token");
