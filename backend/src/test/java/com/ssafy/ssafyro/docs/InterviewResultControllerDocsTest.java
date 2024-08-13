@@ -65,6 +65,8 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("질문"),
                                         fieldWithPath("response.interviewResultInfos[].answer").type(JsonFieldType.STRING)
                                                 .description("답변"),
+                                        fieldWithPath("response.interviewResultInfos[].evaluationScore").type(JsonFieldType.NUMBER)
+                                                .description("평가 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
                                                 .description("표정 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(
@@ -115,13 +117,14 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("응답"),
                                         fieldWithPath("response.interviewResultInfos").type(JsonFieldType.ARRAY)
                                                 .description("베스트 질문, 답변"),
-                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(
-                                                        JsonFieldType.STRING)
+                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(JsonFieldType.STRING)
                                                 .description("인터뷰 결과 id"),
                                         fieldWithPath("response.interviewResultInfos[].question").type(JsonFieldType.STRING)
                                                 .description("질문"),
                                         fieldWithPath("response.interviewResultInfos[].answer").type(JsonFieldType.STRING)
                                                 .description("답변"),
+                                        fieldWithPath("response.interviewResultInfos[].evaluationScore").type(JsonFieldType.NUMBER)
+                                                .description("평가 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
                                                 .description("표정 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(
@@ -179,6 +182,8 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("질문"),
                                         fieldWithPath("response.interviewResultInfos[].answer").type(JsonFieldType.STRING)
                                                 .description("답변"),
+                                        fieldWithPath("response.interviewResultInfos[].evaluationScore").type(JsonFieldType.NUMBER)
+                                                .description("평가 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
                                                 .description("표정 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(JsonFieldType.NUMBER)
@@ -238,6 +243,8 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("질문"),
                                         fieldWithPath("response.interviewResultInfos[].answer").type(JsonFieldType.STRING)
                                                 .description("답변"),
+                                        fieldWithPath("response.interviewResultInfos[].evaluationScore").type(JsonFieldType.NUMBER)
+                                                .description("평가 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
                                                 .description("표정 점수"),
                                         fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(JsonFieldType.NUMBER)
