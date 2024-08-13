@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -31,7 +31,6 @@ public class UserService {
         return firstLoginUser;
     }
 
-    @Transactional
     public UserInitSettingResponse initMajorTypeFor(Long userId, MajorType majorType) {
         User user = getUser(userId);
 
