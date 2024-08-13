@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
 import com.ssafy.ssafyro.api.service.report.Expression;
-import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
@@ -38,20 +37,16 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class ReportControllerDocsTest extends RestDocsSupport {
 
-    @MockBean
-    private ReportService reportService;
-
-    private final Report report = mock(Report.class);
-    private final PresentationInterviewReport presentationInterviewReport = mock(PresentationInterviewReport.class);
     private final Room room = mock(Room.class);
+    private final Report report = mock(Report.class);
     private final InterviewResult interviewResult = mock(InterviewResult.class);
+    private final PresentationInterviewReport presentationInterviewReport = mock(PresentationInterviewReport.class);
 
     @DisplayName("면접 레포트 목록 조회 API")
     @Test

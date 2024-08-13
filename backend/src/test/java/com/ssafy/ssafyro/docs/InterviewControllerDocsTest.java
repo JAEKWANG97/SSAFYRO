@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultCreateRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
-import com.ssafy.ssafyro.api.service.interview.InterviewService;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.QnAResultCreateResponse;
@@ -29,14 +28,10 @@ import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class InterviewControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private InterviewService interviewService;
 
     @DisplayName("면접시작 API")
     @Test

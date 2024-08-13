@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.api.controller.chat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ssafy.ssafyro.api.controller.ControllerTestSupport;
 import com.ssafy.ssafyro.api.controller.chat.dto.MessageRequest;
 import com.ssafy.ssafyro.api.controller.chat.dto.MessageResponse;
 import com.ssafy.ssafyro.api.controller.chat.dto.NotificationResponse;
@@ -11,8 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -22,8 +21,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ChatControllerTest {
+class ChatControllerTest extends ControllerTestSupport {
 
     @LocalServerPort
     private int port;

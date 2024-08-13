@@ -15,7 +15,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.service.codingtestproblem.CodingTestProblemService;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemDetailResponse;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemListResponse;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
@@ -23,15 +22,11 @@ import com.ssafy.ssafyro.domain.codingtestproblem.Difficulty;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private CodingTestProblemService codingTestProblemService;
 
     private final CodingTestProblem problem1 = mock(CodingTestProblem.class);
     private final CodingTestProblem problem2 = mock(CodingTestProblem.class);
