@@ -31,8 +31,19 @@ public class InterviewResultDocumentOperationRepositoryImpl implements Interview
     }
 
     @Override
-    public List<InterviewResultDocument> findBestInterviewResultBy(List<String> tags, Long userId, Pageable pageable) {
+    public List<InterviewResultDocument> findBestInterviewResultsBy(List<String> tags, Long userId, Pageable pageable) {
         Query query = new CriteriaQuery(whereQuestionTagsInAndUserIdIsNot(tags, userId))
+                .addSort(Sort.by(DESC, "_score"))
+                .setPageable(pageable);
+
+        return elasticsearchOperations.search(query, InterviewResultDocument.class).stream()
+                .map(SearchHit::getContent)
+                .toList();
+    }
+
+    @Override
+    public List<InterviewResultDocument> findBestInterviewResultsBy(List<String> tags, Pageable pageable) {
+        Query query = new CriteriaQuery(whereQuestionTagsIn(tags))
                 .addSort(Sort.by(DESC, "_score"))
                 .setPageable(pageable);
 
