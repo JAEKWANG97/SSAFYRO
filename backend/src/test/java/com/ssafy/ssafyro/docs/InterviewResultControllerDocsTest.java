@@ -14,9 +14,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.service.interviewresult.InterviewResultService;
 import com.ssafy.ssafyro.api.service.interviewresult.response.InterviewResultsResponse;
-import com.ssafy.ssafyro.api.service.report.KoMorAnGenerator;
 import com.ssafy.ssafyro.domain.interview.InterviewRedis;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocument;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
@@ -24,18 +22,11 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class InterviewResultControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private InterviewResultService interviewResultService;
-
-    @MockBean
-    private KoMorAnGenerator koMorAnGenerator;
 
     @DisplayName("유저 맞춤 베스트 질문 답변 조회 API")
     @Test
@@ -67,7 +58,8 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("응답"),
                                         fieldWithPath("response.interviewResultInfos").type(JsonFieldType.ARRAY)
                                                 .description("베스트 질문, 답변"),
-                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(JsonFieldType.STRING)
+                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(
+                                                        JsonFieldType.STRING)
                                                 .description("인터뷰 결과 id"),
                                         fieldWithPath("response.interviewResultInfos[].question").type(JsonFieldType.STRING)
                                                 .description("질문"),
@@ -75,11 +67,14 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("답변"),
                                         fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
                                                 .description("표정 점수"),
-                                        fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(
+                                                        JsonFieldType.NUMBER)
                                                 .description("표정1"),
-                                        fieldWithPath("response.interviewResultInfos[].expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.interviewResultInfos[].expressions.DISGUST").type(
+                                                        JsonFieldType.NUMBER)
                                                 .description("표정2"),
-                                        fieldWithPath("response.interviewResultInfos[].expressions.SAD").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.interviewResultInfos[].expressions.SAD").type(
+                                                        JsonFieldType.NUMBER)
                                                 .description("표정3"),
                                         fieldWithPath("response.interviewResultInfos[].createdDate").type(JsonFieldType.STRING)
                                                 .description("생성 날짜"),
@@ -120,7 +115,8 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("응답"),
                                         fieldWithPath("response.interviewResultInfos").type(JsonFieldType.ARRAY)
                                                 .description("베스트 질문, 답변"),
-                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(JsonFieldType.STRING)
+                                        fieldWithPath("response.interviewResultInfos[].interviewResultId").type(
+                                                        JsonFieldType.STRING)
                                                 .description("인터뷰 결과 id"),
                                         fieldWithPath("response.interviewResultInfos[].question").type(JsonFieldType.STRING)
                                                 .description("질문"),
@@ -128,11 +124,14 @@ public class InterviewResultControllerDocsTest extends RestDocsSupport {
                                                 .description("답변"),
                                         fieldWithPath("response.interviewResultInfos[].expressions").type(JsonFieldType.OBJECT)
                                                 .description("표정 점수"),
-                                        fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.interviewResultInfos[].expressions.HAPPY").type(
+                                                        JsonFieldType.NUMBER)
                                                 .description("표정1"),
-                                        fieldWithPath("response.interviewResultInfos[].expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.interviewResultInfos[].expressions.DISGUST").type(
+                                                        JsonFieldType.NUMBER)
                                                 .description("표정2"),
-                                        fieldWithPath("response.interviewResultInfos[].expressions.SAD").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("response.interviewResultInfos[].expressions.SAD").type(
+                                                        JsonFieldType.NUMBER)
                                                 .description("표정3"),
                                         fieldWithPath("response.interviewResultInfos[].createdDate").type(JsonFieldType.STRING)
                                                 .description("생성 날짜"),

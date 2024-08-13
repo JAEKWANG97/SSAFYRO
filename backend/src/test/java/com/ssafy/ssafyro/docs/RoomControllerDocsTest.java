@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ssafy.ssafyro.api.controller.room.request.RoomCreateRequest;
 import com.ssafy.ssafyro.api.controller.room.request.RoomEnterRequest;
 import com.ssafy.ssafyro.api.controller.room.request.RoomExitRequest;
-import com.ssafy.ssafyro.api.service.room.RoomService;
 import com.ssafy.ssafyro.api.service.room.request.RoomCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.room.request.RoomListServiceRequest;
 import com.ssafy.ssafyro.api.service.room.response.RoomCreateResponse;
@@ -34,14 +33,10 @@ import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class RoomControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private RoomService roomService;
 
     @DisplayName("Room 목록 조회  API")
     @Test
@@ -132,7 +127,8 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         roomRedis.addParticipant(1L);
         roomRedis.addParticipant(2L);
 
-        given(roomService.getRoomById(any(String.class))).willReturn(RoomDetailResponse.of(roomRedis , List.of("user1", "user2")));
+        given(roomService.getRoomById(any(String.class))).willReturn(
+                RoomDetailResponse.of(roomRedis, List.of("user1", "user2")));
 
         mockMvc.perform(get("/api/v1/rooms/{id}", requestRoomId)).andDo(print())
                 .andExpect(status().isOk())

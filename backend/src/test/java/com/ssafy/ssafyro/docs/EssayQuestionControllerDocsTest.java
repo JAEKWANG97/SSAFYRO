@@ -14,21 +14,16 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.service.essayquestion.EssayQuestionService;
 import com.ssafy.ssafyro.api.service.essayquestion.request.EssayQuestionDetailServiceRequest;
 import com.ssafy.ssafyro.api.service.essayquestion.response.EssayQuestionDetailResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class EssayQuestionControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private EssayQuestionService essayQuestionService;
 
     private final EssayQuestion essayQuestion = mock(EssayQuestion.class);
 

@@ -15,7 +15,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ssafy.ssafyro.api.service.itknowledge.ItKnowledgeService;
 import com.ssafy.ssafyro.api.service.itknowledge.request.ItKnowledgeDetailServiceRequest;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeDetailResponse;
 import com.ssafy.ssafyro.api.service.itknowledge.response.ItKnowledgeListResponse;
@@ -23,17 +22,12 @@ import com.ssafy.ssafyro.domain.itknowledge.ItKnowledge;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 public class ItKnowledgeControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private ItKnowledgeService itKnowledgeService;
 
     @DisplayName("IT Knowledge 상세 조회 API")
     @Test
