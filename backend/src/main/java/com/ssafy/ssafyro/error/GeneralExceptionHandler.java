@@ -5,7 +5,7 @@ import static com.ssafy.ssafyro.api.ApiUtils.error;
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.error.codingtestproblem.CodingTestProblemNotFoundException;
 import com.ssafy.ssafyro.error.essayquestion.EssayQuestionNotFoundException;
-import com.ssafy.ssafyro.error.interviewResult.InterviewResultNotFoundException;
+import com.ssafy.ssafyro.error.interviewresult.InterviewResultNotFoundException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import jakarta.validation.ConstraintViolationException;

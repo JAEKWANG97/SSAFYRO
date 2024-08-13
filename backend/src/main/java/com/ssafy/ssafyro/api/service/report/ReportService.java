@@ -24,7 +24,7 @@ import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.article.ArticleNotFoundException;
-import com.ssafy.ssafyro.error.interviewResult.InterviewResultNotFoundException;
+import com.ssafy.ssafyro.error.interviewresult.InterviewResultNotFoundException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
@@ -101,7 +101,7 @@ public class ReportService {
                 .orElseThrow(() -> new ReportNotFoundException("Report not found"))
                 .toResponse(request.roomType());
     }
-    
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
