@@ -194,7 +194,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
           <img
             src={ssafyLogo}
             alt="SSAFYRO 로고"
-            className="w-6 h-6 mt-1 mr-2 rounded-md"
+            className="w-4 h-4 mt-1 mr-3 rounded-md"
           />
         </button>
       </div>

@@ -10,6 +10,9 @@ const useFirstStore = create((set, get) => ({
   setEssayContent : (content) => set({ essayContent: content }),
   showCorrection : false, // ai 첨삭 버튼 클릭 여부
   setShowCorrection : (value) => set({ showCorrection: value }),
+  essayData: null,
+  setEssayData : (value) => set({ setEssayData: value }),
+
 
 
 

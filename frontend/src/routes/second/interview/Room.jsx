@@ -27,7 +27,7 @@ export default function WaitRoom() {
   const navigate = useNavigate();
   const [waitRoom, setWaitRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-  const { setUserList } = useRoomStore(); // zustand store의 setUserList 사용
+  const { setUserList, setUserNameList } = useRoomStore(); // zustand store의 setUserList 사용
   const isInitialMount = useRef(true);
   const { setRoomType } = useInterviewStore();
   const interviewClient = useRef(null); // WebSocket client 추가
@@ -49,8 +49,8 @@ export default function WaitRoom() {
 
         setRoomType(response.data.response.type);
         const roomData = response.data.response;
-        console.log("roomData : ", roomData);
-        console.log("userInfo.userId : ", userInfo.userId);
+        // console.log("roomData : ", roomData);
+        // console.log("userInfo.userId : ", userInfo.userId);
 
         const isUserAlreadyInRoom = roomData.userList.some((participant) => {
           return participant === userInfo.userId;
@@ -74,12 +74,16 @@ export default function WaitRoom() {
           const updatedRoomData = updatedResponse.data.response;
           setWaitRoom(updatedRoomData);
           setUserList(updatedRoomData.userList);
-          console.log("updatedRoomData : ", updatedRoomData);
-          console.log("참여자 정보: ", updatedRoomData.userList);
+          setUserNameList(updatedRoomData.userNameList)
+          // console.log("updatedRoomData : ", updatedRoomData);
+          // console.log("참여자 정보: ", updatedRoomData.userList);
+          console.log("참여자 이름 리스트: ", updatedRoomData.userNameList)
         } else {
           setWaitRoom(roomData);
           setUserList(roomData.userList);
-          console.log("참여자 정보: ", roomData.userList);
+          setUserNameList(roomData.userNameList)
+          // console.log("참여자 정보: ", roomData.userList);
+          console.log("참여자 이름 리스트: ", roomData.userNameList)
         }
       } catch (error) {
         console.error(error);
@@ -206,7 +210,7 @@ export default function WaitRoom() {
       }
 
       const updatedRoom = { ...waitRoom };
-      console.log("updatedRoom: ", updatedRoom);
+      // console.log("updatedRoom: ", updatedRoom);
       const participantIndex = updatedRoom.userList.findIndex(
         (participant) => participant === userInfo.userId
       );
