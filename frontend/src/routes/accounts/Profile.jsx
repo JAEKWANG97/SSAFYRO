@@ -137,10 +137,10 @@ export default function Profile() {
               </div>
               <div className="flex flex-col">
                 <span className="text-sm text-gray-500">
-                  인성 모의 면접 <span className="font-bold text-gray-900">{userInfo.personalCount}</span> 번
+                  인성 모의 면접 <span className="font-bold text-gray-900">{userInfo.personalCount}</span> 회
                 </span> 
                 <span className="text-sm text-gray-500">
-                  PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 번
+                  PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 회
                 </span>
               </div>
             </div>
