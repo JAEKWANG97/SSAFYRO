@@ -4,7 +4,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import { useLocation } from 'react-router-dom';
 import { Card } from 'flowbite-react';
 import axios from 'axios';
-import { getEmotionImage } from '../../../util/get-emotion-image';
+import { getEmotionImage } from '../../../util/get-emotion-image-white';
 
 export default function PtFeedback() {
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";

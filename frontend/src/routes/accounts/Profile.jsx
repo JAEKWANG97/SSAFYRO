@@ -53,11 +53,11 @@ export default function Profile() {
             headers: { Authorization: `Bearer ${Token}` },
           })
           .then((res)=>{
-            console.log(res.data)
+            // console.log(res.data)
             setInterviewInfo(res.data.response.reports);
           })
           .catch((error)=>{
-            console.log(error)
+            // console.log(error)
           })
 
         
@@ -71,16 +71,16 @@ export default function Profile() {
             },
           })
           .then((res) => {
-            console.log(res.data.response)
+            // console.log(res.data.response)
             setEssayData(res.data.response.content); 
             
           });
           
         } else {
-          console.error("No userInfo found in localStorage.");
+          // console.error("No userInfo found in localStorage.");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       }
     };
 
