@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import EssayDetail from './components/EssayDetail';
@@ -17,39 +18,82 @@ import {
 export default function Profile() {
   const nav = useNavigate();
   const location = useLocation();
-  const userId = location.state?.userId;
-  console.log(userId)
-  
+  // const userId = location.state?.userId;
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
+  const Token = localStorage.getItem("Token");
+  const [userInfo, setUserInfo] = useState({})  // 유저정보(닉네임, 전공유무, 이미지, 인성면접 횟수, pt면접 횟수)
   const [fillActive, setFillActive] = useState("tab1");
+  const [interviewInfo, setInterviewInfo] = useState([]) // 면접정보[{레포트ID, 면접종류, 총점, 발음점수, 면접일시}]
 
-  // 뒤로 가기 또는 페이지 이동 시, location.state에 저장된 탭 상태를 불러옴
+  useEffect(() => {
+    // 유저 정보 불러오기
+    axios
+      .get(`${APIURL}users`, 
+        {headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        setUserInfo(res.data.response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      if (!location.state?.activeTab) {
+        setFillActive("tab1");
+      }
+  }, []);
+
+  useEffect(() => {
+   
+    const Info = localStorage.getItem('userInfo')
+    const parsedInfo = JSON.parse(Info);
+
+    // 유저 정보 불러오기
+    axios
+      .get(`${APIURL}reports`, {
+        params: {
+          userId: parsedInfo.userId,  // userId를 parsedInfo 객체에서 가져옵니다.
+          page: 1,
+          size: 10,
+        }, 
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+        })
+        .then((res) => {
+          console.log(res.data.response.reports);
+          setInterviewInfo(res.data.response.reports)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      }, []);
+
+
   useEffect(() => {
     if (location.state?.activeTab) {
       setFillActive(location.state.activeTab);
     }
   }, [location.state]);
 
-  // 페이지가 처음 로드될 때 첫 번째 탭을 선택 (새로고침 시 포함)
-  useEffect(() => {
-    if (!location.state?.activeTab) {
-      setFillActive("tab1");
-    }
-  }, []);
-
+  
   useEffect(() => {
     if (fillActive === "tab2" || fillActive === "tab3") {
       window.scrollTo(0, document.body.scrollHeight);
     }
   }, [fillActive]);
 
-  const userInfo = useAuthStore((state) => state.userInfo); 
-  const interviewInfo = [
-    {type: 1, title: '전공자 인성 면접', room : 1},
-    {type: 2, title: '전공자 PT 면접', room : 2},
-    {type: 1, title: '0810', room : 3},
-    {type: 2, title: '0810', room : 4},
-    {type: 2, title: '0810', room : 5}
-  ];
+  // const userInfo = useAuthStore((state) => state.userInfo); 
+  // const interviewInfo = [
+  //   {type: 1, title: '전공자 인성 면접', room : 1},
+  //   {type: 2, title: '전공자 PT 면접', room : 2},
+  //   {type: 1, title: '0810', room : 3},
+  //   {type: 2, title: '0810', room : 4},
+  //   {type: 2, title: '0810', room : 5}
+  // ];
 
   const handleFillClick = (value) => {
     if (value === fillActive) {
@@ -78,15 +122,20 @@ export default function Profile() {
             />
             <div>
               <div className="flex items-center gap-3 pb-3">
-                <h2 className="text-2xl font-semibold text-center">{`${userInfo.userName}`}</h2>
+                <h2 className="text-2xl font-semibold text-center">{userInfo.nickname}</h2>
                 <Button
-                  text={userInfo.isMajor ? '전공자' : '비전공자'} 
-                  type={userInfo.isMajor ? 'MAJOR' : 'NONMAJOR'} />
+                  text={userInfo.type === 'MAJOR' ? '전공자' : '비전공자'} 
+                  type={userInfo.type === 'MAJOR' ? 'MAJOR' : 'NONMAJOR'} />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm text-gray-500">인성 모의 면접 N번 </span> 
-                <span className="text-sm text-gray-500">PT 모의 면접 N번</span>
+                <span className="text-sm text-gray-500">
+                  인성 모의 면접 <span className="font-bold text-gray-900">{userInfo.personalCount}</span> 번
+                </span> 
+                <span className="text-sm text-gray-500">
+                  PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 번
+                </span>
               </div>
+
             </div>
           </div>
         </div>
@@ -158,11 +207,11 @@ export default function Profile() {
                     key={index}
                     className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg"
                     style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
-                    onClick={() => info.type === 1 ? nav('personality_feedback', { state: { info, activeTab: "tab3" } }) : nav('pt_feedback', { state: { info, activeTab: "tab3" } })}
+                    onClick={() => info.type === "PERSONALITY" ? nav('personality_feedback', { state: { info, activeTab: "tab3" } }) : nav('pt_feedback', { state: { info, activeTab: "tab3" } })}
                   >
                     <img 
-                      src={info.type === 1 ? PersonaltyImg : PtImg} 
-                      alt={info.type === 1 ? "Personality Interview" : "PT Interview"} 
+                      src={info.type === "PERSONALITY" ? PersonaltyImg : PtImg} 
+                      alt={info.type === "PERSONALITY" ? "Personality Interview" : "PT Interview"} 
                       className="w-10 h-10 mb-2" 
                     />
                     <p className="font-medium text-sm text-center">{info.title}</p>

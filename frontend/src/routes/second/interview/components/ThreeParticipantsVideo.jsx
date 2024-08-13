@@ -25,6 +25,7 @@ export default function ThreeParticipantsVideo({
   handleStartSurvey,
   userList,
   userTurn,
+  setModalOpen,
 }) {
   useEffect(() => {
     console.log("remoteTracks 재확인: ", remoteTracks);
@@ -131,7 +132,8 @@ export default function ThreeParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            onClick={handleStartSurvey}
+            onClick={setModalOpen}
+            // onClick={handleStartSurvey}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
