@@ -5,8 +5,8 @@ import static com.ssafy.ssafyro.domain.report.QReport.report;
 import static com.ssafy.ssafyro.domain.room.entity.QRoom.room;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.ssafyro.api.service.report.dto.QReportScoreAverageDto;
-import com.ssafy.ssafyro.api.service.report.dto.ReportScoreAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.QReportScoreAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportScoreAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.user.User;
 import java.util.List;

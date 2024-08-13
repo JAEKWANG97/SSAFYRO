@@ -5,10 +5,10 @@ import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import com.ssafy.ssafyro.api.service.report.dto.ReportScoreAverageDto;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
+import com.ssafy.ssafyro.domain.report.dto.ReportScoreAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.entity.RoomRepository;

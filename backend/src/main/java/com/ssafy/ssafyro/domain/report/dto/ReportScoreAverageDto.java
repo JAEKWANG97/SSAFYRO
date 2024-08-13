@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.service.report.dto;
+package com.ssafy.ssafyro.domain.report.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
