@@ -2,15 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
+import whiteBoardIcon from "../../../../public/main/whiteBoardIcon2.png";
 import axios from "axios";
-// 새로고침 아이콘 반응형으로 만들 css파일
 import "./styles.css";
 import Button from "../../../components/Button.jsx";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]);
-  // 아이콘 회전 상태
   const [isRotating, setIsRotating] = useState(false);
 
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ export default function Interview() {
     const response = await axios
       .get(APIURL + "rooms", { params: filter })
       .then((response) => {
-        // console.log(response.data.response.rooms);
         setFilteredRoomList(response.data.response.rooms);
       })
       .catch((error) => {
@@ -47,22 +45,17 @@ export default function Interview() {
       });
   };
 
-  // 방 타입 한글로 변환
   const typeKorean = {
     PRESENTATION: "PT",
     PERSONALITY: "인성",
   };
 
-  // react useEffect Hook: 방 목록 불러오기
   useEffect(() => {
     getRooms(null, null, 1, 10, null, null);
   }, []);
 
-  // 방 참여
   const handleJoinRoom = (id) => {
     const roomIndex = filteredRoomList.findIndex((room) => room.id === id);
-    console.log("roomIndex: ", roomIndex);
-    console.log("filteredRoomList:", filteredRoomList);
     if (
       roomIndex !== -1 &&
       filteredRoomList[roomIndex].status === "WAIT" &&
@@ -77,7 +70,6 @@ export default function Interview() {
     }
   };
 
-  // 필터 갱신
   const handleSearchClick = function (filter) {
     getRooms(
       filter.type ? filter.type : null,
@@ -89,7 +81,6 @@ export default function Interview() {
     );
   };
 
-  // 빠른 입장
   const handleQuickStart = async function (type) {
     await axios
       .get(APIURL + "rooms/fast-enter", {
@@ -106,15 +97,12 @@ export default function Interview() {
       });
   };
 
-  // 새로고침 핸들러
   const handleRefreshClick = () => {
-    // 회전 시작
     setIsRotating(true);
     setTimeout(() => {
-      // 회전 멈춤
       setIsRotating(false);
       window.location.reload();
-    }, 1000); // 1초 후 새로고침
+    }, 1000);
   };
 
   return (
@@ -123,44 +111,6 @@ export default function Interview() {
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow p-4">
           <div className="container mx-auto">
-            {/* <div className="flex items-center mb-2">
-              <h1 className="text-3xl font-bold mr-4">면접 스터디 모집</h1>
-              <svg
-                onClick={handleRefreshClick}
-                xmlns="http://www.w3.org/2000/svg"
-                className={`refresh-icon ${isRotating ? "rotating" : ""}`} // 클래스 조건부 추가
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4.75 10.75h-3m12.5-2c0 3-2.798 5.5-6.25 5.5c-3.75 0-6.25-3.5-6.25-3.5v3.5m9.5-9h3m-12.5 2c0-3 2.798-5.5 6.25-5.5c3.75 0 6.25 3.5 6.25 3.5v-3.5"
-                ></path>
-              </svg>
-            </div>
-            <div className="flex gap-4 mb-4 justify-end ">
-              <button
-                className="bg-violet-300 shadow rounded p-4 flex items-center justify-center text-violet-600 hover:bg-violet-400 hover:text-white"
-                onClick={() => handleQuickStart("PRESENTATION")}
-              >
-                PT면접 빠른 시작
-              </button>
-              <button
-                className="bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-emerald-600 hover:bg-emerald-400 hover:text-white"
-                onClick={() => handleQuickStart("PERSONALITY")}
-              >
-                인성면접 빠른 시작
-              </button>
-              <button
-                onClick={() => navigate("/second/interview/createroom")}
-                className="rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
-              >
-                + 방 생성
-              </button>
-            </div> */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <h1 className="text-3xl font-bold mr-4">면접 스터디 모집</h1>
@@ -213,59 +163,69 @@ export default function Interview() {
                   {filteredRoomList.map((room) => (
                     <div
                       key={room.id}
-                      className="bg-white shadow rounded p-6 flex flex-col justify-between"
-                      style={{ height: "270px" }}
+                      className="bg-white shadow rounded flex flex-col justify-between"
+                      style={{ height: "300px" }}
                     >
-                      <div className="flex justify-between items-center mb-2">
-                        <span
-                          className={`text-sm bg-${
-                            room.status === "WAIT" ? "green" : "red"
-                          }-100 text-${
-                            room.status === "WAIT" ? "green" : "red"
-                          }-800 text-xs font-medium py-1 px-2 rounded border border-${
-                            room.status === "WAIT" ? "green" : "red"
-                          }-400`}
-                        >
-                          {room.status === "WAIT" ? "모집중" : "마감"}
-                        </span>
-                        <span
-                          className={`border ${
-                            room.type === "PERSONALITY"
-                              ? "bg-emerald-100 text-emerald-800 border-emerald-400"
-                              : "bg-violet-100 text-violet-800 border-violet-400"
-                          } text-xs font-medium py-1 px-2 rounded`}
-                        >
-                          {typeKorean[room.type]}
-                        </span>
-                      </div>
-                      <div className="flex-grow mt-2">
-                        <p className="text-gray-700 font-semibold">
-                          {room.title}
-                        </p>
-                        <p className="text-gray-500 text-sm">
-                          {room.description}
-                        </p>
-                      </div>
-                      <hr />
-                      <div className="mt-4 flex justify-between items-center">
-                        <div>
-                          <img
-                            className="w-[24px] inline mr-2"
-                            src="/Interview/group.png"
-                            alt="group icon"
-                          />
-                          <span className="text-sm text-gray-600">
-                            {room.participantCount} / {room.capacity}
+                      {/* 머리 부분에 색상 추가 */}
+                      <div
+                        className={`${
+                          room.type === "PERSONALITY"
+                            ? "bg-yellow-300"
+                            : "bg-violet-100"
+                        } h-2 rounded-t`}
+                      ></div>
+
+                      <div className="p-6 flex flex-col flex-grow justify-start">
+                        <div className="flex justify-between items-center mb-2">
+                          <span
+                            className={`border ${
+                              room.type === "PERSONALITY"
+                                ? "bg-emerald-100 text-emerald-800 border-emerald-400"
+                                : "bg-violet-100 text-violet-800 border-violet-400"
+                            } text-xs font-medium py-1 px-2 rounded`}
+                          >
+                            {typeKorean[room.type]}
+                          </span>
+                          <span
+                            className={`text-sm bg-${
+                              room.status === "WAIT" ? "green" : "red"
+                            }-100 text-${
+                              room.status === "WAIT" ? "green" : "red"
+                            }-800 text-xs font-medium py-1 px-2 rounded border border-${
+                              room.status === "WAIT" ? "green" : "red"
+                            }-400`}
+                          >
+                            {room.status === "WAIT" ? "모집중" : "마감"}
                           </span>
                         </div>
-                        <button
-                          onClick={() => handleJoinRoom(room.id)}
-                          className="bg-blue-500 text-white py-1 px-2 rounded w-[60px]"
-                          disabled={room.status !== "WAIT"}
-                        >
-                          참여
-                        </button>
-                        {/* <Button text="참여하기" type="SEARCHROOM" onClick={() => handleJoinRoom(room.id)} disabled={room.status !== "WAIT"}/> */}
+                        <div className="flex-grow mt-2">
+                          <p className="text-gray-700 font-semibold">
+                            {room.title}
+                          </p>
+                          <p className="text-gray-500 text-sm mt-2">
+                            {room.description}
+                          </p>
+                        </div>
+                        <hr />
+                        <div className="mt-4 flex justify-between items-center">
+                          <div>
+                            <img
+                              className="w-[24px] inline mr-2"
+                              src="/Interview/group.png"
+                              alt="group icon"
+                            />
+                            <span className="text-sm text-gray-600">
+                              {room.participantCount} / {room.capacity}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleJoinRoom(room.id)}
+                            className="bg-blue-500 text-white py-1 px-2 rounded w-[60px]"
+                            disabled={room.status !== "WAIT"}
+                          >
+                            참여
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
