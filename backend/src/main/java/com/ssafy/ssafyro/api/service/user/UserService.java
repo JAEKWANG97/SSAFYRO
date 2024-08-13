@@ -9,7 +9,6 @@ import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +21,14 @@ public class UserService {
     private final ReportRepository reportRepository;
 
     public User loginOAuth(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        if (userRepository.existsByUsername(username)) {
+            return getUser(username);
+        }
+
+        User firstLoginUser = User.createFirstLoginUser(username);
+        userRepository.save(firstLoginUser);
+
+        return firstLoginUser;
     }
 
     @Transactional
@@ -47,6 +52,11 @@ public class UserService {
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    private User getUser(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }

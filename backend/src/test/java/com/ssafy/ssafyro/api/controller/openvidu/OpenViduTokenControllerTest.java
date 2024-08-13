@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.ControllerTestSupport;
 import com.ssafy.ssafyro.api.controller.openvidu.request.TokenRequest;
+import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ class OpenViduTokenControllerTest extends ControllerTestSupport {
 
     @DisplayName("회의 방 id와 유저 닉네임을 활용해 openVidu 토큰을 생성한다.")
     @Test
+    @WithMockJwtAuthentication
     void createTokenTest() throws Exception {
         TokenRequest tokenRequest = new TokenRequest(generateRandomRoomId(), "김두열");
 
@@ -39,6 +41,7 @@ class OpenViduTokenControllerTest extends ControllerTestSupport {
 
     @DisplayName("openVidu 토큰을 생성할 때 회의 방 id가 누락되면 400 에러가 반환된다.")
     @Test
+    @WithMockJwtAuthentication
     void createTokenWithoutRoomIdTest() throws Exception {
         TokenRequest tokenRequest = new TokenRequest(null, "김두열");
 
@@ -59,6 +62,7 @@ class OpenViduTokenControllerTest extends ControllerTestSupport {
 
     @DisplayName("openVidu 토큰을 생성할 때 유저 닉네임이 누락되면 400 에러가 반환된다.")
     @Test
+    @WithMockJwtAuthentication
     void createTokenWithoutParticipantNameTest() throws Exception {
         TokenRequest tokenRequest = new TokenRequest(generateRandomRoomId(), null);
 
