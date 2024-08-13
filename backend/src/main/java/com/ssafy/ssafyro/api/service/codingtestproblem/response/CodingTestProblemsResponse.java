@@ -6,11 +6,11 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class CodingTestProblemListResponse {
+public class CodingTestProblemsResponse {
 
     private final List<CodingTestProblemInfo> problemInfos;
 
-    public CodingTestProblemListResponse(List<CodingTestProblem> problems) {
+    public CodingTestProblemsResponse(List<CodingTestProblem> problems) {
         this.problemInfos = problems.stream()
                 .map(CodingTestProblemInfo::new)
                 .toList();

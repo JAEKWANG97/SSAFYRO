@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemDetailResponse;
-import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemListResponse;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemResponse;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemsResponse;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblemRepository;
 import com.ssafy.ssafyro.domain.codingtestproblem.Difficulty;
@@ -27,7 +27,7 @@ class CodingTestProblemServiceTest extends IntegrationTestSupport {
 
     @DisplayName("코딩 테스트 문제 목록을 조회한다.")
     @Test
-    void findAll() {
+    void getProblems() {
         //given
         CodingTestProblem problem1 = createProblem("문제1");
         CodingTestProblem problem2 = createProblem("문제2");
@@ -35,27 +35,27 @@ class CodingTestProblemServiceTest extends IntegrationTestSupport {
         codingTestProblemRepository.saveAll(List.of(problem1, problem2));
 
         //when
-        CodingTestProblemListResponse response = codingTestProblemService.findAll(PageRequest.of(0, 10));
+        CodingTestProblemsResponse response = codingTestProblemService.getProblems(PageRequest.of(0, 10));
 
         //then
         assertThat(response.getProblemInfos())
                 .extracting("id", "title")
                 .containsExactlyInAnyOrder(
-                        tuple(1L, "문제1"),
-                        tuple(2L, "문제2")
+                        tuple(problem1.getId(), "문제1"),
+                        tuple(problem2.getId(), "문제2")
                 );
     }
 
     @DisplayName("코딩 테스트 문제를 상세 조회한다.")
     @Test
-    void findById() {
+    void getProblem() {
         //given
         CodingTestProblem problem = createProblem("문제1");
 
         codingTestProblemRepository.save(problem);
 
         //when
-        CodingTestProblemDetailResponse response = codingTestProblemService.findById(problem.getId());
+        CodingTestProblemResponse response = codingTestProblemService.getProblem(problem.getId());
 
         //then
         assertThat(response)
@@ -65,7 +65,7 @@ class CodingTestProblemServiceTest extends IntegrationTestSupport {
                 );
     }
 
-    private static CodingTestProblem createProblem(String title) {
+    private CodingTestProblem createProblem(String title) {
         return CodingTestProblem.builder()
                 .title(title)
                 .difficulty(Difficulty.D1)
