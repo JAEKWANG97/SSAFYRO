@@ -14,7 +14,7 @@ import static org.mockito.BDDMockito.given;
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
-import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
@@ -41,14 +41,13 @@ import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 
-@Disabled
+//@Disabled
 class ReportServiceTest extends IntegrationTestSupport {
 
     @MockBean
@@ -256,9 +255,9 @@ class ReportServiceTest extends IntegrationTestSupport {
 
         //when
         ReportsAverageResponse result1 = reportService.getReportsScoreAverage(user.getId(),
-                new ReportsAverageServiceRequest(PERSONALITY));
+                new ReportsScoreServiceRequest(PERSONALITY));
         ReportsAverageResponse result2 = reportService.getReportsScoreAverage(user.getId(),
-                new ReportsAverageServiceRequest(PRESENTATION));
+                new ReportsScoreServiceRequest(PRESENTATION));
 
         //then
         assertThat(result1).isNotNull()
@@ -296,7 +295,7 @@ class ReportServiceTest extends IntegrationTestSupport {
 
         //then
         assertThatThrownBy(
-                () -> reportService.getReportsScoreAverage(user.getId(), new ReportsAverageServiceRequest(PERSONALITY))
+                () -> reportService.getReportsScoreAverage(user.getId(), new ReportsScoreServiceRequest(PERSONALITY))
         )
                 .isInstanceOf(ReportNotFoundException.class)
                 .hasMessage("Report not found");
