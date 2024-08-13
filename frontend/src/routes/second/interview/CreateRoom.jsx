@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Button from "../../../components/Button";
 
 export default function CreateRoom() {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export default function CreateRoom() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-md rounded-lg p-8 max-w-2xl w-full">
+      <div className="bg-white shadow-md rounded-3xl p-8 max-w-2xl w-full">
         <h1 className="text-3xl font-bold mb-8 text-center">방 생성하기</h1>
 
         <div className="flex justify-end space-x-4 mb-2">
@@ -107,18 +108,20 @@ export default function CreateRoom() {
         </div>
 
         <div className="flex justify-center space-x-4">
-          <button
+          {/* <button
             onClick={handleCreateRoom}
-            className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 focus:outline-none"
+            className="bg-blue-500 text-white px-3 rounded-xl hover:bg-blue-600 focus:outline-none"
           >
             작성완료
-          </button>
-          <button
+          </button> */}
+          {/* <button
             onClick={handleCancel}
             className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 focus:outline-none"
           >
             취소
-          </button>
+          </button> */}
+          <Button text="생성하기" type="MAKEROOM" onClick={handleCreateRoom} />
+          <Button text="취소" type="CANCELROOM" onClick={handleCancel}/>
         </div>
       </div>
     </div>

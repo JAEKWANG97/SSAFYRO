@@ -17,6 +17,10 @@ export default function GuideIT() {
           page: 0,
           size: 200, 
         },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+      }
+        
       })
       .then((response) => {
         // 최대 60개의 기사만 저장
