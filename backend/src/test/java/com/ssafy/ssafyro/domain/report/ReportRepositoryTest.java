@@ -3,12 +3,16 @@ package com.ssafy.ssafyro.domain.report;
 import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
-import com.ssafy.ssafyro.domain.report.dto.ReportScoreAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportExpressionDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportScoreDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportUserAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
@@ -135,8 +139,8 @@ class ReportRepositoryTest extends IntegrationTestSupport {
         interviewResultRepository.saveAll(List.of(interviewResult1, interviewResult2, interviewResult3));
 
         //when
-        ReportScoreAverageDto resultPersonal = reportRepository.findTotalAvgBy(PERSONALITY, user).get();
-        ReportScoreAverageDto resultPresentation = reportRepository.findTotalAvgBy(PRESENTATION, user).get();
+        ReportUserAverageDto resultPersonal = reportRepository.findTotalAvgBy(PERSONALITY, user).get();
+        ReportUserAverageDto resultPresentation = reportRepository.findTotalAvgBy(PRESENTATION, user).get();
 
         //then
         assertThat(resultPersonal).isNotNull()
@@ -154,6 +158,98 @@ class ReportRepositoryTest extends IntegrationTestSupport {
                         4.0,
                         0.9,
                         0.8
+                );
+    }
+
+    @DisplayName("레포트 타입 별 모든 유저의 레포트 점수의 평균을 조회한다.")
+    @Test
+    void findAllAvgScoreBy() {
+        //given
+        User user1 = userRepository.save(createUser());
+        User user2 = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PRESENTATION, 3);
+        roomRepository.saveAll(List.of(room1, room2, room3));
+
+        Report report1 = createReport(user1, room1, 90, 2);
+        Report report2 = createReport(user2, room2, 100, 3);
+        Report report3 = createReport(user1, room3, 80, 4);
+        reportRepository.saveAll(List.of(report1, report2, report3));
+
+        //when
+        ReportAllScoreAverageDto result = reportRepository.findAllAvgScoreBy(PERSONALITY).get();
+
+        //then
+        assertThat(result).isNotNull()
+                .extracting("totalScore", "pronunciationScore")
+                .containsExactly(
+                        (report1.getTotalScore() + report2.getTotalScore()) / 2.0,
+                        (report1.getPronunciationScore() + report2.getPronunciationScore()) / 2.0
+                );
+    }
+
+    @DisplayName("유저의 모든 레포트 총점 및 발음 점수를 전체 조회한다.")
+    @Test
+    void findScoreBy() {
+        //given
+        User user1 = userRepository.save(createUser());
+        User user2 = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PERSONALITY, 3);
+        Room room4 = createRoom(PRESENTATION, 4);
+        roomRepository.saveAll(List.of(room1, room2, room3, room4));
+
+        Report report1 = createReport(user1, room1, 90, 2);
+        Report report2 = createReport(user2, room2, 100, 3);
+        Report report3 = createReport(user1, room3, 80, 4);
+        Report report4 = createReport(user1, room4, 80, 4);
+        reportRepository.saveAll(List.of(report1, report2, report3, report4));
+
+        //when
+        List<ReportScoreDto> result = reportRepository.findScoreBy(PERSONALITY, user1);
+
+        //then
+        assertThat(result).isNotNull()
+                .extracting("title", "totalScore", "pronunciationScore")
+                .containsExactlyInAnyOrder(
+                        tuple("제목1", 90, 2),
+                        tuple("제목3", 80, 4)
+                );
+    }
+
+    @DisplayName("유저의 모든 레포트 표정 평균을 반환한다.")
+    @Test
+    void findAvgExpressionBy() {
+        User user = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PRESENTATION, 3);
+        roomRepository.saveAll(List.of(room1, room2, room3));
+
+        Report report1 = createReport(user, room1, 90, 2);
+        Report report2 = createReport(user, room2, 100, 3);
+        Report report3 = createReport(user, room3, 80, 4);
+        reportRepository.saveAll(List.of(report1, report2, report3));
+
+        InterviewResult interviewResult1 = createInterviewResult(report1);
+        InterviewResult interviewResult2 = createInterviewResult(report2);
+        InterviewResult interviewResult3 = createInterviewResult(report3);
+        interviewResultRepository.saveAll(List.of(interviewResult1, interviewResult2, interviewResult3));
+
+        //when
+        ReportExpressionDto result = reportRepository.findAvgExpressionBy(PERSONALITY, user).get();
+
+        //then
+        assertThat(result).isNotNull()
+                .extracting("happy", "neutral")
+                .containsExactly(
+                        (0.9 + 0.9) / 2,
+                        (0.8 + 0.8) / 2
                 );
     }
 
@@ -188,7 +284,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
     private Room createRoom(RoomType roomType, int num) {
         return Room.builder()
                 .id("roomId" + num)
-                .title("제목")
+                .title("제목" + num)
                 .type(roomType)
                 .build();
     }

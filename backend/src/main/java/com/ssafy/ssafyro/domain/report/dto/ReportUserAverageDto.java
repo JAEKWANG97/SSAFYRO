@@ -1,7 +1,7 @@
 package com.ssafy.ssafyro.domain.report.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReportScoreAverageDto {
+public class ReportUserAverageDto {
 
     private double totalScore;
     private double pronunciationScore;
@@ -22,8 +22,8 @@ public class ReportScoreAverageDto {
     private double neutral;
 
     @QueryProjection
-    public ReportScoreAverageDto(double totalScore, double pronunciationScore, double happy, double disgust, double sad,
-                                 double surprise, double fear, double angry, double neutral) {
+    public ReportUserAverageDto(double totalScore, double pronunciationScore, double happy, double disgust, double sad,
+                                double surprise, double fear, double angry, double neutral) {
         this.totalScore = totalScore;
         this.pronunciationScore = pronunciationScore;
         this.happy = happy;
@@ -35,8 +35,8 @@ public class ReportScoreAverageDto {
         this.neutral = neutral;
     }
 
-    public ReportsAverageResponse toResponse(RoomType roomType) {
-        return new ReportsAverageResponse(
+    public ReportsUserAverageResponse toResponse(RoomType roomType) {
+        return new ReportsUserAverageResponse(
                 roomType,
                 (int) Math.round(totalScore),
                 (int) Math.round(pronunciationScore),
