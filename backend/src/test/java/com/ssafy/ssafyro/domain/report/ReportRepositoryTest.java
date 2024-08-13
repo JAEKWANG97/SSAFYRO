@@ -10,6 +10,7 @@ import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
 import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportExpressionDto;
 import com.ssafy.ssafyro.domain.report.dto.ReportScoreDto;
 import com.ssafy.ssafyro.domain.report.dto.ReportUserAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
@@ -217,6 +218,38 @@ class ReportRepositoryTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder(
                         tuple("제목1", 90, 2),
                         tuple("제목3", 80, 4)
+                );
+    }
+
+    @DisplayName("유저의 모든 레포트 표정 평균을 반환한다.")
+    @Test
+    void findAvgExpressionBy() {
+        User user = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PRESENTATION, 3);
+        roomRepository.saveAll(List.of(room1, room2, room3));
+
+        Report report1 = createReport(user, room1, 90, 2);
+        Report report2 = createReport(user, room2, 100, 3);
+        Report report3 = createReport(user, room3, 80, 4);
+        reportRepository.saveAll(List.of(report1, report2, report3));
+
+        InterviewResult interviewResult1 = createInterviewResult(report1);
+        InterviewResult interviewResult2 = createInterviewResult(report2);
+        InterviewResult interviewResult3 = createInterviewResult(report3);
+        interviewResultRepository.saveAll(List.of(interviewResult1, interviewResult2, interviewResult3));
+
+        //when
+        ReportExpressionDto result = reportRepository.findAvgExpressionBy(PERSONALITY, user).get();
+
+        //then
+        assertThat(result).isNotNull()
+                .extracting("happy", "neutral")
+                .containsExactly(
+                        (0.9 + 0.9) / 2,
+                        (0.8 + 0.8) / 2
                 );
     }
 
