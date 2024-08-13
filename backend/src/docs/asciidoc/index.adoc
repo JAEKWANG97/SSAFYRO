@@ -36,6 +36,8 @@ include::api/interview/interview-finish.adoc[]
 == 면접 결과 API
 
 include::api/interviewresult/get-best-interview-result.adoc[]
+include::api/interviewresult/get-best-interview-result-by-id.adoc[]
+include::api/interviewresult/get-interview-result.adoc[]
 include::api/interviewresult/get-interview-result-by-user-id.adoc[]
 
 [[report-API]]
@@ -45,6 +47,7 @@ include::api/report/reports-list.adoc[]
 include::api/report/report-create.adoc[]
 include::api/report/report-personal-detail.adoc[]
 include::api/report/report-presentation-detail.adoc[]
+include::api/report/report-score-average.adoc[]
 
 [[essay-API]]
 == 에세이 API
