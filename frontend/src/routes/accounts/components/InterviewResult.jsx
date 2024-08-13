@@ -43,13 +43,11 @@ export default function InterviewResult() {
             const data = response.data.response;
 
             if (roomType === 'PERSONALITY' && data) {
-              console.log('레포트 인성 평균 점수',data)
               setPersonTotalScore(data.totalScore);
               setPersonPronScore(data.pronunciationScore);
               setPersonExpression(data.expressions);
       
             } else if (roomType === 'PRESENTATION' && data) {
-              console.log('레포트 pt 평균 점수', data)
               setPtTotalScore(data.totalScore);
               setPtPronScore(data.pronunciationScore);
               setPtExpression(data.expressions);
