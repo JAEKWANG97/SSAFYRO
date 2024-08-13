@@ -25,6 +25,7 @@ public class InterviewResultsResponse {
     private record InterviewResultInfo(String interviewResultId,
                                        String question,
                                        String answer,
+                                       Integer evaluationScore,
                                        Map<Expression, Double> expressions,
                                        LocalDateTime createdDate) {
 
@@ -33,6 +34,7 @@ public class InterviewResultsResponse {
                     interviewResultDocument.getId(),
                     interviewResultDocument.getQuestion(),
                     interviewResultDocument.getAnswer(),
+                    interviewResultDocument.getEvaluationScore(),
                     interviewResultDocument.getTop3Expression(),
                     interviewResultDocument.getCreatedDate()
             );
