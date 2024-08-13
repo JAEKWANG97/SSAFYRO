@@ -29,6 +29,7 @@ import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticExpressionResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse.ReportScoreInfo;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
@@ -461,7 +462,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 );
     }
 
-    @DisplayName("한 유저의 레포트 총 점수 및 발음 점수 전체 조회")
+    @DisplayName("한 유저의 레포트 총 점수 및 발음 점수 전체 조회 API")
     @Test
     @WithMockJwtAuthentication
     void getReportsStatisticUserScore() throws Exception {
@@ -506,6 +507,64 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                                 .description("해당 회차 총 점수"),
                                         fieldWithPath("response.scores[].pronunciationScore").type(JsonFieldType.NUMBER)
                                                 .description("해당 회차 총 발음 점수"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("유저의 전체 레포트 Top3 표정 통계 API")
+    @Test
+    @WithMockJwtAuthentication
+    void getReportsStatisticExpression() throws Exception {
+        ReportsStatisticExpressionResponse response = new ReportsStatisticExpressionResponse(
+                PERSONALITY,
+                Map.of(
+                        HAPPY, 0.8,
+                        SAD, 0.15,
+                        DISGUST, 0.05
+                )
+        );
+
+        given(reportService.getReportsStatisticExpression(any(Long.class), any(ReportsScoreServiceRequest.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/reports/statistics-expression")
+                                .queryParam("roomType", "PERSONALITY")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("reports-statistic-expression",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("roomType").description("PERSONALITY / PRESENTATION")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                                .description("방 타입"),
+                                        fieldWithPath("response.expressions").type(JsonFieldType.OBJECT)
+                                                .description("표정 점수 상위 3개 \n (HAPPY,\n"
+                                                        + "    DISGUST,\n"
+                                                        + "    SAD,\n"
+                                                        + "    SURPRISE,\n"
+                                                        + "    FEAR,\n"
+                                                        + "    ANGRY,\n"
+                                                        + "    NEUTRAL)"),
+                                        fieldWithPath("response.expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 행복"),
+                                        fieldWithPath("response.expressions.SAD").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 슬픔"),
+                                        fieldWithPath("response.expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 역겨움"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
                                 )
