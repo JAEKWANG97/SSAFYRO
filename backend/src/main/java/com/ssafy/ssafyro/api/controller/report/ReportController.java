@@ -9,6 +9,7 @@ import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticExpressionResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
@@ -67,5 +68,12 @@ public class ReportController {
             @AuthenticationPrincipal JwtAuthentication userInfo,
             @Valid @ModelAttribute ReportsScoreRequest request) {
         return success(reportService.getReportsStatisticUserScore(userInfo.id(), request.toServiceRequest()));
+    }
+
+    @GetMapping("/api/v1/reports/statistics-expression")
+    public ApiResult<ReportsStatisticExpressionResponse> getReportsStatisticExpression(
+            @AuthenticationPrincipal JwtAuthentication userInfo,
+            @Valid @ModelAttribute ReportsScoreRequest request) {
+        return success(reportService.getReportsStatisticExpression(userInfo.id(), request.toServiceRequest()));
     }
 }

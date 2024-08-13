@@ -7,6 +7,7 @@ import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticExpressionResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
@@ -116,6 +117,11 @@ public class ReportService {
                 request.roomType(),
                 reportRepository.findScoreBy(request.roomType(), getUser(userId))
         );
+    }
+
+    public ReportsStatisticExpressionResponse getReportsStatisticExpression(Long userId,
+                                                                            ReportsScoreServiceRequest request) {
+        return null;
     }
 
     private User getUser(Long userId) {
