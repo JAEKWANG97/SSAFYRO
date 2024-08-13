@@ -28,14 +28,13 @@ import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportStatisticAllScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticScoreResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.domain.report.Report;
-import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
@@ -415,33 +414,28 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 );
     }
 
-    @DisplayName("모든 사람의 총점 평균 및 개인의 회차별 점수 API")
+    @DisplayName("모든 사람의 총점 평균 점수 API")
     @Test
     @WithMockJwtAuthentication
     void getReportsStatisticScore() throws Exception {
-        ReportsStatisticScoreResponse response = new ReportsStatisticScoreResponse(
+        ReportStatisticAllScoreResponse response = new ReportStatisticAllScoreResponse(
                 PERSONALITY,
                 90,
-                4,
-                List.of(
-                        new ReportAllScoreDto("제목1", 80, 3),
-                        new ReportAllScoreDto("제목2", 70, 2),
-                        new ReportAllScoreDto("제목3", 75, 4)
-                )
+                4
         );
 
-        given(reportService.getReportsStatisticScore(any(Long.class), any(ReportsScoreServiceRequest.class)))
+        given(reportService.getReportsStatisticAllScore(any(ReportsScoreServiceRequest.class)))
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/v1/reports/statistics-score")
+                        get("/api/v1/reports/statistics-all-score")
                                 .queryParam("roomType", "PERSONALITY")
                                 .header("Authorization", "Bearer {JWT Token}")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("reports-statistic-score",
+                .andDo(document("reports-statistic-all-score",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 queryParameters(
@@ -458,14 +452,6 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                                 .description("해당 타입 모든 유저 평균 점수"),
                                         fieldWithPath("response.allPronunciationScore").type(JsonFieldType.NUMBER)
                                                 .description("해당 타입 모든 유저 평균 발음 점수"),
-                                        fieldWithPath("response.scores[]").type(JsonFieldType.ARRAY)
-                                                .description("해당 타입 로그인한 유저 회차별 점수"),
-                                        fieldWithPath("response.scores[].title").type(JsonFieldType.STRING)
-                                                .description("해당 타입 로그인한 유저 회차별 방 제목"),
-                                        fieldWithPath("response.scores[].totalScore").type(JsonFieldType.NUMBER)
-                                                .description("해당 타입 로그인한 유저 회차별 총점"),
-                                        fieldWithPath("response.scores[].pronunciationScore").type(JsonFieldType.NUMBER)
-                                                .description("해당 타입 로그인한 유저 회차별 발음 점수"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
                                 )
