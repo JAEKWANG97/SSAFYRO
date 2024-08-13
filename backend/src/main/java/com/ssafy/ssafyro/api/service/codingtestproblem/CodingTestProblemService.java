@@ -1,11 +1,10 @@
 package com.ssafy.ssafyro.api.service.codingtestproblem;
 
-import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemDetailResponse;
-import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemListResponse;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemResponse;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemsResponse;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblemRepository;
 import com.ssafy.ssafyro.error.codingtestproblem.CodingTestProblemNotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,17 +17,22 @@ public class CodingTestProblemService {
 
     private final CodingTestProblemRepository codingTestProblemRepository;
 
-    public CodingTestProblemListResponse findAll(Pageable pageable) {
-        List<CodingTestProblem> problems = codingTestProblemRepository.findAll(pageable)
-                .getContent();
-
-        return new CodingTestProblemListResponse(problems);
+    public CodingTestProblemsResponse getProblems(Pageable pageable) {
+        return new CodingTestProblemsResponse(
+                codingTestProblemRepository.findAll(pageable).getContent()
+        );
     }
 
-    public CodingTestProblemDetailResponse findById(Long id) {
+    public CodingTestProblemsResponse getScrapedProblemsBy(Long userId, Pageable pageable) {
+        return new CodingTestProblemsResponse(
+                codingTestProblemRepository.getScrapedCodingTestProblemsBy(userId, pageable)
+        );
+    }
+
+    public CodingTestProblemResponse getProblem(Long id) {
         CodingTestProblem problem = getCodingTestProblem(id);
 
-        return new CodingTestProblemDetailResponse(problem);
+        return new CodingTestProblemResponse(problem);
     }
 
     private CodingTestProblem getCodingTestProblem(Long id) {

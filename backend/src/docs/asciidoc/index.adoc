@@ -66,6 +66,7 @@ include::api/essayquestion/get-essay-question-by-major-type-and-generation.adoc[
 
 include::api/codingtestproblem/get-problems.adoc[]
 include::api/codingtestproblem/get-problem-by-id.adoc[]
+include::api/codingtestproblem/get-scraped-problems-by-user-id.adoc[]
 
 [[it-knowledge-API]]
 == IT 지식 API

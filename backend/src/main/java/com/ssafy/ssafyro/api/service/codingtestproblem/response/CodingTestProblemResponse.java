@@ -3,14 +3,14 @@ package com.ssafy.ssafyro.api.service.codingtestproblem.response;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
 import com.ssafy.ssafyro.domain.codingtestproblem.Difficulty;
 
-public record CodingTestProblemDetailResponse(Long id,
-                                              String title,
-                                              Difficulty difficulty,
-                                              double correctRate,
-                                              int recommendationCount,
-                                              String problemUrl) {
+public record CodingTestProblemResponse(Long id,
+                                        String title,
+                                        Difficulty difficulty,
+                                        double correctRate,
+                                        int recommendationCount,
+                                        String problemUrl) {
 
-    public CodingTestProblemDetailResponse(CodingTestProblem problem) {
+    public CodingTestProblemResponse(CodingTestProblem problem) {
         this(
                 problem.getId(),
                 problem.getTitle(),
