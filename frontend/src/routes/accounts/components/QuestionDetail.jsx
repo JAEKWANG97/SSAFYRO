@@ -1,6 +1,24 @@
 import { useState, useEffect } from "react";
 import { EMOTIONS, SCORE_RANGES } from "./constants";
 
+import angry from "../../../../public/profile/angry.png";
+import dead from "../../../../public/profile/dead.png";
+import happy from "../../../../public/profile/happy.png";
+import neutral from "../../../../public/profile/neutral.png";
+import sad from "../../../../public/profile/sad.png";
+import suprised from "../../../../public/profile/suprised.png";
+import vomiting from "../../../../public/profile/vomiting.png";
+
+const emotionImages = {
+  angry,
+  dead,
+  happy,
+  neutral,
+  sad,
+  suprised,
+  vomiting
+};
+
 export default function QuestionDetail({ detailItem }) {
   const [item, setItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,18 +53,17 @@ export default function QuestionDetail({ detailItem }) {
             총점: {item.totalScore}
           </div>
           <div className="flex flex-wrap justify-end gap-2 mt-2">
-            {Object.entries(EMOTIONS).map(([key, emotion]) => {
-              const value = item.expressions[key.toLowerCase()];
-              if (value !== undefined) {
+          {Object.entries(item.expressions).map(([key, value]) => {
+              if (value !== undefined && emotionImages[key]) {
                 return (
                   <div key={key} className="flex items-center space-x-1">
-                    <span className={emotion.color}>{emotion.emoji}</span>
-                    <span className="text-xs">{(value * 100).toFixed(1)}%</span>
+                    <img src={emotionImages[key]} alt={key} className="w-6 h-6" />
+                    {/* <span className="text-xs">{(value * 100).toFixed(1)}%</span> */}
                   </div>
-                );
-              }
-              return null;
-            })}
+                  );
+                }
+                return null;
+              })}
           </div>
         </div>
       </div>

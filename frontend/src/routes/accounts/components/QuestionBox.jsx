@@ -1,6 +1,57 @@
 import letterQ from "../../../../public/interview_result/letter-q.png";
-import freeIconLetterQ from "../../../../public/interview_result/free-icon-letter-q-7548487.png";
+import freeIconLetterQ from "../../../../public/interview_result/free-icon-letter-q-3541245.png";
+import { CiCalendar } from "react-icons/ci";
+import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+
+// 이모지 이미지 import
+import angry from "../../../../public/profile/angry.png";
+import dead from "../../../../public/profile/dead.png";
+import happy from "../../../../public/profile/happy.png";
+import neutral from "../../../../public/profile/neutral.png";
+import sad from "../../../../public/profile/sad.png";
+import suprised from "../../../../public/profile/suprised.png";
+import vomiting from "../../../../public/profile/vomiting.png";
+
+const emotionImages = {
+  angry,
+  dead,
+  happy,
+  neutral,
+  sad,
+  suprised,
+  vomiting
+};
+
 import { useNavigate } from "react-router-dom";
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleString('ko-KR', {
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  }).replace(',', '').replace(/^0/, '');
+};
+
+const renderEmotions = (expressions) => {
+  return Object.entries(expressions).map(([emotion, value]) => {
+    if (emotionImages[emotion]) {
+      const size = 16;
+      return (
+        <img
+          key={emotion}
+          src={emotionImages[emotion]}
+          alt={emotion}
+          className="mr-1"
+          style={{ width: `${size}px`, height: `${size}px` }}
+        />
+      );
+    }
+    return null;
+  });
+};
 
 export default function QuestionBox({ item, selectedItem }) {
   const navigate = useNavigate();
@@ -8,30 +59,55 @@ export default function QuestionBox({ item, selectedItem }) {
     navigate(`/question_feedback/${item.id}`);
     window.scrollTo(0, 0);
   };
+  console.log(item.expressions);
 
   const getScoreColor = (score) => {
-    console.log(score);
-    if (score >= 80) return "bg-[#8ACDD7]";
-    if (score >= 60) return "bg-[#F9F9E0]";
-    return "bg-[#FFC0D9]";
+    if (score >= 80) return "bg-green-300";
+    if (score >= 60) return "bg-yellow-300";
+    return "bg-red-300";
+  };
+  const formattedDate = formatDate(item.createdDate);
+
+  const getScoreTextColor = (score) => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-blue-600";
+    if (score >= 40) return "text-yellow-600";
+    return "text-red-600";
   };
 
   return (
     <div className="p-4">
-      <div
-        className={`bg-white rounded-lg shadow overflow-hidden cursor-pointer transform transition duration-200 hover:scale-105 hover:shadow-lg ${
-          selectedItem === item ? "bg-blue-100" : "hover:bg-blue-100"
-        }`}
-        onClick={handleClick}
-      >
-        <div className={`h-2 ${getScoreColor(item.totalScore)}`}></div>
-        <div className="p-4">
-          <div className="flex gap-2 mb-2 ">
-            <img src={freeIconLetterQ} alt="letter-q" className="w-4 h-4" />
-            <h3 className="font-bold">{item.question}</h3>
-          </div>
-        </div>
+  <div
+    className={`bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition duration-300 hover:scale-102 hover:shadow-lg ${
+      selectedItem === item ? "ring-2 ring-blue-400" : "hover:bg-blue-50"
+    }`}
+    onClick={handleClick}
+  >
+    <div className={`h-1 ${getScoreColor(item.totalScore)}`}></div>
+    <div className="flex items-center justify-between p-3">
+      <div className="flex justify-center space-x-2">
+        <span className="text-sm font-semibold text-gray-600">평점 </span>
+        <span className={`text-sm font-bold ${getScoreTextColor(item.totalScore)}`}>
+          {item.totalScore}
+        </span>
       </div>
+      <div className="flex items-center space-x-1">
+        {renderEmotions(item.expressions)}
+      </div>
+    </div>
+    <div className="p-4">
+      <div className="flex space-x-3 mb-5">
+        <div className="mt-1">
+         <HiOutlineChatBubbleLeftRight className="w-4 h-4" />
+        </div>
+        <h3 className="font-light text-gray-800">{item.question}</h3>
+      </div>
+      <div className="flex items-center text-sm text-gray-500">
+        <CiCalendar className="mr-2 text-blue-500" />
+        <p>{formattedDate}</p>
+      </div>
+      </div>
+    </div>
     </div>
   );
 }
