@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,5 +54,13 @@ public class User extends BaseEntity {
 
     public void initializeMajorType(MajorType majorType) {
         this.majorType = majorType;
+    }
+
+    public static User createFirstLoginUser(String username) {
+        return User.builder()
+                .username(username)
+                .nickname("user:" + UUID.randomUUID())
+                .profileImageUrl("https://sample.png")
+                .build();
     }
 }
