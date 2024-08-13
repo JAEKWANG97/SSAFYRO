@@ -3,12 +3,14 @@ package com.ssafy.ssafyro.domain.report;
 import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultRepository;
 import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportScoreDto;
 import com.ssafy.ssafyro.domain.report.dto.ReportUserAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
@@ -187,6 +189,37 @@ class ReportRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("유저의 모든 레포트 총점 및 발음 점수를 전체 조회한다.")
+    @Test
+    void findScoreBy() {
+        //given
+        User user1 = userRepository.save(createUser());
+        User user2 = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PERSONALITY, 3);
+        Room room4 = createRoom(PRESENTATION, 4);
+        roomRepository.saveAll(List.of(room1, room2, room3, room4));
+
+        Report report1 = createReport(user1, room1, 90, 2);
+        Report report2 = createReport(user2, room2, 100, 3);
+        Report report3 = createReport(user1, room3, 80, 4);
+        Report report4 = createReport(user1, room4, 80, 4);
+        reportRepository.saveAll(List.of(report1, report2, report3, report4));
+
+        //when
+        List<ReportScoreDto> result = reportRepository.findScoreBy(PERSONALITY, user1);
+
+        //then
+        assertThat(result).isNotNull()
+                .extracting("title", "totalScore", "pronunciationScore")
+                .containsExactlyInAnyOrder(
+                        tuple("제목1", 90, 2),
+                        tuple("제목3", 80, 4)
+                );
+    }
+
     private User createUser() {
         return User.builder()
                 .username("enduf768640@gmail.com")
@@ -218,7 +251,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
     private Room createRoom(RoomType roomType, int num) {
         return Room.builder()
                 .id("roomId" + num)
-                .title("제목")
+                .title("제목" + num)
                 .type(roomType)
                 .build();
     }

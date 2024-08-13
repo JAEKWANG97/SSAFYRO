@@ -19,6 +19,7 @@ import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.MajorType;
@@ -327,6 +328,38 @@ class ReportServiceTest extends IntegrationTestSupport {
                 .containsExactly(
                         (report1.getTotalScore() + report2.getTotalScore()) / 2.0,
                         (report1.getPronunciationScore() + report2.getPronunciationScore()) / 2.0
+                );
+    }
+
+    @DisplayName("사용자의 모든 레포트 총 점수 및 발음 점수 전체 조회한다.")
+    @Test
+    void getReportsStatisticUserScore() {
+        //given
+        User user1 = userRepository.save(createUser());
+        User user2 = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PERSONALITY, 3);
+        Room room4 = createRoom(PRESENTATION, 4);
+        roomRepository.saveAll(List.of(room1, room2, room3, room4));
+
+        Report report1 = createReportPersonal(user1, 90, room1);
+        Report report2 = createReportPersonal(user2, 100, room2);
+        Report report3 = createReportPersonal(user1, 80, room3);
+        Report report4 = createReportPresentation(user1, 80, room4, null);
+        reportRepository.saveAll(List.of(report1, report2, report3, report4));
+
+        //when
+        ReportsStatisticUserScoreResponse result = reportService.getReportsStatisticUserScore(
+                user1.getId(), new ReportsScoreServiceRequest(PERSONALITY));
+
+        //then
+        assertThat(result.scores()).isNotNull()
+                .extracting("totalScore", "pronunciationScore")
+                .containsExactlyInAnyOrder(
+                        tuple(90, 3),
+                        tuple(80, 3)
                 );
     }
 

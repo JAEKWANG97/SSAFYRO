@@ -30,13 +30,13 @@ import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse.ReportScoreInfo;
 import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.domain.report.Report;
-import com.ssafy.ssafyro.domain.report.dto.ReportScoreDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
@@ -468,9 +468,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         ReportsStatisticUserScoreResponse response = new ReportsStatisticUserScoreResponse(
                 PERSONALITY,
                 List.of(
-                        new ReportScoreDto("제목1", 80, 3),
-                        new ReportScoreDto("제목2", 90, 3),
-                        new ReportScoreDto("제목3", 70, 3)
+                        new ReportScoreInfo("제목1", 80, 3),
+                        new ReportScoreInfo("제목2", 90, 3),
+                        new ReportScoreInfo("제목3", 70, 3)
                 )
         );
 
