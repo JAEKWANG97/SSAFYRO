@@ -100,6 +100,7 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
         return jpaQueryFactory
                 .select(
                         new QReportScoreDto(
+                                report.room.title,
                                 report.totalScore,
                                 report.pronunciationScore
                         )

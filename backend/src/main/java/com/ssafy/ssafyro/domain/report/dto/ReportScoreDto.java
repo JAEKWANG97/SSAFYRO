@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReportScoreDto {
 
+    private String title;
     private int totalScore;
     private int pronunciationScore;
 
     @QueryProjection
-    public ReportScoreDto(int totalScore, int pronunciationScore) {
+    public ReportScoreDto(String title, int totalScore, int pronunciationScore) {
+        this.title = title;
         this.totalScore = totalScore;
         this.pronunciationScore = pronunciationScore;
     }
