@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
 // import botImg from "../../../../../public/main/botImg3.png";
-import botImg from "../../../../../public/main/botImg.jpg"
+import botImg from "../../../../../public/main/botImg.jpg";
 import {
   startRecording,
   stopRecording,
@@ -25,9 +25,11 @@ export default function TwoParticipantsVideo({
   faceExpressionData,
   handleSubmitAnswer,
   handleStartSurvey,
+  userInfo,
   userList,
   userTurn,
-  setModalOpen
+  userNameList,
+  setModalOpen,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -76,9 +78,10 @@ export default function TwoParticipantsVideo({
     }
   };
 
-  // 카카오 유저데이터 보완 시 userList[userTurn] 수정
-  const targetUser = userList[userTurn];
-  const isSurveyTarget = (identity) => identity === targetUser;
+  const currentTurnId = userList[userTurn];
+  const currentTurnUserName = userNameList[userTurn];
+  console.log("현재 면접 순서인 ID :", currentTurnId);
+  console.log("현재 면접 순서인 사람 :", currentTurnUserName);
 
   const styles = `
   @keyframes indigoBlink {
@@ -98,6 +101,7 @@ export default function TwoParticipantsVideo({
     padding: 5px;
   }
   `;
+  // 내 차례일 때에는 불빛을 비칠 수 있지만, 다른 참여자의 경우에는 Name이 없으므로 할 수 없다.
   return (
     <>
       <style>{styles}</style> {/* 애니메이션 스타일 추가 */}
@@ -113,7 +117,7 @@ export default function TwoParticipantsVideo({
               local={true}
               // 표정 상태 변경을 VideoComponent로 전달
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={isSurveyTarget(participantName)}
+              isSurveyTarget={participantName === currentTurnUserName}
             />
           </div>
         )}
@@ -214,25 +218,22 @@ export default function TwoParticipantsVideo({
         ) : (
           // 추가된 부분: remoteTracks를 감싸는 외부 <div> 추가
           <div className=" mb-2 rounded-2xl flex items-center justify-center w-full h-full bg-gray-400">
-            {remoteTracks.map((remoteTrack) =>
-              remoteTrack.trackPublication.kind === "video" ? (
+            {remoteTracks.map((remoteTrack) => {
+              return remoteTrack.trackPublication.kind === "video" ? (
                 <VideoComponent
                   key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={isSurveyTarget(
-                    remoteTrack.participantIdentity
-                  )}
+                  isSurveyTarget={remoteTrack.participantIdentity === currentTurnUserName}
                 />
               ) : (
-                // 추가된 부분: <div> 위치 조정 및 중복 key 속성 제거
                 <AudioComponent
                   key={remoteTrack.trackPublication.trackSid}
                   track={remoteTrack.trackPublication.audioTrack}
                 />
-              )
-            )}
+              );
+            })}
           </div>
         )}
       </div>

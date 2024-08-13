@@ -58,10 +58,12 @@ export default function PT() {
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
-  const { userList, setUserList, userTurn, setUserTurn } = useRoomStore(
+  const { userList, setUserList, userNameList, setUserNameList, userTurn, setUserTurn } = useRoomStore(
     (state) => ({
       userList: state.userList,
       setUserList: state.setUserList,
+      userNameList: state.userNameList,
+      setUserNameList: state.setUserNameList,
       userTurn: state.userTurn,
       setUserTurn: state.setUserTurn,
     })
@@ -91,7 +93,8 @@ export default function PT() {
         .then((response) => {
           const roomData = response.data.response;
           setUserList(roomData.userList);
-          console.log("updated userList: ", roomData.userList);
+          setUserNameList(roomData.userNameList)
+          // console.log("updated userList: ", roomData.userList);
         })
         .catch((error) => {
           console.log("Error! : ", error);
@@ -153,8 +156,12 @@ export default function PT() {
 
   useEffect(() => {
     console.log("Current userList: ", userList);
+    console.log("Current userNameList: ", userNameList);
     console.log("Current userTurn: ", userTurn);
-  }, [userList, userTurn]);
+    // console.log("Target User: ", userList[userTurn])
+    // console.log("Current User: ", userInfo.userId)
+    // console.log("IsSameUser: ", Number(userList[userTurn]) === Number(userInfo.userId))
+  }, [userList, userTurn, userNameList]);
 
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
@@ -315,7 +322,8 @@ export default function PT() {
   const [remoteTracks, setRemoteTracks] = useState([]);
 
   const [participantName, setParticipantName] = useState(
-    userInfo.userName + Math.floor(Math.random() * 100)
+    // userInfo.userName + Math.floor(Math.random() * 100)
+    userInfo.userName
   );
   const [roomName, setRoomName] = useState(roomid);
 
@@ -674,13 +682,15 @@ export default function PT() {
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
+                  userInfo={userInfo}
                   userList={userList}
                   userTurn={userTurn}
+                  userNameList={userNameList}
                   setModalOpen={setModalOpen}
                 />
               );
             } else {
-              console.log("세명 전용 방으로 이동");
+              // console.log("세명 전용 방으로 이동");
               return (
                 <ThreeParticipantsVideo
                   localTrack={localTrack}
@@ -695,8 +705,10 @@ export default function PT() {
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
                   handleStartSurvey={handleStartSurvey}
+                  userInfo={userInfo}
                   userList={userList}
                   userTurn={userTurn}
+                  userNameList={userNameList}
                   setModalOpen={setModalOpen}
                 />
               );

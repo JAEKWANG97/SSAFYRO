@@ -2,9 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// 더미 데이터 가져오기: API 연동 시 삭제
-import { currentUser } from "./data"; // currentUser 가져오기
-
 export default function CreateRoom() {
   const navigate = useNavigate();
   const [participantCount, setParticipantCount] = useState("");
