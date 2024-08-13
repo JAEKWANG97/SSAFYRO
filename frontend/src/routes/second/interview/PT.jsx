@@ -155,9 +155,9 @@ export default function PT() {
   // const userTurn = useRoomStore((state) => state.userTurn);
 
   useEffect(() => {
-    console.log("Current userList: ", userList);
-    console.log("Current userNameList: ", userNameList);
-    console.log("Current userTurn: ", userTurn);
+    // console.log("Current userList: ", userList);
+    // console.log("Current userNameList: ", userNameList);
+    // console.log("Current userTurn: ", userTurn);
     // console.log("Target User: ", userList[userTurn])
     // console.log("Current User: ", userInfo.userId)
     // console.log("IsSameUser: ", Number(userList[userTurn]) === Number(userInfo.userId))
@@ -406,7 +406,7 @@ export default function PT() {
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
-      console.log(event.results[current]);
+      // console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
       setTranscript((prevTranscript) => prevTranscript + transcript);
     };
@@ -461,7 +461,7 @@ export default function PT() {
       setTenMinuteTimer((prevSeconds) => prevSeconds - 1);
     }, 1000);
 
-    console.log(`${stage} 단계 타이머가 시작되었습니다.`);
+    // console.log(`${stage} 단계 타이머가 시작되었습니다.`);
   };
 
   useEffect(() => {
@@ -478,7 +478,7 @@ export default function PT() {
           destination: `/interview/turn/${roomid}`,
           body: JSON.stringify({ nowStage: stage }),
         });
-        console.log(`${stage} 메시지를 서버로 전송했습니다.`);
+        // console.log(`${stage} 메시지를 서버로 전송했습니다.`);
       }
     }
   }, [userTurn]);
@@ -494,9 +494,9 @@ export default function PT() {
           const parsedMessage = JSON.parse(message.body);
 
           if (parsedMessage.nowStage) {
-            console.log(
-              `${parsedMessage.nowStage} 파일을 받았으므로 타이머를 시작합니다.`
-            );
+            // console.log(
+            //   `${parsedMessage.nowStage} 파일을 받았으므로 타이머를 시작합니다.`
+            // );
             startTimer(parsedMessage.nowStage);
           }
         });

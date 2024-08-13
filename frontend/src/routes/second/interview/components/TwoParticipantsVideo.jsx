@@ -35,7 +35,7 @@ export default function TwoParticipantsVideo({
   const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
-    console.log("remoteTracks 재확인: ", remoteTracks);
+    // console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
   useEffect(() => {
@@ -80,8 +80,8 @@ export default function TwoParticipantsVideo({
 
   const currentTurnId = userList[userTurn];
   const currentTurnUserName = userNameList[userTurn];
-  console.log("현재 면접 순서인 ID :", currentTurnId);
-  console.log("현재 면접 순서인 사람 :", currentTurnUserName);
+  // console.log("현재 면접 순서인 ID :", currentTurnId);
+  // console.log("현재 면접 순서인 사람 :", currentTurnUserName);
 
   const styles = `
   @keyframes lightBlueBlink {
