@@ -11,6 +11,7 @@ import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
+import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ class ReportControllerTest extends ControllerTestSupport {
 
     @DisplayName("인성 면접을 상세 조회한다.")
     @Test
+    @WithMockJwtAuthentication
     void getReportPersonal() throws Exception {
         //given
         ReportResponse result = ReportResponse.of(List.of());
@@ -38,6 +40,7 @@ class ReportControllerTest extends ControllerTestSupport {
 
     @DisplayName("PT 면접을 상세 조회한다.")
     @Test
+    @WithMockJwtAuthentication
     void getReportPresentation() throws Exception {
         //given
         ReportResponse result = ReportPresentationResponse.of(

@@ -1,6 +1,8 @@
 package com.ssafy.ssafyro.config;
 
 import com.ssafy.ssafyro.security.CustomOAuth2UserService;
+import com.ssafy.ssafyro.security.EntryPointUnauthorizedHandler;
+import com.ssafy.ssafyro.security.JwtAccessDeniedHandler;
 import com.ssafy.ssafyro.security.JwtAuthenticationTokenFilter;
 import com.ssafy.ssafyro.security.OAuth2AuthenticationFailureHandler;
 import com.ssafy.ssafyro.security.OAuth2AuthenticationSuccessHandler;
@@ -21,6 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtAccessDeniedHandler accessDeniedHandler;
+    private final EntryPointUnauthorizedHandler UnauthorizedHandler;
     private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -35,11 +39,16 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(UnauthorizedHandler)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/ssafyro-chat").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(configurer -> configurer
