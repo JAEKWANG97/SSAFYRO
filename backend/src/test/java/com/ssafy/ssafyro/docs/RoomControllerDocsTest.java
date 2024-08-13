@@ -31,6 +31,7 @@ import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -128,7 +129,7 @@ public class RoomControllerDocsTest extends RestDocsSupport {
         roomRedis.addParticipant(2L);
 
         given(roomService.getRoomById(any(String.class))).willReturn(
-                RoomDetailResponse.of(roomRedis, List.of("user1", "user2")));
+                RoomDetailResponse.of(roomRedis, Map.of(1L, "유저1", 2L, "유저2")));
 
         mockMvc.perform(get("/api/v1/rooms/{id}", requestRoomId)).andDo(print())
                 .andExpect(status().isOk())
@@ -151,8 +152,14 @@ public class RoomControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("response.userList")
                                         .type(JsonFieldType.ARRAY)
                                         .description("방 참가자 ID 목록"),
-                                fieldWithPath("response.userNameList")
-                                        .type(JsonFieldType.ARRAY)
+                                fieldWithPath("response.userNameMap")
+                                        .type(JsonFieldType.OBJECT)
+                                        .description("방 참가자 이름 목록 (key : userId)"),
+                                fieldWithPath("response.userNameMap.1")
+                                        .type(JsonFieldType.STRING)
+                                        .description("방 참가자 이름 목록"),
+                                fieldWithPath("response.userNameMap.2")
+                                        .type(JsonFieldType.STRING)
                                         .description("방 참가자 이름 목록"),
                                 fieldWithPath("response.type").type(
                                                 JsonFieldType.STRING)

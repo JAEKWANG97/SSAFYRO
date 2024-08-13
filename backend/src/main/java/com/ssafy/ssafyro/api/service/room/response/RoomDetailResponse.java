@@ -1,9 +1,10 @@
 package com.ssafy.ssafyro.api.service.room.response;
 
+import com.ssafy.ssafyro.domain.room.RoomStatus;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.redis.RoomRedis;
-import com.ssafy.ssafyro.domain.room.RoomStatus;
 import java.util.List;
+import java.util.Map;
 
 public record RoomDetailResponse(String title,
                                  String description,
@@ -11,9 +12,9 @@ public record RoomDetailResponse(String title,
                                  RoomStatus status,
                                  int capacity,
                                  List<Long> userList,
-                                 List<String> userNameList
+                                 Map<Long, String> userNameMap
 ) {
-    public static RoomDetailResponse of(RoomRedis room , List<String> userNameList) {
+    public static RoomDetailResponse of(RoomRedis room, Map<Long, String> userNameMap) {
         return new RoomDetailResponse(
                 room.getTitle(),
                 room.getDescription(),
@@ -21,7 +22,7 @@ public record RoomDetailResponse(String title,
                 room.getStatus(),
                 room.getCapacity(),
                 room.getUserList(),
-                userNameList
+                userNameMap
         );
     }
 }

@@ -28,7 +28,7 @@ import com.ssafy.ssafyro.error.user.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -55,13 +55,15 @@ public class RoomService {
                 .map(RoomRedis::getUserList)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
-        List<String> userNameList = userList.stream()
-                .map(userId -> userRepository.findById(userId)
-                        .orElseThrow(() -> new UserNotFoundException("User not found"))
-                        .getNickname())
-                .toList();
+        Map<Long, String> userNameMap = userList.stream()
+                .collect(Collectors.toMap(
+                        userId -> userId,
+                        userId -> userRepository.findById(userId)
+                                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                                .getNickname()
+                ));
 
-        return RoomDetailResponse.of(getRoomRedisBy(id), userNameList);
+        return RoomDetailResponse.of(getRoomRedisBy(id), userNameMap);
     }
 
     public RoomCreateResponse createRoom(RoomCreateServiceRequest request) {

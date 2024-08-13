@@ -88,9 +88,6 @@ class RoomServiceTest extends IntegrationTestSupport {
                 .username("test2")
                 .build());
 
-
-
-
         RoomRedis room = RoomRedis.builder()
                 .title("test")
                 .description("test description")
@@ -100,7 +97,6 @@ class RoomServiceTest extends IntegrationTestSupport {
 
         room.addParticipant(userRepository.save(user).getId());
         room.addParticipant(userRepository.save(user2).getId());
-
 
         String savedRoomId = roomRedisRepository.save(room);
 
@@ -113,7 +109,8 @@ class RoomServiceTest extends IntegrationTestSupport {
         assertThat(roomDetailResponse.type()).isEqualTo(room.getType());
         assertThat(roomDetailResponse.capacity()).isEqualTo(room.getCapacity());
         assertThat(roomDetailResponse.userList()).containsExactlyInAnyOrder(user.getId(), user2.getId());
-        assertThat(roomDetailResponse.userNameList()).containsExactlyInAnyOrder(user.getNickname(), user2.getNickname());
+        assertThat(roomDetailResponse.userNameMap().values()).containsExactlyInAnyOrder(user.getNickname(),
+                user2.getNickname());
     }
 
     @DisplayName("방 목록을 조회한다.")
