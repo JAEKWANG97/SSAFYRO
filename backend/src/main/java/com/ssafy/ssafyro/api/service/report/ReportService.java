@@ -2,12 +2,13 @@ package com.ssafy.ssafyro.api.service.report;
 
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
-import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticScoreResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewInfos;
@@ -96,10 +97,14 @@ public class ReportService {
         return ReportCreateResponse.of(report);
     }
 
-    public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsAverageServiceRequest request) {
+    public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsScoreServiceRequest request) {
         return reportRepository.findTotalAvgBy(request.roomType(), getUser(userId))
                 .orElseThrow(() -> new ReportNotFoundException("Report not found"))
                 .toResponse(request.roomType());
+    }
+
+    public ReportsStatisticScoreResponse getReportsStatisticScore(Long userId, ReportsScoreServiceRequest request) {
+        return null;
     }
 
     private User getUser(Long userId) {
