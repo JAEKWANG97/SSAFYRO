@@ -3,16 +3,21 @@ package com.ssafy.ssafyro.api.controller.codingtestproblem;
 import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
+import com.ssafy.ssafyro.api.controller.codingtestproblem.request.CodingTestProblemScrapRequest;
 import com.ssafy.ssafyro.api.service.codingtestproblem.CodingTestProblemService;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemResponse;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemScrapResponse;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemsResponse;
 import com.ssafy.ssafyro.security.JwtAuthentication;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,6 +45,14 @@ public class CodingTestProblemController {
     public ApiResult<CodingTestProblemResponse> getProblemById(@PathVariable Long id) {
         return success(
                 codingTestProblemService.getProblem(id)
+        );
+    }
+
+    @PostMapping("/api/v1/coding-test-problems/scrap")
+    public ApiResult<CodingTestProblemScrapResponse> createScrapedProblemsBy(@Valid @RequestBody CodingTestProblemScrapRequest request,
+                                                                             @AuthenticationPrincipal JwtAuthentication userInfo) {
+        return success(
+                codingTestProblemService.createScrap(request.problemId(), userInfo.id())
         );
     }
 }

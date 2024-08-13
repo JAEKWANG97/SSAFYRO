@@ -5,9 +5,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -15,12 +17,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ssafy.ssafyro.api.controller.codingtestproblem.request.CodingTestProblemScrapRequest;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemResponse;
+import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemScrapResponse;
 import com.ssafy.ssafyro.api.service.codingtestproblem.response.CodingTestProblemsResponse;
 import com.ssafy.ssafyro.domain.codingtestproblem.CodingTestProblem;
 import com.ssafy.ssafyro.domain.codingtestproblem.Difficulty;
-import com.ssafy.ssafyro.domain.problemscrap.ProblemScrap;
-import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -94,7 +96,7 @@ public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
                 );
     }
 
-    @DisplayName("유저 별 스크랩한 적성 진단 테스트 문제 목록 조회 API")
+    @DisplayName("유저 별 스크랩한 SW 적성 진단 테스트 문제 목록 조회 API")
     @Test
     @WithMockJwtAuthentication
     void getScrapedProblemsByUserId() throws Exception {
@@ -198,6 +200,46 @@ public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
                                                 .description("문제 추천 수"),
                                         fieldWithPath("response.problemUrl").type(JsonFieldType.STRING)
                                                 .description("문제 url"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("SW 적성 진단 테스트 문제 스크랩 생성 API")
+    @Test
+    @WithMockJwtAuthentication
+    void createScrapedProblemsBy() throws Exception {
+        CodingTestProblemScrapRequest request = new CodingTestProblemScrapRequest(1L);
+        CodingTestProblemScrapResponse response = new CodingTestProblemScrapResponse(1L, 1L);
+
+        given(codingTestProblemService.createScrap(any(Long.class), any(Long.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        post("/api/v1/coding-test-problems/scrap")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("problem-scrap-save",
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("problemId").type(JsonFieldType.NUMBER)
+                                                .description("문제 id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.problemScrapId").type(JsonFieldType.NUMBER)
+                                                .description("스크랩 id"),
+                                        fieldWithPath("response.userId").type(JsonFieldType.NUMBER)
+                                                .description("유저 id"),
                                         fieldWithPath("error").type(JsonFieldType.NULL)
                                                 .description("에러")
                                 )
