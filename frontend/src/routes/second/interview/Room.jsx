@@ -115,7 +115,7 @@ export default function WaitRoom() {
 
   function initializeStompClient() {
     const client = new Client({
-      brokerURL: "ws://i11c201.p.ssafy.io:9999/ssafyro-chat", // STOMP 서버 URL
+      brokerURL: "wss://i11c201.p.ssafy.io:8443/ssafyro-chat", // STOMP 서버 URL
       onConnect: () => {
         // console.log("STOMP client connected");
 

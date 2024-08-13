@@ -37,6 +37,12 @@ import useAuthStore from "../../../stores/AuthStore";
 // 상태 관리 모듈
 import useInterviewStore from "../../../stores/InterviewStore";
 
+// Survey 모달창
+import Survey from "../../../components/Survey";
+
+// 알림창 라이브러리
+import Swal from "sweetalert2";
+
 export default function PT() {
   // 방 정보 가져오기
   const { roomid } = useParams();
@@ -108,6 +114,7 @@ export default function PT() {
   };
 
   const handleEndInterview = async () => {
+    
     try {
       // 면접 종료 요청 api 호출
       await axios.patch(
@@ -120,11 +127,24 @@ export default function PT() {
         }
       );
       console.log("Interview finished successfully");
+      
+      // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
+      totalResult.forEach(result => {
+        axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", result, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+          }
+        })
+        .then((response) => {
+          console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
+        })
+        .catch((error) => console.log(error))
+      });
 
       // OpenVidu 연결 종료 및 페이지 이동
       leaveRoom();
       stop();
-      navigate("/second/interview");
+      navigate("/account/profile");
     } catch (error) {
       console.error("Error finishing the interview: ", error);
     }
@@ -465,7 +485,7 @@ export default function PT() {
   // STOMP 클라이언트 초기화 및 메시지 구독
   useEffect(() => {
     const client = new Client({
-      brokerURL: `ws://i11c201.p.ssafy.io:9999/ssafyro-chat`,
+      brokerURL: `wss://i11c201.p.ssafy.io:8443/ssafyro-chat`,
       onConnect: async () => {
         console.log("STOMP client connected");
 
@@ -514,6 +534,16 @@ export default function PT() {
     if (tenMinuteTimer <= 0) {
       clearInterval(timerRef.current); // 10분 타이머가 끝나면 정지
 
+      Swal.fire({
+        title: "면접 차례가 종료되었습니다.",
+        text: "2분동안 상호평가가 진행됩니다.",
+        icon: "info",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setModalOpen();
+        }
+      });
+
       // 2분 타이머 시작
       twoMinuteTimerRef.current = setInterval(() => {
         setTwoMinuteTimer((prevSeconds) => prevSeconds - 1);
@@ -533,17 +563,26 @@ export default function PT() {
 
       // 면접을 종료하거나 다음 면접자 준비
       if (interviewTurnCounter.current >= userList.length) {
-        handleEndInterview();
+        Swal.fire({
+          title: "면접이 종료되었습니다.",
+          text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleEndInterview();
+          }
+        })
       }
-      // else if (userList.length === 1) {
-      //   handleEndInterview();
-      // } else {
-      //   handleStartSurvey();
-      // }
-      else {
-        if (userList.length === 1) {
-          handleEndInterview();
-        }
+      else if (userList.length === 1) {
+        Swal.fire({
+          title: "면접이 종료되었습니다.",
+          text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleEndInterview();
+          }
+        })
       }
     }
   }, [twoMinuteTimer]);
@@ -572,6 +611,22 @@ export default function PT() {
 
   // 면접 컨트롤을 위한 함수와 변수들
   const [questionCount, setQuestionCount] = useState(0);
+
+  // 면접 평가 modal 창
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const setModalOpen = function () {
+    setIsModalOpen(true);
+  };
+
+  const setModalClose = function () {
+    setIsModalOpen(false);
+  };
+
+  // 면접 평가 데이터
+  const [totalResult, setTotalResult] = useState([]);
+
+  const renewTotalResult = function (newResult) {setTotalResult((prev) => [...prev, newResult])};
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -631,6 +686,7 @@ export default function PT() {
                   userList={userList}
                   userTurn={userTurn}
                   userNameList={userNameList}
+                  setModalOpen={setModalOpen}
                 />
               );
             } else {
@@ -653,6 +709,7 @@ export default function PT() {
                   userList={userList}
                   userTurn={userTurn}
                   userNameList={userNameList}
+                  setModalOpen={setModalOpen}
                 />
               );
             }
@@ -675,6 +732,18 @@ export default function PT() {
           </div>
         </div>
       </div>
+      {/* survey 모달창 */}
+      { isModalOpen && <>
+        <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
+          <div className="w-4/5 bg-white border rounded-lg py-5 px-5">
+            <Survey
+              targetUser={userList[userTurn]}
+              setModalClose={setModalClose}
+              setTotalResult={renewTotalResult}
+             />
+          </div>
+        </div>
+      </>}
     </div>
   );
 }

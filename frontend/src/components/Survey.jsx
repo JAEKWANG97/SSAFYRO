@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 
-export default function Survey() {
+export default function Survey({ targetUser, setModalClose, setTotalResult }) {
   const roomId = useParams().roomid;
-  const location = useLocation();
-  const { targetUser } = location.state;
+  // const location = useLocation();
+  // const { targetUser } = location.state;
   
   const [answers, setAnswers] = useState({
     q1: '',
@@ -23,6 +23,7 @@ export default function Survey() {
   };
 
   const handleSubmit = () => {
+    console.log(targetUser);
     // 여기에 제출 로직을 추가하세요
     let totalScore = Number(answers.q1) + Number(answers.q2) + Number(answers.q3) + Number(answers.q4) + Number(answers.q5);
     const requestBody = {
@@ -32,13 +33,18 @@ export default function Survey() {
       totalScore: totalScore,
     }
 
-    axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
-    .then((response) => {
-      alert('평가 제출이 완료되었습니다.'); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    setTotalResult(requestBody);
+    setModalClose();
+
+    // axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
+    // .then((response) => {
+    //   alert('평가 제출이 완료되었습니다.'); // 모달화가 완료되면 이거 지우고 모달 닫는 함수로 변경
+    //   setModalClose();
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    //   setModalClose();
+    // });
   };
 
   return (

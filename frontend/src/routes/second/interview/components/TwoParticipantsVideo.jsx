@@ -29,6 +29,7 @@ export default function TwoParticipantsVideo({
   userList,
   userTurn,
   userNameList,
+  setModalOpen,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -124,7 +125,8 @@ export default function TwoParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            onClick={handleStartSurvey}
+            // onClick={handleStartSurvey}
+            onClick={setModalOpen}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
