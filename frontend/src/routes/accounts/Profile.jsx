@@ -6,7 +6,6 @@ import InterviewResult from './components/InterviewResult';
 import UserImg from './../../../public/main/user.jpg';
 import PersonaltyImg from './../../../public/profile/personality.png';
 import PtImg from './../../../public/profile/pt.png';
-import useAuthStore from '../../stores/AuthStore';
 import Button from './../../../src/components/Button';
 import {
   TETabs,
@@ -18,97 +17,105 @@ import {
 export default function Profile() {
   const nav = useNavigate();
   const location = useLocation();
-  // const userId = location.state?.userId;
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const Token = localStorage.getItem("Token");
-  const [userInfo, setUserInfo] = useState({})  // 유저정보(닉네임, 전공유무, 이미지, 인성면접 횟수, pt면접 횟수)
+
+
+  const [userInfo, setUserInfo] = useState({});  // 유저 정보
   const [fillActive, setFillActive] = useState("tab1");
-  const [interviewInfo, setInterviewInfo] = useState([]) // 면접정보[{레포트ID, 면접종류, 총점, 발음점수, 면접일시}]
+  const [interviewInfo, setInterviewInfo] = useState([]); // 면접 정보
+  const [essayData, setEssayData] = useState(null)
 
+  // 초기 데이터 로드
   useEffect(() => {
-    // 유저 정보 불러오기
-    axios
-      .get(`${APIURL}users`, 
-        {headers: {
-          Authorization: `Bearer ${Token}`,
-        },
-      })
-      .then((res) => {
-        setUserInfo(res.data.response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-      if (!location.state?.activeTab) {
-        setFillActive("tab1");
-      }
-  }, []);
-
-  useEffect(() => {
-   
-    const Info = localStorage.getItem('userInfo')
-    const parsedInfo = JSON.parse(Info);
-
-    // 유저 정보 불러오기
-    axios
-      .get(`${APIURL}reports`, {
-        params: {
-          userId: parsedInfo.userId,  // userId를 parsedInfo 객체에서 가져옵니다.
-          page: 1,
-          size: 10,
-        }, 
-        headers: {
-          Authorization: `Bearer ${Token}`,
-        },
-        })
-        .then((res) => {
-          console.log(res.data.response.reports);
-          setInterviewInfo(res.data.response.reports)
-        })
-        .catch((error) => {
-          console.log(error);
+    const fetchData = async () => {
+      try {
+        // 유저 정보 가져오기
+        const userResponse = await axios.get(`${APIURL}users`, {
+          headers: { Authorization: `Bearer ${Token}` },
         });
+        setUserInfo(userResponse.data.response);
 
-      }, []);
+        // 로컬 스토리지에서 userInfo 가져오기
+        const Info = localStorage.getItem('userInfo');
+        
+        if (Info) {
+          const parsedInfo = JSON.parse(Info);
+          const userId = parsedInfo.userId;
 
+          // 인터뷰 정보 가져오기
+          const interviewResponse = await axios.get(`${APIURL}reports`, {
+            params: {
+              userId: userId,
+              page: 0,
+              size: 10,
+            },
+            headers: { Authorization: `Bearer ${Token}` },
+          })
+          .then((res)=>{
+            console.log(res.data)
+            setInterviewInfo(res.data.response.reports);
+          })
+          .catch((error)=>{
+            console.log(error)
+          })
 
+        
+          // 에세이 데이터 가져오기
+          const essayResponse = await axios.get(`${APIURL}essays`, {
+            params: {
+              userId: userId, 
+            },
+            headers: {
+              Authorization: `Bearer ${Token}`, 
+            },
+          })
+          .then((res) => {
+            console.log(res.data.response)
+            setEssayData(res.data.response.content); 
+            
+          });
+          
+        } else {
+          console.error("No userInfo found in localStorage.");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    // 탭 설정이 없으면 기본 탭으로 설정
+    if (!location.state?.activeTab) {
+      setFillActive("tab1");
+    }
+  }, [APIURL, Token, location.state]);
+
+  // 탭 상태 관리
   useEffect(() => {
     if (location.state?.activeTab) {
       setFillActive(location.state.activeTab);
     }
   }, [location.state]);
 
-  
+  // 탭 상태에 따라 스크롤 위치 조정
   useEffect(() => {
     if (fillActive === "tab2" || fillActive === "tab3") {
       window.scrollTo(0, document.body.scrollHeight);
     }
   }, [fillActive]);
 
-  // const userInfo = useAuthStore((state) => state.userInfo); 
-  // const interviewInfo = [
-  //   {type: 1, title: '전공자 인성 면접', room : 1},
-  //   {type: 2, title: '전공자 PT 면접', room : 2},
-  //   {type: 1, title: '0810', room : 3},
-  //   {type: 2, title: '0810', room : 4},
-  //   {type: 2, title: '0810', room : 5}
-  // ];
-
   const handleFillClick = (value) => {
-    if (value === fillActive) {
-      return;
-    }
+    if (value === fillActive) return;
     setFillActive(value);
-
-    // 현재 탭 상태를 location.state에 저장
     nav(location.pathname, { state: { activeTab: value } });
   };
 
   return (
     <div>
       <div className="container mx-auto p-5 max-w-2xl bg-white rounded-lg shadow-md mt-10 mb-20">
-        <div className='flex justify-center py-3'>
+        <div className="flex justify-center py-3">
           <div className="flex items-center mb-6 gap-9">
             <img 
               src={UserImg} 
@@ -117,7 +124,7 @@ export default function Profile() {
                 width: '100px', 
                 height: '100px', 
                 borderRadius: '50%', 
-                objectFit: 'cover', 
+                objectFit: 'cover',
               }}
             />
             <div>
@@ -125,7 +132,8 @@ export default function Profile() {
                 <h2 className="text-2xl font-semibold text-center">{userInfo.nickname}</h2>
                 <Button
                   text={userInfo.type === 'MAJOR' ? '전공자' : '비전공자'} 
-                  type={userInfo.type === 'MAJOR' ? 'MAJOR' : 'NONMAJOR'} />
+                  type={userInfo.type === 'MAJOR' ? 'MAJOR' : 'NONMAJOR'} 
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-sm text-gray-500">
@@ -135,13 +143,12 @@ export default function Profile() {
                   PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 번
                 </span>
               </div>
-
             </div>
           </div>
         </div>
 
         <hr className="border-t-10 pb-5"/>
-        <InterviewResult/>
+        <InterviewResult />
         <hr className="border-t-10 mt-5"/>
 
         <div className="mt-10 mb-3">
@@ -149,7 +156,7 @@ export default function Profile() {
             <TETabsItem
               onClick={() => handleFillClick("tab1")}
               active={fillActive === "tab1"}
-              className={`pb-4 !text-base !font-extrabold ${fillActive === "tab1" ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'}`}
+              className={`pb-4  !text-base !font-extrabold ${fillActive === "tab1" ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-400'}`}
             >
               에세이
             </TETabsItem>
@@ -171,7 +178,8 @@ export default function Profile() {
 
           <TETabsContent>
             <TETabsPane show={fillActive === "tab1"}>
-              <EssayDetail />
+              {essayData && <EssayDetail essayData={essayData} />}
+              
             </TETabsPane>
             <TETabsPane show={fillActive === "tab2"}>
               {/* Dashboard content */}
@@ -180,10 +188,10 @@ export default function Profile() {
               <div className="pl-7">
                 <div 
                   className="max-w-xl h-[80px] border rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
-                  onClick={() => nav('question_feedback', { state: { activeTab: "tab3" } })}
+                  onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
                 >
                   이 질문들에서 점수를 높일 방법은?
-                  <span className="text-sm font-medium pt-1">구체적인 피드백을 받아보세요</span>
+                  <span className="text-sm font-medium pt-1">WORST & BEST 질문을 확인해보세요</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
