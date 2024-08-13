@@ -23,18 +23,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
-import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
-import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticScoreResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.domain.report.Report;
+import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
@@ -350,7 +351,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("유저 레포트 평균 점수 API")
+    @DisplayName("유저 레포트 평균 점수 및 표정 평균 API")
     @Test
     @WithMockJwtAuthentication
     void getReportsAverage() throws Exception {
@@ -365,7 +366,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 )
         );
 
-        given(reportService.getReportsScoreAverage(any(Long.class), any(ReportsAverageServiceRequest.class)))
+        given(reportService.getReportsScoreAverage(any(Long.class), any(ReportsScoreServiceRequest.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -412,7 +413,64 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                 )
                         )
                 );
+    }
 
+    @DisplayName("모든 사람의 총점 평균 및 개인의 회차별 점수 API")
+    @Test
+    @WithMockJwtAuthentication
+    void getReportsStatisticScore() throws Exception {
+        ReportsStatisticScoreResponse response = new ReportsStatisticScoreResponse(
+                PERSONALITY,
+                90,
+                4,
+                List.of(
+                        new ReportAllScoreDto("제목1", 80, 3),
+                        new ReportAllScoreDto("제목2", 70, 2),
+                        new ReportAllScoreDto("제목3", 75, 4)
+                )
+        );
+
+        given(reportService.getReportsStatisticScore(any(Long.class), any(ReportsScoreServiceRequest.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/reports/statistics-score")
+                                .queryParam("roomType", "PERSONALITY")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("reports-statistic-score",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("roomType").description("PERSONALITY / PRESENTATION")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                                .description("방 타입"),
+                                        fieldWithPath("response.allTotalScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 모든 유저 평균 점수"),
+                                        fieldWithPath("response.allPronunciationScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 모든 유저 평균 발음 점수"),
+                                        fieldWithPath("response.scores[]").type(JsonFieldType.ARRAY)
+                                                .description("해당 타입 로그인한 유저 회차별 점수"),
+                                        fieldWithPath("response.scores[].title").type(JsonFieldType.STRING)
+                                                .description("해당 타입 로그인한 유저 회차별 방 제목"),
+                                        fieldWithPath("response.scores[].totalScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 로그인한 유저 회차별 총점"),
+                                        fieldWithPath("response.scores[].pronunciationScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 로그인한 유저 회차별 발음 점수"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
     }
 
     private String generateRandomRoomId() {
