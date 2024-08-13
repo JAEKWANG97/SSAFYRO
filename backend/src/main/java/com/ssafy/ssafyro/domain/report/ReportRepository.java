@@ -9,4 +9,5 @@ public interface ReportRepository extends JpaRepository<Report, Long>, ReportQue
 
     Page<Report> findAllByUser(User user, Pageable pageable);
 
+//    findAvgByRoomType(RoomType roomType);
 }

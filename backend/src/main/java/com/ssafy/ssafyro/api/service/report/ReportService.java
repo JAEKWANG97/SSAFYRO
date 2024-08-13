@@ -6,9 +6,9 @@ import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportStatisticAllScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticScoreResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewInfos;
@@ -103,7 +103,7 @@ public class ReportService {
                 .toResponse(request.roomType());
     }
 
-    public ReportsStatisticScoreResponse getReportsStatisticScore(Long userId, ReportsScoreServiceRequest request) {
+    public ReportStatisticAllScoreResponse getReportsStatisticAllScore(ReportsScoreServiceRequest request) {
         return null;
     }
 

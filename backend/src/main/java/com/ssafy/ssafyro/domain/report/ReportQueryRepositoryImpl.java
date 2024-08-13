@@ -94,6 +94,7 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
                         )
                         .fetchOne()
         );
+
     }
 
     @Override

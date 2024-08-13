@@ -8,9 +8,9 @@ import com.ssafy.ssafyro.api.controller.report.request.ReportsScoreRequest;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportStatisticAllScoreResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticScoreResponse;
 import com.ssafy.ssafyro.security.JwtAuthentication;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -54,10 +54,9 @@ public class ReportController {
         return success(reportService.getReportsScoreAverage(userInfo.id(), request.toServiceRequest()));
     }
 
-    @GetMapping("/api/v1/reports/statistics-score")
-    public ApiResult<ReportsStatisticScoreResponse> getReportsStatisticScore(
-            @AuthenticationPrincipal JwtAuthentication userInfo,
+    @GetMapping("/api/v1/reports/statistics-all-score")
+    public ApiResult<ReportStatisticAllScoreResponse> getReportsStatisticAllScore(
             @Valid @ModelAttribute ReportsScoreRequest request) {
-        return success(reportService.getReportsStatisticScore(userInfo.id(), request.toServiceRequest()));
+        return success(reportService.getReportsStatisticAllScore(request.toServiceRequest()));
     }
 }
