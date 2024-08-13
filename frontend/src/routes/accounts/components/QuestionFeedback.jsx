@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroller";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import dummyData from "../dummyData.json";
-import SearchAndFilter from "./SearchAndFilter";
+
 import QuestionBox from "./QuestionBox";
 import QuestionDetail from "./QuestionDetail";
 
@@ -20,17 +20,15 @@ export default function QuestionFeedback() {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    // 여기에 검색 로직 추가
   };
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
-    // 여기에 필터 로직 추가
   };
 
   useEffect(() => {
     if (id) {
-      fetchDetailItem(id);
+      setDetailItem(localStorage.getItem("detailItem"));
     }
     loadMore(0);
   }, [id]);
@@ -48,23 +46,16 @@ export default function QuestionFeedback() {
 
   const loadMore = useCallback(
     async (currentPage) => {
-      // const size = 10;
-      // const start = currentPage * size;
-      // const end = start + size;
       let newItems = [];
       if (id) {
-        newItems = dummyData.response.interviewResultInfos;
-        // const newItems = await fetchQuestionFeedbacks(page, filter, searchTerm);
-        // setSelectedItem(await fetchQuestionFeedbackByQuestionId(id));
+        newItems = z;
       } else {
         newItems = dummyData.response.interviewResultInfos;
-        // const newItems = await fetchQuestionFeedbacks(page, filter, searchTerm);
       }
 
       if (newItems.length > 0) {
         setFeedbackItems((prevItems) => [...prevItems, ...newItems]);
         setPage(currentPage + 1);
-        // setHasMore(end < dummyData.response.interviewResultInfos.length);
         setHasMore(true);
       } else {
         setHasMore(false);
@@ -79,13 +70,6 @@ export default function QuestionFeedback() {
 
   return (
     <div className="p-4">
-      <SearchAndFilter
-        searchTerm={searchTerm}
-        onSearchChange={handleSearch}
-        filter={filter}
-        onFilterChange={handleFilterChange}
-      />
-
       {id && <QuestionDetail detailItem={detailItem} />}
 
       <InfiniteScroll

@@ -16,7 +16,7 @@ const emotionImages = {
   neutral,
   sad,
   suprised,
-  vomiting
+  vomiting,
 };
 
 export default function QuestionDetail({ detailItem }) {
@@ -53,17 +53,21 @@ export default function QuestionDetail({ detailItem }) {
             총점: {item.totalScore}
           </div>
           <div className="flex flex-wrap justify-end gap-2 mt-2">
-          {Object.entries(item.expressions).map(([key, value]) => {
+            {Object.entries(item.expressions).map(([key, value]) => {
               if (value !== undefined && emotionImages[key]) {
                 return (
                   <div key={key} className="flex items-center space-x-1">
-                    <img src={emotionImages[key]} alt={key} className="w-6 h-6" />
+                    <img
+                      src={emotionImages[key]}
+                      alt={key}
+                      className="w-6 h-6"
+                    />
                     {/* <span className="text-xs">{(value * 100).toFixed(1)}%</span> */}
                   </div>
-                  );
-                }
-                return null;
-              })}
+                );
+              }
+              return null;
+            })}
           </div>
         </div>
       </div>
