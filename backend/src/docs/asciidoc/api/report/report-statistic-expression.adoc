@@ -1,0 +1,12 @@
+[[report-statistic-expression]]
+=== 유저의 전체 레포트 Top3 표정 조회
+
+==== HTTP Request
+
+include::{snippets}/reports-statistic-expression/query-parameters.adoc[]
+include::{snippets}/reports-statistic-expression/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/reports-statistic-expression/http-response.adoc[]
+include::{snippets}/reports-statistic-expression/response-fields.adoc[]
