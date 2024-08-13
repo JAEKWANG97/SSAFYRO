@@ -58,16 +58,21 @@ export default function PT() {
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
-  const { userList, setUserList, userNameMap, setUserNameMap, userTurn, setUserTurn } = useRoomStore(
-    (state) => ({
-      userList: state.userList,
-      setUserList: state.setUserList,
-      userNameMap: state.userNameMap,
-      setUserNameMap: state.setUserNameMap,
-      userTurn: state.userTurn,
-      setUserTurn: state.setUserTurn,
-    })
-  );
+  const {
+    userList,
+    setUserList,
+    userNameMap,
+    setUserNameMap,
+    userTurn,
+    setUserTurn,
+  } = useRoomStore((state) => ({
+    userList: state.userList,
+    setUserList: state.setUserList,
+    userNameMap: state.userNameMap,
+    setUserNameMap: state.setUserNameMap,
+    userTurn: state.userTurn,
+    setUserTurn: state.setUserTurn,
+  }));
 
   const handleStartInterview = async () => {
     try {
@@ -93,7 +98,7 @@ export default function PT() {
         .then((response) => {
           const roomData = response.data.response;
           setUserList(roomData.userList);
-          setUserNameMap(roomData.userNameMap)
+          setUserNameMap(roomData.userNameMap);
           // console.log("updated userList: ", roomData.userList);
         })
         .catch((error) => {
@@ -114,7 +119,6 @@ export default function PT() {
   };
 
   const handleEndInterview = async () => {
-    
     try {
       // 면접 종료 요청 api 호출
       await axios.patch(
@@ -127,18 +131,19 @@ export default function PT() {
         }
       );
       console.log("Interview finished successfully");
-      
+
       // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
-      totalResult.forEach(result => {
-        axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", result, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("Token")}`,
-          }
-        })
-        .then((response) => {
-          // console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
-        })
-        .catch((error) => console.log(error))
+      totalResult.forEach((result) => {
+        axios
+          .post("https://i11c201.p.ssafy.io:8443/api/v1/reports", result, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("Token")}`,
+            },
+          })
+          .then((response) => {
+            // console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
+          })
+          .catch((error) => console.log(error));
       });
 
       // OpenVidu 연결 종료 및 페이지 이동
@@ -271,7 +276,7 @@ export default function PT() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("Token")}`
+        Authorization: `Bearer ${localStorage.getItem("Token")}`,
       },
       body: JSON.stringify({
         roomName: roomName,
@@ -460,41 +465,41 @@ export default function PT() {
     const tick = () => {
       setTenMinuteTimer((prevSeconds) => {
         if (prevSeconds > 0) {
-          timerRef.current = setTimeout(tick, 1000)
-          return prevSeconds - 1
+          timerRef.current = setTimeout(tick, 1000);
+          return prevSeconds - 1;
         } else {
-          clearTimeout(timerRef.current);  // 타이머 종료 후 클리어
-          return prevSeconds
+          clearTimeout(timerRef.current); // 타이머 종료 후 클리어
+          return prevSeconds;
         }
-      })
-    }
+      });
+    };
 
-    timerRef.current = setTimeout(tick, 1000)
+    timerRef.current = setTimeout(tick, 1000);
 
     // console.log(`${stage} 단계 타이머가 시작되었습니다.`);
   };
 
   const startTwoMinuteTimer = () => {
     if (twoMinuteTimerRef.current) {
-      clearTimeout(twoMinuteTimerRef.current) 
+      clearTimeout(twoMinuteTimerRef.current);
     }
 
-    setTwoMinuteTimer(30)
+    setTwoMinuteTimer(30);
 
     const tick = () => {
       setTwoMinuteTimer((prevSeconds) => {
         if (prevSeconds > 0) {
-          twoMinuteTimerRef.current = setTimeout(tick, 1000)
-          return prevSeconds - 1
+          twoMinuteTimerRef.current = setTimeout(tick, 1000);
+          return prevSeconds - 1;
         } else {
           // 2분 타이머 종료 시점 처리
-          handleTurnEnd()
-          return prevSeconds
+          handleTurnEnd();
+          return prevSeconds;
         }
-      })
-    }
+      });
+    };
     twoMinuteTimerRef.current = setTimeout(tick, 1000);
-  }
+  };
 
   useEffect(() => {
     if (interviewClient.current) {
@@ -571,7 +576,7 @@ export default function PT() {
         title: "면접 차례가 종료되었습니다.",
         text: "2분동안 상호평가가 진행됩니다.",
         icon: "info",
-        confirmButtonText: "확인"
+        confirmButtonText: "확인",
       }).then((result) => {
         if (result.isConfirmed) {
           setModalOpen();
@@ -581,23 +586,26 @@ export default function PT() {
   }, [tenMinuteTimer]);
 
   const handleTurnEnd = () => {
-    interviewTurnCounter.current += 1
+    interviewTurnCounter.current += 1;
 
     const nextTurn = (userTurn + 1) % userList.length;
-    setUserTurn(nextTurn)
+    setUserTurn(nextTurn);
 
-    if (interviewTurnCounter.current >= userList.length || userList.length === 1) {
+    if (
+      interviewTurnCounter.current >= userList.length ||
+      userList.length === 1
+    ) {
       Swal.fire({
         title: "면접이 종료되었습니다.",
         text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
-        icon: "success"
+        icon: "success",
       }).then((result) => {
         if (result.isConfirmed) {
-          handleEndInterview()
+          handleEndInterview();
         }
-      })
+      });
     }
-  }
+  };
 
   // // 타이머 시작 및 종료 처리
   // useEffect(() => {
@@ -639,7 +647,27 @@ export default function PT() {
   // 면접 평가 데이터
   const [totalResult, setTotalResult] = useState([]);
 
-  const renewTotalResult = function (newResult) {setTotalResult((prev) => [...prev, newResult])};
+  const renewTotalResult = function (newResult) {
+    setTotalResult((prev) => [...prev, newResult]);
+  };
+
+  // 대사 출력 스타일링
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    const fullText = `안녕하세요! ${userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요!`;
+    let index = 0;
+
+    const typingInterval = setInterval(() => {
+      setDisplayedText((prev) => prev + fullText[index]);
+      index += 1;
+      if (index === fullText.length) {
+        clearInterval(typingInterval);
+      }
+    }, 50); // 타이핑 속도 조절
+
+    return () => clearInterval(typingInterval); // 컴포넌트 언마운트 시 타이핑 멈춤
+  }, [userInfo.userName]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -736,8 +764,10 @@ export default function PT() {
               className="w-[50px] h-[50px] rounded-full bg-blue-500"
             />
             <p className="ml-4">
-              안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
-              드릴게요! <br />
+              {displayedText}
+              {/* 안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
+              드릴게요!  */}
+              <br />
               {questionCount < 2
                 ? questions[questionCount]
                 : "본인 질문이 종료되었습니다."}
@@ -746,17 +776,19 @@ export default function PT() {
         </div>
       </div>
       {/* survey 모달창 */}
-      { isModalOpen && <>
-        <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
-          <div className="w-3/5 max-w-lg bg-white border rounded-lg py-5 px-5 mx-auto">
-            <Survey
-              targetUser={userList[userTurn]}
-              setModalClose={setModalClose}
-              setTotalResult={renewTotalResult}
-             />
+      {isModalOpen && (
+        <>
+          <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
+            <div className="w-3/5 max-w-lg bg-white border rounded-lg py-5 px-5 mx-auto">
+              <Survey
+                targetUser={userList[userTurn]}
+                setModalClose={setModalClose}
+                setTotalResult={renewTotalResult}
+              />
+            </div>
           </div>
-        </div>
-      </>}
+        </>
+      )}
     </div>
   );
 }

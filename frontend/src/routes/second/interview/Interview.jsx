@@ -189,13 +189,23 @@ export default function Interview() {
                           <span
                             className={`${
                               room.type === "PERSONALITY"
-                                ? "bg-yellow-300 text-yellow-700"
-                                : "bg-violet-100 text-violet-600"
-                            } text-xs font-medium py-2 px-2 rounded-xl`}
+                                ? "bg-yellow-300 text-yellow-700 py-2 px-2 rounded-xl"
+                                : "bg-violet-100 text-violet-700 py-1 px-1 rounded-lg"
+                            } text-xs font-medium`}
                           >
-                            {/* {typeKorean[room.type]} */}
-                            {/* <img src={personalityIcon} alt="personalityIcon" className="w-4 h-4 "/> */}
-                            <img src={presentationIcon} alt="personalityIcon" className="w-6 h-6 "/>
+                            {room.type === "PERSONALITY" ? (
+                              <img
+                                src={personalityIcon}
+                                alt="personalityIcon"
+                                className="w-4 h-4"
+                              />
+                            ) : (
+                              <img
+                                src={presentationIcon}
+                                alt="presentationIcon"
+                                className="w-6 h-6"
+                              />
+                            )}
                           </span>
                           <span
                             className={`text-sm bg-${

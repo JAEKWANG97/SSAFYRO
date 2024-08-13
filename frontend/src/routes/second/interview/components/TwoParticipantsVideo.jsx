@@ -80,9 +80,10 @@ export default function TwoParticipantsVideo({
 
   const currentTurnId = userList[userTurn];
   const currentTurnUserName = userNameMap[currentTurnId];
-
-  // console.log("현재 면접 순서인 ID :", currentTurnId);
-  // console.log("현재 면접 순서인 사람 :", currentTurnUserName);
+  const nextTurnUserName = userNameMap[userList[userTurn + 1]]
+  console.log("현재 면접 순서인 ID :", currentTurnId);
+  console.log("현재 면접 순서인 사람 :", currentTurnUserName);
+  console.log(`다음 면접 순서인 사람 : ${nextTurnUserName ? nextTurnUserName : "마지막 차례"}`)
 
   const styles = `
   @keyframes lightBlueBlink {
