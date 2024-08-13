@@ -28,7 +28,7 @@ export default function TwoParticipantsVideo({
   userInfo,
   userList,
   userTurn,
-  userNameList,
+  userNameMap,
   setModalOpen,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
@@ -79,7 +79,8 @@ export default function TwoParticipantsVideo({
   };
 
   const currentTurnId = userList[userTurn];
-  const currentTurnUserName = userNameList[userTurn];
+  const currentTurnUserName = userNameMap[currentTurnId];
+
   // console.log("현재 면접 순서인 ID :", currentTurnId);
   // console.log("현재 면접 순서인 사람 :", currentTurnUserName);
 
@@ -117,15 +118,13 @@ export default function TwoParticipantsVideo({
               local={true}
               // 표정 상태 변경을 VideoComponent로 전달
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={participantName === currentTurnUserName}
+              isSurveyTarget={currentTurnUserName === participantName }
             />
           </div>
         )}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
-            // 변경해야 할곳 2
-            // onClick={handleStartSurvey}
             onClick={setModalOpen}
           >
             <svg
@@ -225,7 +224,7 @@ export default function TwoParticipantsVideo({
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={remoteTrack.participantIdentity === currentTurnUserName}
+                  isSurveyTarget={currentTurnUserName === remoteTrack.participantIdentity}
                 />
               ) : (
                 <AudioComponent

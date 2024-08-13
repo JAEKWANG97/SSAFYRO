@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
-import whiteBoardIcon from "../../../../public/main/whiteBoardIcon2.png";
+import personalityIcon from "../../../../public/main/personalityIcon2.png";
+import presentationIcon from "../../../../public/main/presentationIcon.png";
 import axios from "axios";
 import "./styles.css";
 import Button from "../../../components/Button.jsx";
@@ -186,13 +187,15 @@ export default function Interview() {
                       <div className="p-6 flex flex-col flex-grow justify-start">
                         <div className="flex justify-between items-center mb-2">
                           <span
-                            className={`border ${
+                            className={`${
                               room.type === "PERSONALITY"
-                                ? "bg-yellow-300 text-white border-yellow-400"
-                                : "bg-violet-100 text-violet-800 border-violet-400"
-                            } text-xs font-medium py-1 px-2 rounded`}
+                                ? "bg-yellow-300 text-yellow-700"
+                                : "bg-violet-100 text-violet-600"
+                            } text-xs font-medium py-2 px-2 rounded-xl`}
                           >
-                            {typeKorean[room.type]}
+                            {/* {typeKorean[room.type]} */}
+                            {/* <img src={personalityIcon} alt="personalityIcon" className="w-4 h-4 "/> */}
+                            <img src={presentationIcon} alt="personalityIcon" className="w-6 h-6 "/>
                           </span>
                           <span
                             className={`text-sm bg-${

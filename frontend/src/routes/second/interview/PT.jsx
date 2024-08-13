@@ -58,12 +58,12 @@ export default function PT() {
   const timerRef = useRef();
   const twoMinuteTimerRef = useRef();
 
-  const { userList, setUserList, userNameList, setUserNameList, userTurn, setUserTurn } = useRoomStore(
+  const { userList, setUserList, userNameMap, setUserNameMap, userTurn, setUserTurn } = useRoomStore(
     (state) => ({
       userList: state.userList,
       setUserList: state.setUserList,
-      userNameList: state.userNameList,
-      setUserNameList: state.setUserNameList,
+      userNameMap: state.userNameMap,
+      setUserNameMap: state.setUserNameMap,
       userTurn: state.userTurn,
       setUserTurn: state.setUserTurn,
     })
@@ -93,7 +93,7 @@ export default function PT() {
         .then((response) => {
           const roomData = response.data.response;
           setUserList(roomData.userList);
-          setUserNameList(roomData.userNameList)
+          setUserNameMap(roomData.userNameMap)
           // console.log("updated userList: ", roomData.userList);
         })
         .catch((error) => {
@@ -136,7 +136,7 @@ export default function PT() {
           }
         })
         .then((response) => {
-          console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
+          // console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
         })
         .catch((error) => console.log(error))
       });
@@ -154,14 +154,14 @@ export default function PT() {
   // const userList = useRoomStore((state) => state.userList);
   // const userTurn = useRoomStore((state) => state.userTurn);
 
-  useEffect(() => {
-    // console.log("Current userList: ", userList);
-    // console.log("Current userNameList: ", userNameList);
-    // console.log("Current userTurn: ", userTurn);
-    // console.log("Target User: ", userList[userTurn])
-    // console.log("Current User: ", userInfo.userId)
-    // console.log("IsSameUser: ", Number(userList[userTurn]) === Number(userInfo.userId))
-  }, [userList, userTurn, userNameList]);
+  // useEffect(() => {
+  //   console.log("Current userList: ", userList);
+  //   console.log("Current userNameList: ", userNameList);
+  //   console.log("Current userTurn: ", userTurn);
+  //   console.log("Target User: ", userList[userTurn])
+  //   console.log("Current User: ", userInfo.userId)
+  //   console.log("IsSameUser: ", Number(userList[userTurn]) === Number(userInfo.userId))
+  // }, [userList, userTurn, userNameMap]);
 
   const handleStartSurvey = () => {
     navigate(`/second/interview/room/${roomid}/pt/survey`, {
@@ -698,7 +698,7 @@ export default function PT() {
                   userInfo={userInfo}
                   userList={userList}
                   userTurn={userTurn}
-                  userNameList={userNameList}
+                  userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                 />
               );
@@ -721,7 +721,7 @@ export default function PT() {
                   userInfo={userInfo}
                   userList={userList}
                   userTurn={userTurn}
-                  userNameList={userNameList}
+                  userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                 />
               );
