@@ -13,6 +13,7 @@ export default function PersonalityFeedback() {
   const info = location.state?.info;  // 면접정보(레포트ID, 면접종류, 총점, 발음점수, 면접일시)
   const [count, setCount] = useState(0)
   const [reportDetail, setReportDetail] = useState([])
+  const Token = localStorage.getItem('Token')
 
   useEffect(() => {
     axios.
@@ -33,30 +34,6 @@ export default function PersonalityFeedback() {
     window.scrollTo(0, 0);
   }, []);
 
-  //roomId 기준으로 면접방 정보 가져와서 렌더링
-  // const roomContent = 
-  //   {
-  //     roomId : 1,
-  //     title : '전공자 인성 면접',
-  //     content : '열심히 하실 분 구해요',
-  //     create : '2024-08-11',
-  //     count: 5
-  //   }
-  
-
-  // 해당 면접에 대한 [질문, 답변, 피드백, 표정(표정과 %), 발음점수] 얻어와서 렌더링
-  // const allContent = [
-  //   {
-  //     question: '1분 자기소개를 해주세요.',
-  //     answer: '안녕하세요, 저는 홍길동입니다. 저는 성실함과 책임감을 바탕으로 다양한 도전을 통해 성장해 왔습니다. 대학에서는 경영학을 전공하며 팀 프로젝트와 동아리 활동에서 리더 역할을 맡아 팀원들과 협력하여 목표를 달성하는 경험을 쌓았습니다. 특히, 지난 인턴십에서는 프로젝트 관리와 고객 대응 업무를 통해 문제 해결 능력을 키웠고, 이를 통해 팀의 성과를 높이는 데 기여했습니다. 앞으로도 제 강점인 분석력과 문제 해결 능력을 바탕으로 회사의 성장에 기여하고 싶습니다. 감사합니다.',
-  //     feedback: '홍길동님의 자기소개는 매우 깔끔하고 효과적으로 자신의 강점과 경험을 잘 전달하고 있습니다. 그러나 더욱 강력한 인상을 남기기 위해 몇 가지 개선할 수 있는 부분이 있습니다. 아래는 제안된 피드백입니다.',
-  //     expression: [
-  //       { img: happyImg, percentage: 60 },
-  //       { img: neutralImg, percentage: 30 },
-  //       { img: surprisedImg, percentage: 10 }
-  //     ],
-  //     pronscore: 80
-  //   }]
 
   return (
     <>
