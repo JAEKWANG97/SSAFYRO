@@ -18,8 +18,9 @@ import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
@@ -254,9 +255,9 @@ class ReportServiceTest extends IntegrationTestSupport {
         interviewResultRepository.saveAll(List.of(interviewResult1, interviewResult2, interviewResult3));
 
         //when
-        ReportsAverageResponse result1 = reportService.getReportsScoreAverage(user.getId(),
+        ReportsUserAverageResponse result1 = reportService.getReportsUserAverage(user.getId(),
                 new ReportsScoreServiceRequest(PERSONALITY));
-        ReportsAverageResponse result2 = reportService.getReportsScoreAverage(user.getId(),
+        ReportsUserAverageResponse result2 = reportService.getReportsUserAverage(user.getId(),
                 new ReportsScoreServiceRequest(PRESENTATION));
 
         //then
@@ -291,14 +292,42 @@ class ReportServiceTest extends IntegrationTestSupport {
         //given
         User user = userRepository.save(createUser());
 
-        //when
-
-        //then
+        //when //then
         assertThatThrownBy(
-                () -> reportService.getReportsScoreAverage(user.getId(), new ReportsScoreServiceRequest(PERSONALITY))
+                () -> reportService.getReportsUserAverage(user.getId(), new ReportsScoreServiceRequest(PERSONALITY))
         )
                 .isInstanceOf(ReportNotFoundException.class)
                 .hasMessage("Report not found");
+    }
+
+    @DisplayName("모든 사용자의 레포트 평균 총 점수 및 발음 점수를 구한다.")
+    @Test
+    void getReportsStatisticUsersScore() {
+        //given
+        User user1 = userRepository.save(createUser());
+        User user2 = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PRESENTATION, 3);
+        roomRepository.saveAll(List.of(room1, room2, room3));
+
+        Report report1 = createReportPersonal(user1, 90, room1);
+        Report report2 = createReportPersonal(user2, 100, room2);
+        Report report3 = createReportPresentation(user1, 80, room3, null);
+        reportRepository.saveAll(List.of(report1, report2, report3));
+
+        //when
+        ReportsStatisticUsersScoreResponse response = reportService.getReportsStatisticUsersScore(
+                new ReportsScoreServiceRequest(PERSONALITY));
+
+        //then
+        assertThat(response).isNotNull()
+                .extracting("allTotalScore", "allPronunciationScore")
+                .containsExactly(
+                        (report1.getTotalScore() + report2.getTotalScore()) / 2.0,
+                        (report1.getPronunciationScore() + report2.getPronunciationScore()) / 2.0
+                );
     }
 
     private User createUser() {

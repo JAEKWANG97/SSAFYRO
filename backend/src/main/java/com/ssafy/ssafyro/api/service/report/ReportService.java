@@ -6,9 +6,9 @@ import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportStatisticAllScoreResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
 import com.ssafy.ssafyro.domain.interview.InterviewInfos;
@@ -97,14 +97,16 @@ public class ReportService {
         return ReportCreateResponse.of(report);
     }
 
-    public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsScoreServiceRequest request) {
+    public ReportsUserAverageResponse getReportsUserAverage(Long userId, ReportsScoreServiceRequest request) {
         return reportRepository.findTotalAvgBy(request.roomType(), getUser(userId))
                 .orElseThrow(() -> new ReportNotFoundException("Report not found"))
                 .toResponse(request.roomType());
     }
 
-    public ReportStatisticAllScoreResponse getReportsStatisticAllScore(ReportsScoreServiceRequest request) {
-        return null;
+    public ReportsStatisticUsersScoreResponse getReportsStatisticUsersScore(ReportsScoreServiceRequest request) {
+        return reportRepository.findAllAvgScoreBy(request.roomType())
+                .orElseThrow(() -> new ReportNotFoundException("Report not found"))
+                .toResponse(request.roomType());
     }
 
     private User getUser(Long userId) {

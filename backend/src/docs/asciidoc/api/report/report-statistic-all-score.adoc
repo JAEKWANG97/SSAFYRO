@@ -1,5 +1,5 @@
 [[report-statistic-all-score]]
-=== 레포트 총점, 발음 통계 점수
+=== 레포트 모든 유저 총점, 발음 통계 점수
 
 ==== HTTP Request
 

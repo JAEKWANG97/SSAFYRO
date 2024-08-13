@@ -8,9 +8,9 @@ import com.ssafy.ssafyro.api.controller.report.request.ReportsScoreRequest;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportStatisticAllScoreResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.security.JwtAuthentication;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -49,14 +49,15 @@ public class ReportController {
     }
 
     @GetMapping("/api/v1/reports/score-average")
-    public ApiResult<ReportsAverageResponse> getReportsAverage(@AuthenticationPrincipal JwtAuthentication userInfo,
-                                                               @Valid @ModelAttribute ReportsScoreRequest request) {
-        return success(reportService.getReportsScoreAverage(userInfo.id(), request.toServiceRequest()));
+    public ApiResult<ReportsUserAverageResponse> getReportsUserAverage(
+            @AuthenticationPrincipal JwtAuthentication userInfo,
+            @Valid @ModelAttribute ReportsScoreRequest request) {
+        return success(reportService.getReportsUserAverage(userInfo.id(), request.toServiceRequest()));
     }
 
     @GetMapping("/api/v1/reports/statistics-all-score")
-    public ApiResult<ReportStatisticAllScoreResponse> getReportsStatisticAllScore(
+    public ApiResult<ReportsStatisticUsersScoreResponse> getReportsStatisticUsersScore(
             @Valid @ModelAttribute ReportsScoreRequest request) {
-        return success(reportService.getReportsStatisticAllScore(request.toServiceRequest()));
+        return success(reportService.getReportsStatisticUsersScore(request.toServiceRequest()));
     }
 }

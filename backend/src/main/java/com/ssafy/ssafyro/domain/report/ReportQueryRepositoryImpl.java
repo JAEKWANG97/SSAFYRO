@@ -5,14 +5,14 @@ import static com.ssafy.ssafyro.domain.report.QReport.report;
 import static com.ssafy.ssafyro.domain.room.entity.QRoom.room;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.ssafyro.domain.report.dto.QReportAllScoreDto;
+import com.ssafy.ssafyro.domain.report.dto.QReportAllScoreAverageDto;
 import com.ssafy.ssafyro.domain.report.dto.QReportExpressionDto;
-import com.ssafy.ssafyro.domain.report.dto.QReportScoreAverageDto;
 import com.ssafy.ssafyro.domain.report.dto.QReportScoreDto;
-import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreDto;
+import com.ssafy.ssafyro.domain.report.dto.QReportUserAverageDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportAllScoreAverageDto;
 import com.ssafy.ssafyro.domain.report.dto.ReportExpressionDto;
-import com.ssafy.ssafyro.domain.report.dto.ReportScoreAverageDto;
 import com.ssafy.ssafyro.domain.report.dto.ReportScoreDto;
+import com.ssafy.ssafyro.domain.report.dto.ReportUserAverageDto;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.user.User;
 import java.util.List;
@@ -48,11 +48,11 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
     }
 
     @Override
-    public Optional<ReportScoreAverageDto> findTotalAvgBy(RoomType type, User user) {
+    public Optional<ReportUserAverageDto> findTotalAvgBy(RoomType type, User user) {
         return Optional.ofNullable(
                 jpaQueryFactory
                         .select(
-                                new QReportScoreAverageDto(
+                                new QReportUserAverageDto(
                                         report.totalScore.avg(),
                                         report.pronunciationScore.avg(),
                                         interviewResult.happy.avg(),
@@ -77,12 +77,11 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
     }
 
     @Override
-    public Optional<ReportAllScoreDto> findAllAvgScoreBy(RoomType type) {
+    public Optional<ReportAllScoreAverageDto> findAllAvgScoreBy(RoomType type) {
         return Optional.ofNullable(
                 jpaQueryFactory
                         .select(
-                                new QReportAllScoreDto(
-                                        report.room.title,
+                                new QReportAllScoreAverageDto(
                                         report.totalScore.avg(),
                                         report.pronunciationScore.avg()
                                 )
@@ -94,7 +93,6 @@ public class ReportQueryRepositoryImpl implements ReportQueryRepository {
                         )
                         .fetchOne()
         );
-
     }
 
     @Override

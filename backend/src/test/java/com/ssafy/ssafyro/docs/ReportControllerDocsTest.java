@@ -28,9 +28,9 @@ import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportStatisticAllScoreResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
@@ -354,7 +354,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @Test
     @WithMockJwtAuthentication
     void getReportsAverage() throws Exception {
-        ReportsAverageResponse response = new ReportsAverageResponse(
+        ReportsUserAverageResponse response = new ReportsUserAverageResponse(
                 PERSONALITY,
                 93,
                 80,
@@ -365,7 +365,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 )
         );
 
-        given(reportService.getReportsScoreAverage(any(Long.class), any(ReportsScoreServiceRequest.class)))
+        given(reportService.getReportsUserAverage(any(Long.class), any(ReportsScoreServiceRequest.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -418,13 +418,13 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     @Test
     @WithMockJwtAuthentication
     void getReportsStatisticScore() throws Exception {
-        ReportStatisticAllScoreResponse response = new ReportStatisticAllScoreResponse(
+        ReportsStatisticUsersScoreResponse response = new ReportsStatisticUsersScoreResponse(
                 PERSONALITY,
                 90,
                 4
         );
 
-        given(reportService.getReportsStatisticAllScore(any(ReportsScoreServiceRequest.class)))
+        given(reportService.getReportsStatisticUsersScore(any(ReportsScoreServiceRequest.class)))
                 .willReturn(response);
 
         mockMvc.perform(
