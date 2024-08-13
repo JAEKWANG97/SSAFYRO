@@ -444,11 +444,11 @@ export default function PT() {
   const startTimer = (stage) => {
     // 10분 타이머가 끝나면 2분 타이머로 전환되도록 설계
     if (timerRef.current) {
-      clearInterval(timerRef.current);
+      clearTimeout(timerRef.current);
     }
 
     if (twoMinuteTimerRef.current) {
-      clearInterval(twoMinuteTimerRef.current);
+      clearTimeout(twoMinuteTimerRef.current);
     }
 
     if (stage === "FIRST") {
@@ -457,12 +457,44 @@ export default function PT() {
       setTenMinuteTimer(60);
     }
 
-    timerRef.current = setInterval(() => {
-      setTenMinuteTimer((prevSeconds) => prevSeconds - 1);
-    }, 1000);
+    const tick = () => {
+      setTenMinuteTimer((prevSeconds) => {
+        if (prevSeconds > 0) {
+          timerRef.current = setTimeout(tick, 1000)
+          return prevSeconds - 1
+        } else {
+          clearTimeout(timerRef.current);  // 타이머 종료 후 클리어
+          return prevSeconds
+        }
+      })
+    }
+
+    timerRef.current = setTimeout(tick, 1000)
 
     // console.log(`${stage} 단계 타이머가 시작되었습니다.`);
   };
+
+  const startTwoMinuteTimer = () => {
+    if (twoMinuteTimerRef.current) {
+      clearTimeout(twoMinuteTimerRef.current) 
+    }
+
+    setTwoMinuteTimer(30)
+
+    const tick = () => {
+      setTwoMinuteTimer((prevSeconds) => {
+        if (prevSeconds > 0) {
+          twoMinuteTimerRef.current = setTimeout(tick, 1000)
+          return prevSeconds - 1
+        } else {
+          // 2분 타이머 종료 시점 처리
+          handleTurnEnd()
+          return prevSeconds
+        }
+      })
+    }
+    twoMinuteTimerRef.current = setTimeout(tick, 1000);
+  }
 
   useEffect(() => {
     if (interviewClient.current) {
@@ -506,7 +538,7 @@ export default function PT() {
 
         // 타이머가 중복 설정되지 않도록 clearInterval
         if (timerRef.current) {
-          clearInterval(timerRef.current);
+          clearTimeout(timerRef.current);
         }
 
         // // 10분 타이머 시작
@@ -526,67 +558,46 @@ export default function PT() {
       if (interviewClient.current) {
         interviewClient.current.deactivate();
       }
-      clearInterval(timerRef.current);
-      clearInterval(twoMinuteTimerRef.current);
+      clearTimeout(timerRef.current);
+      clearTimeout(twoMinuteTimerRef.current);
     };
   }, [roomid]);
 
   useEffect(() => {
-    if (tenMinuteTimer <= 0) {
-      clearInterval(timerRef.current); // 10분 타이머가 끝나면 정지
+    if (tenMinuteTimer === 0) {
+      clearTimeout(timerRef.current); // 10분 타이머가 끝나면 정지
 
       Swal.fire({
         title: "면접 차례가 종료되었습니다.",
         text: "2분동안 상호평가가 진행됩니다.",
         icon: "info",
+        confirmButtonText: "확인"
       }).then((result) => {
         if (result.isConfirmed) {
           setModalOpen();
         }
       });
-
-      // 2분 타이머 시작
-      twoMinuteTimerRef.current = setInterval(() => {
-        setTwoMinuteTimer((prevSeconds) => prevSeconds - 1);
-      }, 1000);
     }
   }, [tenMinuteTimer]);
 
-  useEffect(() => {
-    if (twoMinuteTimer <= 0) {
-      clearInterval(twoMinuteTimerRef.current);
-      // 면접 턴 카운터 증가
-      interviewTurnCounter.current += 1;
+  const handleTurnEnd = () => {
+    interviewTurnCounter.current += 1
 
-      // 다음 사용자를 위해 userTurn을 증가시켜 다음 면접자의 Survey를 설정
-      const nextTurn = (userTurn + 1) % userList.length;
-      setUserTurn(nextTurn);
+    const nextTurn = (userTurn + 1) % userList.length;
+    setUserTurn(nextTurn)
 
-      // 면접을 종료하거나 다음 면접자 준비
-      if (interviewTurnCounter.current >= userList.length) {
-        Swal.fire({
-          title: "면접이 종료되었습니다.",
-          text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
-          icon: "success",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleEndInterview();
-          }
-        })
-      }
-      else if (userList.length === 1) {
-        Swal.fire({
-          title: "면접이 종료되었습니다.",
-          text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
-          icon: "success",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleEndInterview();
-          }
-        })
-      }
+    if (interviewTurnCounter.current >= userList.length || userList.length === 1) {
+      Swal.fire({
+        title: "면접이 종료되었습니다.",
+        text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
+        icon: "success"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleEndInterview()
+        }
+      })
     }
-  }, [twoMinuteTimer]);
+  }
 
   // // 타이머 시작 및 종료 처리
   // useEffect(() => {
@@ -618,6 +629,7 @@ export default function PT() {
 
   const setModalOpen = function () {
     setIsModalOpen(true);
+    startTwoMinuteTimer(); // 모달이 열릴 때 타이머 재개
   };
 
   const setModalClose = function () {
@@ -736,7 +748,7 @@ export default function PT() {
       {/* survey 모달창 */}
       { isModalOpen && <>
         <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
-          <div className="w-4/5 bg-white border rounded-lg py-5 px-5">
+          <div className="w-3/5 max-w-lg bg-white border rounded-lg py-5 px-5 mx-auto">
             <Survey
               targetUser={userList[userTurn]}
               setModalClose={setModalClose}
