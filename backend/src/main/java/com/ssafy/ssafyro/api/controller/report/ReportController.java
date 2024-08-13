@@ -33,7 +33,7 @@ public class ReportController {
 
     @GetMapping("/api/v1/reports")
     public ApiResult<ReportsResponse> getReports(@RequestParam @NotNull Long userId,
-                                                 @PageableDefault(page = 1) Pageable pageable) {
+                                                 @PageableDefault Pageable pageable) {
         return success(reportService.getReports(userId, pageable));
     }
 
