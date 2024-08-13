@@ -34,7 +34,12 @@ export default function Interview() {
     };
 
     const response = await axios
-      .get(APIURL + "rooms", { params: filter })
+      .get(APIURL + "rooms", {
+        params: filter,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      })
       .then((response) => {
         setFilteredRoomList(response.data.response.rooms);
       })
@@ -86,6 +91,9 @@ export default function Interview() {
       .get(APIURL + "rooms/fast-enter", {
         params: {
           type: type,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
         },
       })
       .then((response) => {
@@ -139,7 +147,7 @@ export default function Interview() {
                   PT면접 빠른 시작
                 </button>
                 <button
-                  className="bg-emerald-300 shadow rounded p-4 flex items-center justify-center text-white hover:bg-emerald-400 hover:text-white"
+                  className="shadow rounded p-4 flex items-center justify-center text-white bg-yellow-300 hover:bg-yellow-400"
                   onClick={() => handleQuickStart("PERSONALITY")}
                 >
                   인성면접 빠른 시작
@@ -180,7 +188,7 @@ export default function Interview() {
                           <span
                             className={`border ${
                               room.type === "PERSONALITY"
-                                ? "bg-emerald-100 text-emerald-800 border-emerald-400"
+                                ? "bg-yellow-300 text-white border-yellow-400"
                                 : "bg-violet-100 text-violet-800 border-violet-400"
                             } text-xs font-medium py-1 px-2 rounded`}
                           >

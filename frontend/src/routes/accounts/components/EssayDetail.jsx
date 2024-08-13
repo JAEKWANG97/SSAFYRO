@@ -20,7 +20,9 @@ export default function EssayDetail() {
 
     // Token 값을 URL의 파라미터로 전달
     axios
-      .get(`${APIURL}/${Token}`)
+      .get(`${APIURL}/${Token}`, {
+        headers: { Authorization: `Bearer ${Token}`}
+      })
       .then((res) => {
         console.log(res.data);
         // setEssayId(res.data) // 에세이 질문 id 저장

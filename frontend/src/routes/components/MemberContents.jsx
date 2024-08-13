@@ -1,11 +1,22 @@
 import ServiceContents from "./ServiceContents";
 import maincharacter from './../../../public/main/main_characters.png'
+import UserImg from './../../../public/main/drawing1.jpg';
 import useAuthStore from "../../stores/AuthStore";
+import { useNavigate } from "react-router-dom";
 
 export default function MemberContents() {
 
+  const navigate = useNavigate()
   const userInfo = useAuthStore((state) => state.userInfo);
   console.log(userInfo.userName)
+
+  const handleProfileClick = () => {
+    if (userInfo && userInfo.userId) {
+      navigate('/account/profile', { state: { userId: userInfo.userId } });
+    } else {
+      console.error("User info가 없습니다.");
+    }
+  };
 
   return (
     <div className="flex justify-center">
@@ -46,7 +57,7 @@ export default function MemberContents() {
             <div className="flex items-center justify-center w-full mt-8 mb-6">
               <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200">
                 <img
-                  src="/public/main/drawing.jpg"
+                  src={UserImg}
                   alt="Main Character"
                   className="w-full h-full object-cover"
                 />
@@ -62,7 +73,7 @@ export default function MemberContents() {
               </p>
             </div>
             <div className="w-full flex justify-center mt-4">
-              <button className="mx-4 text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-neutral-500/25 border-2 border-white hover:bg-gradient-to-r hover:from-purple-400/50 hover:to-pink-400/50">
+              <button className="mx-4 text-white font-bold px-4 py-3 rounded-xl w-[300px] bg-neutral-500/25 border-2 border-white hover:bg-gradient-to-r hover:from-purple-400/50 hover:to-pink-400/50" onClick={handleProfileClick}>
                 마이페이지 바로가기
               </button>
               {/* <button className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 font-bold px-4 py-3 rounded-xl w-[300px] bg-[#2090FF] hover:bg-[#1A78D6]">

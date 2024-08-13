@@ -34,8 +34,12 @@ export default function Button({ text, type, onClick, isActive }) {
                                 : type === "MAJOR"
                                   ? "bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded" 
                                   : type === "NONMAJOR"
-                                    ? "bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded" 
-                                      : "text-white";
+                                    ? "bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded"
+                                      : type === "MAKEROOM"
+                                        ? "text-blue-800 bg-blue-100 hover:bg-blue-400 font-semibold rounded-lg mt-3 px-5 py-2.5 focus:outline-none dark:focus:ring-blue-800 h-[45px]"
+                                          : type === "CANCELROOM"
+                                            ? 'ml-auto text-white bg-gray-600 hover:bg-gray-800 font-medium rounded-lg text-sm mt-3 px-5 py-2.5 me-2 mb-2 focus:outline-none h-[45px]'
+                                              : "text-white";
 
   return (
     <button
