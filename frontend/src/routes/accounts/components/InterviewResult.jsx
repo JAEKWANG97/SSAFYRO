@@ -14,9 +14,11 @@ export default function InterviewResult() {
   
   const [personTotalScore, setPersonTotalScore] = useState(93); // 인성 전체 점수
   const [personPronScore, setPersonPronScore] = useState(80)    // 인성 발음 점수 
+  const [personExpression, setpersonExpression] = useState({})    // 인성 발음 점수 
 
   const [ptTotalScore, setPtTotalScore] = useState(93); // pt 전체 점수
   const [ptPronScore, setPtPronScore] = useState(80)    // pt 발음 점수 
+  const [personExpression, setpersonExpression] = useState({})    // 인성 발음 점수 
 
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
@@ -46,19 +48,23 @@ export default function InterviewResult() {
 
             if (roomType === 'PERSONALITY') {
               setPersonTotalScore(data.totalScore);
+              setPersonPronScore(data.pronunciationScore)
+              setpersonExpression(data.expressions)
+
             } else if (roomType === 'PRESENTATION') {
               setPtTotalScore(data.totalScore);
+              setPtPronScore(data.pronunciationScore)
+
             }
           });
         })
         .catch((error) => {
-          console.error("Error fetching data:", error);
+          console.log(error);
         });
     };
 
     fetchData();
   }, [APIURL, Token]);
-
 
   const onHandlePT = () => {
     if (isPt) {
