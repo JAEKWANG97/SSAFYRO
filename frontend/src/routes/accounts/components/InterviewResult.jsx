@@ -1,17 +1,64 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from "../../../stores/AuthStore";
 import happyImg from './../../../../public/profile/happy.png';
 import neutralImg from './../../../../public/profile/neutral.png';
 import sadImg from './../../../../public/profile/sad.png';
+import axios from axios;
 
 export default function InterviewResult() {
 
   const nav = useNavigate();
   const isPerson = useAuthStore((state) => state.isPerson);
   const isPt = useAuthStore((state) => state.isPt);
-  const [totalScore, settotalScore] = useState(93); // 전체 점수
-  const [pronScore, setpronScore] = useState(80)    // 발음 점수 
+  
+  const [personTotalScore, setPersonTotalScore] = useState(93); // 인성 전체 점수
+  const [personPronScore, setPersonPronScore] = useState(80)    // 인성 발음 점수 
+
+  const [ptTotalScore, setPtTotalScore] = useState(93); // pt 전체 점수
+  const [ptPronScore, setPtPronScore] = useState(80)    // pt 발음 점수 
+
+
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
+  const Token = localStorage.getItem("Token");
+
+
+
+
+  // total score 불러오기
+
+  useEffect(() => {
+    const fetchData = () => {
+      const roomTypes = ['PERSONALITY', 'PRESENTATION'];
+
+      const requests = roomTypes.map((type) =>
+        axios.get(`${APIURL}/score-average`, {
+          params: { roomType: type },
+          headers: { Authorization: `Bearer ${Token}` },
+        })
+      );
+
+      Promise.all(requests)
+        .then((responses) => {
+          responses.forEach((response, index) => {
+            const roomType = roomTypes[index];
+            const data = response.data.response;
+
+            if (roomType === 'PERSONALITY') {
+              setPersonTotalScore(data.totalScore);
+            } else if (roomType === 'PRESENTATION') {
+              setPtTotalScore(data.totalScore);
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    fetchData();
+  }, [APIURL, Token]);
+
 
   const onHandlePT = () => {
     if (isPt) {
