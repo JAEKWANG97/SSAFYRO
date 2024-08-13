@@ -6,4 +6,8 @@ import java.util.Map;
 
 public record ReportsStatisticExpressionResponse(RoomType roomType,
                                                  Map<Expression, Double> expressions) {
+
+    public static ReportsStatisticExpressionResponse of(RoomType roomType, Map<Expression, Double> expressions) {
+        return new ReportsStatisticExpressionResponse(roomType, expressions);
+    }
 }

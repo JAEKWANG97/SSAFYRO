@@ -121,7 +121,12 @@ public class ReportService {
 
     public ReportsStatisticExpressionResponse getReportsStatisticExpression(Long userId,
                                                                             ReportsScoreServiceRequest request) {
-        return null;
+        return ReportsStatisticExpressionResponse.of(
+                request.roomType(),
+                reportRepository.findAvgExpressionBy(request.roomType(), getUser(userId))
+                        .orElseThrow(() -> new InterviewResultNotFoundException("InterviewResult not found"))
+                        .getTop3Expression()
+        );
     }
 
     private User getUser(Long userId) {
