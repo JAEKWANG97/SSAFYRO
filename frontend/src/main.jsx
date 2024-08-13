@@ -15,6 +15,7 @@ import Kakao from "./routes/accounts/components/Kakao.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
 import PersonalityFeedback from "./routes/accounts/components/PersonalityFeedback.jsx";
 import PtFeedback from "./routes/accounts/components/PtFeedback.jsx";
+import BestWorstQuestion from "./routes/accounts/components/BestWorstQuestion.jsx";
 import QuestionFeedback from "./routes/accounts/components/QuestionFeedback.jsx";
 import Essay from "./routes/first/Essay.jsx";
 import Test from "./routes/first/Test.jsx";
@@ -112,6 +113,7 @@ const router = createBrowserRouter([
               },
               { path: "pt_feedback", element: <PtFeedback /> },
               { path: "question_feedback", element: <QuestionFeedback /> },
+              { path: "bestworst_feedback", element: <BestWorstQuestion /> },
             ],
           },
         ],
