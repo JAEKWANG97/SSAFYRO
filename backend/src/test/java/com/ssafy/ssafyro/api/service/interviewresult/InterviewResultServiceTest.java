@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 
 class InterviewResultServiceTest extends IntegrationTestSupport {
 
@@ -95,7 +96,8 @@ class InterviewResultServiceTest extends IntegrationTestSupport {
 
         //when
         InterviewResultsResponse recommendInterviewResults = interviewResultService.getRecommendInterviewResultsFor(
-                user.getId()
+                user.getId(),
+                Pageable.ofSize(5)
         );
 
         //then

@@ -1,0 +1,12 @@
+[[get-interview-result]]
+=== 인터뷰 결과 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/get-interview-result/query-parameters.adoc[]
+include::{snippets}/get-interview-result/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-interview-result/http-response.adoc[]
+include::{snippets}/get-interview-result/response-fields.adoc[]

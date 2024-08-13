@@ -1,5 +1,9 @@
 package com.ssafy.ssafyro.docs;
 
+import static com.ssafy.ssafyro.api.service.report.Expression.DISGUST;
+import static com.ssafy.ssafyro.api.service.report.Expression.HAPPY;
+import static com.ssafy.ssafyro.api.service.report.Expression.SAD;
+import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -20,11 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
 import com.ssafy.ssafyro.api.service.report.Expression;
-import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
@@ -32,33 +37,30 @@ import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
 import com.ssafy.ssafyro.domain.report.Report;
 import com.ssafy.ssafyro.domain.room.RoomType;
 import com.ssafy.ssafyro.domain.room.entity.Room;
+import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class ReportControllerDocsTest extends RestDocsSupport {
 
-    @MockBean
-    private ReportService reportService;
-
-    private final Report report = mock(Report.class);
-    private final PresentationInterviewReport presentationInterviewReport = mock(PresentationInterviewReport.class);
     private final Room room = mock(Room.class);
+    private final Report report = mock(Report.class);
     private final InterviewResult interviewResult = mock(InterviewResult.class);
+    private final PresentationInterviewReport presentationInterviewReport = mock(PresentationInterviewReport.class);
 
     @DisplayName("면접 레포트 목록 조회 API")
     @Test
     void showReports() throws Exception {
         given(room.getId()).willReturn("roomId");
         given(room.getTitle()).willReturn("title");
-        given(room.getType()).willReturn(RoomType.PERSONALITY);
+        given(room.getType()).willReturn(PERSONALITY);
         given(room.getCreatedDate()).willReturn(LocalDateTime.now());
 
         given(report.getId()).willReturn(1L);
@@ -119,7 +121,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     void getReportPersonal() throws Exception {
         given(room.getId()).willReturn("roomId");
         given(room.getTitle()).willReturn("title");
-        given(room.getType()).willReturn(RoomType.PERSONALITY);
+        given(room.getType()).willReturn(PERSONALITY);
         given(room.getCreatedDate()).willReturn(LocalDateTime.now());
 
         given(report.getId()).willReturn(1L);
@@ -134,9 +136,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         given(interviewResult.getPronunciationScore()).willReturn(3);
         given(interviewResult.getTop3Expression()).willReturn(
                 Map.of(
-                        Expression.HAPPY, 0.8,
-                        Expression.SAD, 0.15,
-                        Expression.DISGUST, 0.05
+                        HAPPY, 0.8,
+                        SAD, 0.15,
+                        DISGUST, 0.05
                 )
         );
 
@@ -222,9 +224,9 @@ public class ReportControllerDocsTest extends RestDocsSupport {
         given(interviewResult.getPronunciationScore()).willReturn(3);
         given(interviewResult.getTop3Expression()).willReturn(
                 Map.of(
-                        Expression.HAPPY, 0.8,
-                        Expression.SAD, 0.15,
-                        Expression.DISGUST, 0.05
+                        HAPPY, 0.8,
+                        SAD, 0.15,
+                        DISGUST, 0.05
                 )
         );
 
@@ -297,7 +299,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
     void createReport() throws Exception {
         given(room.getId()).willReturn("roomId");
         given(room.getTitle()).willReturn("title");
-        given(room.getType()).willReturn(RoomType.PERSONALITY);
+        given(room.getType()).willReturn(PERSONALITY);
         given(room.getCreatedDate()).willReturn(LocalDateTime.now());
 
         given(report.getId()).willReturn(1L);
@@ -346,6 +348,71 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                         .description("에러")
                         )
                 ));
+    }
+
+    @DisplayName("유저 레포트 평균 점수 API")
+    @Test
+    @WithMockJwtAuthentication
+    void getReportsAverage() throws Exception {
+        ReportsAverageResponse response = new ReportsAverageResponse(
+                PERSONALITY,
+                93,
+                80,
+                Map.of(
+                        HAPPY, 0.8,
+                        SAD, 0.15,
+                        DISGUST, 0.05
+                )
+        );
+
+        given(reportService.getReportsScoreAverage(any(Long.class), any(ReportsAverageServiceRequest.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/reports/score-average")
+                                .queryParam("roomType", "PERSONALITY")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("reports-average",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("roomType").description("PERSONALITY / PRESENTATION")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                                .description("방 타입"),
+                                        fieldWithPath("response.totalScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 전체 평균 점수"),
+                                        fieldWithPath("response.pronunciationScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 전체 발음 평균 점수"),
+                                        fieldWithPath("response.expressions").type(JsonFieldType.OBJECT)
+                                                .description("표정 점수 상위 3개 \n (HAPPY,\n"
+                                                        + "    DISGUST,\n"
+                                                        + "    SAD,\n"
+                                                        + "    SURPRISE,\n"
+                                                        + "    FEAR,\n"
+                                                        + "    ANGRY,\n"
+                                                        + "    NEUTRAL)"),
+                                        fieldWithPath("response.expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 행복"),
+                                        fieldWithPath("response.expressions.SAD").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 슬픔"),
+                                        fieldWithPath("response.expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 역겨움"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+
     }
 
     private String generateRandomRoomId() {

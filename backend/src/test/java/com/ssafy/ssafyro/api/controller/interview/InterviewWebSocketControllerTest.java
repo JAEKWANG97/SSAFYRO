@@ -2,6 +2,7 @@ package com.ssafy.ssafyro.api.controller.interview;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ssafy.ssafyro.api.controller.ControllerTestSupport;
 import com.ssafy.ssafyro.api.controller.interview.request.InterviewStageRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ExitResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
@@ -22,8 +23,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -34,8 +33,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class InterviewWebSocketControllerTest {
+class InterviewWebSocketControllerTest extends ControllerTestSupport {
 
     @LocalServerPort
     private int port;

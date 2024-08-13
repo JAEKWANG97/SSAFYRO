@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.essay.request.EssayReviewRequest;
 import com.ssafy.ssafyro.api.controller.essay.request.EssaySaveRequest;
-import com.ssafy.ssafyro.api.service.essay.EssayService;
 import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
@@ -27,14 +26,10 @@ import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class EssayControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private EssayService essayService;
 
     @DisplayName("에세이 첨삭 API")
     @Test

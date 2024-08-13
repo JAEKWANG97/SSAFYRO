@@ -15,21 +15,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.user.request.UserInitSettingRequest;
-import com.ssafy.ssafyro.api.service.user.UserService;
 import com.ssafy.ssafyro.api.service.user.response.UserInfoResponse;
 import com.ssafy.ssafyro.api.service.user.response.UserInitSettingResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class UserControllerDocsTest extends RestDocsSupport {
-
-    @MockBean
-    private UserService userService;
 
     @DisplayName("첫 로그인 시 전공 여부 설정 API")
     @Test

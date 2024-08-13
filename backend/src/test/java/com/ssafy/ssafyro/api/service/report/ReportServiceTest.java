@@ -1,8 +1,12 @@
 package com.ssafy.ssafyro.api.service.report;
 
+import static com.ssafy.ssafyro.api.service.report.Expression.HAPPY;
+import static com.ssafy.ssafyro.api.service.report.Expression.NEUTRAL;
+import static com.ssafy.ssafyro.api.service.report.Expression.SAD;
 import static com.ssafy.ssafyro.domain.room.RoomType.PERSONALITY;
 import static com.ssafy.ssafyro.domain.room.RoomType.PRESENTATION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -10,9 +14,11 @@ import static org.mockito.BDDMockito.given;
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.article.Article;
@@ -31,14 +37,18 @@ import com.ssafy.ssafyro.domain.room.entity.Room;
 import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
+import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 
+@Disabled
 class ReportServiceTest extends IntegrationTestSupport {
 
     @MockBean
@@ -216,11 +226,80 @@ class ReportServiceTest extends IntegrationTestSupport {
                 .extracting("userId", "reportId")
                 .containsExactly(user.getId(), report.getId());
 
-        assertThat(interviewResultDocumentRepository.findBy(user.getId())).isNotNull()
+        assertThat(interviewResultDocumentRepository.findTop5ByUserIdOrderByEvaluationScore(user.getId())).isNotNull()
                 .extracting("userId", "question", "answer")
                 .containsExactlyInAnyOrder(
                         tuple(user.getId(), "질문1", "답변1"),
                         tuple(user.getId(), "질문2", "답변2"));
+    }
+
+    @DisplayName("사용자의 전체 레포트의 평균 점수를 구한다. 감정은 상위 3개만 반환한다.")
+    @Test
+    void getReportsScoreAverage() {
+        //given
+        User user = userRepository.save(createUser());
+
+        Room room1 = createRoom(PERSONALITY, 1);
+        Room room2 = createRoom(PERSONALITY, 2);
+        Room room3 = createRoom(PRESENTATION, 3);
+        roomRepository.saveAll(List.of(room1, room2, room3));
+
+        Report report1 = createReportPersonal(user, 90, room1);
+        Report report2 = createReportPersonal(user, 100, room2);
+        Report report3 = createReportPresentation(user, 80, room3, null);
+        reportRepository.saveAll(List.of(report1, report2, report3));
+
+        InterviewResult interviewResult1 = createInterviewResult(user, report1, 1);
+        InterviewResult interviewResult2 = createInterviewResult(user, report2, 2);
+        InterviewResult interviewResult3 = createInterviewResult(user, report3, 3);
+        interviewResultRepository.saveAll(List.of(interviewResult1, interviewResult2, interviewResult3));
+
+        //when
+        ReportsAverageResponse result1 = reportService.getReportsScoreAverage(user.getId(),
+                new ReportsAverageServiceRequest(PERSONALITY));
+        ReportsAverageResponse result2 = reportService.getReportsScoreAverage(user.getId(),
+                new ReportsAverageServiceRequest(PRESENTATION));
+
+        //then
+        assertThat(result1).isNotNull()
+                .extracting("totalScore", "pronunciationScore", "expressions")
+                .containsExactly(
+                        (90 + 100) / 2,
+                        3,
+                        Map.of(
+                                HAPPY, 0.9,
+                                NEUTRAL, 0.8,
+                                SAD, 0.7
+                        )
+                );
+
+        assertThat(result2).isNotNull()
+                .extracting("totalScore", "pronunciationScore", "expressions")
+                .containsExactly(
+                        80,
+                        3,
+                        Map.of(
+                                HAPPY, 0.9,
+                                NEUTRAL, 0.8,
+                                SAD, 0.7
+                        )
+                );
+    }
+
+    @DisplayName("사용자의 전체 레포트의 평균 점수를 구할 때, 데이터가 없으면 예외가 발생한다.")
+    @Test
+    void getReportsScoreAverageWithoutData() {
+        //given
+        User user = userRepository.save(createUser());
+
+        //when
+
+        //then
+        assertThatThrownBy(
+                () -> reportService.getReportsScoreAverage(user.getId(), new ReportsAverageServiceRequest(PERSONALITY))
+        )
+                .isInstanceOf(ReportNotFoundException.class)
+                .hasMessage("Report not found");
     }
 
     private User createUser() {

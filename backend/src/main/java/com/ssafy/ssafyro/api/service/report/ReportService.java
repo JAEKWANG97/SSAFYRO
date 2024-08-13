@@ -2,9 +2,11 @@ package com.ssafy.ssafyro.api.service.report;
 
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
@@ -22,6 +24,7 @@ import com.ssafy.ssafyro.domain.room.entity.RoomRepository;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.domain.user.UserRepository;
 import com.ssafy.ssafyro.error.article.ArticleNotFoundException;
+import com.ssafy.ssafyro.error.interviewresult.InterviewResultNotFoundException;
 import com.ssafy.ssafyro.error.report.ReportNotFoundException;
 import com.ssafy.ssafyro.error.room.RoomNotFoundException;
 import com.ssafy.ssafyro.error.user.UserNotFoundException;
@@ -57,11 +60,12 @@ public class ReportService {
     }
 
     public ReportResponse getReport(Long reportId) {
-        Report report = reportRepository.findById(reportId)
-                .orElseThrow(ReportNotFoundException::new);
+        Report report = getReportBy(reportId);
 
         List<InterviewResult> interviewResult = interviewResultRepository.findByReportId(reportId);
+        validInterviewResult(interviewResult);
 
+        //TODO: 형변환 리펙토링 고려하기
         if (report.isPresentation()) {
             Article article = ((PresentationInterviewReport) report).getArticle();
 
@@ -88,8 +92,14 @@ public class ReportService {
         interviewResultDocumentRepository.saveAll(
                 interviewInfos.generateInterviewResultDocuments(koMorAnGenerator)
         );
-        
+
         return ReportCreateResponse.of(report);
+    }
+
+    public ReportsAverageResponse getReportsScoreAverage(Long userId, ReportsAverageServiceRequest request) {
+        return reportRepository.findTotalAvgBy(request.roomType(), getUser(userId))
+                .orElseThrow(() -> new ReportNotFoundException("Report not found"))
+                .toResponse(request.roomType());
     }
 
     private User getUser(Long userId) {
@@ -124,8 +134,19 @@ public class ReportService {
                 .build();
     }
 
+    private Report getReportBy(Long reportId) {
+        return reportRepository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException("Report not found"));
+    }
+
     private Article getArticle(Long id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
+    }
+
+    private static void validInterviewResult(List<InterviewResult> interviewResult) {
+        if (interviewResult.isEmpty()) {
+            throw new InterviewResultNotFoundException("InterviewResult not found");
+        }
     }
 }
