@@ -112,7 +112,10 @@ public class ReportService {
 
     public ReportsStatisticUserScoreResponse getReportsStatisticUserScore(Long userId,
                                                                           ReportsScoreServiceRequest request) {
-        return null;
+        return ReportsStatisticUserScoreResponse.of(
+                request.roomType(),
+                reportRepository.findScoreBy(request.roomType(), getUser(userId))
+        );
     }
 
     private User getUser(Long userId) {
