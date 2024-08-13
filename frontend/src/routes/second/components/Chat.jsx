@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Client as StompClient } from "@stomp/stompjs";
 import sendImg from "../../../../public/main/send.jpeg";
-import ssafyLogo from "../../../../public/SSAFYRO.png";
+import ssafyLogo from "../../../../public/main/sendIcon.png";
 import userImg from "../../../../public/main/user.jpg";
 // import userImg from "../../../../public/main/users.png";
 
@@ -181,20 +181,20 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       </div>
 
       <div className="flex items-center p-2 bg-gray-100 rounded-3xl">
-        <img src={userImg} alt="User" className="w-8 h-8 rounded-full mr-3" />
+        <img src={userImg} alt="User" className="w-8 h-8 rounded-full mr-1" />
         <input
           type="text"
           placeholder="내용을 입력하세요."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-grow bg-transparent border-none outline-none"
+          className="flex-grow bg-transparent border-none outline-none p-1"
         />
-        <button onClick={handleSendMessage} className="text-2xl text-gray-500">
+        <button onClick={handleSendMessage} className=" text-gray-500">
           <img
             src={ssafyLogo}
             alt="SSAFYRO 로고"
-            className="w-4 h-4 mt-1 mr-3 rounded-md"
+            className="w-6 h-6 object-contain"
           />
         </button>
       </div>

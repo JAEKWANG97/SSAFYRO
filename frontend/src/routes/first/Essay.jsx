@@ -85,9 +85,16 @@ export default function Essay() {
       },
     });
 
+    // 에세이 저장 요청
+    const Token = localStorage.getItem("Token");
+    
     // 에세이 첨삭 요청
     axios
-      .post(`${APIURL}essays/review`, beforeEssay)
+      .post(`${APIURL}essays/review`, beforeEssay, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      })
       .then((response) => {
         // 서버 응답 성공 시 리뷰 내용 설정
         const content = response.data.response.content;
@@ -140,7 +147,6 @@ export default function Essay() {
       content: essayContent,
     };
 
-    // 에세이 저장 요청
     const Token = localStorage.getItem("Token");
 
     axios
@@ -158,13 +164,20 @@ export default function Essay() {
   };
 
   useEffect(() => {
+    const Token = localStorage.getItem("Token");
+    
     axios
       .get(`${APIURL}essay-questions`, {
         params: {
           type: selected === "major" ? "MAJOR" : "NON_MAJOR", // 전공자/비전공자 타입
           generation: 11, // 기수
         },
-      })         
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      }, 
+        
+      )         
       .then((res) => {
         setEssayId(res.data.response.id); // 에세이 질문 id
         setEssayQuestion(res.data.response.content); // 에세이 질문 content

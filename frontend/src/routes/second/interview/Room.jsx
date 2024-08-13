@@ -259,6 +259,7 @@ export default function WaitRoom() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("Token")}`
       },
       body: JSON.stringify({
         roomName: roomId,
@@ -428,7 +429,7 @@ export default function WaitRoom() {
                 messages={messages}
                 setMessages={setMessages}
               />
-              <div className="p-7 flex justify-center items-center ml-3 mr-5">
+              <div className="p-4 flex justify-center items-center ml-3 mr-5">
                 <Button
                   text="면접 시작"
                   type="WAITINGROOMSTART"

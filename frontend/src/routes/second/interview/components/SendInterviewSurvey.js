@@ -12,7 +12,11 @@ const createInterviewSurvey = function (roomId, userId, score) {
 };
 
 const handleSubmitSurvey = async function (interviewSurvey) {
-    await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/score", interviewSurvey)
+    await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/score", interviewSurvey, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      })
     .then((response) => {
         // 응답 성공시
         alert("평가표가 제출되었습니다.")
