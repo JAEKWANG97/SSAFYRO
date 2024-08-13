@@ -4,12 +4,15 @@ import static com.ssafy.ssafyro.api.ApiUtils.success;
 
 import com.ssafy.ssafyro.api.ApiUtils.ApiResult;
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
-import com.ssafy.ssafyro.api.controller.report.request.ReportsAverageRequest;
+import com.ssafy.ssafyro.api.controller.report.request.ReportsScoreRequest;
 import com.ssafy.ssafyro.api.service.report.ReportService;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticExpressionResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.security.JwtAuthentication;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -48,8 +51,29 @@ public class ReportController {
     }
 
     @GetMapping("/api/v1/reports/score-average")
-    public ApiResult<ReportsAverageResponse> getReportsAverage(@AuthenticationPrincipal JwtAuthentication userInfo,
-                                                               @Valid @ModelAttribute ReportsAverageRequest request) {
-        return success(reportService.getReportsScoreAverage(userInfo.id(), request.toServiceRequest()));
+    public ApiResult<ReportsUserAverageResponse> getReportsUserAverage(
+            @AuthenticationPrincipal JwtAuthentication userInfo,
+            @Valid @ModelAttribute ReportsScoreRequest request) {
+        return success(reportService.getReportsUserAverage(userInfo.id(), request.toServiceRequest()));
+    }
+
+    @GetMapping("/api/v1/reports/statistics-all-score")
+    public ApiResult<ReportsStatisticUsersScoreResponse> getReportsStatisticUsersScore(
+            @Valid @ModelAttribute ReportsScoreRequest request) {
+        return success(reportService.getReportsStatisticUsersScore(request.toServiceRequest()));
+    }
+
+    @GetMapping("/api/v1/reports/statistics-score")
+    public ApiResult<ReportsStatisticUserScoreResponse> getReportsStatisticUserScore(
+            @AuthenticationPrincipal JwtAuthentication userInfo,
+            @Valid @ModelAttribute ReportsScoreRequest request) {
+        return success(reportService.getReportsStatisticUserScore(userInfo.id(), request.toServiceRequest()));
+    }
+
+    @GetMapping("/api/v1/reports/statistics-expression")
+    public ApiResult<ReportsStatisticExpressionResponse> getReportsStatisticExpression(
+            @AuthenticationPrincipal JwtAuthentication userInfo,
+            @Valid @ModelAttribute ReportsScoreRequest request) {
+        return success(reportService.getReportsStatisticExpression(userInfo.id(), request.toServiceRequest()));
     }
 }

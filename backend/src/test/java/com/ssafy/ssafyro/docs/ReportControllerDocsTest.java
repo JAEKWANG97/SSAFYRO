@@ -23,14 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ssafy.ssafyro.api.controller.report.request.ReportCreateRequest;
-import com.ssafy.ssafyro.api.service.report.Expression;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
-import com.ssafy.ssafyro.api.service.report.request.ReportsAverageServiceRequest;
+import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportPresentationResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportResponse;
-import com.ssafy.ssafyro.api.service.report.response.ReportsAverageResponse;
 import com.ssafy.ssafyro.api.service.report.response.ReportsResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticExpressionResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUserScoreResponse.ReportScoreInfo;
+import com.ssafy.ssafyro.api.service.report.response.ReportsStatisticUsersScoreResponse;
+import com.ssafy.ssafyro.api.service.report.response.ReportsUserAverageResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.report.PresentationInterviewReport;
@@ -350,11 +353,11 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("유저 레포트 평균 점수 API")
+    @DisplayName("유저 레포트 평균 점수 및 표정 평균 API")
     @Test
     @WithMockJwtAuthentication
     void getReportsAverage() throws Exception {
-        ReportsAverageResponse response = new ReportsAverageResponse(
+        ReportsUserAverageResponse response = new ReportsUserAverageResponse(
                 PERSONALITY,
                 93,
                 80,
@@ -365,7 +368,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 )
         );
 
-        given(reportService.getReportsScoreAverage(any(Long.class), any(ReportsAverageServiceRequest.class)))
+        given(reportService.getReportsUserAverage(any(Long.class), any(ReportsScoreServiceRequest.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -412,7 +415,161 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                                 )
                         )
                 );
+    }
 
+    @DisplayName("모든 사람의 레포트 총점 및 발음 평균 점수 API")
+    @Test
+    @WithMockJwtAuthentication
+    void getReportsStatisticScore() throws Exception {
+        ReportsStatisticUsersScoreResponse response = new ReportsStatisticUsersScoreResponse(
+                PERSONALITY,
+                90,
+                4
+        );
+
+        given(reportService.getReportsStatisticUsersScore(any(ReportsScoreServiceRequest.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/reports/statistics-all-score")
+                                .queryParam("roomType", "PERSONALITY")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("reports-statistic-all-score",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("roomType").description("PERSONALITY / PRESENTATION")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                                .description("방 타입"),
+                                        fieldWithPath("response.allTotalScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 모든 유저 평균 점수"),
+                                        fieldWithPath("response.allPronunciationScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 타입 모든 유저 평균 발음 점수"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("한 유저의 레포트 총 점수 및 발음 점수 전체 조회 API")
+    @Test
+    @WithMockJwtAuthentication
+    void getReportsStatisticUserScore() throws Exception {
+        ReportsStatisticUserScoreResponse response = new ReportsStatisticUserScoreResponse(
+                PERSONALITY,
+                List.of(
+                        new ReportScoreInfo("제목1", 80, 3),
+                        new ReportScoreInfo("제목2", 90, 3),
+                        new ReportScoreInfo("제목3", 70, 3)
+                )
+        );
+
+        given(reportService.getReportsStatisticUserScore(any(Long.class), any(ReportsScoreServiceRequest.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/reports/statistics-score")
+                                .queryParam("roomType", "PERSONALITY")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("reports-statistic-score",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("roomType").description("PERSONALITY / PRESENTATION")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                                .description("방 타입"),
+                                        fieldWithPath("response.scores[]").type(JsonFieldType.ARRAY)
+                                                .description("유저 회차별 점수"),
+                                        fieldWithPath("response.scores[].title").type(JsonFieldType.STRING)
+                                                .description("해당 회차 제목"),
+                                        fieldWithPath("response.scores[].totalScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 회차 총 점수"),
+                                        fieldWithPath("response.scores[].pronunciationScore").type(JsonFieldType.NUMBER)
+                                                .description("해당 회차 총 발음 점수"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("유저의 전체 레포트 Top3 표정 통계 API")
+    @Test
+    @WithMockJwtAuthentication
+    void getReportsStatisticExpression() throws Exception {
+        ReportsStatisticExpressionResponse response = new ReportsStatisticExpressionResponse(
+                PERSONALITY,
+                Map.of(
+                        HAPPY, 0.8,
+                        SAD, 0.15,
+                        DISGUST, 0.05
+                )
+        );
+
+        given(reportService.getReportsStatisticExpression(any(Long.class), any(ReportsScoreServiceRequest.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/v1/reports/statistics-expression")
+                                .queryParam("roomType", "PERSONALITY")
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("reports-statistic-expression",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                queryParameters(
+                                        parameterWithName("roomType").description("PERSONALITY / PRESENTATION")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.roomType").type(JsonFieldType.STRING)
+                                                .description("방 타입"),
+                                        fieldWithPath("response.expressions").type(JsonFieldType.OBJECT)
+                                                .description("표정 점수 상위 3개 \n (HAPPY,\n"
+                                                        + "    DISGUST,\n"
+                                                        + "    SAD,\n"
+                                                        + "    SURPRISE,\n"
+                                                        + "    FEAR,\n"
+                                                        + "    ANGRY,\n"
+                                                        + "    NEUTRAL)"),
+                                        fieldWithPath("response.expressions.HAPPY").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 행복"),
+                                        fieldWithPath("response.expressions.SAD").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 슬픔"),
+                                        fieldWithPath("response.expressions.DISGUST").type(JsonFieldType.NUMBER)
+                                                .description("표정 점수: 역겨움"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
     }
 
     private String generateRandomRoomId() {
