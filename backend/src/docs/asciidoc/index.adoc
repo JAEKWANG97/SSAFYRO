@@ -48,7 +48,7 @@ include::api/report/report-create.adoc[]
 include::api/report/report-personal-detail.adoc[]
 include::api/report/report-presentation-detail.adoc[]
 include::api/report/report-score-average.adoc[]
-include::api/report/report-statistic-score.adoc[]
+include::api/report/report-statistic-all-score.adoc[]
 
 [[essay-API]]
 == 에세이 API

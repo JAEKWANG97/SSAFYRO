@@ -1,0 +1,12 @@
+[[report-statistic-all-score]]
+=== 레포트 총점, 발음 통계 점수
+
+==== HTTP Request
+
+include::{snippets}/reports-statistic-all-score/query-parameters.adoc[]
+include::{snippets}/reports-statistic-all-score/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/reports-statistic-all-score/http-response.adoc[]
+include::{snippets}/reports-statistic-all-score/response-fields.adoc[]
