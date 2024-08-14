@@ -30,6 +30,7 @@ include::api/room/fast-enter-room.adoc[]
 include::api/interview/interview-start.adoc[]
 include::api/interview/interview-article.adoc[]
 include::api/interview/interview-question-answer-save.adoc[]
+include::api/interview/interview-question-answer-evaluation-score-save.adoc[]
 include::api/interview/interview-finish.adoc[]
 
 [[interview-result-API]]
