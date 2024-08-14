@@ -19,10 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ssafy.ssafyro.api.controller.interview.request.FinishRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.QnAResultCreateRequest;
+import com.ssafy.ssafyro.api.controller.interview.request.ScoreRequest;
 import com.ssafy.ssafyro.api.controller.interview.request.StartRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.interview.request.ScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.QnAResultCreateResponse;
+import com.ssafy.ssafyro.api.service.interview.response.ScoreResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.security.WithMockJwtAuthentication;
 import java.util.List;
@@ -70,7 +73,7 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("기사 제공 및 질문 생성 API")
     @Test
-    void showArticle() throws Exception {
+    void getArticle() throws Exception {
         String request = "roomId";
 
         given(interviewService.getArticle(any()))
@@ -152,8 +155,6 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("면접 답변"),
                                 fieldWithPath("pronunciationScore").type(JsonFieldType.NUMBER)
                                         .description("발음 점수"),
-                                fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER)
-                                        .description("평가 점수"),
                                 fieldWithPath("happy").type(JsonFieldType.NUMBER)
                                         .description("행복 점수"),
                                 fieldWithPath("disgust").type(JsonFieldType.NUMBER)
@@ -168,6 +169,43 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                                         .description("화남 점수"),
                                 fieldWithPath("neutral").type(JsonFieldType.NUMBER)
                                         .description("무표정 점수")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                        .description("성공 여부"),
+                                fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                        .description("응답"),
+                                fieldWithPath("response.userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 id"),
+                                fieldWithPath("error").type(JsonFieldType.NULL)
+                                        .description("에러")
+                        )
+                ));
+    }
+
+    @DisplayName("면접 질문, 답변 평가 점수 저장 API")
+    @Test
+    void scoreQnAResult() throws Exception {
+        ScoreRequest request = new ScoreRequest(1L, 5);
+
+        given(interviewService.scoreQnAResult(any(ScoreServiceRequest.class)))
+                .willReturn(new ScoreResponse(1L));
+
+        mockMvc.perform(
+                        post("/api/v1/interview/question-answer-result/score")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("interview-question-answer-evaluation-score-save",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                        .description("유저 id"),
+                                fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER)
+                                        .description("평가 점수")
                         ),
                         responseFields(
                                 fieldWithPath("success").type(JsonFieldType.BOOLEAN)
@@ -211,4 +249,6 @@ public class InterviewControllerDocsTest extends RestDocsSupport {
                         )
                 ));
     }
+
+
 }
