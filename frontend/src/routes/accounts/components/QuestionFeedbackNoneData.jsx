@@ -10,7 +10,7 @@ const QuestionFeedbackNoneData = () => {
   };
 
   const handleViewAllInterviews = () => {
-    navigate('/accounts/interviews');
+    navigate('/question_feedback/search?tags=성공&filter=evaluationScore');
   };
 
   return (
