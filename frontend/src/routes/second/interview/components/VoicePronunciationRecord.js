@@ -15,7 +15,7 @@ let pronunciationScore
 const pronunciationEvaluation = async function (base64String) {
     await axios
       .post(
-        "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation",
+        "http://aiopen.etri.re.kr:8000/WiseASR/PronunciationKor",
         {
           argument: {
             language_code: "korean",
@@ -32,8 +32,10 @@ const pronunciationEvaluation = async function (base64String) {
         return response.data.return_object.score;
       })
       .catch((error) => {
-        console.log("발음 정확도 평가 에러 발생!!")
+        // console.log("발음 정확도 평가 에러 발생!!")
         console.error(error);
+        pronunciationScore = 3;
+        return 3;
       });
   };
 
@@ -62,6 +64,9 @@ const startRecording = () => {
         };
 
         reader.readAsDataURL(audioBlob);
+        setTimeout(() => {
+          mediaRecorder.start();
+        }, 1000)
       };
 
       mediaRecorder.start();
