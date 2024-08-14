@@ -543,9 +543,9 @@ export default function PT() {
             } else if (parsedMessage.nowStage === 'SECOND') {
               setUserTurn(1);
             } else {
-              setUserList(2);
+              setUserTurn(2);
             }
-            
+
             startTimer(parsedMessage.nowStage);
           }
         });
@@ -597,11 +597,13 @@ export default function PT() {
   const handleTurnEnd = () => {
     interviewTurnCounter.current += 1;
 
-    const nextTurn = (userTurn + 1) % userList.length;
+    const nextTurn = (userTurn + 1);
+    console.log(nextTurn);
     setUserTurn(nextTurn);
 
     if (
-      interviewTurnCounter.current >= userList.length ||
+      // interviewTurnCounter.current >= userList.length ||
+      nextTurn >= userList.length ||
       userList.length === 1
     ) {
       Swal.fire({
@@ -613,6 +615,8 @@ export default function PT() {
           handleEndInterview();
         }
       });
+    } else {
+      console.log("못들어감")
     }
   };
 
@@ -716,7 +720,7 @@ export default function PT() {
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
             // console.log("remoteTracks: ", remoteTracks);
-            console.log("참여자 정보 : ", userNameMap)
+            //console.log("참여자 정보 : ", userNameMap)
             if (remoteTracks.length <= 2) {
               // console.log("두명 전용 방으로 이동");
               return (

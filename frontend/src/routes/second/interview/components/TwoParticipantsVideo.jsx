@@ -81,9 +81,9 @@ export default function TwoParticipantsVideo({
   const currentTurnId = userList[userTurn];
   const currentTurnUserName = userNameMap[currentTurnId];
   const nextTurnUserName = userNameMap[userList[userTurn + 1]]
-  console.log("현재 면접 순서인 ID :", currentTurnId);
-  console.log("현재 면접 순서인 사람 :", currentTurnUserName);
-  console.log(`다음 면접 순서인 사람 : ${nextTurnUserName ? nextTurnUserName : "마지막 차례"}`)
+  // console.log("현재 면접 순서인 ID :", currentTurnId);
+  // console.log("현재 면접 순서인 사람 :", currentTurnUserName);
+  // console.log(`다음 면접 순서인 사람 : ${nextTurnUserName ? nextTurnUserName : "마지막 차례"}`)
 
   const styles = `
   @keyframes lightBlueBlink {
@@ -100,7 +100,6 @@ export default function TwoParticipantsVideo({
 
   .current-turn {
     animation: lightBlueBlink 1s infinite;
-    padding: 5px;
   }
   `;
   // 내 차례일 때에는 불빛을 비칠 수 있지만, 다른 참여자의 경우에는 Name이 없으므로 할 수 없다.
