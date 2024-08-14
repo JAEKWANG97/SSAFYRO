@@ -1,0 +1,12 @@
+[[interview-question-answer-evaluation-score-save]]
+=== 면접 질문, 대답 평가 점수 저장
+
+==== HTTP Request
+
+include::{snippets}/interview-question-answer-evaluation-score-save/http-request.adoc[]
+include::{snippets}/interview-question-answer-evaluation-score-save/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/interview-question-answer-evaluation-score-save/http-response.adoc[]
+include::{snippets}/interview-question-answer-evaluation-score-save/response-fields.adoc[]

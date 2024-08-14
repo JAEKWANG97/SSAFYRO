@@ -2,11 +2,13 @@ package com.ssafy.ssafyro.api.service.interview;
 
 import com.ssafy.ssafyro.api.service.interview.request.InterviewStageServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultCreateServiceRequest;
+import com.ssafy.ssafyro.api.service.interview.request.ScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.response.ArticleResponse;
 import com.ssafy.ssafyro.api.service.interview.response.ExitResponse;
 import com.ssafy.ssafyro.api.service.interview.response.FinishResponse;
 import com.ssafy.ssafyro.api.service.interview.response.InterviewStageResponse;
 import com.ssafy.ssafyro.api.service.interview.response.QnAResultCreateResponse;
+import com.ssafy.ssafyro.api.service.interview.response.ScoreResponse;
 import com.ssafy.ssafyro.api.service.interview.response.StartResponse;
 import com.ssafy.ssafyro.domain.article.Article;
 import com.ssafy.ssafyro.domain.article.ArticleRepository;
@@ -57,6 +59,10 @@ public class InterviewService {
 
     public QnAResultCreateResponse createQnAResult(Long userId, QnAResultCreateServiceRequest request) {
         return QnAResultCreateResponse.of(interviewRedisRepository.save(request.toEntity(userId)));
+    }
+
+    public ScoreResponse scoreQnAResult(ScoreServiceRequest request) {
+        return ScoreResponse.of(interviewRedisRepository.scoreInterview(request.userId(), request.evaluationScore()));
     }
 
     public ArticleResponse getArticle(String roomId) {

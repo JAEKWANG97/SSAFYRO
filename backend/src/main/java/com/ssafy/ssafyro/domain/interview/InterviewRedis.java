@@ -48,4 +48,8 @@ public class InterviewRedis {
         this.angry = angry;
         this.neutral = neutral;
     }
+
+    public void addScore(int score) {
+        this.evaluationScore += score;
+    }
 }
