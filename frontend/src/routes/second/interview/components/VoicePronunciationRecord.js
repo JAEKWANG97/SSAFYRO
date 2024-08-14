@@ -15,7 +15,7 @@ let pronunciationScore
 const pronunciationEvaluation = async function (base64String) {
     await axios
       .post(
-        "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation",
+        "https://i11c201.p.ssafy.io:8443/WiseASR/Pronunciation",
         {
           argument: {
             language_code: "korean",
