@@ -1,61 +1,59 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Card } from 'flowbite-react';
+import { Card } from "flowbite-react";
 import Button from "../../../components/Button";
-
+import { EssayApi } from "../../../api/EssayApi";
+import useUserStore from "../../../stores/userStore";
 
 export default function EssayDetail() {
-  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const Token = localStorage.getItem("Token");
+  const { userInfo, setUserInfo } = useUserStore();
 
   const [essayData, setEssayData] = useState("");
-  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
-  const [editedEssayData, setEditedEssayData] = useState(""); // 수정된 에세이 데이터
-  const [question, setQuestion] = useState(""); // 에세이 질문
-  const [essayId, setEssayId] = useState(1)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedEssayData, setEditedEssayData] = useState("");
+  const [question, setQuestion] = useState("");
+  const [essayId, setEssayId] = useState(null);
+  const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (storedUserInfo && storedUserInfo.userId) {
+      setUserId(storedUserInfo.userId);
+    }
+
     const fetchEssayDetails = async () => {
       try {
-        const userInfoResponse = await axios.get(`${APIURL}users`, {
-          headers: { Authorization: `Bearer ${Token}` },
-        });
+        if (!userInfo) {
+          const fetchedUserInfo = await EssayApi.getUserInfo(Token);
+          setUserInfo(fetchedUserInfo);
+        }
 
-        const userInfo = userInfoResponse.data.response;
-        const userType = userInfo.type;
-
-        const questionResponse = await axios.get(`${APIURL}essay-questions`, {
-          params: {
-            type: userType, 
-            generation: 11 
-          },
-          headers: { Authorization: `Bearer ${Token}` },
-        });
-
-        const questionData = questionResponse.data.response;
+        const questionData = await EssayApi.getEssayQuestion(
+          Token,
+          userInfo.type,
+          11
+        );
         setQuestion(questionData.content);
-        setEssayId(questionData.id)
+        setEssayId(questionData.id);
 
-        const Info = localStorage.getItem('userInfo');
-        if (Info) {
-          const parsedInfo = JSON.parse(Info);
-          const userId = parsedInfo.userId;
-
-          const essayResponse = await axios.get(`${APIURL}essays`, {
-            params: { userId: userId },
-            headers: { Authorization: `Bearer ${Token}` },
-          });
-
-          setEssayData(essayResponse.data.response.content);
-          setEditedEssayData(essayResponse.data.response.content);
+        if (storedUserInfo && storedUserInfo.userId) {
+          const essayResponse = await EssayApi.getEssay(
+            Token,
+            storedUserInfo.userId
+          );
+          setEssayData(essayResponse.content);
+          setEditedEssayData(essayResponse.content);
+          console.log(essayResponse);
         }
       } catch (error) {
-        // console.error("Error fetching essay details:", error);
+        console.error("Error fetching essay details:", error);
+        setError(error);
       }
     };
 
     fetchEssayDetails();
-  }, [APIURL, Token]);
+  }, [Token, userInfo, setUserInfo]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -65,18 +63,16 @@ export default function EssayDetail() {
   const handleSaveClick = async () => {
     try {
       const afterEssay = {
-        essayQuestionId: essayId, 
+        essayQuestionId: essayId,
         content: editedEssayData,
       };
-
-      await axios.post(`${APIURL}essays`, afterEssay, {
-        headers: { Authorization: `Bearer ${Token}` },
-      });
+      console.log(afterEssay);
+      await EssayApi.updateEssay(Token, afterEssay);
 
       setEssayData(editedEssayData);
       setIsEditing(false);
     } catch (error) {
-      // console.error("Error saving essay data:", error);
+      setError(error);
     }
   };
 
@@ -88,10 +84,10 @@ export default function EssayDetail() {
     <div>
       <Card>
         <div className="w-full border-b-2 border-gray-400 pb-1 flex flex-col items-center gap-2 font-bold pb-4">
-          {question.split(',').map((part, index) => (
+          {question.split(",").map((part, index) => (
             <span key={index}>
               {part.trim()}
-              {index !== question.split(',').length - 1 && <br />} 
+              {index !== question.split(",").length - 1 && <br />}
             </span>
           ))}
         </div>
@@ -103,7 +99,12 @@ export default function EssayDetail() {
               spellCheck="false"
               autoCorrect="off"
               autoComplete="off"
-              style={{ lineHeight: 1.8, height: "25rem", width: "100%", resize: 'none' }}
+              style={{
+                lineHeight: 1.8,
+                height: "25rem",
+                width: "100%",
+                resize: "none",
+              }}
               value={editedEssayData}
               onChange={handleTextareaChange}
             />
@@ -115,9 +116,9 @@ export default function EssayDetail() {
         </div>
       </Card>
       {isEditing ? (
-        <Button type='ESSAYSAVE' text='저장' onClick={handleSaveClick} />
+        <Button type="ESSAYSAVE" text="저장" onClick={handleSaveClick} />
       ) : (
-        <Button type='ESSAYUPDATE' text='수정' onClick={handleEditClick} />
+        <Button type="ESSAYUPDATE" text="수정" onClick={handleEditClick} />
       )}
     </div>
   );
