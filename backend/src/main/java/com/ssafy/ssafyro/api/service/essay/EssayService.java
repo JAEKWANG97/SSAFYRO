@@ -5,6 +5,7 @@ import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
+import com.ssafy.ssafyro.api.service.essay.response.EssayUpdateResponse;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.domain.essay.Essay;
 import com.ssafy.ssafyro.domain.essay.EssayRepository;
@@ -56,6 +57,16 @@ public class EssayService {
         Essay essay = getEssayBy(user);
 
         return new EssayDetailResponse(essay);
+    }
+
+    public EssayUpdateResponse updateEssayBy(Long userId, EssaySaveServiceRequest request) {
+        User user = getUserBy(userId);
+
+        Essay essay = getEssayBy(user);
+
+        essay.update(request.content());
+
+        return new EssayUpdateResponse(essay.getId());
     }
 
     private EssayQuestion getEssayQuestionBy(Long essayQuestionId) {

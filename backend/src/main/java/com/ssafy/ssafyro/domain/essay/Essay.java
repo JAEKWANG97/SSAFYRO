@@ -43,4 +43,8 @@ public class Essay extends BaseEntity {
         this.question = question;
         this.content = content;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
 }
