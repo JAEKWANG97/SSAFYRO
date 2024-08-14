@@ -67,7 +67,7 @@ export default function EssayDetail() {
         content: editedEssayData,
       };
       console.log(afterEssay);
-      await EssayApi.saveEssay(Token, afterEssay);
+      await EssayApi.updateEssay(Token, afterEssay);
 
       setEssayData(editedEssayData);
       setIsEditing(false);

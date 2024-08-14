@@ -36,4 +36,11 @@ export const EssayApi = {
       });
     return response.data;
   },
+
+  updateEssay: async (token, essayData) => {
+    const response = await axios.put(`${APIURL}essays`, essayData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
 };
