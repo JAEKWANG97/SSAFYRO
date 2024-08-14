@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/ssafyro-chat").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/api/**").authenticated()

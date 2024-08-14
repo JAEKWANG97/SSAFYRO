@@ -1,5 +1,7 @@
 package com.ssafy.ssafyro.api.service.user;
 
+import static com.ssafy.ssafyro.domain.user.User.createFirstLoginUser;
+
 import com.ssafy.ssafyro.api.service.user.response.UserInfoResponse;
 import com.ssafy.ssafyro.api.service.user.response.UserInitSettingResponse;
 import com.ssafy.ssafyro.domain.MajorType;
@@ -20,12 +22,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
 
-    public User loginOAuth(String username) {
-        if (userRepository.existsByUsername(username)) {
-            return getUser(username);
+    public User loginOAuth(UserInfo userInfo) {
+        if (userRepository.existsByUsername(userInfo.username())) {
+            return getUser(userInfo.username());
         }
 
-        User firstLoginUser = User.createFirstLoginUser(username);
+        User firstLoginUser = createFirstLoginUser(
+                userInfo.username(),
+                userInfo.nickname(),
+                userInfo.providerId()
+        );
+
         userRepository.save(firstLoginUser);
 
         return firstLoginUser;
