@@ -1,25 +1,33 @@
-import { useState } from 'react';
-import { Card } from 'flowbite-react';
-import ReactCardFlip from 'react-card-flip';
-import Pagination from '@mui/material/Pagination';
-import PaginationItem from '@mui/material/PaginationItem';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Button from './../../../components/Button'
+import React, { useState, useEffect } from "react";
+import { Card, Tooltip } from "flowbite-react";
+import ReactCardFlip from "react-card-flip";
+import Pagination from "@mui/material/Pagination";
+import PaginationItem from "@mui/material/PaginationItem";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
+import QuestionCard from "./QuestionCard";
+import ErrorPage from "./ErrorPage";
+import QuestionFeedbackNoneData from "./QuestionFeedbackNoneData";
+import {
+  getBestWorstQuestion,
+  getBestWorstQuestionByUser,
+} from "./../../../api/bestWorstQuestionApi";
+
+import {
+  ArrowRightIcon,
+  InfoIcon,
+  SparklesIcon,
+} from "./../../../heroicons/Icons";
 
 export default function BestWorstQuestion() {
+  const [cardData, setCardData] = useState([]);
   const [isFlipped, setIsFlipped] = useState(false);
   const [page, setPage] = useState(1);
-
-  // 카드 데이터
-  const cardData = [
-    { id: 1, question: "질문 1", answer: "답변 1", feedback: "피드백 1", newQuestion: "새로운 질문 1", newAnswer: "새로운 답변 1", newFeedback: "새로운 피드백 1" },
-    { id: 2, question: "질문 2", answer: "답변 2", feedback: "피드백 2", newQuestion: "새로운 질문 2", newAnswer: "새로운 답변 2", newFeedback: "새로운 피드백 2" },
-    { id: 3, question: "질문 3", answer: "답변 3", feedback: "피드백 3", newQuestion: "새로운 질문 3", newAnswer: "새로운 답변 3", newFeedback: "새로운 피드백 3" },
-    { id: 4, question: "질문 4", answer: "답변 4", feedback: "피드백 4", newQuestion: "새로운 질문 4", newAnswer: "새로운 답변 4", newFeedback: "새로운 피드백 4" },
-    { id: 5, question: "질문 5", answer: "답변 5", feedback: "피드백 5", newQuestion: "새로운 질문 5", newAnswer: "새로운 답변 5", newFeedback: "새로운 피드백 5" }
-  ];
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
+  
   const handleClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -29,83 +37,93 @@ export default function BestWorstQuestion() {
     setIsFlipped(false);
   };
 
-  const currentCard = cardData[page - 1];
+  const currentCard = cardData[page - 1] || {};
+
+  useEffect(() => {
+    const page = 0;
+    const size = 5;
+    const sort = "evaluationScore";
+
+    const fetchData = async () => {
+      try {
+        const bestData = await getBestWorstQuestion(page, size);
+        const worstData = await getBestWorstQuestionByUser(page, size, sort);
+
+        const newCardData = bestData.response.interviewResultInfos.map(
+          (best, index) => ({
+            id: index + 1,
+            question:
+              worstData.response.interviewResultInfos[index]?.question || "",
+            answer:
+              worstData.response.interviewResultInfos[index]?.answer || "",
+            newQuestion: best.question || "",
+            newAnswer: best.answer || "",
+          })
+        );
+
+        setCardData(newCardData);
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+        setError(true);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (error) {
+    return <ErrorPage />;
+  }
+
+  if (cardData.length === 0) {
+    return <QuestionFeedbackNoneData />;
+  }
 
   return (
     <>
-      <div className="container mx-auto p-5 max-w-2xl bg-white rounded-lg shadow-md mt-10 mb-20"
-            style={{
-              boxShadow:
-                "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
-            }}>
-        <div className="relative py-5 mb-10">
-          <h2 className="text-center font-bold text-2xl">WORST & BEST 질문 확인하기</h2>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="black"
-              className="w-8 h-8 mr-4 text-gray-400 absolute right-0 top-1/2 transform -translate-y-1/2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
-              />
-            </svg>
+      <div
+        className="container mx-auto p-5 max-w-2xl bg-white rounded-lg shadow-md mt-10 mb-20"
+        style={{
+          boxShadow:
+            "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <div className="relative py-8 mb-12 bg-blue-50 rounded-lg shadow-sm">
+          {" "}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="rounded-full p-3">
+              {/* <SparklesIcon className="w-8 h-8 text-white" /> */}
+            </div>
+          </div>
+          <h3 className="text-center text-3xl font-bold mb-3 text-gray-800">
+            탁월한 답변 사례
+          </h3>
+          <h4 className="text-center text-lg text-blue-600 font-medium">
+            유사 질문에 대한 최고의 답변 Top 5
+          </h4>
+          <p className="text-center text-sm text-gray-600 mt-2 max-w-md mx-auto">
+            다른 사용자들의 뛰어난 답변을 참고하여
+            <br />
+            당신의 면접 실력을 한 단계 높여보세요!
+          </p>
         </div>
-
         <div className="flex justify-center">
           <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
-            {/* Front Side of the Card */}
-            <Card className="mb-5 w-[600px] shadow-none border-2 pb-0" onClick={handleClick}>
-            <button type="button" class="relative group">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ml-auto">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7.498 15.25H4.372c-1.026 0-1.945-.694-2.054-1.715a12.137 12.137 0 0 1-.068-1.285c0-2.848.992-5.464 2.649-7.521C5.287 4.247 5.886 4 6.504 4h4.016a4.5 4.5 0 0 1 1.423.23l3.114 1.04a4.5 4.5 0 0 0 1.423.23h1.294M7.498 15.25c.618 0 .991.724.725 1.282A7.471 7.471 0 0 0 7.5 19.75 2.25 2.25 0 0 0 9.75 22a.75.75 0 0 0 .75-.75v-.633c0-.573.11-1.14.322-1.672.304-.76.93-1.33 1.653-1.715a9.04 9.04 0 0 0 2.86-2.4c.498-.634 1.226-1.08 2.032-1.08h.384m-10.253 1.5H9.7m8.075-9.75c.01.05.027.1.05.148.593 1.2.925 2.55.925 3.977 0 1.487-.36 2.89-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398-.306.774-1.086 1.227-1.918 1.227h-1.053c-.472 0-.745-.556-.5-.96a8.95 8.95 0 0 0 .303-.54" />
-              </svg>
-              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-sm font-medium py-2 px-3 rounded-lg shadow-sm">
-                Tooltip content
-              </div>
-            </button>
-
-
-              <div className="w-full border-b-2 border-gray-400 pb-1 flex items-center gap-2">
-                <span className="text-2xl font-medium">Q.</span>
-                <span className="text-xl font-semibold">{currentCard.question}</span>
-              </div>
-              <div className="w-full border-b-2 border-gray-400 pb-1 flex gap-2">
-                <span className="text-2xl font-medium">A.</span>
-                <span className="text-md text-gray-700 pb-2">{currentCard.answer}</span>
-              </div>
-              <div className="w-full border-b-2 border-gray-400 flex gap-2">
-                <div className="text-2xl font-medium mb-2">F.</div>
-                <div className="text-md font-semibold text-blue-500 pb-2">{currentCard.feedback}</div>
-              </div>
-            </Card>
-
-            {/* Back Side of the Card */}
-            <Card className="mb-5 w-[600px] shadow-none border-2 pb-0" onClick={handleClick}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 ml-auto">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-            </svg>
-
-              <div className="w-full border-b-2 border-gray-400 pb-1 flex items-center gap-2">
-                <span className="text-2xl font-medium">Q.</span>
-                <span className="text-xl font-semibold">{currentCard.newQuestion}</span>
-              </div>
-              <div className="w-full border-b-2 border-gray-400 pb-1 flex gap-2">
-                <span className="text-2xl font-medium">A.</span>
-                <span className="text-md text-gray-700 pb-2">{currentCard.newAnswer}</span>
-              </div>
-              <div className="w-full pb-4 flex gap-2">
-                <div className="text-2xl font-medium mb-2">F.</div>
-                <div className="text-md font-semibold text-blue-500 pb-2">{currentCard.newFeedback}</div>
-              </div>
-            </Card>
+            <QuestionCard
+              data={currentCard}
+              onClick={handleClick}
+              isFlipped={false}
+            />
+            <QuestionCard
+              data={{
+                question: currentCard.newQuestion || "",
+                answer: currentCard.newAnswer || "",
+              }}
+              onClick={handleClick}
+              isFlipped={true}
+            />
           </ReactCardFlip>
         </div>
-
         <div className="flex justify-center mt-5">
           <Pagination
             count={cardData.length}
@@ -119,28 +137,20 @@ export default function BestWorstQuestion() {
             )}
           />
         </div>
-
-        <div className="pl-7 mt-5">
-          <div 
-            className="max-w-xl h-[80px] border-2 border-black rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105 cursor-pointer"
-            onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
+        <div className="mt-8">
+          <div
+            className="max-w-xl h-[80px] border-2 border-black rounded-xl flex flex-col font-extrabold pl-4 relative transition-transform transform hover:scale-105 mx-auto justify-center"
+            onClick={() =>
+              navigate("/account/profile/question_feedback", {
+                state: { activeTab: "tab3" },
+              })
+            }
           >
-            더 자세히 알아보기
-            <span className="text-sm font-medium pt-1">유사 질답 내용을 모아놨어요.</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="black"
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
-            </svg>
+            <div>
+              <h3 className="text-xl font-bold mb-1">더 자세히 알아보기</h3>
+              <p className="text-sm font-medium text-gray-400">유사 질답 내용을 모아놨어요.</p>
+            </div>
+            <ArrowRightIcon className="w-6 h-6 text-white" />
           </div>
         </div>
       </div>
