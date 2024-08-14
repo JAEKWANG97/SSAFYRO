@@ -36,6 +36,18 @@ public class InterviewRedisRepository {
         return new InterviewInfos(redisTemplate.opsForList().range(key, 0, -1));
     }
 
+    public Long scoreInterview(Long userId, int evaluationScore) {
+        String key = INTERVIEW_PREFIX + userId;
+
+        InterviewRedis interviewRedis = redisTemplate.opsForList().rightPop(key);
+        
+        interviewRedis.addScore(evaluationScore);
+
+        redisTemplate.opsForList().rightPush(key, interviewRedis);
+
+        return userId;
+    }
+
     public void deleteAll() {
         Set<String> keys = redisTemplate.keys(INTERVIEW_PREFIX + "*");
         redisTemplate.delete(keys);

@@ -7,7 +7,6 @@ import lombok.Builder;
 public record QnAResultCreateServiceRequest(String question,
                                             String answer,
                                             int pronunciationScore,
-                                            int evaluationScore,
                                             double happy,
                                             double disgust,
                                             double sad,
@@ -22,7 +21,7 @@ public record QnAResultCreateServiceRequest(String question,
                 .question(question)
                 .answer(answer)
                 .pronunciationScore(pronunciationScore)
-                .evaluationScore(evaluationScore)
+                .evaluationScore(0)
                 .happy(happy)
                 .disgust(disgust)
                 .sad(sad)
