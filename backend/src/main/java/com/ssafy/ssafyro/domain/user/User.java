@@ -56,10 +56,11 @@ public class User extends BaseEntity {
         this.majorType = majorType;
     }
 
-    public static User createFirstLoginUser(String username) {
+    public static User createFirstLoginUser(String username, String nickname, String providerId) {
         return User.builder()
                 .username(username)
-                .nickname("user:" + UUID.randomUUID())
+                .nickname(nickname)
+                .providerId(providerId)
                 .profileImageUrl("https://sample.png")
                 .build();
     }

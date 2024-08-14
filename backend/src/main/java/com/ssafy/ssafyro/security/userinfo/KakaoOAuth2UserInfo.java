@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.security.userinfo;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
@@ -29,5 +30,11 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public String getNickname() {
+        LinkedHashMap<String, String> properties = (LinkedHashMap) attributes.get("properties");
+        return properties.get("nickname");
     }
 }
