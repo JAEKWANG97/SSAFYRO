@@ -35,9 +35,9 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
       onConnect: (frame) => {
         console.log("Connected: " + frame);
         stompClient.current.subscribe(`/topic/${roomId}`, (message) => {
-          console.log("Received message: ", message.body);
+          // console.log("Received message: ", message.body);
           const msg = JSON.parse(message.body);
-          console.log("Parsed message: ", msg);
+          // console.log("Parsed message: ", msg);
           setMessages((prevMessages) => [...prevMessages, msg]);
         });
         sendEnterMessage(roomId);
@@ -58,7 +58,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
     if (!currentRoom || !stompClient.current || newMessage.trim() === "")
       return;
 
-    console.log("Sending message: ", newMessage);
+    // console.log("Sending message: ", newMessage);
 
     stompClient.current.publish({
       destination: `/chat/${currentRoom}`,
@@ -129,7 +129,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
 
       <div className="flex-grow overflow-y-auto mb-4">
         {messages.map((message, index) => {
-          console.log("message : ", message);
+          // console.log("message : ", message);
           const showProfile =
             index === 0 || messages[index - 1].name !== message.name;
           const isCurrentUser = message.name === currentUser.userName;

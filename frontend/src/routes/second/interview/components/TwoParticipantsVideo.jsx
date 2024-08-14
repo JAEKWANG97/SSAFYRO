@@ -28,7 +28,7 @@ export default function TwoParticipantsVideo({
   userInfo,
   userList,
   userTurn,
-  userNameList,
+  userNameMap,
   setModalOpen,
   setEvaluationModal,
 }) {
@@ -36,7 +36,7 @@ export default function TwoParticipantsVideo({
   const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
-    console.log("remoteTracks 재확인: ", remoteTracks);
+    // console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
   useEffect(() => {
@@ -80,9 +80,11 @@ export default function TwoParticipantsVideo({
   };
 
   const currentTurnId = userList[userTurn];
-  const currentTurnUserName = userNameList[userTurn];
-  console.log("현재 면접 순서인 ID :", currentTurnId);
-  console.log("현재 면접 순서인 사람 :", currentTurnUserName);
+  const currentTurnUserName = userNameMap[currentTurnId];
+  const nextTurnUserName = userNameMap[userList[userTurn + 1]]
+  // console.log("현재 면접 순서인 ID :", currentTurnId);
+  // console.log("현재 면접 순서인 사람 :", currentTurnUserName);
+  // console.log(`다음 면접 순서인 사람 : ${nextTurnUserName ? nextTurnUserName : "마지막 차례"}`)
 
   const styles = `
   @keyframes lightBlueBlink {
@@ -99,7 +101,6 @@ export default function TwoParticipantsVideo({
 
   .current-turn {
     animation: lightBlueBlink 1s infinite;
-    padding: 5px;
   }
   `;
   // 내 차례일 때에는 불빛을 비칠 수 있지만, 다른 참여자의 경우에는 Name이 없으므로 할 수 없다.
@@ -118,7 +119,7 @@ export default function TwoParticipantsVideo({
               local={true}
               // 표정 상태 변경을 VideoComponent로 전달
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={participantName === currentTurnUserName}
+              isSurveyTarget={currentTurnUserName === participantName }
             />
           </div>
         )}
@@ -126,7 +127,6 @@ export default function TwoParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            // onClick={handleStartSurvey}
             onClick={setEvaluationModal(true)}
           >
             <svg
@@ -226,7 +226,7 @@ export default function TwoParticipantsVideo({
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={remoteTrack.participantIdentity === currentTurnUserName}
+                  isSurveyTarget={currentTurnUserName === remoteTrack.participantIdentity}
                 />
               ) : (
                 <AudioComponent
