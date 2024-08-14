@@ -26,11 +26,11 @@ export default function ThreeParticipantsVideo({
   userInfo,
   userList,
   userTurn,
-  userNameList,
+  userNameMap,
   setModalOpen,
 }) {
   useEffect(() => {
-    console.log("remoteTracks 재확인: ", remoteTracks);
+    // console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
   const [faceExpression, setFaceExpression] = useState("neutral");
@@ -90,29 +90,28 @@ export default function ThreeParticipantsVideo({
   };
 
   const styles = `
-  @keyframes indigoBlink {
+  @keyframes lightBlueBlink {
     0% {
-      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
     }
     50% {
-      box-shadow: 0 0 20px rgba(75, 0, 130, 0.8), 0 0 30px rgba(75, 0, 130, 0.8);
+      box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 30px rgba(135, 206, 235, 0.8);
     }
     100% {
-      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
     }
   }
 
   .current-turn {
-    animation: indigoBlink 1s infinite;
+    animation: lightBlueBlink 1s infinite;
     padding: 5px;
   }
   `;
 
-  const currentTurnId = userList[userTurn]
-  const currentTurnUserName = userNameList[userTurn]
-  console.log("현재 면접 순서인 ID :", currentTurnId)
-  console.log("현재 면접 순서인 사람 :", currentTurnUserName)
-
+  const currentTurnId = userList[userTurn];
+  const currentTurnUserName = userNameMap[currentTurnId];
+  // console.log("현재 면접 순서인 ID :", currentTurnId)
+  // console.log("현재 면접 순서인 사람 :", currentTurnUserName)
 
   return (
     <>
@@ -128,7 +127,7 @@ export default function ThreeParticipantsVideo({
               participantIdentity={participantName}
               local={true}
               onFaceExpressionChange={setFaceExpression}
-              isSurveyTarget={participantName === currentTurnUserName}
+              isSurveyTarget={currentTurnUserName === participantName}
             />
           </div>
         )}
@@ -221,7 +220,7 @@ export default function ThreeParticipantsVideo({
                 track={tracks.video.trackPublication.videoTrack}
                 participantIdentity={participant}
                 local={false}
-                isSurveyTarget={participant === currentTurnUserName}
+                isSurveyTarget={currentTurnUserName === participant}
               />
             )}
             {tracks.audio && ( // 변경된 부분: 오디오 트랙 렌더링

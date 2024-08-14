@@ -4,8 +4,8 @@ const useRoomStore = create((set) => ({
   userList: [],
   setUserList: (users) => set({ userList: users }),
 
-  userNameList: [],
-  setUserNameList: (userNames) => set({ userNameList: userNames }),
+  userNameMap: {},
+  setUserNameMap: (userNameMap) => set({ userNameMap }),
   
   userTurn: 0,
   setUserTurn: (turn) => set({ userTurn: turn }),

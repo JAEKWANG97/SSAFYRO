@@ -17,7 +17,7 @@ export function getEmotionImage(emotion) {
       return vomitingImg;
     case 'ANGRY':
       return angryImg;
-    case 'SURPRISED':
+    case 'SURPRISE':
       return surprisedImg;
     case 'FEAR':
       return deadImg

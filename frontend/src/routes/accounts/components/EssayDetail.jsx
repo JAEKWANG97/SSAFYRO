@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card } from 'flowbite-react';
 import Button from "../../../components/Button";
 
+
 export default function EssayDetail() {
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const Token = localStorage.getItem("Token");
@@ -49,7 +50,7 @@ export default function EssayDetail() {
           setEditedEssayData(essayResponse.data.response.content);
         }
       } catch (error) {
-        console.error("Error fetching essay details:", error);
+        // console.error("Error fetching essay details:", error);
       }
     };
 
@@ -75,7 +76,7 @@ export default function EssayDetail() {
       setEssayData(editedEssayData);
       setIsEditing(false);
     } catch (error) {
-      console.error("Error saving essay data:", error);
+      // console.error("Error saving essay data:", error);
     }
   };
 

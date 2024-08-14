@@ -4,58 +4,72 @@ import 'react-vertical-timeline-component/style.min.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { Card } from 'flowbite-react';
-import { getEmotionImage } from '../../../util/get-emotion-image';
+
+import { getEmotionImageColor } from '../../../util/get-emotion-image-color';
 
 export default function PersonalityFeedback() {
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const location = useLocation();
   const info = location.state?.info;  // 면접정보(레포트ID, 면접종류, 총점, 발음점수, 면접일시)
-  const [count, setCount] = useState(0)
-  const [reportDetail, setReportDetail] = useState([])
-  const Token = localStorage.getItem('Token')
+  const [count, setCount] = useState(0);
+  const [reportDetail, setReportDetail] = useState([]);
+
+  const formattedDate = new Date(info.createdDate).toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).replace(/\./g, '-').replace(/ /g, '').replace(/-$/, '');
+  
 
   useEffect(() => {
-    axios.
-    get(`${APIURL}report/${info.reportId}`,
-      {headers: {
-        Authorization: `Bearer ${Token}`,
-      },
-    })
-    .then((res) => {
-      console.log(res.data.response);
-      setCount(res.data.response.qnaCount)
-      setReportDetail(res.data.response.reportDetails)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+    axios
+      .get(`${APIURL}report/${info.reportId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.response);
+        setCount(res.data.response.qnaCount);
+        setReportDetail(res.data.response.reportDetails);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     // 페이지 로드 시 화면을 맨 위로 스크롤
     window.scrollTo(0, 0);
-  }, []);
-
+  }, [info]);
 
   return (
     <>
-      <div className="container mx-auto p-5 bg-white rounded-lg shadow-md mt-10 mb-20" style={{ maxWidth: '80%', minHeight: '80vh' }}>
-      <div className='flex flex-col items-center my-10'>
-        <span className="text-2xl font-semibold text-center">{info.title}</span>
-        <div className='mt-4 flex flex-col items-start'>
-          <span className="text-md text-gray-600">시행 일자 | {info.createDate}</span>
-          <span className="text-md text-gray-600 mt-1">질답 횟수 | {count}회</span>
+      <div className="container mx-auto p-5 bg-white rounded-lg shadow-md mt-10 mb-20" style={{ maxWidth: '70%', minHeight: '80vh' }}>
+        <div className='flex flex-col items-center my-10'>
+          <span className="text-2xl font-semibold text-center">{info.title}</span>
+          <div className='mt-4 flex flex-col items-start'>
+            <span className="text-md text-gray-600">시행 일자 | {formattedDate}</span>
+            <span className="text-md text-gray-600 mt-1">질답 횟수 | {count}회</span>
+          </div>
+          <div className="w-1/2 h-0.5 bg-gray-400 mt-4"></div>
         </div>
-        <div className="w-1/2 h-0.5 bg-gray-400 mt-4"></div>
-      </div>
 
         <VerticalTimeline
           lineColor="#000"
-          className="ml-[-150px]" 
+          layout="1-column-left"
+          className="custom-timeline"
+          style={{ marginLeft: '20%' }}  // 타임라인 위치 조정
         >
           {reportDetail.map((content, index) => (
             <VerticalTimelineElement
               key={index}
               className="vertical-timeline-element--work"
-              contentStyle={{ padding: '0', boxShadow: 'none', margin: '0' }}
+              contentStyle={{ 
+                padding: '0', 
+                boxShadow: 'none', 
+                margin: '0', 
+                marginLeft: '13%',  // 카드 위치 조정
+                width: '80%',       // 카드 크기 조정
+              }}
               contentArrowStyle={{ display: 'none' }}
               iconStyle={{
                 background: '#d1d5db',
@@ -74,22 +88,22 @@ export default function PersonalityFeedback() {
                 </svg>
               }
               style={{ marginBottom: '10px' }}
-              position="right"
+              position="right"  // 카드를 타임라인의 오른쪽에 표시
             >
-              <Card className="mb-5 w-full shadow-none">
+              <Card className="mb-5 shadow-none">
                 <div className='flex'>
                   <div className='flex'>
-                  {Object.entries(content.expression).map(([emotion, value]) => (
-                    <div key={emotion} className='flex flex-col items-center'>
-                      <img 
-                        src={getEmotionImage(emotion)} 
-                        alt={emotion} 
-                        className="w-10 h-10 mr-2" 
-                        style={{ filter: 'invert(100%)' }} 
-                      />
-                      <span className='pr-1 pt-1 text-sm'>{(value * 100).toFixed(2)}%</span>
-                    </div>
-                  ))}
+                    {Object.entries(content.expression).map(([emotion, value]) => (
+                      <div key={emotion} className='flex flex-col items-center'>
+                        <img 
+                          src={getEmotionImageColor(emotion)} 
+                          alt={emotion} 
+                          className="w-10 h-10 mr-2" 
+                          // style={{ filter: 'invert(100%)' }} 
+                        />
+                        <span className='pr-1 pt-1 text-sm'>{(value * 100).toFixed(0)}%</span>
+                      </div>
+                    ))}
                   </div>
 
                   <div className='ml-auto flex flex-col items-end pt-2'>
@@ -121,6 +135,17 @@ export default function PersonalityFeedback() {
           />
         </VerticalTimeline>
       </div>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .custom-timeline {
+            margin-left: 10%; /* 타임라인 위치 조정 */
+          }
+          .vertical-timeline-element--work .vertical-timeline-element-content {
+            margin-left: 10%; /* 카드 위치 조정 */
+            width: 80%; /* 카드 너비 조정 */
+          }
+        }
+      `}</style>
     </>
   );
 }

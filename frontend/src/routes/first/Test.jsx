@@ -19,6 +19,8 @@ export default function Test() {
 
   const [sortOrder, setSortOrder] = useState("asc"); // 기본 정렬 상태를 오름차순으로 설정
 
+  const Token = localStorage.getItem("Token")
+  
   // 적성진단 문제 가져오기
   useEffect(() => {
     axios
@@ -27,7 +29,11 @@ export default function Test() {
           page: 0,
           size: 389,
         },
-      })
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      }, 
+      )
       .then((response) => {
         // console.log(response.data);
 

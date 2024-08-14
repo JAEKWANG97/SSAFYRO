@@ -20,7 +20,11 @@ const createInterviewAnswer = function (userId, question, answer, faceExpression
 }
 
 const handleSubmitAnswer = async function (interviewAnswer) {
-    await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result", interviewAnswer)
+    await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result", interviewAnswer, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      })
     .then((response) => {
         // 제출 성공
         // console.log(response.data.response);

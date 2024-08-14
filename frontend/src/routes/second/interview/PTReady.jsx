@@ -14,7 +14,7 @@ export default function PTReady() {
   const { roomid } = useParams();
 
   async function leaveRoom() {
-    const token = localStorage.getItem("Token")
+    const token = localStorage.getItem("Token");
     try {
       await axios.post(
         `https://i11c201.p.ssafy.io:8443/api/v1/rooms/exit`,
@@ -23,13 +23,13 @@ export default function PTReady() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
-      )
-      console.log("Successfully left the room")
+      );
+      console.log("Successfully left the room");
     } catch (error) {
-      console.error("Error leaving the room: ", error)
+      console.error("Error leaving the room: ", error);
     }
   }
 
@@ -48,7 +48,7 @@ export default function PTReady() {
     });
 
     if (result.isConfirmed) {
-      await leaveRoom(); 
+      await leaveRoom();
       Swal.fire("면접 종료", "면접이 종료되었습니다.", "success");
       navigate("/second/interview");
     } else if (result.isDismissed) {
@@ -62,7 +62,7 @@ export default function PTReady() {
   };
 
   const Timer = () => {
-    const [seconds, setSeconds] = useState(900); // 15분 = 900초
+    const [seconds, setSeconds] = useState(60); // 15분 = 900초
     const timerRef = useRef();
 
     useEffect(() => {
@@ -103,22 +103,23 @@ export default function PTReady() {
     title: "다시 시도해주세요. (ERROR)",
     content:
       "현재 질문 정보를 불러오는 데 어려움이 있는 것 같습니다. 다시 시도하거나 조금 더 기다려주세요.",
-    question: [
-      "",
-      "",
-    ],
+    question: ["", ""],
   };
 
   // axios 데이터 요청
   const [interviewQuestion, setInerviewQuestion] = useState(initData);
-  const setPTQuestions = (questions) => useInterviewStore.setState({ PTQuestions: questions });
+  const setPTQuestions = (questions) =>
+    useInterviewStore.setState({ PTQuestions: questions });
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
 
   const getQuestion = function () {
     axios
       .get(APIURL + `interview/pt/${roomid}`, {
-        timeout: 300000
+        timeout: 300000,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
       })
       .then((response) => {
         setInerviewQuestion(response.data.response);
@@ -128,7 +129,7 @@ export default function PTReady() {
         console.log(error);
         setInerviewQuestion(dummyData);
       });
-  }
+  };
 
   let getQuestionTrigger = 1;
   useEffect(() => {
@@ -158,8 +159,9 @@ export default function PTReady() {
         <div className="bg-gray-200 p-6 rounded-lg mb-6">
           <h3 className="text-xl font-bold mb-4">{interviewQuestion.title}</h3>
           <p className="mb-4">{interviewQuestion.question[0]}</p>
-          {interviewQuestion.question.length > 1 && 
-            <p className="mb-4">{interviewQuestion.question[1]}</p>}
+          {interviewQuestion.question.length > 1 && (
+            <p className="mb-4">{interviewQuestion.question[1]}</p>
+          )}
           <p className="mb-2">{interviewQuestion.content}</p>
         </div>
         <div className="flex">

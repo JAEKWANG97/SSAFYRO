@@ -27,7 +27,7 @@ export default function WaitRoom() {
   const navigate = useNavigate();
   const [waitRoom, setWaitRoom] = useState(null);
   const [messages, setMessages] = useState([]);
-  const { setUserList, setUserNameList } = useRoomStore(); // zustand store의 setUserList 사용
+  const { setUserList, setUserNameMap } = useRoomStore(); // zustand store의 setUserList 사용
   const isInitialMount = useRef(true);
   const { setRoomType } = useInterviewStore();
   const interviewClient = useRef(null); // WebSocket client 추가
@@ -74,16 +74,16 @@ export default function WaitRoom() {
           const updatedRoomData = updatedResponse.data.response;
           setWaitRoom(updatedRoomData);
           setUserList(updatedRoomData.userList);
-          setUserNameList(updatedRoomData.userNameList)
+          setUserNameMap(updatedRoomData.userNameMap)
           // console.log("updatedRoomData : ", updatedRoomData);
           // console.log("참여자 정보: ", updatedRoomData.userList);
-          console.log("참여자 이름 리스트: ", updatedRoomData.userNameList)
+          // console.log("참여자 이름 리스트: ", updatedRoomData.userNameMap)
         } else {
           setWaitRoom(roomData);
           setUserList(roomData.userList);
-          setUserNameList(roomData.userNameList)
+          setUserNameMap(roomData.userNameMap)
           // console.log("참여자 정보: ", roomData.userList);
-          console.log("참여자 이름 리스트: ", roomData.userNameList)
+          // console.log("참여자 이름 리스트: ", roomData.userNameMap)
         }
       } catch (error) {
         console.error(error);
@@ -259,6 +259,7 @@ export default function WaitRoom() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("Token")}`
       },
       body: JSON.stringify({
         roomName: roomId,
@@ -428,7 +429,7 @@ export default function WaitRoom() {
                 messages={messages}
                 setMessages={setMessages}
               />
-              <div className="p-7 flex justify-center items-center ml-3 mr-5">
+              <div className="p-4 flex justify-center items-center ml-3 mr-5">
                 <Button
                   text="면접 시작"
                   type="WAITINGROOMSTART"
