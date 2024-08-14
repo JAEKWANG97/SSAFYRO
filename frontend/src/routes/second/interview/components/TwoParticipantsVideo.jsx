@@ -30,6 +30,7 @@ export default function TwoParticipantsVideo({
   userTurn,
   userNameList,
   setModalOpen,
+  serEvaluationModal,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);

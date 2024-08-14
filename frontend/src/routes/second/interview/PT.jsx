@@ -227,6 +227,7 @@ export default function PT() {
   };
 
   // 각 질문별 상호평가 결과 저장
+  const [evaluationModal, setEvaluationModal] = useState(false);
   const handleEvaluation = async function (targetUser, evaluationScore) {
     await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result/score", {
       userId: targetUser,
@@ -700,6 +701,7 @@ export default function PT() {
                   userTurn={userTurn}
                   userNameList={userNameList}
                   setModalOpen={setModalOpen}
+                  setEvaluationModal={setEvaluationModal}
                 />
               );
             } else {
@@ -723,6 +725,7 @@ export default function PT() {
                   userTurn={userTurn}
                   userNameList={userNameList}
                   setModalOpen={setModalOpen}
+                  setEvaluationModal={setEvaluationModal}
                 />
               );
             }
@@ -757,6 +760,7 @@ export default function PT() {
           </div>
         </div>
       </>}
+      {/* evaluation 모달창 */}
     </div>
   );
 }
