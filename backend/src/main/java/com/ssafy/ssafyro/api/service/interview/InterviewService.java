@@ -47,8 +47,10 @@ public class InterviewService {
         RoomRedis roomRedis = getRoomRedis(roomId);
         roomRedis.finishInterview();
 
-        Room room = roomRedis.toEntity();
-        roomRepository.save(room);
+        if (!roomRepository.existsById(roomId)) {
+            Room room = roomRedis.toEntity();
+            roomRepository.save(room);
+        }
 
         return new FinishResponse(roomRedisRepository.save(roomRedis));
     }
