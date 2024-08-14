@@ -7,7 +7,7 @@ import useAuthStore from '../../../stores/AuthStore';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 export default function Chart() {
-  const chartType = useAuthStore((state) => state.chartType); // chartType 가져오기
+  const chartType = useAuthStore((state) => state.chartType);
   const [allTotalScore, setAllTotalScore] = useState(null);
   const [allPronScore, setAllPronScore] = useState(null);
   const [userTotalScore, setUserTotalScore] = useState([]);
@@ -19,17 +19,17 @@ export default function Chart() {
   useEffect(() => {
     const fetchData = () => {
       const fetchAllScores = axios.get(`${APIURL}statistics-all-score`, {
-        params: { roomType: chartType }, // chartType 사용
+        params: { roomType: chartType },
         headers: { Authorization: `Bearer ${Token}` },
       });
 
       const fetchUserScores = axios.get(`${APIURL}statistics-score`, {
-        params: { roomType: chartType }, // chartType 사용
+        params: { roomType: chartType },
         headers: { Authorization: `Bearer ${Token}` },
       });
 
       const fetchUserExpressions = axios.get(`${APIURL}statistics-expression`, {
-        params: { roomType: chartType }, // chartType 사용
+        params: { roomType: chartType },
         headers: { Authorization: `Bearer ${Token}` },
       });
 
@@ -50,19 +50,18 @@ export default function Chart() {
     }
   }, [APIURL, Token, chartType]);
 
-
-  // Total Score 그래프 데이터
   const totalScoreData = {
     labels: ['전체 사용자', ...userTotalScore.map(score => score.title)],
     datasets: [
       {
         label: '평가 점수',
-        data: [Math.round(allTotalScore), ...userTotalScore.map(score => Math.round(score.totalScore))],         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)', 
+        data: [Math.round(allTotalScore), ...userTotalScore.map(score => Math.round(score.totalScore))],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
           ...Array(userTotalScore.length).fill('rgba(54, 162, 235, 0.2)')
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)', 
+          'rgba(255, 99, 132, 1)',
           ...Array(userTotalScore.length).fill('rgba(54, 162, 235, 1)')
         ],
         borderWidth: 1,
@@ -70,19 +69,18 @@ export default function Chart() {
     ],
   };
 
-  // Pronunciation Score 그래프 데이터
   const pronScoreData = {
     labels: ['전체 사용자', ...userTotalScore.map(score => score.title)],
     datasets: [
       {
         label: '발음 점수',
-        data: [Math.round(allPronScore), ...userTotalScore.map(score => Math.round(score.pronunciationScore))], 
+        data: [Math.round(allPronScore), ...userTotalScore.map(score => Math.round(score.pronunciationScore))],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           ...Array(userTotalScore.length).fill('rgba(75, 192, 192, 0.2)')
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)', 
+          'rgba(255, 99, 132, 1)',
           ...Array(userTotalScore.length).fill('rgba(75, 192, 192, 1)')
         ],
         borderWidth: 1,
@@ -90,16 +88,15 @@ export default function Chart() {
     ],
   };
 
-  // 파이 차트 데이터
   const expressionLabels = Object.keys(userExpressionScore);
   const expressionValues = Object.values(userExpressionScore);
   const totalExpressionValue = expressionValues.reduce((acc, value) => acc + value, 0);
-  const otherValue = 1 - totalExpressionValue; 
+  const otherValue = 1 - totalExpressionValue;
 
-  const percentageValues = expressionValues.map(value => (value * 100).toFixed(0)); // 퍼센트로 변환
-  const percentageOtherValue = (otherValue * 100).toFixed(0); 
+  const percentageValues = expressionValues.map(value => (value * 100).toFixed(0));
+  const percentageOtherValue = (otherValue * 100).toFixed(0);
   const pieData = {
-    labels: [...expressionLabels, '기타'],
+    labels: [],
     datasets: [
       {
         data: [...percentageValues, percentageOtherValue],
@@ -120,7 +117,7 @@ export default function Chart() {
     ],
   };
 
-  const options = {
+  const barOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -133,7 +130,7 @@ export default function Chart() {
         callbacks: {
           label: function(tooltipItem) {
             const value = tooltipItem.raw;
-            return `${tooltipItem.label}: ${value}%`; // 값 뒤에 % 기호 추가
+            return ` ${value}점`;
           }
         }
       }
@@ -144,29 +141,70 @@ export default function Chart() {
         max: 100,
         ticks: {
           callback: function(value) {
-            return Math.round(value); 
+            return Math.round(value);
           }
         }
       },
     },
   };
-  
 
+  const pronScoreOptions = {
+    ...barOptions,
+    plugins: {
+      ...barOptions.plugins,
+      title: {
+        display: true,
+        text: '발음 점수',
+        align: 'center',
+      },
+    },
+    scales: {
+      ...barOptions.scales,
+      y: {
+        beginAtZero: true,
+        max: 5,
+        ticks: {
+          callback: function(value) {
+            return Math.round(value);
+          }
+        }
+      },
+    },
+  };
+
+  const pieOptions = {
+    ...barOptions,
+    plugins: {
+      ...barOptions.plugins,
+      title: {
+        display: true,
+        text: '표정 점수',
+        align: 'center',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem) {
+            const value = tooltipItem.raw;
+            return ` ${value}%`; // % 표시 추가
+          }
+        }
+      }
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex flex-row justify-between gap-4 w-full">
         <div className="w-full h-64 lg:w-1/2">
-          <Bar data={totalScoreData} options={{ ...options, plugins: { ...options.plugins, title: { display: true, text: '평가 점수' } } }} />
+          <Bar data={totalScoreData} options={{ ...barOptions, plugins: { ...barOptions.plugins, title: { display: true, text: '평가 점수' } } }} />
         </div>
         <div className="w-full h-64 lg:w-1/2">
-          <Bar data={pronScoreData} options={{ ...options, plugins: { ...options.plugins, title: { display: true, text: '발음 점수' } } }} />
+          <Bar data={pronScoreData} options={pronScoreOptions} />
         </div>
       </div>
       <div className="w-full h-80 lg:w-1/2 mx-auto pl-20">
-        <Pie data={pieData} options={{ ...options, plugins: { ...options.plugins, title: { display: true, text: '표정 점수' } } }} />
+        <Pie data={pieData} options={pieOptions} />
       </div>
     </div>
-
   );
 }

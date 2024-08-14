@@ -3,24 +3,25 @@ import FirstdNav from "./components/FirstNav";
 import Ismajor from "./../../components/Ismajor";
 import useFirstStore from "../../stores/FirstStore";
 import axios from "axios";
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function Test() {
-  const { getIconById } = useFirstStore();
-  const selected = useFirstStore((state) => state.selected); // 전공자 비전공자 선택 유무
-  const setSelected = useFirstStore((state) => state.setSelected);
-
   const [allProblems, setAllProblems] = useState([]); // 전체 데이터를 저장할 상태
   const [filteredProblems, setFilteredProblems] = useState([]); // 필터링된 데이터를 저장할 상태
 
+  const { getIconById, saved, toggleSave, setSaved, selected, setSelected } = useFirstStore(); 
+
   const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/'; 
+  const Token = localStorage.getItem("Token");
 
   const [page, setPage] = useState(1); // 현재 페이지 번호 (1부터 시작)
   const [size] = useState(5); // 페이지당 항목 수
-
   const [sortOrder, setSortOrder] = useState("asc"); // 기본 정렬 상태를 오름차순으로 설정
 
-  const Token = localStorage.getItem("Token")
-  
+ 
   // 적성진단 문제 가져오기
   useEffect(() => {
     axios
@@ -32,17 +33,12 @@ export default function Test() {
         headers: {
           Authorization: `Bearer ${Token}`,
         },
-      }, 
-      )
+      })
       .then((response) => {
-        // console.log(response.data);
-
-        // 데이터를 오름차순으로 정렬하여 설정
         const sortedData = response.data.response.problemInfos.sort((a, b) =>
           a.difficulty.localeCompare(b.difficulty)
         );
-
-        setAllProblems(sortedData); // 정렬된 전체 데이터를 상태에 설정
+        setAllProblems(sortedData);
       })
       .catch((error) => {
         console.log(error);
@@ -54,7 +50,6 @@ export default function Test() {
     let filteredData = [];
 
     if (selected === "major") {
-      // 난이도가 D3, D4인 데이터 각각 25개씩 필터링
       const d3Problems = allProblems.filter(
         (item) => item.difficulty === "D3"
       ).slice(0, 25);
@@ -63,15 +58,14 @@ export default function Test() {
         (item) => item.difficulty === "D4"
       ).slice(0, 25);
 
-      filteredData = [...d3Problems, ...d4Problems]; // D3과 D4 문제 합침
+      filteredData = [...d3Problems, ...d4Problems];
     } else {
-      // 난이도가 D1~D2인 데이터 필터링
       filteredData = allProblems.filter(
         (item) => item.difficulty === "D1" || item.difficulty === "D2"
       );
     }
-    setFilteredProblems(filteredData); // 필터링된 데이터로 상태 업데이트
-    setPage(1); // 선택이 변경될 때마다 페이지를 1로 초기화
+    setFilteredProblems(filteredData);
+    setPage(1);
   }, [selected, allProblems]);
 
   // 페이지에 따른 데이터를 설정하는 함수
@@ -85,25 +79,22 @@ export default function Test() {
   const sortData = (order) => {
     const sortedData = [...filteredProblems].sort((a, b) => {
       if (order === "asc") {
-        return a.difficulty.localeCompare(b.difficulty); // 난이도 기준 오름차순 정렬
+        return a.difficulty.localeCompare(b.difficulty);
       } else {
-        return b.difficulty.localeCompare(a.difficulty); // 난이도 기준 내림차순 정렬
+        return b.difficulty.localeCompare(a.difficulty);
       }
     });
-    setFilteredProblems(sortedData); // 정렬된 데이터로 상태 업데이트
+    setFilteredProblems(sortedData);
   };
 
   const toggleSortOrder = () => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newOrder);
-    sortData(newOrder); // 새로운 정렬 상태에 따라 데이터 정렬 실행
+    sortData(newOrder);
   };
 
-  // 페이지 변경 함수
-  const changePage = (newPage) => {
-    if (newPage > 0 && newPage <= Math.ceil(filteredProblems.length / size)) {
-      setPage(newPage);
-    }
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   return (
@@ -144,11 +135,17 @@ export default function Test() {
                 >
                   정답률
                 </th>
+                {/* <th
+                  scope="col"
+                  className="px-2 py-3 pl-20 text-center overflow-hidden" // 추천수 열을 오른쪽으로 이동
+                >
+                  추천수
+                </th> */}
                 <th
                   scope="col"
                   className="px-2 py-3 text-center overflow-hidden"
                 >
-                  추천수
+                  저장
                 </th>
               </tr>
             </thead>
@@ -156,7 +153,7 @@ export default function Test() {
               {getCurrentPageProblems().map((item) => (
                 <tr
                   key={item.id}
-                  className="bg-white border-b-2 hover:bg-gray-100 hover:text-blue-400 hover:font-bold"
+                  className="bg-white border-b-2"
                 >
                   <td className="px-4 py-4 text-gray-900 whitespace-nowrap text-center flex items-center justify-center">
                     <div className="flex items-center justify-center">
@@ -173,8 +170,41 @@ export default function Test() {
                   <td className="px-2 py-4 pl-20 text-center text-base">
                     {item.correctRate}%
                   </td>
+                  {/* <td className="px-8 py-4 pl-20 text-center text-base"> 
+                    {item.recommendationCount}
+                  </td> */}
                   <td className="px-2 py-4 text-center text-base">
-                  {item.recommendationCount}
+                    <button onClick={() => toggleSave(item.id)}>
+                      {saved[item.id] ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                          />
+                        </svg>
+                      )}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -185,73 +215,19 @@ export default function Test() {
         {/* 페이지네이션 */}
         <nav
           aria-label="Page navigation example"
-          className="flex justify-center mt-4" // 페이지네이션을 가운데 정렬
+          className="flex justify-center mt-4"
         >
-          <ul className="flex items-center -space-x-px h-8 text-sm">
-            <li>
-              <button
-                onClick={() => changePage(page - 1)}
-                className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 "
-              >
-                <span className="sr-only">Previous</span>
-                <svg
-                  className="w-2.5 h-2.5 rtl:rotate-180"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 6 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 1 1 5l4 4"
-                  />
-                </svg>
-              </button>
-            </li>
-            {Array.from(
-              { length: Math.ceil(filteredProblems.length / size) },
-              (_, index) => (
-                <li key={index + 1}>
-                  <button
-                    onClick={() => changePage(index + 1)}
-                    className={`flex items-center justify-center px-3 h-8 leading-tight ${
-                      page === index + 1
-                        ? "text-blue-600 border border-blue-300 bg-blue-50"
-                        : "text-gray-500 bg-white border border-gray-300"
-                    } hover:bg-gray-100 hover:text-gray-700`}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              )
+          <Pagination
+            count={Math.ceil(filteredProblems.length / size)}
+            page={page}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                {...item}
+              />
             )}
-            <li>
-              <button
-                onClick={() => changePage(page + 1)}
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-              >
-                <span className="sr-only">Next</span>
-                <svg
-                  className="w-2.5 h-2.5 rtl:rotate-180"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 6 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 9 4-4-4-4"
-                  />
-                </svg>
-              </button>
-            </li>
-          </ul>
+          />
         </nav>
       </div>
     </>

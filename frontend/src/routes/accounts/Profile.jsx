@@ -7,6 +7,8 @@ import UserImg from "./../../../public/main/user.jpg";
 import PersonaltyImg from "./../../../public/profile/personality.png";
 import PtImg from "./../../../public/profile/pt.png";
 import Button from "./../../../src/components/Button";
+import TestList from "./components/TestList";
+
 import {
   getUserInfo,
   getInterviewInfo,
@@ -160,7 +162,7 @@ export default function Profile() {
               <EssayDetail />
             </TETabsPane>
             <TETabsPane show={fillActive === "tab2"}>
-              {/* Dashboard content */}
+              <TestList />
             </TETabsPane>
             <TETabsPane show={fillActive === "tab3"}>
               <div className="pl-7">
@@ -195,7 +197,7 @@ export default function Profile() {
                 {interviewInfo.map((info, index) => (
                   <div
                     key={index}
-                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg"
+                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg "
                     style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
                     onClick={() =>
                       info.type === "PERSONALITY"
