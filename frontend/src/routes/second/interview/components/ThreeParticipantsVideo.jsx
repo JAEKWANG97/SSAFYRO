@@ -136,7 +136,7 @@ export default function ThreeParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            onClick={setEvaluationModal(true)}
+            onClick={() => setEvaluationModal(true)}
             // onClick={handleStartSurvey}
           >
             <svg

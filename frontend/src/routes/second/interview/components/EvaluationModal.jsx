@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 export default function EvaluationModal ({ targetUser, setEvaluationModal, handleEvaluation }) {
-  const [evaluationScore, setEvaluationScore] = useState(0);
+  const [evaluationScore, setEvaluationScore] = useState("");
   
   return (<>
     <div>
