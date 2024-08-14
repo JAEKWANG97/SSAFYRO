@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -211,7 +212,7 @@ public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
     @DisplayName("SW 적성 진단 테스트 문제 스크랩 생성 API")
     @Test
     @WithMockJwtAuthentication
-    void createScrapedProblemsBy() throws Exception {
+    void createScrapedProblem() throws Exception {
         CodingTestProblemScrapRequest request = new CodingTestProblemScrapRequest(1L);
         CodingTestProblemScrapResponse response = new CodingTestProblemScrapResponse(1L, 1L);
 
@@ -232,6 +233,44 @@ public class CodingTestProblemControllerDocsTest extends RestDocsSupport {
                                 requestFields(
                                         fieldWithPath("problemId").type(JsonFieldType.NUMBER)
                                                 .description("문제 id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
+                                                .description("성공 여부"),
+                                        fieldWithPath("response").type(JsonFieldType.OBJECT)
+                                                .description("응답"),
+                                        fieldWithPath("response.problemScrapId").type(JsonFieldType.NUMBER)
+                                                .description("스크랩 id"),
+                                        fieldWithPath("response.userId").type(JsonFieldType.NUMBER)
+                                                .description("유저 id"),
+                                        fieldWithPath("error").type(JsonFieldType.NULL)
+                                                .description("에러")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("SW 적성 진단 테스트 문제 스크랩 삭제 API")
+    @Test
+    @WithMockJwtAuthentication
+    void deleteScrapedProblem() throws Exception {
+        CodingTestProblemScrapResponse response = new CodingTestProblemScrapResponse(1L, 1L);
+
+        given(codingTestProblemService.deleteScrap(any(Long.class), any(Long.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        delete("/api/v1/coding-test-problems/scrap/{id}", 1L)
+                                .header("Authorization", "Bearer {JWT Token}")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("problem-scrap-delete",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("id").description("스크랩 id")
                                 ),
                                 responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN)

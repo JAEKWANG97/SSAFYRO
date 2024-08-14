@@ -53,6 +53,12 @@ public class CodingTestProblemService {
         return CodingTestProblemScrapResponse.of(problemScrap.getId(), userId);
     }
 
+    public CodingTestProblemScrapResponse deleteScrap(Long id, Long userId) {
+        problemScrapRepository.deleteById(id);
+
+        return CodingTestProblemScrapResponse.of(id, userId);
+    }
+
     private CodingTestProblem getCodingTestProblem(Long id) {
         return codingTestProblemRepository.findById(id)
                 .orElseThrow(() -> new CodingTestProblemNotFoundException("Problem not found"));
