@@ -761,6 +761,11 @@ export default function PT() {
         </div>
       </>}
       {/* evaluation 모달창 */}
+      { evaluationModal && <>
+        <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
+          
+        </div>
+      </>}
     </div>
   );
 }
