@@ -225,7 +225,7 @@ export default function InterviewResult() {
       <Modal 
         show={openModal} 
         onClose={handleCloseModal} 
-        className="fixed inset-0 flex items-center justify-center"
+        position={'center'}
         size="6xl" 
       >
         <Modal.Header>{chartType === 'PERSONALITY' ? '인성 면접 점수' : 'PT 면접 점수'}</Modal.Header>

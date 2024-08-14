@@ -4,81 +4,72 @@ import 'react-vertical-timeline-component/style.min.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { Card } from 'flowbite-react';
-import { getEmotionImage } from '../../../util/get-emotion-image-white';
+
+import { getEmotionImageColor } from '../../../util/get-emotion-image-color';
 
 export default function PersonalityFeedback() {
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const location = useLocation();
   const info = location.state?.info;  // 면접정보(레포트ID, 면접종류, 총점, 발음점수, 면접일시)
-  const [count, setCount] = useState(0)
-  const [reportDetail, setReportDetail] = useState([])
+  const [count, setCount] = useState(0);
+  const [reportDetail, setReportDetail] = useState([]);
 
-  useEffect(() => {
-    axios.
-    get(`${APIURL}report/${info.reportId}`,
-      {headers: {
-        Authorization: `Bearer ${localStorage.getItem("Token")}`,
-      },
-    })
-    .then((res) => {
-      console.log(res.data.response);
-      setCount(res.data.response.qnaCount)
-      setReportDetail(res.data.response.reportDetails)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    // 페이지 로드 시 화면을 맨 위로 스크롤
-    window.scrollTo(0, 0);
-  }, []);
-
-  //roomId 기준으로 면접방 정보 가져와서 렌더링
-  // const roomContent = 
-  //   {
-  //     roomId : 1,
-  //     title : '전공자 인성 면접',
-  //     content : '열심히 하실 분 구해요',
-  //     create : '2024-08-11',
-  //     count: 5
-  //   }
+  const formattedDate = new Date(info.createdDate).toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).replace(/\./g, '-').replace(/ /g, '').replace(/-$/, '');
   
 
-  // 해당 면접에 대한 [질문, 답변, 피드백, 표정(표정과 %), 발음점수] 얻어와서 렌더링
-  // const allContent = [
-  //   {
-  //     question: '1분 자기소개를 해주세요.',
-  //     answer: '안녕하세요, 저는 홍길동입니다. 저는 성실함과 책임감을 바탕으로 다양한 도전을 통해 성장해 왔습니다. 대학에서는 경영학을 전공하며 팀 프로젝트와 동아리 활동에서 리더 역할을 맡아 팀원들과 협력하여 목표를 달성하는 경험을 쌓았습니다. 특히, 지난 인턴십에서는 프로젝트 관리와 고객 대응 업무를 통해 문제 해결 능력을 키웠고, 이를 통해 팀의 성과를 높이는 데 기여했습니다. 앞으로도 제 강점인 분석력과 문제 해결 능력을 바탕으로 회사의 성장에 기여하고 싶습니다. 감사합니다.',
-  //     feedback: '홍길동님의 자기소개는 매우 깔끔하고 효과적으로 자신의 강점과 경험을 잘 전달하고 있습니다. 그러나 더욱 강력한 인상을 남기기 위해 몇 가지 개선할 수 있는 부분이 있습니다. 아래는 제안된 피드백입니다.',
-  //     expression: [
-  //       { img: happyImg, percentage: 60 },
-  //       { img: neutralImg, percentage: 30 },
-  //       { img: surprisedImg, percentage: 10 }
-  //     ],
-  //     pronscore: 80
-  //   }]
+  useEffect(() => {
+    axios
+      .get(`${APIURL}report/${info.reportId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.response);
+        setCount(res.data.response.qnaCount);
+        setReportDetail(res.data.response.reportDetails);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // 페이지 로드 시 화면을 맨 위로 스크롤
+    window.scrollTo(0, 0);
+  }, [info]);
 
   return (
     <>
-      <div className="container mx-auto p-5 bg-white rounded-lg shadow-md mt-10 mb-20" style={{ maxWidth: '80%', minHeight: '80vh' }}>
-      <div className='flex flex-col items-center my-10'>
-        <span className="text-2xl font-semibold text-center">{info.title}</span>
-        <div className='mt-4 flex flex-col items-start'>
-          <span className="text-md text-gray-600">시행 일자 | {info.createDate}</span>
-          <span className="text-md text-gray-600 mt-1">질답 횟수 | {count}회</span>
+      <div className="container mx-auto p-5 bg-white rounded-lg shadow-md mt-10 mb-20" style={{ maxWidth: '70%', minHeight: '80vh' }}>
+        <div className='flex flex-col items-center my-10'>
+          <span className="text-2xl font-semibold text-center">{info.title}</span>
+          <div className='mt-4 flex flex-col items-start'>
+            <span className="text-md text-gray-600">시행 일자 | {formattedDate}</span>
+            <span className="text-md text-gray-600 mt-1">질답 횟수 | {count}회</span>
+          </div>
+          <div className="w-1/2 h-0.5 bg-gray-400 mt-4"></div>
         </div>
-        <div className="w-1/2 h-0.5 bg-gray-400 mt-4"></div>
-      </div>
 
         <VerticalTimeline
           lineColor="#000"
-          className="ml-[-150px]" 
+          layout="1-column-left"
+          className="custom-timeline"
+          style={{ marginLeft: '20%' }}  // 타임라인 위치 조정
         >
           {reportDetail.map((content, index) => (
             <VerticalTimelineElement
               key={index}
               className="vertical-timeline-element--work"
-              contentStyle={{ padding: '0', boxShadow: 'none', margin: '0' }}
+              contentStyle={{ 
+                padding: '0', 
+                boxShadow: 'none', 
+                margin: '0', 
+                marginLeft: '13%',  // 카드 위치 조정
+                width: '80%',       // 카드 크기 조정
+              }}
               contentArrowStyle={{ display: 'none' }}
               iconStyle={{
                 background: '#d1d5db',
@@ -97,22 +88,22 @@ export default function PersonalityFeedback() {
                 </svg>
               }
               style={{ marginBottom: '10px' }}
-              position="right"
+              position="right"  // 카드를 타임라인의 오른쪽에 표시
             >
-              <Card className="mb-5 w-full shadow-none">
+              <Card className="mb-5 shadow-none">
                 <div className='flex'>
                   <div className='flex'>
-                  {Object.entries(content.expression).map(([emotion, value]) => (
-                    <div key={emotion} className='flex flex-col items-center'>
-                      <img 
-                        src={getEmotionImage(emotion)} 
-                        alt={emotion} 
-                        className="w-10 h-10 mr-2" 
-                        style={{ filter: 'invert(100%)' }} 
-                      />
-                      <span className='pr-1 pt-1 text-sm'>{(value * 100).toFixed(2)}%</span>
-                    </div>
-                  ))}
+                    {Object.entries(content.expression).map(([emotion, value]) => (
+                      <div key={emotion} className='flex flex-col items-center'>
+                        <img 
+                          src={getEmotionImageColor(emotion)} 
+                          alt={emotion} 
+                          className="w-10 h-10 mr-2" 
+                          // style={{ filter: 'invert(100%)' }} 
+                        />
+                        <span className='pr-1 pt-1 text-sm'>{(value * 100).toFixed(0)}%</span>
+                      </div>
+                    ))}
                   </div>
 
                   <div className='ml-auto flex flex-col items-end pt-2'>
@@ -144,6 +135,17 @@ export default function PersonalityFeedback() {
           />
         </VerticalTimeline>
       </div>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .custom-timeline {
+            margin-left: 10%; /* 타임라인 위치 조정 */
+          }
+          .vertical-timeline-element--work .vertical-timeline-element-content {
+            margin-left: 10%; /* 카드 위치 조정 */
+            width: 80%; /* 카드 너비 조정 */
+          }
+        }
+      `}</style>
     </>
   );
 }
