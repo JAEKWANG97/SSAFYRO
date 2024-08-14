@@ -3,6 +3,7 @@ import axios from "axios";
 import { Card } from 'flowbite-react';
 import Button from "../../../components/Button";
 
+
 export default function EssayDetail() {
   const [essayQuestion, setEssayQuestion] = useState(null);
   const [essayData, setEssayData] = useState(null); // 불러온 에세이 데이터 
@@ -34,12 +35,38 @@ export default function EssayDetail() {
       });
   }, []);
 
-  // mockquestion을 ,로 분리하여 배열로 변환하고 문장 간 간격 조정
-  const formattedQuestion = mockquestion.split(',').map((item, index) => (
-    <span key={index} className="block mb-1 text-center">
-      {item.trim()}
-    </span>
-  ));
+        const questionResponse = await axios.get(`${APIURL}essay-questions`, {
+          params: {
+            type: userType, 
+            generation: 11 
+          },
+          headers: { Authorization: `Bearer ${Token}` },
+        });
+
+        const questionData = questionResponse.data.response;
+        setQuestion(questionData.content);
+        setEssayId(questionData.id)
+
+        const Info = localStorage.getItem('userInfo');
+        if (Info) {
+          const parsedInfo = JSON.parse(Info);
+          const userId = parsedInfo.userId;
+
+          const essayResponse = await axios.get(`${APIURL}essays`, {
+            params: { userId: userId },
+            headers: { Authorization: `Bearer ${Token}` },
+          });
+
+          setEssayData(essayResponse.data.response.content);
+          setEditedEssayData(essayResponse.data.response.content);
+        }
+      } catch (error) {
+        // console.error("Error fetching essay details:", error);
+      }
+    };
+
+    fetchEssayDetails();
+  }, [APIURL, Token]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -71,6 +98,12 @@ export default function EssayDetail() {
       .catch((error) => {
         console.log(error);
       });
+
+      setEssayData(editedEssayData);
+      setIsEditing(false);
+    } catch (error) {
+      // console.error("Error saving essay data:", error);
+    }
   };
 
   const handleTextareaChange = (event) => {

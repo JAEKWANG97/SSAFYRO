@@ -17,9 +17,11 @@ const useAuthStore = create((set) => ({
       ...state.userInfo,
       ...newUserInfo
     }
-  }))
-}));
+  })),
+  chartType: null, // chart 타입
+  setChartType: (type) => set({ chartType: type })
 
+}))
   
 
 export default useAuthStore;;

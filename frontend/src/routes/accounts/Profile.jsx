@@ -53,11 +53,11 @@ export default function Profile() {
             headers: { Authorization: `Bearer ${Token}` },
           })
           .then((res)=>{
-            console.log(res.data)
+            // console.log(res.data)
             setInterviewInfo(res.data.response.reports);
           })
           .catch((error)=>{
-            console.log(error)
+            // console.log(error)
           })
 
         
@@ -71,16 +71,16 @@ export default function Profile() {
             },
           })
           .then((res) => {
-            console.log(res.data.response)
+            // console.log(res.data.response)
             setEssayData(res.data.response.content); 
             
           });
           
         } else {
-          console.error("No userInfo found in localStorage.");
+          // console.error("No userInfo found in localStorage.");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       }
     };
 
@@ -137,10 +137,10 @@ export default function Profile() {
               </div>
               <div className="flex flex-col">
                 <span className="text-sm text-gray-500">
-                  인성 모의 면접 <span className="font-bold text-gray-900">{userInfo.personalCount}</span> 번
+                  인성 모의 면접 <span className="font-bold text-gray-900">{userInfo.personalCount}</span> 회
                 </span> 
                 <span className="text-sm text-gray-500">
-                  PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 번
+                  PT 모의 면접 <span className="font-bold text-gray-900">{userInfo.presentationCount}</span> 회
                 </span>
               </div>
             </div>

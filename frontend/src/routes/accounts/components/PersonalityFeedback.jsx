@@ -4,7 +4,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { Card } from 'flowbite-react';
-import { getEmotionImage } from '../../../util/get-emotion-image';
+import { getEmotionImage } from '../../../util/get-emotion-image-white';
 
 export default function PersonalityFeedback() {
 
