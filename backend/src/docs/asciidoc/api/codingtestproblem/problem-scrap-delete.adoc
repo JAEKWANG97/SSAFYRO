@@ -1,0 +1,12 @@
+[[problem-scrap-delete]]
+=== SW 적성 진단 테스트 문제 스크랩 삭제
+
+==== HTTP Request
+
+include::{snippets}/problem-scrap-delete/http-request.adoc[]
+include::{snippets}/problem-scrap-delete/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/problem-scrap-delete/http-response.adoc[]
+include::{snippets}/problem-scrap-delete/response-fields.adoc[]

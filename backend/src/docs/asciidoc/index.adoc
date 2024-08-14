@@ -71,6 +71,7 @@ include::api/essayquestion/get-essay-question-by-major-type-and-generation.adoc[
 include::api/codingtestproblem/get-problems.adoc[]
 include::api/codingtestproblem/get-problem-by-id.adoc[]
 include::api/codingtestproblem/problem-scrap-save.adoc[]
+include::api/codingtestproblem/problem-scrap-delete.adoc[]
 include::api/codingtestproblem/get-scraped-problems-by-user-id.adoc[]
 
 [[it-knowledge-API]]
