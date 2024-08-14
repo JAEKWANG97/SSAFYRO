@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.security;
 
+import com.ssafy.ssafyro.api.service.user.UserInfo;
 import com.ssafy.ssafyro.api.service.user.UserService;
 import com.ssafy.ssafyro.domain.user.User;
 import com.ssafy.ssafyro.security.Jwt.Claims;
@@ -26,15 +27,20 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        String username = getUsername(authentication);
+        UserInfo userInfo = createUserInfo(authentication);
+        User user = userService.loginOAuth(userInfo);
 
-        User user = userService.loginOAuth(username);
         sendToken(response, createJWT(user), user);
     }
 
-    private String getUsername(Authentication authentication) {
+    private UserInfo createUserInfo(Authentication authentication) {
         CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-        return principal.getName();
+
+        return new UserInfo(
+                principal.getName(),
+                principal.getNickname(),
+                principal.getProviderId()
+        );
     }
 
     private String createJWT(User user) {
