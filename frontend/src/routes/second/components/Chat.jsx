@@ -123,8 +123,8 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
   };
 
   return (
-    <div className="flex-grow rounded-lg p-5 bg-white shadow-md mt-7 mr-2 flex flex-col mb-4 h-[200px]">
-      <h1 className="font-bold mb-4">Chat</h1>
+    <div className="flex-grow rounded-lg p-5 bg-white shadow-md mt-5 mr-2 flex flex-col mb-1 h-[200px]">
+      <h1 className="font-bold mb-2">Chat</h1>
       <hr className="mb-4" />
 
       <div className="flex-grow overflow-y-auto mb-4">

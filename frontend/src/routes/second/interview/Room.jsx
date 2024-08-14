@@ -330,7 +330,7 @@ export default function WaitRoom() {
   useEffect(() => {
     if (joinRoomTrigger === 1) {
       joinRoomTrigger = 0;
-      joinRoom(roomid, userInfo.userName + Math.floor(Math.random() * 101));
+      joinRoom(roomid, userInfo.userName);
     }
   }, [joinRoomTrigger]);
 
@@ -352,7 +352,7 @@ export default function WaitRoom() {
   const emptyDivs = Array(2 - Object.keys(groupedTracks).length).fill(null);
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center" style={{ maxHeight: "900px" }}>
       <PreventRefresh />
       <div
         className="w-full mt-8 mb-8 overflow-hidden"
@@ -376,9 +376,9 @@ export default function WaitRoom() {
             />
           </div>
 
-          <div className="flex h-[95%] rounded-xl mt-4 bg-gray-50">
-            <div className="w-[70%] flex flex-col p-4">
-              <div className="flex-grow rounded-lg p-1 flex items-center justify-between h-[50%]">
+          <div className="flex h-[92%] rounded-xl mt-2 bg-gray-50">
+            <div className="w-[70%] flex flex-col p-2">
+              <div className="flex-grow rounded-lg px-2 py-1 flex items-center justify-between h-[50%]">
                 <div className="w-[32%] h-[90%] rounded-lg flex flex-col items-center justify-center">
                   {localTrack && (
                     <div className="w-full h-full">
@@ -393,7 +393,7 @@ export default function WaitRoom() {
                 {Object.entries(groupedTracks).map(([participant, tracks]) => (
                   <div
                     key={participant}
-                    className="w-[32%] h-[90%] rounded-lg flex flex-col items-center justify-center"
+                    className="w-[32%] h-[92%] rounded-lg flex flex-col items-center justify-center"
                   >
                     {tracks.video && (
                       <VideoComponent
@@ -412,7 +412,7 @@ export default function WaitRoom() {
                 {emptyDivs.map((_, index) => (
                   <div
                     key={index}
-                    className="w-[32%] h-[90%] bg-gray-200 rounded-2xl flex flex-col items-center justify-center"
+                    className="w-[32%] h-[92%] bg-gray-200 rounded-2xl flex flex-col items-center justify-center"
                   >
                     <div className="flex items-center justify-center h-full text-gray-400">
                       No participant
@@ -422,7 +422,7 @@ export default function WaitRoom() {
               </div>
               <InterviewTips interviewType={waitRoom.type} />
             </div>
-            <div className="w-[30%] flex flex-col justify-between">
+            <div className="w-[30%] flex flex-col justify-between mr-1">
               <Chat
                 currentUser={userInfo}
                 currentRoom={roomid}

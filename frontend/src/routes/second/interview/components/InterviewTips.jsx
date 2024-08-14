@@ -81,7 +81,7 @@ export default function InterviewTips({ interviewType }) {
 
   return (
     <div
-      className="p-5 bg-white shadow-md rounded-xl ml-2 mr-2 mt-3 flex flex-col justify-between"
+      className="p-5 bg-white shadow-md rounded-xl ml-2 mr-2 mt-1 mb-2 flex flex-col justify-between"
       style={{ height: "50%", maxHeight: "380px" }}
     >
       <div

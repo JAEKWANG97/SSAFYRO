@@ -42,6 +42,7 @@ import Survey from "../../../components/Survey";
 
 // 알림창 라이브러리
 import Swal from "sweetalert2";
+import InterviewQuestion from "./components/InterviewQuestion";
 
 export default function PT() {
   // 방 정보 가져오기
@@ -197,7 +198,7 @@ export default function PT() {
           question: question,
           answer: answer,
           pronunciationScore: parseInt(pronunciationScore),
-          evaluationScore: Math.floor((Math.random() * 3) + 3), // 3, 4, 5 중에 랜덤으로 하나
+          evaluationScore: Math.floor(Math.random() * 3 + 3), // 3, 4, 5 중에 랜덤으로 하나
           happy: faceExpressionData.happy,
           disgust: faceExpressionData.disgusted,
           sad: faceExpressionData.sad,
@@ -539,9 +540,9 @@ export default function PT() {
             //   `${parsedMessage.nowStage} 파일을 받았으므로 타이머를 시작합니다.`
             // );
 
-            if (parsedMessage.nowStage === 'FIRST') {
+            if (parsedMessage.nowStage === "FIRST") {
               setUserTurn(0);
-            } else if (parsedMessage.nowStage === 'SECOND') {
+            } else if (parsedMessage.nowStage === "SECOND") {
               setUserTurn(1);
             } else {
               setUserTurn(2);
@@ -598,7 +599,7 @@ export default function PT() {
   const handleTurnEnd = () => {
     interviewTurnCounter.current += 1;
 
-    const nextTurn = (userTurn + 1);
+    const nextTurn = userTurn + 1;
     console.log(nextTurn);
     setUserTurn(nextTurn);
 
@@ -617,7 +618,7 @@ export default function PT() {
         }
       });
     } else {
-      console.log("못들어감")
+      console.log("못들어감");
     }
   };
 
@@ -664,24 +665,6 @@ export default function PT() {
   const renewTotalResult = function (newResult) {
     setTotalResult((prev) => [...prev, newResult]);
   };
-
-  // 대사 출력 스타일링
-  const [displayedText, setDisplayedText] = useState("");
-
-  useEffect(() => {
-    const fullText = `안녕하세요! ${userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요!`;
-    let index = 0;
-
-    const typingInterval = setInterval(() => {
-      setDisplayedText((prev) => prev + fullText[index]);
-      index += 1;
-      if (index === fullText.length) {
-        clearInterval(typingInterval);
-      }
-    }, 50); // 타이핑 속도 조절
-
-    return () => clearInterval(typingInterval); // 컴포넌트 언마운트 시 타이핑 멈춤
-  }, [userInfo.userName]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -778,15 +761,19 @@ export default function PT() {
               alt="botIcon"
               className="w-[50px] h-[50px] rounded-full bg-blue-500"
             />
-            <p className="ml-4">
-              {displayedText}
-              {/* 안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
-              드릴게요!  */}
-              <br />
-              {questionCount < 2
+            {/* <p className="ml-4">
+              {questionCount === 0 && (
+                <>
+                  안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
+                  드릴게요!
+                  <br />
+                </>
+              )}
+              {questionCount < questions.length
                 ? questions[questionCount]
                 : "본인 질문이 종료되었습니다."}
-            </p>
+            </p> */}
+            <InterviewQuestion userInfo={userInfo} questions={questions} questionCount={questionCount} />
           </div>
         </div>
       </div>
