@@ -30,7 +30,7 @@ const useFirstStore = create(
         const Token = localStorage.getItem('Token');
         const saved = get().saved;
         const url = saved[id]
-          ? `${APIURL}coding-test-problems/scrap/r`
+          ? `${APIURL}coding-test-problems/scrap/${id}`
           : `${APIURL}coding-test-problems/scrap`;
 
         const method = saved[id] ? 'delete' : 'post';

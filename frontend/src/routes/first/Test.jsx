@@ -12,7 +12,7 @@ export default function Test() {
   const [allProblems, setAllProblems] = useState([]); // 전체 데이터를 저장할 상태
   const [filteredProblems, setFilteredProblems] = useState([]); // 필터링된 데이터를 저장할 상태
 
-  const { getIconById, saved, toggleSave, setSaved, selected, setSelected } = useFirstStore(); 
+  const { getIconById, saved, toggleSave, selected, setSelected } = useFirstStore(); 
 
   const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/'; 
   const Token = localStorage.getItem("Token");
@@ -21,6 +21,7 @@ export default function Test() {
   const [size] = useState(5); // 페이지당 항목 수
   const [sortOrder, setSortOrder] = useState("asc"); // 기본 정렬 상태를 오름차순으로 설정
 
+  console.log(saved)
  
   // 적성진단 문제 가져오기
   useEffect(() => {

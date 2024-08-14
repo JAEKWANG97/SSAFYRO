@@ -7,11 +7,11 @@ export default function TestList() {
   const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/'; 
   const Token = localStorage.getItem('Token');
   const [userProblem, setUserProblem] = useState([]);
-  const { getIconById } = useFirstStore();
+  const { getIconById, toggleSave } = useFirstStore();
   const saved = useFirstStore((state) => state.saved);
   const setSaved = useFirstStore((state) => state.setSaved);
 
-
+  console.log(saved)
 
   useEffect(()=>{
     axios
@@ -28,7 +28,7 @@ export default function TestList() {
         console.log(res.data.response.problemInfos);
         setUserProblem(res.data.response.problemInfos);
       });
-  },[]);
+  },[saved]);
 
   return (
     <>
