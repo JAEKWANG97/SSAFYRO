@@ -192,7 +192,6 @@ export default function PT() {
           question: question,
           answer: answer,
           pronunciationScore: parseInt(pronunciationScore),
-          evaluationScore: Math.floor((Math.random() * 3) + 3), // 3, 4, 5 중에 랜덤으로 하나
           happy: faceExpressionData.happy,
           disgust: faceExpressionData.disgusted,
           sad: faceExpressionData.sad,
