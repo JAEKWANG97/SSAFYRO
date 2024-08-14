@@ -226,6 +226,18 @@ export default function PT() {
       });
   };
 
+  // 각 질문별 상호평가 결과 저장
+  const handleEvaluation = async function (targetUser, evaluationScore) {
+    await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result/score", {
+      userId: targetUser,
+      evaluationScore: evaluationScore
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("Token")}`,
+      }
+    })
+  }
+  
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL =
