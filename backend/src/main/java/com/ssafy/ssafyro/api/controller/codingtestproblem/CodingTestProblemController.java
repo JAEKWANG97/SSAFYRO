@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,10 +50,18 @@ public class CodingTestProblemController {
     }
 
     @PostMapping("/api/v1/coding-test-problems/scrap")
-    public ApiResult<CodingTestProblemScrapResponse> createScrapedProblemsBy(@Valid @RequestBody CodingTestProblemScrapRequest request,
-                                                                             @AuthenticationPrincipal JwtAuthentication userInfo) {
+    public ApiResult<CodingTestProblemScrapResponse> createScrapedProblem(@AuthenticationPrincipal JwtAuthentication userInfo,
+                                                                          @Valid @RequestBody CodingTestProblemScrapRequest request) {
         return success(
                 codingTestProblemService.createScrap(request.problemId(), userInfo.id())
+        );
+    }
+
+    @DeleteMapping("/api/v1/coding-test-problems/scrap/{id}")
+    public ApiResult<CodingTestProblemScrapResponse> deleteScrapedProblem(@AuthenticationPrincipal JwtAuthentication userInfo,
+                                                                          @PathVariable Long id) {
+        return success(
+                codingTestProblemService.deleteScrap(id, userInfo.id())
         );
     }
 }
