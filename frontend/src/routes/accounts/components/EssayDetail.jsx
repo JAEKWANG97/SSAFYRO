@@ -12,7 +12,8 @@ export default function EssayDetail() {
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [editedEssayData, setEditedEssayData] = useState(""); // 수정된 에세이 데이터
   const [question, setQuestion] = useState(""); // 에세이 질문
-  const [essayId, setEssayId] = useState(1)
+  const [essayId, setEssayId] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchEssayDetails = async () => {
@@ -20,7 +21,7 @@ export default function EssayDetail() {
         const userInfoResponse = await axios.get(`${APIURL}users`, {
           headers: { Authorization: `Bearer ${Token}` },
         });
-
+        console.log(userInfoResponse.data.response)
         const userInfo = userInfoResponse.data.response;
         const userType = userInfo.type;
 
@@ -35,12 +36,10 @@ export default function EssayDetail() {
         const questionData = questionResponse.data.response;
         setQuestion(questionData.content);
         setEssayId(questionData.id)
-
-        const Info = localStorage.getItem('userInfo');
-        if (Info) {
-          const parsedInfo = JSON.parse(Info);
-          const userId = parsedInfo.userId;
-
+        setUserId(userInfo.userId)
+        console.log(userInfo.userId)
+        if (userId) {
+          console.log(userId)
           const essayResponse = await axios.get(`${APIURL}essays`, {
             params: { userId: userId },
             headers: { Authorization: `Bearer ${Token}` },
