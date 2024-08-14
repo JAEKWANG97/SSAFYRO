@@ -42,6 +42,7 @@ import Survey from "../../../components/Survey";
 
 // 알림창 라이브러리
 import Swal from "sweetalert2";
+import EvaluationModal from "./components/EvaluationModal";
 
 export default function PT() {
   // 방 정보 가져오기
@@ -763,7 +764,13 @@ export default function PT() {
       {/* evaluation 모달창 */}
       { evaluationModal && <>
         <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
-          
+          <div className="w-4/5 bg-white border rounded-lg py-5 px-5">
+            <EvaluationModal
+              targetUser={userList[userTurn]}
+              setEvaluationModal={setEvaluationModal}
+              handleEvaluation={handleEvaluation}
+             />
+          </div>
         </div>
       </>}
     </div>
