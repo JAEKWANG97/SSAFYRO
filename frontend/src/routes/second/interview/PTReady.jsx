@@ -62,7 +62,7 @@ export default function PTReady() {
   };
 
   const Timer = () => {
-    const [seconds, setSeconds] = useState(900); // 15분 = 900초
+    const [seconds, setSeconds] = useState(60); // 15분 = 900초
     const timerRef = useRef();
 
     useEffect(() => {
