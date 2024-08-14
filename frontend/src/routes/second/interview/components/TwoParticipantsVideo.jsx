@@ -30,6 +30,7 @@ export default function TwoParticipantsVideo({
   userTurn,
   userNameMap,
   setModalOpen,
+  setEvaluationModal,
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -125,7 +126,8 @@ export default function TwoParticipantsVideo({
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
-            onClick={setModalOpen}
+            // 변경해야 할곳 2
+            onClick={setEvaluationModal(true)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
