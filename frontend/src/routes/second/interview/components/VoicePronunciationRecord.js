@@ -8,7 +8,7 @@ let audioChunks = [];
 let base64String;
 
 // 공공 인공지능 API Key 가져오기
-const API_KEY = import.meta.env.VITE_ETRI_API_KEY;
+const API_KEY = "369fa137-5c63-436e-aa45-1c6f29bc3bc5";
 
 // 발음 정확도 평가 API 전송-수신
 let pronunciationScore
