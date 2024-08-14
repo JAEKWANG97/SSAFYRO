@@ -8,7 +8,6 @@ import com.ssafy.ssafyro.api.controller.interviewresult.request.InterviewResults
 import com.ssafy.ssafyro.api.service.interviewresult.InterviewResultService;
 import com.ssafy.ssafyro.api.service.interviewresult.response.InterviewResultsResponse;
 import com.ssafy.ssafyro.security.JwtAuthentication;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -52,7 +51,7 @@ public class InterviewResultController {
     public ApiResult<InterviewResultsResponse> getInterviewResults(@ModelAttribute InterviewResultsRequest request,
                                                                    @PageableDefault(sort = "evaluationScore") Pageable pageable) {
         return success(
-                interviewResultService.getInterviewResultsBy(request.query() != null ? request.query() : List.of(), pageable)
+                interviewResultService.getInterviewResultsBy(request.query(), pageable)
         );
     }
 }
