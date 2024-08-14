@@ -10,6 +10,7 @@ import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
+import com.ssafy.ssafyro.api.service.essay.response.EssayUpdateResponse;
 import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.essay.Essay;
@@ -80,7 +81,7 @@ class EssayServiceTest extends IntegrationTestSupport {
         EssaySaveResponse response = essayService.createEssayBy(user.getId(), essaySaveServiceRequest);
 
         //then
-        assertThat(response.essayId()).isEqualTo(1L);
+        assertThat(response.essayId()).isEqualTo(essayRepository.findByUser(user).get().getId());
     }
 
     @DisplayName("유저 id를 바탕으로 에세이를 상세 조회한다.")
@@ -102,6 +103,30 @@ class EssayServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response).extracting("userId", "content")
                 .containsExactly(user.getId(), essay.getContent());
+    }
+
+    @DisplayName("에세이를 수정한다.")
+    @Test
+    void updateEssayTest() {
+        //given
+        User user = userRepository.save(createUser());
+
+        EssayQuestion essayQuestion = essayQuestionRepository.save(createEssayQuestion());
+
+        Essay essay = createEssay(user, essayQuestion);
+        essayRepository.save(essay);
+
+        EssaySaveServiceRequest essaySaveServiceRequest = new EssaySaveServiceRequest(
+                essayQuestion.getId(),
+                "수정된 에세이"
+        );
+
+        //when
+        EssayUpdateResponse response = essayService.updateEssayBy(user.getId(), essaySaveServiceRequest);
+
+        //then
+        assertThat(essayRepository.findByUser(user).get().getContent()).isEqualTo("수정된 에세이");
+        assertThat(response.essayId()).isEqualTo(essay.getId());
     }
 
     private User createUser() {
