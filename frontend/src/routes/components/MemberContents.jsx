@@ -1,5 +1,6 @@
 import ServiceContents from "./ServiceContents";
 import maincharacter from './../../../public/main/main_characters.png'
+import UserImg from './../../../public/main/drawing1.jpg';
 import useAuthStore from "../../stores/AuthStore";
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
@@ -46,6 +47,14 @@ export default function MemberContents() {
 
   const userInfo = useAuthStore((state) => state.userInfo);
 
+  const handleProfileClick = () => {
+    if (userInfo && userInfo.userId) {
+      navigate('/account/profile', { state: { userId: userInfo.userId } });
+    } else {
+      console.error("User info가 없습니다.");
+    }
+  };
+
   return (
     <div className="flex justify-center">
       <div
@@ -80,7 +89,7 @@ export default function MemberContents() {
             <div className="flex items-center justify-center w-full mt-8 mb-6">
               <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200">
                 <img
-                  src="/public/main/drawing.jpg"
+                  src={UserImg}
                   alt="Main Character"
                   className="w-full h-full object-cover"
                 />

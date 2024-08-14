@@ -84,20 +84,20 @@ export default function TwoParticipantsVideo({
   console.log("현재 면접 순서인 사람 :", currentTurnUserName);
 
   const styles = `
-  @keyframes indigoBlink {
+  @keyframes lightBlueBlink {
     0% {
-      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
     }
     50% {
-      box-shadow: 0 0 20px rgba(75, 0, 130, 0.8), 0 0 30px rgba(75, 0, 130, 0.8);
+      box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 30px rgba(135, 206, 235, 0.8);
     }
     100% {
-      box-shadow: 0 0 10px rgba(75, 0, 130, 0.5), 0 0 20px rgba(75, 0, 130, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
     }
   }
 
   .current-turn {
-    animation: indigoBlink 1s infinite;
+    animation: lightBlueBlink 1s infinite;
     padding: 5px;
   }
   `;

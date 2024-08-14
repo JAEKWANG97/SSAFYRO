@@ -18,7 +18,7 @@ export default function PtFeedback() {
     axios.
     get(`${APIURL}report/${info.reportId}`,
       {headers: {
-        Authorization: `Bearer ${Token}`,
+        Authorization: `Bearer ${localStorage.getItem("Token")}`,
       },
     })
     .then((res) => {
