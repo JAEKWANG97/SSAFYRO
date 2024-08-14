@@ -1,7 +1,11 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import SecondNav from "../components/SecondNav.jsx";
 import GuideNav from "./components/GuideNav.jsx";
-import axios from "axios";
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function GuideIT() {
   const [itKnowledgeInfos, setItKnowledgeInfos] = useState([]); // 초기 상태를 빈 배열로 설정
@@ -37,8 +41,8 @@ export default function GuideIT() {
   const currentItems = itKnowledgeInfos.slice(indexOfFirstItem, indexOfLastItem);
 
   // 페이지 변경 핸들러
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   // 전체 페이지 수 계산
@@ -69,76 +73,19 @@ export default function GuideIT() {
         {/* 페이지네이션 */}
         <nav
           aria-label="Page navigation example"
-          className="flex justify-center mt-4" // 페이지네이션을 가운데 정렬
+          className="flex justify-center mt-4"
         >
-          <ul className="flex items-center -space-x-px h-8 text-sm">
-            <li>
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ${
-                  currentPage === 1 ? "text-gray-300 cursor-not-allowed" : ""
-                }`}
-              >
-                <span className="sr-only">Previous</span>
-                <svg
-                  className="w-2.5 h-2.5 rtl:rotate-180"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 6 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 1 1 5l4 4"
-                  />
-                </svg>
-              </button>
-            </li>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index + 1}>
-                <button
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`flex items-center justify-center px-3 h-8 leading-tight ${
-                    currentPage === index + 1
-                      ? "text-blue-600 border border-blue-300 bg-blue-50"
-                      : "text-gray-500 bg-white border border-gray-300"
-                  } hover:bg-gray-100 hover:text-gray-700`}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-            <li>
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ${
-                  currentPage === totalPages ? "text-gray-300 cursor-not-allowed" : ""
-                }`}
-              >
-                <span className="sr-only">Next</span>
-                <svg
-                  className="w-2.5 h-2.5 rtl:rotate-180"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 6 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 9 4-4-4-4"
-                  />
-                </svg>
-              </button>
-            </li>
-          </ul>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                {...item}
+              />
+            )}
+          />
         </nav>
       </div>
     </>

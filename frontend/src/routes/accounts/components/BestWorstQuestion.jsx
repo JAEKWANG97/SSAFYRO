@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Card, Tooltip } from 'flowbite-react';
+import { useState } from 'react';
+import { Card } from 'flowbite-react';
 import ReactCardFlip from 'react-card-flip';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
