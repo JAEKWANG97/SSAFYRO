@@ -98,6 +98,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/signup", element: <Kakao /> },
+      { path: "/question_feedback/search", element: <QuestionFeedback /> },
       { path: "/question_feedback/:id", element: <QuestionFeedback /> },
       {
         path: "account/",

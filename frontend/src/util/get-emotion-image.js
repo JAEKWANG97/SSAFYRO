@@ -25,3 +25,5 @@ export function getEmotionImage(emotion) {
       return neutralImg;  
   }
 }
+
+export default getEmotionImage;

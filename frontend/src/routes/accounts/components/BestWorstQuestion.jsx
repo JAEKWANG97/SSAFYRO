@@ -7,6 +7,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import QuestionCard from "./QuestionCard";
+import ErrorPage from "./ErrorPage";
+import QuestionFeedbackNoneData from "./QuestionFeedbackNoneData";
 import {
   getBestWorstQuestion,
   getBestWorstQuestionByUser,
@@ -22,57 +24,10 @@ export default function BestWorstQuestion() {
   const [cardData, setCardData] = useState([]);
   const [isFlipped, setIsFlipped] = useState(false);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
-
-  // 카드 데이터
-  const dummYCardData = [
-    {
-      id: 1,
-      question: "질문 1",
-      answer: "답변 1",
-      feedback: "피드백 1",
-      newQuestion: "탈월한 질문 1",
-      newAnswer: "탈월한 답변 1",
-      newFeedback: "탈월한 피드백 1",
-    },
-    {
-      id: 2,
-      question: "질문 2",
-      answer: "답변 2",
-      feedback: "피드백 2",
-      newQuestion: "탈월한 질문 2",
-      newAnswer: "탈월한 답변 2",
-      newFeedback: "탈월한 피드백 2",
-    },
-    {
-      id: 3,
-      question: "질문 3",
-      answer: "답변 3",
-      feedback: "피드백 3",
-      newQuestion: "탈월한 질문 3",
-      newAnswer: "탈월한 답변 3",
-      newFeedback: "탈월한 피드백 3",
-    },
-    {
-      id: 4,
-      question: "질문 4",
-      answer: "답변 4",
-      feedback: "피드백 4",
-      newQuestion: "탈월한 질문 4",
-      newAnswer: "탈월한 답변 4",
-      newFeedback: "탈월한 피드백 4",
-    },
-    {
-      id: 5,
-      question: "질문 5",
-      answer: "답변 5",
-      feedback: "피드백 5",
-      newQuestion: "탈월한 질문 5",
-      newAnswer: "탈월한 답변 5",
-      newFeedback: "탈월한 피드백 5",
-    },
-  ];
-
+  
   const handleClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -106,22 +61,22 @@ export default function BestWorstQuestion() {
           })
         );
 
-        if (newCardData.length === 0) {
-          setCardData(dummYCardData);
-        } else {
-          setCardData(newCardData);
-        }
+        setCardData(newCardData);
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
-        setCardData(dummYCardData);
+        setError(true);
       }
     };
 
     fetchData();
   }, []);
 
+  if (error) {
+    return <ErrorPage />;
+  }
+
   if (cardData.length === 0) {
-    return <div>로딩 중...</div>;
+    return <QuestionFeedbackNoneData />;
   }
 
   return (
@@ -133,16 +88,17 @@ export default function BestWorstQuestion() {
             "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 -4px 6px -1px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div className="relative py-8 mb-12 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow-sm">
+        <div className="relative py-8 mb-12 bg-blue-50 rounded-lg shadow-sm">
+          {" "}
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <div className="rounded-full p-3">
-              <SparklesIcon className="w-8 h-8 text-white" />
+              {/* <SparklesIcon className="w-8 h-8 text-white" /> */}
             </div>
           </div>
           <h3 className="text-center text-3xl font-bold mb-3 text-gray-800">
             탁월한 답변 사례
           </h3>
-          <h4 className="text-center text-lg text-purple-600 font-medium">
+          <h4 className="text-center text-lg text-blue-600 font-medium">
             유사 질문에 대한 최고의 답변 Top 5
           </h4>
           <p className="text-center text-sm text-gray-600 mt-2 max-w-md mx-auto">
@@ -183,7 +139,7 @@ export default function BestWorstQuestion() {
         </div>
         <div className="mt-8">
           <div
-            className="max-w-xl h-[80px] border rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105 mx-auto"
+            className="max-w-xl h-[80px] border-2 border-black rounded-xl flex flex-col font-extrabold pl-4 relative transition-transform transform hover:scale-105 mx-auto justify-center"
             onClick={() =>
               navigate("/account/profile/question_feedback", {
                 state: { activeTab: "tab3" },
@@ -192,7 +148,7 @@ export default function BestWorstQuestion() {
           >
             <div>
               <h3 className="text-xl font-bold mb-1">더 자세히 알아보기</h3>
-              <p className="text-sm">유사 질답 내용을 모아놨어요.</p>
+              <p className="text-sm font-medium text-gray-400">유사 질답 내용을 모아놨어요.</p>
             </div>
             <ArrowRightIcon className="w-6 h-6 text-white" />
           </div>

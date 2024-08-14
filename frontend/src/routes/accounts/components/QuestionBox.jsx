@@ -5,7 +5,7 @@ import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 
 // 이모지 이미지 import
 import angry from "../../../../public/profile/angry.png";
-import dead from "../../../../public/profile/dead.png";
+import fear from "../../../../public/profile/dead.png";
 import happy from "../../../../public/profile/happy.png";
 import neutral from "../../../../public/profile/neutral.png";
 import sad from "../../../../public/profile/sad.png";
@@ -14,7 +14,7 @@ import vomiting from "../../../../public/profile/vomiting.png";
 
 const emotionImages = {
   angry,
-  dead,
+  fear,
   happy,
   neutral,
   sad,
@@ -39,16 +39,17 @@ const formatDate = (dateString) => {
 };
 
 const renderEmotions = (expressions) => {
-  return Object.entries(expressions).map(([emotion, value]) => {
-    if (emotionImages[emotion]) {
+  return Object.entries(expressions).map(([emotion]) => {
+    const emotionKey = emotion.toLowerCase();
+    if (emotionImages[emotionKey]) {
       const size = 16;
       return (
         <img
-          key={emotion}
-          src={emotionImages[emotion]}
-          alt={emotion}
+          key={emotionKey}
+          src={emotionImages[emotionKey]}
+          alt={emotionKey}
           className="mr-1"
-          style={{ width: `${size}px`, height: `${size}px` }}
+          style={{ width: `${size}px`, height: `${size}px`}}
         />
       );
     }
@@ -57,24 +58,26 @@ const renderEmotions = (expressions) => {
 };
 
 export default function QuestionBox({ item, selectedItem }) {
+
   const navigate = useNavigate();
   const handleClick = () => {
     localStorage.setItem("detailItem", JSON.stringify(item));
-    navigate(`/question_feedback/${item.id}`);
+    navigate(`/question_feedback/${item.interviewResultId}`);
     window.scrollTo(0, 0);
   };
 
   const getScoreColor = (score) => {
-    if (score >= 80) return "bg-green-300";
-    if (score >= 60) return "bg-yellow-300";
+    if (score >= 4) return "bg-green-300";
+    if (score >= 3) return "bg-yellow-300";
     return "bg-red-300";
   };
-  const formattedDate = formatDate(item.createdDate);
+
+  const formattedDate = item.createdDate ? formatDate(item.createdDate) : "2024-08-14";
 
   const getScoreTextColor = (score) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-blue-600";
-    if (score >= 40) return "text-yellow-600";
+    if (score >= 4) return "text-green-600";
+    if (score >= 3) return "text-blue-600";
+    if (score >= 2) return "text-yellow-600";
     return "text-red-600";
   };
 
@@ -86,16 +89,16 @@ export default function QuestionBox({ item, selectedItem }) {
         }`}
         onClick={handleClick}
       >
-        <div className={`h-1 ${getScoreColor(item.totalScore)}`}></div>
+        <div className={`h-1 ${getScoreColor(item.evaluationScore)}`}></div>
         <div className="flex items-center justify-between p-3">
           <div className="flex justify-center space-x-2">
             <span className="text-sm font-semibold text-gray-600">평점 </span>
             <span
               className={`text-sm font-bold ${getScoreTextColor(
-                item.totalScore
+                item.evaluationScore
               )}`}
             >
-              {item.totalScore}
+              {item.evaluationScore * 20}
             </span>
           </div>
           <div className="flex items-center space-x-1">
