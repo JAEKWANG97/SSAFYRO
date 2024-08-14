@@ -74,10 +74,10 @@ export default function PT() {
     setUserTurn: state.setUserTurn,
   }));
 
-  const handleStartInterview = async () => {
+  const handleStartInterview = () => {
     try {
       // 면접 시작 요청
-      await axios.patch(
+      axios.patch(
         "https://i11c201.p.ssafy.io:8443/api/v1/interview/start",
         { roomId: roomid },
         {
@@ -89,7 +89,7 @@ export default function PT() {
       console.log("Interview started successfully");
 
       // 방의 최신 정보 불러오기
-      await axios
+      axios
         .get(`https://i11c201.p.ssafy.io:8443/api/v1/rooms/${roomid}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -527,6 +527,9 @@ export default function PT() {
       onConnect: async () => {
         console.log("STOMP client connected");
 
+        // STOMP 연결이 완료된 후에 면접 시작 요청 및 메시지 전송
+        handleStartInterview();
+
         client.subscribe(`/topic/interview/${roomid}`, (message) => {
           const parsedMessage = JSON.parse(message.body);
 
@@ -534,12 +537,18 @@ export default function PT() {
             // console.log(
             //   `${parsedMessage.nowStage} 파일을 받았으므로 타이머를 시작합니다.`
             // );
+
+            if (parsedMessage.nowStage === 'FIRST') {
+              setUserTurn(0);
+            } else if (parsedMessage.nowStage === 'SECOND') {
+              setUserTurn(1);
+            } else {
+              setUserList(2);
+            }
+            
             startTimer(parsedMessage.nowStage);
           }
         });
-
-        // STOMP 연결이 완료된 후에 면접 시작 요청 및 메시지 전송
-        await handleStartInterview();
 
         // 타이머가 중복 설정되지 않도록 clearInterval
         if (timerRef.current) {
@@ -707,6 +716,7 @@ export default function PT() {
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
             // console.log("remoteTracks: ", remoteTracks);
+            console.log("참여자 정보 : ", userNameMap)
             if (remoteTracks.length <= 2) {
               // console.log("두명 전용 방으로 이동");
               return (
