@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import VideoComponent from "./VideoComponent";
 import AudioComponent from "./AudioComponent";
-// import botImg from "../../../../../public/main/botImg3.png";
+import submitIcon from "../../../../../public/main/submitIcon.png";
 import botImg from "../../../../../public/main/botImg.jpg";
 import {
   startRecording, // 녹음을 시작하는 함수
@@ -100,13 +100,13 @@ export default function TwoParticipantsVideo({
   const styles = `
   @keyframes lightBlueBlink {
     0% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
     50% {
-      box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 30px rgba(135, 206, 235, 0.8);
+      box-shadow: 0 0 20px rgba(135, 206, 270, 1.0), 0 0 30px rgba(135, 206, 270, 1.0);
     }
     100% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
   }
 
@@ -161,12 +161,17 @@ export default function TwoParticipantsVideo({
           </button> */}
           <button
             className={`p-3 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
-              isRecording ? "bg-green-700" : "bg-green-500"
-            } hover:bg-green-700`}
-            // 녹음 및 음성 인식 처리 시작
+              Number(currentTurnId) === Number(userInfo.userId)
+                ? isRecording
+                  ? "bg-green-500 hover:bg-green-700"
+                  : "bg-green-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
             onClick={handleButtonClick}
+            title="이 버튼을 클릭하면 답변이 제출됩니다."
+            disabled={Number(currentTurnId) !== Number(userInfo.userId)}
           >
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.5em"
               height="1.5em"
@@ -181,11 +186,25 @@ export default function TwoParticipantsVideo({
                 strokeWidth={1.5}
                 d="M2 14.959V9.04C2 8.466 2.448 8 3 8h3.586a.98.98 0 0 0 .707-.305l3-3.388c.63-.656 1.707-.191 1.707.736v13.914c0 .934-1.09 1.395-1.716.726l-2.99-3.369A.98.98 0 0 0 6.578 16H3c-.552 0-1-.466-1-1.041M16 8.5c1.333 1.778 1.333 5.222 0 7M19 5c3.988 3.808 4.012 10.217 0 14"
               ></path>
+            </svg> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-6 text-white"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15"
+              />
             </svg>
           </button>
           <button
-            className="p-3 bg-red-500 rounded-2xl w-[55px] h-[55px] flex items-center justify-center"
-            onClick={handleEndInterview} // 면접 종료 처리
+            className="p-3 bg-red-500 hover:bg-red-700 rounded-2xl w-[55px] h-[55px] flex items-center justify-center"
+            onClick={handleEndInterview}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +256,9 @@ export default function TwoParticipantsVideo({
                   track={remoteTrack.trackPublication.videoTrack}
                   participantIdentity={remoteTrack.participantIdentity}
                   local={false}
-                  isSurveyTarget={currentTurnUserName === remoteTrack.participantIdentity}
+                  isSurveyTarget={
+                    currentTurnUserName === remoteTrack.participantIdentity
+                  }
                 />
               ) : (
                 <AudioComponent

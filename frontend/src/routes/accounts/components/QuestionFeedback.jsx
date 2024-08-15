@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 import InfiniteScroll from "react-infinite-scroller";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import TagsInput from "react-tagsinput";
@@ -13,6 +14,15 @@ import {
 import QuestionBox from "./QuestionBox";
 import QuestionDetail from "./QuestionDetail";
 import QuestionFeedbackNoneData from "./QuestionFeedbackNoneData";
+
+import styled from "styled-components";
+
+const CustomTagsInput = styled(TagsInput)`
+  &.react-tagsinput {
+    border: 1px solid #91d5ff;
+    background-color: white;
+  }
+`;
 
 export default function QuestionFeedback() {
   const tagStyle = {
@@ -54,10 +64,19 @@ export default function QuestionFeedback() {
   };
 
   const handleSearch = () => {
-    const searchParams = new URLSearchParams();
-    if (tags.length > 0) {
-      searchParams.append("tags", tags.join(","));
+    if (tags.length === 0) {
+      Swal.fire({
+        title: "경고",
+        text: "검색어를 입력해주세요.",
+        icon: "warning",
+        confirmButtonText: "확인",
+        confirmButtonColor: "#3085d6",
+      });
+      return;
     }
+
+    const searchParams = new URLSearchParams();
+    searchParams.append("tags", tags.join(","));
     searchParams.append("filter", filter);
     navigate(`/question_feedback/search?${searchParams.toString()}`);
   };
@@ -136,23 +155,22 @@ export default function QuestionFeedback() {
     <div className="p-4">
       <div className="mb-4 flex flex-wrap items-center gap-4">
         <div className="flex-grow">
-          <TagsInput
+          <CustomTagsInput
             value={tags}
             onChange={handleTagChange}
             inputProps={{ placeholder: "태그" }}
             tagProps={{
-              className: "bg-blue-500 text-white rounded-md px-2 py-1  mx-1",
+              className: "bg-blue-500 text-white rounded-md px-2 py-1 mx-1",
               style: {
                 background: "#e6f7ff",
                 borderColor: "#91d5ff",
                 color: "#1890ff",
               },
             }}
-            className="react-tagsinput"
-            style={tagStyle}
+            className="react-tagsinput custom-tags-input" // 사용자 정의 클래스 추가
           />
         </div>
-        <select
+        {/* <select
           value={filter}
           onChange={handleFilterChange}
           className="p-2 border rounded"
@@ -161,7 +179,7 @@ export default function QuestionFeedback() {
           <option value="lowScore">저득점순</option>
           <option value="newest">최신순</option>
           <option value="oldest">오래된순</option>
-        </select>
+        </select> */}
         <button
           onClick={handleSearch}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

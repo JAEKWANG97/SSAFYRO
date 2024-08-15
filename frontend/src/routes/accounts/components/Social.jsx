@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../../stores/AuthStore";
+import useUserStore from "../../../stores/userStore"; // userStore 임포트
+import { getUserInfo } from '../../../api/profileApi';
 
 export default function Social() {
   const nav = useNavigate();
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
-  const setUserInfo = useAuthStore((state) => state.setUserInfo);
+  const setUserInfo = useUserStore((state) => state.setUserInfo); // setUserInfo 함수 가져오기
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -18,13 +20,20 @@ export default function Social() {
 
       const userInfo = {
         userId: userId,
-        userName: nickname
+        userName: nickname,
       };
       
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      setUserInfo(userInfo);
       setIsLogin(true);
-      nav("/");
+
+      getUserInfo()
+        .then((res) => {
+          setUserInfo(res); // userInfo를 userStore에 저장
+          nav("/"); // 메인 페이지로 이동
+        })
+        .catch((error) => {
+          console.error("유저 정보를 가져오는 중 오류 발생:", error);
+        });
     } else {
       console.error("토큰을 찾을 수 없습니다.");
       nav("/login"); // 로그인 페이지로 이동

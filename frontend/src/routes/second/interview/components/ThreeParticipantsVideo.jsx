@@ -94,19 +94,18 @@ export default function ThreeParticipantsVideo({
   const styles = `
   @keyframes lightBlueBlink {
     0% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
     50% {
-      box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 30px rgba(135, 206, 235, 0.8);
+      box-shadow: 0 0 20px rgba(135, 206, 270, 1.0), 0 0 30px rgba(135, 206, 270, 1.0);
     }
     100% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
   }
 
   .current-turn {
     animation: lightBlueBlink 1s infinite;
-    padding: 5px;
   }
   `;
 
@@ -142,22 +141,30 @@ export default function ThreeParticipantsVideo({
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="1.5em"
-              height="1.5em"
-              viewBox="0 0 26 26"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-6 text-white"
             >
               <path
-                fill="white"
-                strokeWidth="0.1"
-                d="M8.813 0A1 1 0 0 0 8 1v1H4.406C3.606 2 3 2.606 3 3.406V24.5c0 .9.606 1.5 1.406 1.5H21.5c.8 0 1.406-.606 1.406-1.406V3.406c.1-.8-.512-1.406-1.312-1.406H18V1a1 1 0 0 0-1-1H9a1 1 0 0 0-.094 0a1 1 0 0 0-.094 0zM10 2h6v2h-6zM5 4h3v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4h3v20H5zm2 5v4h4V9zm1 1h2v2H8zm5 0v2h6v-2zm-6 5v4h4v-4zm6 1v2h6v-2z"
-              ></path>
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15"
+              />
             </svg>
           </button>
           <button
             className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
-              isListening ? "bg-green-700" : "bg-green-500"
-            } hover:bg-green-700`}
+              Number(currentTurnId) === Number(userInfo.userId)
+                ? isRecording
+                  ? "bg-green-500"
+                  : "bg-green-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
             onClick={handleButtonClick}
+            title="이 버튼을 클릭하면 답변이 제출됩니다."
+            disabled={Number(currentTurnId) !== Number(userInfo.userId)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +184,7 @@ export default function ThreeParticipantsVideo({
             </svg>
           </button>
           <button
-            className="p-3 bg-red-500 rounded-2xl w-[55px] h-[55px] flex items-center justify-center"
+            className="p-3 bg-red-500 hover:bg-red-700 rounded-2xl w-[55px] h-[55px] flex items-center justify-center"
             onClick={handleEndInterview}
           >
             <svg
