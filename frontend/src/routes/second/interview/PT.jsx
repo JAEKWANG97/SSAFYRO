@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
+import { TypeAnimation } from "react-type-animation"; // Import TypeAnimation
 import { useNavigate, useParams } from "react-router-dom";
 import ssafyLogo from "../../../../public/SSAFYRO.png";
 import botIcon from "../../../../public/main/botImg.jpg";
@@ -43,6 +44,7 @@ import Survey from "../../../components/Survey";
 // 알림창 라이브러리
 import Swal from "sweetalert2";
 import EvaluationModal from "./components/EvaluationModal";
+import WaitRoom from "./Room";
 
 export default function PT() {
   // 방 정보 가져오기
@@ -185,6 +187,11 @@ export default function PT() {
     questions = useInterviewStore((state) => state.personalityQuestions);
   }
 
+  // 이정준
+  // const handleNextQuestion = () => {
+  //   setQuestionCount((prev) => prev + 1);
+  // }
+
   const handleSubmitAnswer = async function (
     question,
     answer,
@@ -198,6 +205,7 @@ export default function PT() {
           question: question,
           answer: answer,
           pronunciationScore: parseInt(pronunciationScore),
+          evaluationScore: Math.floor(Math.random() * 3 + 3), // 3, 4, 5 중에 랜덤으로 하나
           happy: faceExpressionData.happy,
           disgust: faceExpressionData.disgusted,
           sad: faceExpressionData.sad,
@@ -215,6 +223,9 @@ export default function PT() {
       .then((response) => {
         // 제출 성공
         // console.log("제출되었습니다.", response.data);
+        
+        // 이정준
+        // handleNextQuestion()
         setQuestionCount((prev) => prev + 1);
         faceExpressionData = {
           angry: 0,
@@ -553,9 +564,9 @@ export default function PT() {
             //   `${parsedMessage.nowStage} 파일을 받았으므로 타이머를 시작합니다.`
             // );
 
-            if (parsedMessage.nowStage === 'FIRST') {
+            if (parsedMessage.nowStage === "FIRST") {
               setUserTurn(0);
-            } else if (parsedMessage.nowStage === 'SECOND') {
+            } else if (parsedMessage.nowStage === "SECOND") {
               setUserTurn(1);
             } else {
               setUserTurn(2);
@@ -595,12 +606,14 @@ export default function PT() {
   useEffect(() => {
     if (tenMinuteTimer === 0) {
       clearTimeout(timerRef.current); // 10분 타이머가 끝나면 정지
+      startTwoMinuteTimer(); // 모달이 열릴 때 타이머 재개
 
       Swal.fire({
         title: "면접 차례가 종료되었습니다.",
         text: "2분동안 상호평가가 진행됩니다.",
         icon: "info",
         confirmButtonText: "확인",
+        confirmButtonColor: "#3085d6"
       }).then((result) => {
         if (result.isConfirmed && (userList[userTurn] != userInfo.userId)) {
           setModalOpen();
@@ -612,7 +625,7 @@ export default function PT() {
   const handleTurnEnd = () => {
     interviewTurnCounter.current += 1;
 
-    const nextTurn = (userTurn + 1);
+    const nextTurn = userTurn + 1;
     console.log(nextTurn);
     setUserTurn(nextTurn);
 
@@ -625,13 +638,15 @@ export default function PT() {
         title: "면접이 종료되었습니다.",
         text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
         icon: "success",
+        confirmButtonText: "확인",
+        confirmButtonColor: "#3085d6"
       }).then((result) => {
         if (result.isConfirmed) {
           handleEndInterview();
         }
       });
     } else {
-      console.log("못들어감")
+      console.log("못들어감");
     }
   };
 
@@ -665,7 +680,6 @@ export default function PT() {
 
   const setModalOpen = function () {
     setIsModalOpen(true);
-    startTwoMinuteTimer(); // 모달이 열릴 때 타이머 재개
   };
 
   const setModalClose = function () {
@@ -679,24 +693,6 @@ export default function PT() {
     setTotalResult((prev) => [...prev, newResult]);
   };
 
-  // 대사 출력 스타일링
-  const [displayedText, setDisplayedText] = useState("");
-
-  useEffect(() => {
-    const fullText = `안녕하세요! ${userInfo.userName} 님에 대한 면접 질문을 추천해 드릴게요!`;
-    let index = 0;
-
-    const typingInterval = setInterval(() => {
-      setDisplayedText((prev) => prev + fullText[index]);
-      index += 1;
-      if (index === fullText.length) {
-        clearInterval(typingInterval);
-      }
-    }, 50); // 타이핑 속도 조절
-
-    return () => clearInterval(typingInterval); // 컴포넌트 언마운트 시 타이핑 멈춤
-  }, [userInfo.userName]);
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div
@@ -705,8 +701,11 @@ export default function PT() {
       >
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
-            <img src={ssafyLogo} alt="ssafylogo" className="h-[20px] mr-5" />
-            <h1 className="text-xl font-bold">Presentation Interview</h1>
+            {/* <img src={ssafyLogo} alt="ssafylogo" className="h-[20px] mr-5" />
+            <h1 className="text-xl font-bold">Presentation Interview</h1> */}
+            <span className=" border-2 border-indigo-300 text-indigo-300 text-2xl font-extrabold px-4 pt-2 pb-1 rounded dark:text-indigo-300">
+              {roomType === "PRESENTATION" ? "PT" : "인성"}
+            </span>
           </div>
           <div className="flex items-center bg-black text-white rounded-full px-8 py-2 w-48 justify-center">
             <div
@@ -731,6 +730,36 @@ export default function PT() {
           </div>
         </div>
         {/* 변경해야 할곳 1 */}
+        <div className="bg-gray-200 p-4 rounded-lg mb-4 mt-5 h-[170px] flex items-center">
+          <div className="flex items-center">
+            <img
+              src={botIcon}
+              alt="botIcon"
+              className="w-[50px] h-[50px] rounded-full bg-blue-500"
+            />
+            <p className="ml-4">
+              {questionCount === 0 && (
+                <>
+                  안녕하세요! {userNameMap[userList[userTurn]]} 님에 대한 면접
+                  질문을 추천해 드릴게요!
+                  <br />
+                </>
+              )}
+              {/* 이정준 */}
+              {questionCount < questions.length
+                ? questions[questionCount]
+                : "본인 질문이 종료되었습니다."}
+              {/* <TypeAnimation
+                sequence={[
+                  questions[questionCount]]}
+                wrapper="p"
+                cursor={true}
+                repeat={0}
+                style={{ fontSize: "1em", display: "inline-block" }}
+              /> */}
+            </p>
+          </div>
+        </div>
         <div className="flex" style={{ height: "400px" }}>
           {/* OpenVidu 화상 회의 레이아웃 */}
           {(() => {
@@ -748,6 +777,7 @@ export default function PT() {
                   startListening={startListening}
                   stopListening={stopListening}
                   questions={questions}
+                  questionCount={questionCount}
                   answer={transcript}
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
@@ -786,24 +816,6 @@ export default function PT() {
               );
             }
           })()}
-        </div>
-        <div className="bg-gray-200 p-4 rounded-lg mb-4 mt-5 h-[170px] flex items-center">
-          <div className="flex items-center">
-            <img
-              src={botIcon}
-              alt="botIcon"
-              className="w-[50px] h-[50px] rounded-full bg-blue-500"
-            />
-            <p className="ml-4">
-              {displayedText}
-              {/* 안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
-              드릴게요!  */}
-              <br />
-              {questionCount < 2
-                ? questions[questionCount]
-                : "본인 질문이 종료되었습니다."}
-            </p>
-          </div>
         </div>
       </div>
       {/* survey 모달창 */}
