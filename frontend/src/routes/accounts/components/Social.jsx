@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../../stores/AuthStore";
 
-export default function Kakao() {
+export default function Social() {
   const nav = useNavigate();
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
   const setUserInfo = useAuthStore((state) => state.setUserInfo);

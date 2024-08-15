@@ -11,7 +11,7 @@ import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./routes/Home.jsx";
 import Login from "./routes/accounts/Login.jsx";
-import Kakao from "./routes/accounts/components/Kakao.jsx";
+import Social from "./routes/accounts/components/Social.jsx";
 import Profile from "./routes/accounts/Profile.jsx";
 import PersonalityFeedback from "./routes/accounts/components/PersonalityFeedback.jsx";
 import PtFeedback from "./routes/accounts/components/PtFeedback.jsx";
@@ -98,7 +98,7 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/signup", element: <Kakao /> },
+      { path: "/signup", element: <Social /> },
       { path: "/question_feedback/search", element: <QuestionFeedback /> },
       { path: "/question_feedback/:id", element: <QuestionFeedback /> },
       {
