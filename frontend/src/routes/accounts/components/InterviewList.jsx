@@ -1,21 +1,18 @@
-import { useState, useEffect } from 'react';
-import { getInterviewInfo } from './../../../api/profileApi';
-import { useNavigate } from 'react-router-dom';
-import PersonaltyImg from './../../../../public/first/personality.png'
-import PtImg from './../../../../public/first/pt.png'
+import { useState, useEffect } from "react";
+import { getInterviewInfo } from "./../../../api/profileApi";
+import { useNavigate } from "react-router-dom";
+import PersonaltyImg from "./../../../../public/first/personality.png";
+import PtImg from "./../../../../public/first/pt.png";
 
 export default function InterviewList() {
   const [interviewInfo, setInterviewInfo] = useState([]); // interviewInfo 상태를 추가
   const nav = useNavigate();
 
   useEffect(() => {
-    getInterviewInfo()
-    .then((res)=>{
-      setInterviewInfo(res)
-    }
-    )
+    getInterviewInfo().then((res) => {
+      setInterviewInfo(res);
+    });
   }, []);
-
 
   return (
     <>

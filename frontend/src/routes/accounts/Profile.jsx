@@ -12,6 +12,8 @@ import InterviewList from "./components/InterviewList";
 import Swal from "sweetalert2";
 import useAuthStore from "../../stores/AuthStore";
 import LoginAlert from "../../components/LoginAlert";
+import Loading from "../components/Loading";
+
 import {
   getUserInfo,
   getInterviewInfo,
@@ -29,7 +31,7 @@ import {
 export default function Profile() {
   const nav = useNavigate();
   const location = useLocation();
-  const Token = localStorage.getItem('Token')
+  const Token = localStorage.getItem("Token");
 
   const { userInfo, setUserInfo } = useUserStore();
   const [interviewInfo, setInterviewInfo] = useState([]);
@@ -38,11 +40,9 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const isLogin = useAuthStore((state) => state.isLogin); // 로그인 유무
 
-  
-  <LoginAlert/>
+  <LoginAlert />;
 
   useEffect(() => {
-    
     if (!isLogin) {
       Swal.fire({
         title: "로그인을 해주세요",
@@ -57,7 +57,7 @@ export default function Profile() {
       });
       return;
     }
-}, [Token, nav]);
+  }, [Token, nav]);
 
   // 초기 데이터 로드
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function Profile() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -197,7 +197,7 @@ export default function Profile() {
               <TestList />
             </TETabsPane>
             <TETabsPane show={fillActive === "tab3"}>
-              <InterviewList/>
+              <InterviewList />
             </TETabsPane>
           </TETabsContent>
         </div>
