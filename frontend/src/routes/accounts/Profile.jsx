@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import EssayDetail from './components/EssayDetail';
 import InterviewResult from './components/InterviewResult';
-import TestList from './components/TestList'
+import TestList from './components/TestList';
 import UserImg from './../../../public/main/user.jpg';
-import PersonaltyImg from './../../../public/profile/personality.png';
-import PtImg from './../../../public/profile/pt.png';
+import PersonaltyImg from './../../../public/first/personality.png';
+import PtImg from './../../../public/first/pt.png';
 import Button from './../../../src/components/Button';
 import {
   TETabs,
@@ -21,11 +21,11 @@ export default function Profile() {
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
   const Token = localStorage.getItem("Token");
 
-
   const [userInfo, setUserInfo] = useState({});  // 유저 정보
   const [fillActive, setFillActive] = useState("tab1");
   const [interviewInfo, setInterviewInfo] = useState([]); // 면접 정보
-  const [essayData, setEssayData] = useState(null)
+  const [essayData, setEssayData] = useState(null);
+  const [sortOrder, setSortOrder] = useState('desc'); // 기본은 최신순으로 정렬
 
   // 초기 데이터 로드
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Profile() {
           const userId = parsedInfo.userId;
 
           // 인터뷰 정보 가져오기
-          const interviewResponse = await axios.get(`${APIURL}reports`, {
+          await axios.get(`${APIURL}reports`, {
             params: {
               userId: userId,
               page: 0,
@@ -54,34 +54,21 @@ export default function Profile() {
             headers: { Authorization: `Bearer ${Token}` },
           })
           .then((res)=>{
-            // console.log(res.data)
             setInterviewInfo(res.data.response.reports);
-          })
-          .catch((error)=>{
-            // console.log(error)
-          })
+          });
 
-        
           // 에세이 데이터 가져오기
-          const essayResponse = await axios.get(`${APIURL}essays`, {
-            params: {
-              userId: userId, 
-            },
-            headers: {
-              Authorization: `Bearer ${Token}`, 
-            },
+          await axios.get(`${APIURL}essays`, {
+            params: { userId: userId },
+            headers: { Authorization: `Bearer ${Token}` },
           })
           .then((res) => {
-            // console.log(res.data.response)
             setEssayData(res.data.response.content); 
-            
           });
           
-        } else {
-          // console.error("No userInfo found in localStorage.");
         }
       } catch (error) {
-        // console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -106,6 +93,17 @@ export default function Profile() {
       window.scrollTo(0, document.body.scrollHeight);
     }
   }, [fillActive]);
+
+  // 정렬 함수
+  const handleSortOrderChange = (order) => {
+    setSortOrder(order);
+    const sortedData = [...interviewInfo].sort((a, b) => {
+      const dateA = new Date(a.createdDate);
+      const dateB = new Date(b.createdDate);
+      return order === 'asc' ? dateA - dateB : dateB - dateA;
+    });
+    setInterviewInfo(sortedData);
+  };
 
   const handleFillClick = (value) => {
     if (value === fillActive) return;
@@ -180,33 +178,35 @@ export default function Profile() {
           <TETabsContent>
             <TETabsPane show={fillActive === "tab1"}>
               {essayData && <EssayDetail essayData={essayData} />}
-              
             </TETabsPane>
             <TETabsPane show={fillActive === "tab2"}>
               <TestList/>
             </TETabsPane>
             <TETabsPane show={fillActive === "tab3"}>
-              <div className="pl-7">
-                <div 
-                  className="max-w-xl h-[80px] border rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
-                  onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
-                >
-                  이 질문들에서 점수를 높일 방법은?
-                  <span className="text-sm font-medium pt-1">WORST & BEST 질문을 확인해보세요</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                    />
-                  </svg>
+
+             
+              <div className="flex justify-end mb-4 pr-5">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="desc"
+                    name="sortOrder"
+                    value="desc"
+                    checked={sortOrder === 'desc'}
+                    onChange={() => handleSortOrderChange('desc')}
+                    className="mr-1"
+                  />
+                  <label htmlFor="desc" className="mr-4 text-gray-600">최신순</label>
+                  <input
+                    type="radio"
+                    id="asc"
+                    name="sortOrder"
+                    value="asc"
+                    checked={sortOrder === 'asc'}
+                    onChange={() => handleSortOrderChange('asc')}
+                    className="mr-1"
+                  />
+                  <label htmlFor="asc" className="text-gray-600">오래된 순</label>
                 </div>
               </div>
 
@@ -226,6 +226,31 @@ export default function Profile() {
                     <p className="font-medium text-sm text-center">{info.title}</p>
                   </div>
                 ))}
+              </div>
+
+              {/* 더 좋은 질문 섹션 */}
+              <div className="pl-7 my-5 ">
+                <div 
+                  className="max-w-xl h-[80px] border-2 border-black rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
+                  onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
+                >
+                  이 질문들에서 점수를 높일 방법은?
+                  <span className="text-sm font-medium pt-1 text-gray-400">WORST & BEST 질문을 확인해보세요</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </div>
               </div>
 
             </TETabsPane>

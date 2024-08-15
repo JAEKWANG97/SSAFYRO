@@ -6,50 +6,65 @@ import Level from './../routes/first/components/Level';
 const useFirstStore = create(
   persist(
     (set, get) => ({
-      activeTab: 'essay', // 에세이, sw적성검사 여부
+      activeTab: 'essay', 
       setActiveTab: (tab) => set({ activeTab: tab }),
-      selected: 'major', // 전공자, 비전공자 유무
+      selected: 'major', 
       setSelected: (select) => set({ selected: select }),
-      essayContent: '', // 에세이 내용
+      essayContent: '', 
       setEssayContent: (content) => set({ essayContent: content }),
-      showCorrection: false, // ai 첨삭 버튼 클릭 여부
+      showCorrection: false, 
       setShowCorrection: (value) => set({ showCorrection: value }),
       essayData: null,
-      setEssayData: (value) => set({ setEssayData: value }),
+      setEssayData: (value) => set({ essayData: value }),
+      
       saved: {},
-      setSaved: (problemId) =>
-        set((state) => ({
-          saved: {
-            ...state.saved,
-            [problemId]: !state.saved[problemId],
-          },
-        })),
+      setSaved: (problemId, scrapId = null) => {
+        set((state) => {
+          const newSaved = { ...state.saved };
+          if (scrapId) {
+            newSaved[problemId] = { scrapId };
+          } else {
+            delete newSaved[problemId];
+          }
+          return { saved: newSaved };
+        });
+      },
 
-      toggleSave: (id) => {
+      toggleSave: async (id) => {
         const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/';
         const Token = localStorage.getItem('Token');
         const saved = get().saved;
-        const url = saved[id]
-          ? `${APIURL}coding-test-problems/scrap/${id}`
+        const isSaved = saved[id]?.scrapId;
+
+        const url = isSaved
+          ? `${APIURL}coding-test-problems/scrap/${isSaved}`
           : `${APIURL}coding-test-problems/scrap`;
 
-        const method = saved[id] ? 'delete' : 'post';
+        const method = isSaved ? 'delete' : 'post';
 
-        axios({
-          method: method,
-          url: url,
-          headers: {
-            Authorization: `Bearer ${Token}`,
-          },
-          data: { problemId: id },
-        })
-          .then((res) => {
-            console.log(res.data);
-            get().setSaved(id); // 여기서 saved 상태를 토글
-          })
-          .catch((error) => {
-            console.error('Error updating save status:', error);
+        try {
+          const response = await axios({
+            method: method,
+            url: url,
+            headers: {
+              Authorization: `Bearer ${Token}`,
+            },
+            data: isSaved ? null : { problemId: id },
           });
+
+          console.log(response.data)
+          if (isSaved) {
+            get().setSaved(id, null); // 상태에서 제거
+          } else {
+            const scrapId = response.data.response.problemScrapId;
+            get().setSaved(id, scrapId); // 상태에 추가
+          }
+
+          console.log('Updated saved:', get().saved);
+          
+        } catch (error) {
+          console.log(error)
+        }
       },
 
       icons: [
@@ -58,19 +73,20 @@ const useFirstStore = create(
         { id: 'D3', component: <Level text="3" color="#FFD700" /> },
         { id: 'D4', component: <Level text="4" color="#00FFFF" /> },
       ],
+      
       getIconById: (id) => {
-        const icons = get().icons; // 상태에서 아이콘 목록을 가져옴
+        const icons = get().icons;
         return icons.find((icon) => icon.id === id);
       },
     }),
     {
-      name: 'first-store', // 로컬 스토리지에 저장될 키 이름
+      name: 'first-store', 
       partialize: (state) => ({
         activeTab: state.activeTab,
         selected: state.selected,
         essayContent: state.essayContent,
         showCorrection: state.showCorrection,
-        saved: state.saved, // 지속적으로 저장할 상태만 선택
+        saved: state.saved, 
       }),
     }
   )
