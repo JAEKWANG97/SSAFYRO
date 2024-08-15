@@ -4,6 +4,8 @@ import { useParams, useLocation } from 'react-router-dom';
 
 export default function Survey({ targetUser, setModalClose, setTotalResult }) {
   const roomId = useParams().roomid;
+  console.log("Current Room ID:", roomId); // Room ID 확인용
+  console.log("Target User ID:", targetUser); // Target User ID 확인용
   // const location = useLocation();
   // const { targetUser } = location.state;
   
@@ -20,18 +22,27 @@ export default function Survey({ targetUser, setModalClose, setTotalResult }) {
       ...answers,
       [event.target.name]: event.target.value,
     });
+    console.log("Updated Answers:", { // 각 질문의 점수 업데이트 확인용
+      ...answers,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleSubmit = () => {
-    console.log(targetUser);
+    console.log("Final Answers on Submit:", answers); // 제출 시점에서 최종 답변 확인용
     // 여기에 제출 로직을 추가하세요
     let totalScore = Number(answers.q1) + Number(answers.q2) + Number(answers.q3) + Number(answers.q4) + Number(answers.q5);
+    console.log("Total Score:", totalScore); // 총점 확인용
+
     const requestBody = {
       roomId: roomId,
       articleId: null, // articleId가 어디서 오는지 모르겠음. docs 기준으로 articleId 획득처가 없는 것으로 추정됨.
       userId: targetUser,
       totalScore: totalScore,
     }
+
+    console.log("Request Body for Submission:", requestBody); // 서버로 제출할 데이터 확인용
+
 
     setTotalResult(requestBody);
     setModalClose();

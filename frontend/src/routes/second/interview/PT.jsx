@@ -77,6 +77,9 @@ export default function PT() {
     setUserTurn: state.setUserTurn,
   }));
 
+  // 면접 평가 데이터
+  const [totalResult, setTotalResult] = useState([]);
+
   const handleStartInterview = () => {
     try {
       // 면접 시작 요청
@@ -134,7 +137,14 @@ export default function PT() {
         }
       );
       console.log("Interview finished successfully");
-
+      
+      // OpenVidu 연결 종료 및 페이지 이동
+      leaveRoom();
+      stop();
+      navigate("/account/profile");
+    } catch (error) {
+      console.error("Error finishing the interview: ", error);
+    } finally {
       // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
       totalResult.forEach((result) => {
         axios
@@ -148,13 +158,6 @@ export default function PT() {
           })
           .catch((error) => console.log(error));
       });
-      
-      // OpenVidu 연결 종료 및 페이지 이동
-      leaveRoom();
-      stop();
-      navigate("/account/profile");
-    } catch (error) {
-      console.error("Error finishing the interview: ", error);
     }
   };
 
@@ -687,11 +690,13 @@ export default function PT() {
     setIsModalOpen(false);
   };
 
-  // 면접 평가 데이터
-  const [totalResult, setTotalResult] = useState([]);
-
   const renewTotalResult = function (newResult) {
-    setTotalResult((prev) => [...prev, newResult]);
+    console.log("Previous totalResult:", totalResult); // 이전 상태
+    console.log("New Result to add:", newResult); // 추가할 새로운 결과
+    setTotalResult((prev) => {
+      console.log("Updated totalResult:", [...prev, newResult]); // 업데이트된 상태
+      return [...prev, newResult];
+  });
   };
 
   return (
@@ -789,7 +794,6 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
-                  questionCount={questionCount}
                   recognitionRef={recognitionRef}
                   setTranscript={setTranscript}
                 />
@@ -806,6 +810,7 @@ export default function PT() {
                   startListening={startListening}
                   stopListening={stopListening}
                   questions={questions}
+                  questionCount={questionCount}
                   answer={transcript}
                   faceExpressionData={faceExpressionData}
                   handleSubmitAnswer={handleSubmitAnswer}
@@ -816,7 +821,6 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
-                  questionCount={questionCount}
                 />
               );
             }

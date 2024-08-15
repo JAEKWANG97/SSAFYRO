@@ -157,7 +157,7 @@ export default function PTReady() {
           </div>
         </div>
         <div className="bg-gray-200 p-6 rounded-lg mb-6">
-          <h3 className="text-xl font-bold mb-4">{interviewQuestion.title}</h3>
+          <h3 className="text-2xl font-bold mb-4 text-center">{interviewQuestion.title}</h3>
           <p className="mb-4">{interviewQuestion.question[0]}</p>
           {interviewQuestion.question.length > 1 && (
             <p className="mb-4">{interviewQuestion.question[1]}</p>

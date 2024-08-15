@@ -11,7 +11,6 @@ export default function InterviewList() {
   useEffect(() => {
     getInterviewInfo().then((res) => {
       setInterviewInfo(res);
-      // setInterviewInfo([]);
     });
   }, []);
 

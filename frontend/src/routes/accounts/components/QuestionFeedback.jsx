@@ -14,6 +14,7 @@ import {
 import QuestionBox from "./QuestionBox";
 import QuestionDetail from "./QuestionDetail";
 import QuestionFeedbackNoneData from "./QuestionFeedbackNoneData";
+import Loading from "../../components/Loading";
 
 import styled from "styled-components";
 
@@ -144,10 +145,10 @@ export default function QuestionFeedback() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
-  if (!isLoading && feedbackItems.length === 0) {
+  if (feedbackItems.length === 0) {
     return <QuestionFeedbackNoneData />;
   }
 
