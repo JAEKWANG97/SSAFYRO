@@ -7,9 +7,10 @@ import Button from "./../../components/Button";
 import EssayCorrectionsCarousel from "./EssayCorrectionsCarousel";
 import Swal from "sweetalert2";
 import axios from "axios";
+import {EssayApi} from './../../api/EssayApi'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import LoginAlert from "../../components/LoginAlert";
 import { useNavigate } from "react-router-dom";
 
 export default function Essay() {
@@ -39,21 +40,8 @@ export default function Essay() {
 
   // AI 첨삭 요청 처리
   const handleAiCorrection = () => {
-    // 로그인 확인
-    // if (!isLogin) {
-    //   Swal.fire({
-    //     title: "로그인을 해주세요",
-    //     text: "로그인이 필요한 기능입니다.",
-    //     icon: "warning",
-    //     confirmButtonColor: "#3085d6",
-    //     confirmButtonText: "확인",
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       nav("/account/login");
-    //     }
-    //   });
-    //   return;
-    // }
+
+    <LoginAlert/>
 
     // 에세이 내용이 없는 경우 경고 메시지 표시
     if (!essayContent || essayContent.trim() === "") {
@@ -162,6 +150,16 @@ export default function Essay() {
         console.log(error);
       });
   };
+
+  useEffect(() => {
+    EssayApi.getEssay()
+    .then((res)=>{
+      if(res.content !== null) {
+        setEssayContent(res.content)
+      }
+    })
+
+  },[])
 
   useEffect(() => {
     const Token = localStorage.getItem("Token");

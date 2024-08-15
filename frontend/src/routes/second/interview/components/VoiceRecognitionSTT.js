@@ -13,7 +13,7 @@ useEffect(() => {
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
-      console.log(event.results[current])
+      //console.log(event.results[current])
       const transcript = event.results[current][0].transcript;
       setTranscript(transcript);
     };
