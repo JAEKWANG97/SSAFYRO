@@ -74,6 +74,7 @@ export default function ThreeParticipantsVideo({
     if (isRecording) {
       stopRecording(); // 녹음 중지
       setIsRecording(false);
+      stopListening()
       try {
         await pronunciationEvaluation(base64String);
         handleSubmitAnswer(
@@ -82,11 +83,13 @@ export default function ThreeParticipantsVideo({
           faceExpressionData,
           pronunciationScore
         );
+        // setTranscript("");
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {
         startRecording(); // 평가가 끝나면 다시 녹음 시작
         setIsRecording(true);
+        startListening();
       }
     }
   };
@@ -135,7 +138,6 @@ export default function ThreeParticipantsVideo({
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
-            // 변경해야 할곳 2
             onClick={() => setEvaluationModal(true)}
             // onClick={handleStartSurvey}
           >
@@ -158,7 +160,7 @@ export default function ThreeParticipantsVideo({
             className={`p-3 bg-green-500 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
               Number(currentTurnId) === Number(userInfo.userId)
                 ? isRecording
-                  ? "bg-green-500"
+                  ? "bg-green-500 hover:bg-green-700"
                   : "bg-green-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
@@ -168,19 +170,17 @@ export default function ThreeParticipantsVideo({
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="1.5em"
-              height="1.5em"
+              fill="none"
               viewBox="0 0 24 24"
-              className="text-white"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-6 text-white"
             >
               <path
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M2 14.959V9.04C2 8.466 2.448 8 3 8h3.586a.98.98 0 0 0 .707-.305l3-3.388c.63-.656 1.707-.191 1.707.736v13.914c0 .934-1.09 1.395-1.716.726l-2.99-3.369A.98.98 0 0 0 6.578 16H3c-.552 0-1-.466-1-1.041M16 8.5c1.333 1.778 1.333 5.222 0 7M19 5c3.988 3.808 4.012 10.217 0 14"
-              ></path>
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15"
+              />
             </svg>
           </button>
           <button

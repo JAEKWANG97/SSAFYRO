@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import QuestionCard from "./QuestionCard";
 import ErrorPage from "./ErrorPage";
 import QuestionFeedbackNoneData from "./QuestionFeedbackNoneData";
+import Loading from "../../components/Loading";
 import {
   getBestWorstQuestion,
   getBestWorstQuestionByUser,
@@ -27,7 +28,7 @@ export default function BestWorstQuestion() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  
+
   const handleClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -65,11 +66,17 @@ export default function BestWorstQuestion() {
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
         setError(true);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (error) {
     return <ErrorPage />;
@@ -97,7 +104,6 @@ export default function BestWorstQuestion() {
             </h3>
             <SparklesIcon className="w-6 h-6 text-blue-600" />
           </div>
-        
           <h4 className="text-center text-lg text-blue-600 font-medium">
             유사 질문에 대한 최고의 답변 Top 5
           </h4>
@@ -148,7 +154,9 @@ export default function BestWorstQuestion() {
           >
             <div>
               <h3 className="text-xl font-bold mb-1">더 자세히 알아보기</h3>
-              <p className="text-sm font-medium text-gray-400">유사 질답 내용을 모아놨어요.</p>
+              <p className="text-sm font-medium text-gray-400">
+                유사 질답 내용을 모아놨어요.
+              </p>
             </div>
             <ArrowRightIcon className="w-6 h-6 text-white" />
           </div>
