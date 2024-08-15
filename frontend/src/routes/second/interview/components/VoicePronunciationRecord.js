@@ -64,9 +64,6 @@ const startRecording = () => {
         };
 
         reader.readAsDataURL(audioBlob);
-        setTimeout(() => {
-          mediaRecorder.start();
-        }, 1000)
       };
 
       mediaRecorder.start();
