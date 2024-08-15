@@ -1,6 +1,6 @@
 package com.ssafy.ssafyro.domain.interview;
 
-import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
+import com.ssafy.ssafyro.api.service.ai.AIResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.KoMorAnGenerator;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResult;
 import com.ssafy.ssafyro.domain.interviewresult.InterviewResultDocument;
@@ -15,10 +15,10 @@ public record InterviewInfos(List<InterviewRedis> interviews) {
                 .sum();
     }
 
-    public List<InterviewResult> generateInterviewResults(ChatGptResponseGenerator chatGptResponseGenerator,
+    public List<InterviewResult> generateInterviewResults(AIResponseGenerator aiResponseGenerator,
                                                           Report report) {
         return this.interviews.stream()
-                .map(interview -> InterviewResult.create(report, interview, chatGptResponseGenerator))
+                .map(interview -> InterviewResult.create(report, interview, aiResponseGenerator))
                 .toList();
     }
 

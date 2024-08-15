@@ -12,7 +12,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
-import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
@@ -47,14 +46,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 
-//@Disabled
 class ReportServiceTest extends IntegrationTestSupport {
-
-    @MockBean
-    private ChatGptResponseGenerator chatGptResponseGenerator;
 
     @Autowired
     private ReportService reportService;
@@ -216,7 +210,7 @@ class ReportServiceTest extends IntegrationTestSupport {
         ReportCreateServiceRequest request = new ReportCreateServiceRequest(
                 room.getId(), article.getId(), user.getId(), 100);
 
-        given(chatGptResponseGenerator.generateFeedbackBy(any(String.class), any(String.class)))
+        given(aiResponseGenerator.generateFeedbackBy(any(String.class), any(String.class)))
                 .willReturn("피드백");
 
         // when

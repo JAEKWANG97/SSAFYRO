@@ -1,12 +1,12 @@
 package com.ssafy.ssafyro.api.service.essay;
 
+import com.ssafy.ssafyro.api.service.ai.AIResponseGenerator;
 import com.ssafy.ssafyro.api.service.essay.request.EssayReviewServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.request.EssaySaveServiceRequest;
 import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayUpdateResponse;
-import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.domain.essay.Essay;
 import com.ssafy.ssafyro.domain.essay.EssayRepository;
 import com.ssafy.ssafyro.domain.essayquestion.EssayQuestion;
@@ -25,17 +25,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EssayService {
 
+    private final AIResponseGenerator aiResponseGenerator;
+
     private final UserRepository userRepository;
     private final EssayRepository essayRepository;
     private final EssayQuestionRepository essayQuestionRepository;
-
-    private final ChatGptResponseGenerator chatGptResponseGenerator;
 
     public EssayReviewResponse reviewEssay(EssayReviewServiceRequest request) {
         EssayQuestion essayQuestion = getEssayQuestionBy(request.essayQuestionId());
 
         return new EssayReviewResponse(
-                chatGptResponseGenerator.generateNewEssay(essayQuestion.getContent(), request.content())
+                aiResponseGenerator.generateNewEssay(essayQuestion.getContent(), request.content())
         );
     }
 

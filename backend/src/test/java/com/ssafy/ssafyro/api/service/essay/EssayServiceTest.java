@@ -11,7 +11,6 @@ import com.ssafy.ssafyro.api.service.essay.response.EssayDetailResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayReviewResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssaySaveResponse;
 import com.ssafy.ssafyro.api.service.essay.response.EssayUpdateResponse;
-import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
 import com.ssafy.ssafyro.domain.MajorType;
 import com.ssafy.ssafyro.domain.essay.Essay;
 import com.ssafy.ssafyro.domain.essay.EssayRepository;
@@ -22,7 +21,6 @@ import com.ssafy.ssafyro.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -40,14 +38,11 @@ class EssayServiceTest extends IntegrationTestSupport {
     @Autowired
     private EssayQuestionRepository essayQuestionRepository;
 
-    @MockBean
-    private ChatGptResponseGenerator chatGptResponseGenerator;
-
     @DisplayName("ChatGPT API를 활용하여 에세이를 첨삭받는다.")
     @Test
     void reviewEssayTest() {
         //given
-        given(chatGptResponseGenerator.generateNewEssay(any(String.class), any(String.class)))
+        given(aiResponseGenerator.generateNewEssay(any(String.class), any(String.class)))
                 .willReturn("첨삭 후 에세이");
 
         EssayQuestion essayQuestion = essayQuestionRepository.save(createEssayQuestion());

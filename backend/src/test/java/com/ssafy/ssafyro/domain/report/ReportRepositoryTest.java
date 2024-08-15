@@ -21,7 +21,6 @@ import com.ssafy.ssafyro.domain.user.UserRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +56,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
         reportRepository.saveAll(reports);
 
         //when
-        Page<Report> result = reportRepository.findAllByUser(user, Mockito.any(Pageable.class));
+        Page<Report> result = reportRepository.findAllByUser(user, Pageable.ofSize(5));
 
         //then
         assertThat(result.getContent()).hasSize(3)
