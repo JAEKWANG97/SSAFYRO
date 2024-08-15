@@ -19,6 +19,7 @@ export default function ThreeParticipantsVideo({
   startListening,
   stopListening,
   questions,
+  questionCount,
   answer,
   faceExpressionData,
   handleSubmitAnswer,
@@ -76,7 +77,7 @@ export default function ThreeParticipantsVideo({
       try {
         const score = await pronunciationEvaluation(base64String);
         handleSubmitAnswer(
-          questions[0],
+          questions[questionCount],
           answer,
           faceExpressionData,
           score
