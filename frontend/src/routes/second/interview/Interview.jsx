@@ -140,19 +140,21 @@ export default function Interview() {
                 </svg>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-4 mb-2">
                 <button
-                  className="bg-violet-300 shadow rounded p-4 flex items-center justify-center text-white hover:bg-violet-400 hover:text-white"
+                  className="bg-violet-200 shadow rounded p-4 flex items-center justify-center text-white hover:bg-violet-300 hover:text-white"
                   onClick={() => handleQuickStart("PRESENTATION")}
                 >
                   PT면접 빠른 시작
                 </button>
                 <button
-                  className="shadow rounded p-4 flex items-center justify-center text-white bg-yellow-300 hover:bg-yellow-400"
+                  className="shadow rounded p-4 flex items-center justify-center text-white bg-red-100 hover:bg-[#7CC6E7]"
+                  // style={{ backgroundColor: "rgba(198, 234, 246)" }}
                   onClick={() => handleQuickStart("PERSONALITY")}
                 >
                   인성면접 빠른 시작
                 </button>
+
                 <button
                   onClick={() => navigate("/second/interview/createroom")}
                   className="rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
@@ -179,8 +181,8 @@ export default function Interview() {
                       <div
                         className={`${
                           room.type === "PERSONALITY"
-                            ? "bg-yellow-300"
-                            : "bg-violet-100"
+                            ? "bg-[#97DEFF] opacity-[50%]"
+                            : "bg-violet-200"
                         } h-2 rounded-t`}
                       ></div>
 
@@ -189,7 +191,8 @@ export default function Interview() {
                           <span
                             className={`${
                               room.type === "PERSONALITY"
-                                ? "bg-yellow-300 text-yellow-700 py-2 px-2 rounded-xl"
+                                // ? "bg-[#97DEFF] opacity-[30%] py-2 px-2 rounded-lg"
+                                ? "bg-cyan-100 py-2 px-2 rounded-lg"
                                 : "bg-violet-100 text-violet-700 py-1 px-1 rounded-lg"
                             } text-xs font-medium`}
                           >
