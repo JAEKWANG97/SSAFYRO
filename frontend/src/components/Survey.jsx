@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 
-export default function Survey({ targetUser, setModalClose, setTotalResult }) {
+export default function Survey({ targetUser, setModalClose }) {
   const roomId = useParams().roomid;
   console.log("Current Room ID:", roomId); // Room ID 확인용
   console.log("Target User ID:", targetUser); // Target User ID 확인용
@@ -44,7 +44,7 @@ export default function Survey({ targetUser, setModalClose, setTotalResult }) {
     console.log("Request Body for Submission:", requestBody); // 서버로 제출할 데이터 확인용
 
 
-    setTotalResult(requestBody);
+    // setTotalResult(requestBody);
     setModalClose();
 
     // axios.post("https://i11c201.p.ssafy.io:8443/api/v1/reports", requestBody)
