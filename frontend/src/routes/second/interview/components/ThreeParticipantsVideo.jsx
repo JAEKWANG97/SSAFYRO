@@ -83,7 +83,7 @@ export default function ThreeParticipantsVideo({
           faceExpressionData,
           pronunciationScore
         );
-        setTranscript("");
+        // setTranscript("");
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {
