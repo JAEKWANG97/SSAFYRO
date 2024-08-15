@@ -37,7 +37,6 @@ const AppLayout = () => {
   const setUserInfo = useAuthStore((state) => state.setUserInfo);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
-
   // 초기 렌더링 시 로그인 상태 복원
   useEffect(() => {
     const token = localStorage.getItem("Token");

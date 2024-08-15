@@ -114,7 +114,11 @@ export default function QuestionFeedback() {
           );
         } else {
           // 기본 피드백 목록 로드
-          newItems = await fetchUserQuestionFeedbacks(currentPage, 10, filter);
+          newItems = await fetchUserQuestionFeedbacks(
+            currentPage,
+            10,
+            "evaluationScore,desc"
+          );
           console.log(newItems);
         }
 
@@ -144,11 +148,11 @@ export default function QuestionFeedback() {
     return <div className="text-red-500">{error}</div>;
   }
 
-  if (isLoading) {
-    return <Loading />;
+  if (isLoading && page === 0) {
+    return <div>Loading...</div>;
   }
 
-  if (feedbackItems.length === 0) {
+  if (!isLoading && feedbackItems.length === 0) {
     return <QuestionFeedbackNoneData />;
   }
 
