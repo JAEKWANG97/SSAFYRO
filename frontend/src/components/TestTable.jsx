@@ -1,11 +1,10 @@
-
 export default function TestTable({
   problems,
   toggleSave,
   getIconById,
   saved,
   handleSortOrder,
-  sortOrder
+  sortOrder,
 }) {
   return (
     <div className="overflow-hidden h-full">
@@ -17,7 +16,7 @@ export default function TestTable({
               className="px-4 py-3 text-center cursor-pointer"
               onClick={handleSortOrder}
             >
-              난이도{sortOrder === 'asc' ? '↓' : '↑'}
+              난이도{sortOrder === "asc" ? "↓" : "↑"}
             </th>
             <th
               scope="col"
@@ -31,20 +30,14 @@ export default function TestTable({
             >
               정답률
             </th>
-            <th
-              scope="col"
-              className="px-2 py-3 text-center overflow-hidden"
-            >
+            <th scope="col" className="px-2 py-3 text-center overflow-hidden">
               저장
             </th>
           </tr>
         </thead>
         <tbody>
           {problems.map((item) => (
-            <tr
-              key={item.id}
-              className="bg-white border-b-2"
-            >
+            <tr key={item.id} className="bg-white border-b-2">
               <td className="px-4 py-4 text-gray-900 whitespace-nowrap text-center flex items-center justify-center">
                 <div className="flex items-center justify-center">
                   <div className="w-8 h-8 flex items-center justify-center">
@@ -66,7 +59,10 @@ export default function TestTable({
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      fill={getIconById(item.difficulty)?.component.props.color || 'currentColor'}
+                      fill={
+                        getIconById(item.difficulty)?.component.props.color ||
+                        "currentColor"
+                      }
                       className="w-6 h-6"
                     >
                       <path
