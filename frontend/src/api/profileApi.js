@@ -36,3 +36,9 @@ export const getEssayData = async (userId) => {
   });
   return response.data.response.content;
 };
+
+export const initUserType = async (type) => {
+   await axios.post(`${APIURL}users/init`,
+     type,
+     getAuthHeader());
+} 

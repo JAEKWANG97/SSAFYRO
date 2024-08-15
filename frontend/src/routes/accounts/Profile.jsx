@@ -41,23 +41,7 @@ export default function Profile() {
   
   <LoginAlert/>
 
-  useEffect(() => {
-    
-    if (!isLogin) {
-      Swal.fire({
-        title: "로그인을 해주세요",
-        text: "로그인이 필요한 기능입니다.",
-        icon: "warning",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "확인",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          nav("/account/login");
-        }
-      });
-      return;
-    }
-}, [Token, nav]);
+
 
   // 초기 데이터 로드
   useEffect(() => {

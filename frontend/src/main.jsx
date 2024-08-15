@@ -69,6 +69,7 @@ const AppLayout = () => {
   const isPtFeedbackPage =
     location.pathname.includes("/account/profile/") &&
     location.pathname.includes("pt_feedback");
+
   return (
     <div
       className={`flex flex-col min-h-screen ${isMainPage ? "" : "bg-gray-50"}`}

@@ -143,7 +143,7 @@ export default function QuestionFeedback() {
     return <div className="text-red-500">{error}</div>;
   }
 
-  if (isLoading && page === 0) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
