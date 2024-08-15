@@ -79,7 +79,7 @@ export default function ThreeParticipantsVideo({
           questions[0],
           answer,
           faceExpressionData,
-          pronunciationScore
+          score
         );
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);

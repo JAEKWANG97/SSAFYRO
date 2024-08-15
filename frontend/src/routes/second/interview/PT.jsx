@@ -225,6 +225,7 @@ export default function PT() {
           surprised: 0,
           neutral: 0,
         };
+        setTranscript("");
       })
       .catch((error) => {
         // 제출 실패
