@@ -794,7 +794,6 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
-                  questionCount={questionCount}
                   recognitionRef={recognitionRef}
                   setTranscript={setTranscript}
                 />
@@ -822,7 +821,6 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
-                  questionCount={questionCount}
                 />
               );
             }
