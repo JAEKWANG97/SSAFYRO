@@ -105,7 +105,6 @@ export default function ThreeParticipantsVideo({
 
   .current-turn {
     animation: lightBlueBlink 1s infinite;
-    padding: 5px;
   }
   `;
 
