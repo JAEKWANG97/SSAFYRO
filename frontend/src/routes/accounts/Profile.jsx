@@ -197,7 +197,7 @@ export default function Profile() {
                 {interviewInfo.map((info, index) => (
                   <div
                     key={index}
-                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg "
+                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg"
                     style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
                     onClick={() =>
                       info.type === "PERSONALITY"

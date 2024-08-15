@@ -97,15 +97,28 @@ export default function InterviewResult() {
               </svg>
             </div>
             <div className="flex justify-center items-center w-full">
-              <div className="flex flex-col items-center">
-                <span className="pb-2 text-gray-600 text-sm">전체</span>
+            <div className="flex flex-col items-center">
+              <span className="pb-2 text-gray-600 text-sm">전체
+              </span>
+              <div className="flex items-baseline">
                 <span className="text-gray-600 font-extrabold text-4xl">{personTotalScore}</span>
               </div>
-              <div className="w-0.5 h-8 bg-gray-400 mx-8"></div> 
-              <div className="flex flex-col items-center">
-                <span className="pb-2 text-gray-600 text-sm">발음</span>
+            </div>
+
+            <div className="w-0.5 h-8 bg-gray-400 mx-8"></div> 
+            <div className="flex flex-col items-center">
+              <span className="pb-2 text-gray-600 text-sm">발음(5)</span>
+              <div className="flex items-baseline">
                 <span className="text-gray-600 font-extrabold text-4xl">{personPronScore}</span>
               </div>
+            </div>
+            
+{/* 
+              <div className="flex flex-col items-center">
+                <span className="pb-2 text-gray-600 text-sm">발음</span>
+                
+                <span className="text-gray-600 font-extrabold text-4xl">{personPronScore}</span>
+              </div> */}
             </div>
             <div className="flex justify-center items-center w-full">
               <div className="flex flex-col items-center">
@@ -171,7 +184,7 @@ export default function InterviewResult() {
               </div>
               <div className="w-0.5 h-8 bg-gray-400 mx-8"></div> 
               <div className="flex flex-col items-center">
-                <span className="pb-2 text-gray-600 text-sm">발음</span>
+                <span className="pb-2 text-gray-600 text-sm">발음(5)</span>
                 <span className="text-gray-600 font-extrabold text-4xl">{ptPronScore}</span>
               </div>
             </div>
