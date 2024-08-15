@@ -43,7 +43,7 @@ import Survey from "../../../components/Survey";
 
 // 알림창 라이브러리
 import Swal from "sweetalert2";
-import InterviewQuestion from "./components/InterviewQuestion";
+import EvaluationModal from "./components/EvaluationModal";
 
 export default function PT() {
   // 방 정보 가져오기
@@ -235,6 +235,7 @@ export default function PT() {
           surprised: 0,
           neutral: 0,
         };
+        setTranscript("");
       })
       .catch((error) => {
         // 제출 실패
@@ -242,6 +243,19 @@ export default function PT() {
       });
   };
 
+  // 각 질문별 상호평가 결과 저장
+  const [evaluationModal, setEvaluationModal] = useState(false);
+  const handleEvaluation = async function (targetUser, evaluationScore) {
+    await axios.post("https://i11c201.p.ssafy.io:8443/api/v1/interview/question-answer-result/score", {
+      userId: targetUser,
+      evaluationScore: evaluationScore
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("Token")}`,
+      }
+    })
+  }
+  
   // OpenVidu 연결 코드입니다.
   // 참고 출처: https://openvidu.io/3.0.0-beta2/docs/tutorials/application-client/react/#understanding-the-code
   let APPLICATION_SERVER_URL =
@@ -598,7 +612,7 @@ export default function PT() {
         icon: "info",
         confirmButtonText: "확인",
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && (userList[userTurn] != userInfo.userId)) {
           setModalOpen();
         }
       });
@@ -766,8 +780,7 @@ export default function PT() {
                   userTurn={userTurn}
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
-                  // 이정준
-                  // handleNextQuestion={handleNextQuestion}
+                  setEvaluationModal={setEvaluationModal}
                 />
               );
             } else {
@@ -791,6 +804,7 @@ export default function PT() {
                   userTurn={userTurn}
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
+                  setEvaluationModal={setEvaluationModal}
                 />
               );
             }
@@ -798,7 +812,7 @@ export default function PT() {
         </div>
       </div>
       {/* survey 모달창 */}
-      {isModalOpen && (
+      {isModalOpen &&
         <>
           <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
             <div className="w-3/5 max-w-lg bg-white border rounded-lg py-5 px-5 mx-auto">
@@ -809,8 +823,19 @@ export default function PT() {
               />
             </div>
           </div>
-        </>
-      )}
+      </>}
+      {/* evaluation 모달창 */}
+      { evaluationModal && <>
+        <div className="fixed z-10 h-dvh w-full bg-neutral-800/50 flex justify-center items-center">
+          <div className="w-4/5 bg-white border rounded-lg py-5 px-5">
+            <EvaluationModal
+              targetUser={userList[userTurn]}
+              setEvaluationModal={setEvaluationModal}
+              handleEvaluation={handleEvaluation}
+             />
+          </div>
+        </div>
+      </>}
     </div>
   );
 }

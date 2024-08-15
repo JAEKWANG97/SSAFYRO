@@ -28,6 +28,7 @@ export default function ThreeParticipantsVideo({
   userTurn,
   userNameMap,
   setModalOpen,
+  setEvaluationModal,
 }) {
   useEffect(() => {
     // console.log("remoteTracks 재확인: ", remoteTracks);
@@ -78,7 +79,7 @@ export default function ThreeParticipantsVideo({
           questions[0],
           answer,
           faceExpressionData,
-          pronunciationScore
+          score
         );
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
@@ -134,7 +135,7 @@ export default function ThreeParticipantsVideo({
           <button
             className="p-3 bg-gray-700 bg-opacity-50 rounded-full w-12 h-12"
             // 변경해야 할곳 2
-            onClick={setModalOpen}
+            onClick={() => setEvaluationModal(true)}
             // onClick={handleStartSurvey}
           >
             <svg

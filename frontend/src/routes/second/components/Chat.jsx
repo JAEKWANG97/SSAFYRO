@@ -31,7 +31,7 @@ const Chat = ({ currentUser, currentRoom, messages, setMessages }) => {
 
   const connectToRoom = (roomId) => {
     stompClient.current = new StompClient({
-      brokerURL: "ws://i11c201.p.ssafy.io:9999/ssafyro-chat",
+      brokerURL: "wss://i11c201.p.ssafy.io:8443/ssafyro-chat",
       onConnect: (frame) => {
         console.log("Connected: " + frame);
         stompClient.current.subscribe(`/topic/${roomId}`, (message) => {

@@ -1,31 +1,95 @@
+import axios from 'axios';
 import { create } from 'zustand';
-import Level from './../routes/first/components/Level' 
+import { persist } from 'zustand/middleware';
+import Level from './../routes/first/components/Level';
 
-const useFirstStore = create((set, get) => ({
-  activeTab : 'essay', // 에세이, sw적성검사 여부
-  setActiveTab : (tab) => set({ activeTab: tab }),
-  selected : 'major', // 전공자, 비전공자 유무
-  setSelected : (select) => set({ selected: select }),
-  essayContent: '' , // 에세이 내용
-  setEssayContent : (content) => set({ essayContent: content }),
-  showCorrection : false, // ai 첨삭 버튼 클릭 여부
-  setShowCorrection : (value) => set({ showCorrection: value }),
-  essayData: null,
-  setEssayData : (value) => set({ setEssayData: value }),
+const useFirstStore = create(
+  persist(
+    (set, get) => ({
+      activeTab: 'essay', 
+      setActiveTab: (tab) => set({ activeTab: tab }),
+      selected: 'major', 
+      setSelected: (select) => set({ selected: select }),
+      essayContent: '', 
+      setEssayContent: (content) => set({ essayContent: content }),
+      showCorrection: false, 
+      setShowCorrection: (value) => set({ showCorrection: value }),
+      essayData: null,
+      setEssayData: (value) => set({ essayData: value }),
+      
+      saved: {},
+      setSaved: (problemId, scrapId = null) => {
+        set((state) => {
+          const newSaved = { ...state.saved };
+          if (scrapId) {
+            newSaved[problemId] = { scrapId };
+          } else {
+            delete newSaved[problemId];
+          }
+          return { saved: newSaved };
+        });
+      },
 
+      toggleSave: async (id) => {
+        const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/';
+        const Token = localStorage.getItem('Token');
+        const saved = get().saved;
+        const isSaved = saved[id]?.scrapId;
 
+        const url = isSaved
+          ? `${APIURL}coding-test-problems/scrap/${isSaved}`
+          : `${APIURL}coding-test-problems/scrap`;
 
+        const method = isSaved ? 'delete' : 'post';
 
-  icons: [
-    { id: 'D1', component: <Level text="1" color="#CD7F32" /> },
-    { id: 'D2', component: <Level text="2" color="#C0C0C0" />},
-    { id: 'D3', component: <Level text="3" color="#FFD700" />},
-    { id: 'D4', component: <Level text="4" color="#00FFFF" />}
-  ],
-  getIconById: (id) => {
-    const icons = get().icons;  // 상태에서 아이콘 목록을 가져옴
-    return icons.find(icon => icon.id === id);
-  },
-}));
+        try {
+          const response = await axios({
+            method: method,
+            url: url,
+            headers: {
+              Authorization: `Bearer ${Token}`,
+            },
+            data: isSaved ? null : { problemId: id },
+          });
 
-export default useFirstStore;;
+          console.log(response.data)
+          if (isSaved) {
+            get().setSaved(id, null); // 상태에서 제거
+          } else {
+            const scrapId = response.data.response.problemScrapId;
+            get().setSaved(id, scrapId); // 상태에 추가
+          }
+
+          console.log('Updated saved:', get().saved);
+          
+        } catch (error) {
+          console.log(error)
+        }
+      },
+
+      icons: [
+        { id: 'D1', component: <Level text="1" color="#CD7F32" /> },
+        { id: 'D2', component: <Level text="2" color="#C0C0C0" /> },
+        { id: 'D3', component: <Level text="3" color="#FFD700" /> },
+        { id: 'D4', component: <Level text="4" color="#00FFFF" /> },
+      ],
+      
+      getIconById: (id) => {
+        const icons = get().icons;
+        return icons.find((icon) => icon.id === id);
+      },
+    }),
+    {
+      name: 'first-store', 
+      partialize: (state) => ({
+        activeTab: state.activeTab,
+        selected: state.selected,
+        essayContent: state.essayContent,
+        showCorrection: state.showCorrection,
+        saved: state.saved, 
+      }),
+    }
+  )
+);
+
+export default useFirstStore;
