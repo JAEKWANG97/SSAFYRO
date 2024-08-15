@@ -1,44 +1,8 @@
-@import 'flowbite';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-@font-face {
-    font-family: 'ONE-Mobile';
-    src: url('./fonts/ONEMobileTitle.ttf') format('truetype');
-    font-weight: 900;
+:root {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
-
-@font-face {
-    font-family: 'ONE-Mobile';
-    src: url('./fonts/ONEMobileTitle.ttf') format('truetype');
-    font-weight: 800;
-}
-
-@font-face {
-    font-family: 'ONE-Mobile';
-    src: url('./fonts/ONEMobileBold.ttf') format('truetype');
-    font-weight: 700;
-}
-@font-face {
-    font-family: 'ONE-Mobile';
-    src: url('./fonts/ONEMobileBold.ttf') format('truetype');
-    font-weight: 600;
-}
-@font-face {
-    font-family: 'ONE-Mobile';
-    src: url('./fonts/ONEMobileBold.ttf') format('truetype');
-    font-weight: 500;
-}
-
-@font-face {
-    font-family: 'ONE-Mobile';
-    src: url('./fonts/ONEMobileRegular.ttf') format('truetype');
-    font-weight: normal;
-}
-
-
-body {
-    font-family: "ONE-Mobile";
-    }
