@@ -78,7 +78,7 @@ export default function TwoParticipantsVideo({
           faceExpressionData,
           pronunciationScore // 발음 평가 점수를 포함하여 답변 제출
         );
-        setTranscript(""); // STT로 변환된 텍스트를 초기화
+        // setTranscript(""); // STT로 변환된 텍스트를 초기화
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {
