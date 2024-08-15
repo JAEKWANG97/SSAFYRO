@@ -19,6 +19,7 @@ export default function ThreeParticipantsVideo({
   startListening,
   stopListening,
   questions,
+  questionCount,
   answer,
   faceExpressionData,
   handleSubmitAnswer,
