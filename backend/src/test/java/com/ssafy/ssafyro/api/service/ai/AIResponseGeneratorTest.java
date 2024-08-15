@@ -1,10 +1,11 @@
 package com.ssafy.ssafyro.api.service.ai;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-//@Disabled
+@Disabled
 class AIResponseGeneratorTest extends IntegrationTestSupport {
 
     @DisplayName("생성형 LLM을 활용해 질문에 대한 답변이 적절한지 피드백을 얻는다.")
