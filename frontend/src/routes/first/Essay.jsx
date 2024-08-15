@@ -138,13 +138,19 @@ export default function Essay() {
     const Token = localStorage.getItem("Token");
 
     axios
-      .post(`${APIURL}essays`, afterEssay, {
+      .put(`${APIURL}essays`, afterEssay, {
         headers: {
           Authorization: `Bearer ${Token}`,
         },
       })
       .then((response) => {
-        console.log(response);
+        Swal.fire({
+          title: "저장 완료",
+          text: "에세이가 성공적으로 저장되었습니다.",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "확인",
+        });
       })
       .catch((error) => {
         console.log(error);
