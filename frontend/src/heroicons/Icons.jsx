@@ -229,7 +229,7 @@ export const HomeIcon = () => (
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    class="size-6"
+    class="size-7 pr-2"
   >
     <path
       stroke-linecap="round"
@@ -246,7 +246,7 @@ export const ArrowPathIcon = () => (
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    class="size-6"
+    class="size-7 pr-2"
   >
     <path
       stroke-linecap="round"

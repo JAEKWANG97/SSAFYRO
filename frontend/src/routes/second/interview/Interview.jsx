@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
+import ErrorPage from "../../accounts/components/ErrorPage.jsx";
 import personalityIcon from "../../../../public/main/personalityIcon2.png";
 import presentationIcon from "../../../../public/main/presentationIcon.png";
 import axios from "axios";
@@ -12,7 +13,7 @@ export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]);
   const [isRotating, setIsRotating] = useState(false);
-
+  const [error , SetError] = useState(null);
   const navigate = useNavigate();
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
@@ -47,7 +48,8 @@ export default function Interview() {
       .catch((error) => {
         console.log(error);
         setFilteredRoomList([]);
-        alert("방 목록을 불러오는데 실패했습니다.");
+        SetError(error);
+        // alert("방 목록을 불러오는데 실패했습니다.");
       });
   };
 
@@ -113,6 +115,12 @@ export default function Interview() {
       window.location.reload();
     }, 1000);
   };
+
+  if(error){
+    return(
+      <ErrorPage/>
+    )
+  }
 
   return (
     <>
