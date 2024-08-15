@@ -30,7 +30,6 @@ export default function ThreeParticipantsVideo({
   userNameMap,
   setModalOpen,
   setEvaluationModal,
-  questionCount
 }) {
   useEffect(() => {
     // console.log("remoteTracks 재확인: ", remoteTracks);
