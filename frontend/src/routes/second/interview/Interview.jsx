@@ -9,12 +9,14 @@ import axios from "axios";
 import "./styles.css";
 import Swal from "sweetalert2";
 import Button from "../../../components/Button.jsx";
+import LoginAlert from "../../../components/LoginAlert.jsx";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]);
   const [isRotating, setIsRotating] = useState(false);
   const [error , SetError] = useState(null);
+  const [status, setStatus] = useState(null);
   const navigate = useNavigate();
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
@@ -50,6 +52,8 @@ export default function Interview() {
         console.log(error);
         setFilteredRoomList([]);
         SetError(error);
+        setStatus(error.response.status);
+        console.log(error.response.status);
         // alert("방 목록을 불러오는데 실패했습니다.");
       });
   };
@@ -125,7 +129,10 @@ export default function Interview() {
     }, 1000);
   };
 
-  if(error){
+  if(error && status == 401){
+    return <LoginAlert/>
+  }
+  else if(error){
     return(
       <ErrorPage/>
     )
