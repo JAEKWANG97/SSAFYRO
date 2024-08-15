@@ -92,13 +92,13 @@ export default function TwoParticipantsVideo({
   const styles = `
   @keyframes lightBlueBlink {
     0% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
     50% {
-      box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 30px rgba(135, 206, 235, 0.8);
+      box-shadow: 0 0 20px rgba(135, 206, 270, 1.0), 0 0 30px rgba(135, 206, 270, 1.0);
     }
     100% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
   }
 
@@ -153,11 +153,15 @@ export default function TwoParticipantsVideo({
           </button> */}
           <button
             className={`p-3 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
-              isRecording ? "bg-green-500" : "bg-green-700"
-            } hover:bg-green-700`}
-            // onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
+              Number(currentTurnId) === Number(userInfo.userId)
+                ? isRecording
+                  ? "bg-green-500 hover:bg-green-700"
+                  : "bg-green-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
             onClick={handleButtonClick}
             title="이 버튼을 클릭하면 답변이 제출됩니다."
+            disabled={Number(currentTurnId) !== Number(userInfo.userId)}
           >
             {/* <svg
               xmlns="http://www.w3.org/2000/svg"
