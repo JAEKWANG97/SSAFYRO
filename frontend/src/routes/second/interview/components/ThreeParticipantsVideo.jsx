@@ -29,6 +29,7 @@ export default function ThreeParticipantsVideo({
   userNameMap,
   setModalOpen,
   setEvaluationModal,
+  questionCount
 }) {
   useEffect(() => {
     // console.log("remoteTracks 재확인: ", remoteTracks);
@@ -74,12 +75,12 @@ export default function ThreeParticipantsVideo({
       stopRecording(); // 녹음 중지
       setIsRecording(false);
       try {
-        const score = await pronunciationEvaluation(base64String);
+        await pronunciationEvaluation(base64String);
         handleSubmitAnswer(
-          questions[0],
+          questions[questionCount],
           answer,
           faceExpressionData,
-          score
+          pronunciationScore
         );
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);

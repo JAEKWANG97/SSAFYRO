@@ -146,7 +146,7 @@ export default function PT() {
           })
           .catch((error) => console.log(error));
       });
-
+      
       // OpenVidu 연결 종료 및 페이지 이동
       leaveRoom();
       stop();
@@ -426,8 +426,9 @@ export default function PT() {
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
-      // console.log(event.results[current]);
+      //console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
+      console.log(transcript);
       setTranscript((prevTranscript) => prevTranscript + transcript);
     };
 
@@ -758,6 +759,9 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
+                  questionCount={questionCount}
+                  recognitionRef={recognitionRef}
+                  setTranscript={setTranscript}
                 />
               );
             } else {
@@ -782,6 +786,7 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
+                  questionCount={questionCount}
                 />
               );
             }

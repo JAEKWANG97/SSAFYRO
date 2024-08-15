@@ -59,8 +59,8 @@ const startRecording = () => {
         reader.onload = async () => {
           base64String = reader.result.split(",")[1];
           // console.log(base64String);
-          await pronunciationEvaluation(base64String);
-          console.log("발음 평가 점수: ", pronunciationScore);
+          //await pronunciationEvaluation(base64String);
+          //console.log("발음 평가 점수: ", pronunciationScore);
         };
 
         reader.readAsDataURL(audioBlob);
