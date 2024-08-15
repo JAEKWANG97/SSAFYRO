@@ -144,21 +144,22 @@ export default function PT() {
       navigate("/account/profile");
     } catch (error) {
       console.error("Error finishing the interview: ", error);
-    } finally {
-      // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
-      totalResult.forEach((result) => {
-        axios
-          .post("https://i11c201.p.ssafy.io:8443/api/v1/reports", result, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("Token")}`,
-            },
-          })
-          .then((response) => {
-            // console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
-          })
-          .catch((error) => console.log(error));
-      });
-    }
+    } 
+    // finally {
+    //   // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
+    //   totalResult.forEach((result) => {
+    //     axios
+    //       .post("https://i11c201.p.ssafy.io:8443/api/v1/reports", result, {
+    //         headers: {
+    //           Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    //         },
+    //       })
+    //       .then((response) => {
+    //         // console.log("평가 결과가 성공적으로 전송되었습니다.", response.data);
+    //       })
+    //       .catch((error) => console.log(error));
+    //   });
+    // }
   };
 
   const interviewTurnCounter = useRef(0);
@@ -690,14 +691,14 @@ export default function PT() {
     setIsModalOpen(false);
   };
 
-  const renewTotalResult = function (newResult) {
-    console.log("Previous totalResult:", totalResult); // 이전 상태
-    console.log("New Result to add:", newResult); // 추가할 새로운 결과
-    setTotalResult((prev) => {
-      console.log("Updated totalResult:", [...prev, newResult]); // 업데이트된 상태
-      return [...prev, newResult];
-  });
-  };
+  // const renewTotalResult = function (newResult) {
+  //   console.log("Previous totalResult:", totalResult); // 이전 상태
+  //   console.log("New Result to add:", newResult); // 추가할 새로운 결과
+  //   setTotalResult((prev) => {
+  //     console.log("Updated totalResult:", [...prev, newResult]); // 업데이트된 상태
+  //     return [...prev, newResult];
+  // });
+  // };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -835,7 +836,7 @@ export default function PT() {
               <Survey
                 targetUser={userList[userTurn]}
                 setModalClose={setModalClose}
-                setTotalResult={renewTotalResult}
+                // setTotalResult={renewTotalResult}
               />
             </div>
           </div>
