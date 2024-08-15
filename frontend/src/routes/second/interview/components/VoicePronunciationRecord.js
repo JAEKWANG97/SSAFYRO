@@ -32,8 +32,10 @@ const pronunciationEvaluation = async function (base64String) {
         return response.data.return_object.score;
       })
       .catch((error) => {
-        console.log("발음 정확도 평가 에러 발생!!")
+        // console.log("발음 정확도 평가 에러 발생!!")
         console.error(error);
+        pronunciationScore = 3;
+        return 3;
       });
   };
 

@@ -601,7 +601,7 @@ export default function PT() {
         icon: "info",
         confirmButtonText: "확인",
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && (userList[userTurn] != userInfo.userId)) {
           setModalOpen();
         }
       });
