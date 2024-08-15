@@ -10,6 +10,7 @@ export const fetchUserQuestionFeedbacks = async (
   sort = "evaluationScore"
 ) => {
   console.log(page, size, sort);
+  console.log("유저별 질문 답변 조회");
   console.log(
     `${BASE_URL}/interview-result/user?page=${page}&size=${size}&sort=${sort}`
   );
@@ -19,6 +20,7 @@ export const fetchUserQuestionFeedbacks = async (
       Authorization: `Bearer ${localStorage.getItem("Token")}`,
     },
   });
+  console.log(response.data.response.interviewResultInfos);
   return response.data.response.interviewResultInfos;
 };
 
