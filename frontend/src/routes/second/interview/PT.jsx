@@ -44,6 +44,7 @@ import Survey from "../../../components/Survey";
 // 알림창 라이브러리
 import Swal from "sweetalert2";
 import EvaluationModal from "./components/EvaluationModal";
+import WaitRoom from "./Room";
 
 export default function PT() {
   // 방 정보 가져오기
@@ -147,7 +148,7 @@ export default function PT() {
           })
           .catch((error) => console.log(error));
       });
-
+      
       // OpenVidu 연결 종료 및 페이지 이동
       leaveRoom();
       stop();
@@ -436,8 +437,9 @@ export default function PT() {
 
     recognitionRef.current.onresult = (event) => {
       const current = event.resultIndex;
-      // console.log(event.results[current]);
+      //console.log(event.results[current]);
       const transcript = event.results[current][0].transcript;
+      console.log(transcript);
       setTranscript((prevTranscript) => prevTranscript + transcript);
     };
 
@@ -605,6 +607,7 @@ export default function PT() {
   useEffect(() => {
     if (tenMinuteTimer === 0) {
       clearTimeout(timerRef.current); // 10분 타이머가 끝나면 정지
+      startTwoMinuteTimer(); // 모달이 열릴 때 타이머 재개
 
       Swal.fire({
         title: "면접 차례가 종료되었습니다.",
@@ -678,7 +681,6 @@ export default function PT() {
 
   const setModalOpen = function () {
     setIsModalOpen(true);
-    startTwoMinuteTimer(); // 모달이 열릴 때 타이머 재개
   };
 
   const setModalClose = function () {
@@ -700,8 +702,11 @@ export default function PT() {
       >
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
-            <img src={ssafyLogo} alt="ssafylogo" className="h-[20px] mr-5" />
-            <h1 className="text-xl font-bold">Presentation Interview</h1>
+            {/* <img src={ssafyLogo} alt="ssafylogo" className="h-[20px] mr-5" />
+            <h1 className="text-xl font-bold">Presentation Interview</h1> */}
+            <span className=" border-2 border-indigo-300 text-indigo-300 text-2xl font-extrabold px-4 pt-2 pb-1 rounded dark:text-indigo-300">
+              {roomType === "PRESENTATION" ? "PT" : "인성"}
+            </span>
           </div>
           <div className="flex items-center bg-black text-white rounded-full px-8 py-2 w-48 justify-center">
             <div
@@ -736,8 +741,8 @@ export default function PT() {
             <p className="ml-4">
               {questionCount === 0 && (
                 <>
-                  안녕하세요! {userInfo.userName} 님에 대한 면접 질문을 추천해
-                  드릴게요!
+                  안녕하세요! {userNameMap[userList[userTurn]]} 님에 대한 면접
+                  질문을 추천해 드릴게요!
                   <br />
                 </>
               )}
@@ -784,6 +789,9 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
+                  questionCount={questionCount}
+                  recognitionRef={recognitionRef}
+                  setTranscript={setTranscript}
                 />
               );
             } else {
@@ -808,6 +816,7 @@ export default function PT() {
                   userNameMap={userNameMap}
                   setModalOpen={setModalOpen}
                   setEvaluationModal={setEvaluationModal}
+                  questionCount={questionCount}
                 />
               );
             }

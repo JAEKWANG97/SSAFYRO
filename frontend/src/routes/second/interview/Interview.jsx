@@ -2,17 +2,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
+import ErrorPage from "../../accounts/components/ErrorPage.jsx";
 import personalityIcon from "../../../../public/main/personalityIcon2.png";
 import presentationIcon from "../../../../public/main/presentationIcon.png";
 import axios from "axios";
 import "./styles.css";
+import Swal from "sweetalert2";
 import Button from "../../../components/Button.jsx";
 
 export default function Interview() {
   const [roomList, setRoomList] = useState([]);
   const [filteredRoomList, setFilteredRoomList] = useState([]);
   const [isRotating, setIsRotating] = useState(false);
-
+  const [error , SetError] = useState(null);
   const navigate = useNavigate();
 
   const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
@@ -47,7 +49,8 @@ export default function Interview() {
       .catch((error) => {
         console.log(error);
         setFilteredRoomList([]);
-        alert("방 목록을 불러오는데 실패했습니다.");
+        SetError(error);
+        // alert("방 목록을 불러오는데 실패했습니다.");
       });
   };
 
@@ -98,11 +101,19 @@ export default function Interview() {
         },
       })
       .then((response) => {
-        navigate(`/second/interview/room/${response.data.response.roomId}`);
-      })
+        if(response.data.response.isExisting){
+          navigate(`/second/interview/room/${response.data.response.roomId}`);
+        } else {
+          Swal.fire({
+            title: "매칭 실패",
+            text: "빠른 입장할 수 있는 스터디 방이 현재 존재하지 않습니다.",
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "확인"
+          });
+        }      })
       .catch((error) => {
         console.log(error);
-        alert("빠른 입장할 수 있는 스터디 방이 현재 존재하지 않습니다.");
       });
   };
 
@@ -113,6 +124,12 @@ export default function Interview() {
       window.location.reload();
     }, 1000);
   };
+
+  if(error){
+    return(
+      <ErrorPage/>
+    )
+  }
 
   return (
     <>
@@ -141,14 +158,14 @@ export default function Interview() {
               </div>
 
               <div className="flex gap-4 mb-2">
-                <button
-                  className="bg-violet-200 shadow rounded p-4 flex items-center justify-center text-white hover:bg-violet-300 hover:text-white"
+              <button
+                  className="shadow rounded p-4 flex items-center justify-center text-red-700 font-bold bg-red-100 hover:bg-red-400 hover:text-white"
                   onClick={() => handleQuickStart("PRESENTATION")}
                 >
                   PT면접 빠른 시작
                 </button>
                 <button
-                  className="shadow rounded p-4 flex items-center justify-center text-white bg-red-100 hover:bg-[#7CC6E7]"
+                  className="bg-violet-100 shadow rounded p-4 flex items-center justify-center text-violet-700 font-bold hover:bg-violet-400 hover:text-white"
                   // style={{ backgroundColor: "rgba(198, 234, 246)" }}
                   onClick={() => handleQuickStart("PERSONALITY")}
                 >
@@ -157,7 +174,7 @@ export default function Interview() {
 
                 <button
                   onClick={() => navigate("/second/interview/createroom")}
-                  className="rounded p-4 flex items-center justify-center text-gray-400 hover:bg-gray-300"
+                  className="bg-orange-100 rounded p-4 flex items-center justify-center text-orange-700 font-bold  hover:bg-orange-400 hover:text-white"
                 >
                   + 방 생성
                 </button>
@@ -181,8 +198,8 @@ export default function Interview() {
                       <div
                         className={`${
                           room.type === "PERSONALITY"
-                            ? "bg-[#97DEFF] opacity-[50%]"
-                            : "bg-violet-200"
+                            ? "bg-violet-100"
+                            : "bg-red-100"
                         } h-2 rounded-t`}
                       ></div>
 
@@ -192,22 +209,22 @@ export default function Interview() {
                             className={`${
                               room.type === "PERSONALITY"
                                 // ? "bg-[#97DEFF] opacity-[30%] py-2 px-2 rounded-lg"
-                                ? "bg-cyan-100 py-2 px-2 rounded-lg"
-                                : "bg-violet-100 text-violet-700 py-1 px-1 rounded-lg"
+                                ? "bg-violet-100 text-violet-700 py-1 px-1 rounded-lg"
+                                : "bg-red-100 py-1 px-1 rounded-lg"
                             } text-xs font-medium`}
                           >
                             {room.type === "PERSONALITY" ? (
-                              <img
-                                src={personalityIcon}
-                                alt="personalityIcon"
-                                className="w-4 h-4"
-                              />
-                            ) : (
-                              <img
-                                src={presentationIcon}
-                                alt="presentationIcon"
-                                className="w-6 h-6"
-                              />
+                             <img
+                             src={personalityIcon}
+                             alt="personalityIcon"
+                             className="w-6 h-6 p-1"
+                           />
+                         ) : (
+                           <img
+                             src={presentationIcon}
+                             alt="presentationIcon"
+                             className="w-6 h-6 p-1"
+                           />
                             )}
                           </span>
                           <span
@@ -215,9 +232,7 @@ export default function Interview() {
                               room.status === "WAIT" ? "green" : "red"
                             }-100 text-${
                               room.status === "WAIT" ? "green" : "red"
-                            }-800 text-xs font-medium py-1 px-2 rounded border border-${
-                              room.status === "WAIT" ? "green" : "red"
-                            }-400`}
+                            }-800 text-xs font-medium py-1 px-2 rounded`}
                           >
                             {room.status === "WAIT" ? "모집중" : "마감"}
                           </span>
@@ -244,7 +259,7 @@ export default function Interview() {
                           </div>
                           <button
                             onClick={() => handleJoinRoom(room.id)}
-                            className="bg-blue-500 text-white py-1 px-2 rounded w-[60px]"
+                            className="bg-blue-400 text-white py-1 px-2 rounded w-[60px]"
                             disabled={room.status !== "WAIT"}
                           >
                             참여

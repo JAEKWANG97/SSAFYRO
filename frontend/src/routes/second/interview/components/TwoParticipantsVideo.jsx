@@ -5,26 +5,25 @@ import AudioComponent from "./AudioComponent";
 import submitIcon from "../../../../../public/main/submitIcon.png";
 import botImg from "../../../../../public/main/botImg.jpg";
 import {
-  startRecording,
-  stopRecording,
-  pronunciationEvaluation,
-  base64String,
-  pronunciationScore,
+  startRecording, // 녹음을 시작하는 함수
+  stopRecording, // 녹음을 중지하는 함수
+  pronunciationEvaluation, // 발음 평가를 수행하는 함수
+  base64String, // 녹음된 데이터를 base64 문자열로 변환하는 변수
+  pronunciationScore, // 발음 평가 점수를 저장하는 변수
 } from "./VoicePronunciationRecord";
 
 export default function TwoParticipantsVideo({
   localTrack,
   participantName,
   remoteTracks,
-  handleEndInterview,
-  isListening,
-  startListening,
-  stopListening,
-  questions,
-  questionCount,
-  answer,
-  faceExpressionData,
-  handleSubmitAnswer,
+  handleEndInterview, // 면접 종료를 처리하는 함수
+  isListening, // 현재 음성 인식이 활성화되었는지 여부를 나타내는 상태
+  startListening, // 음성 인식을 시작하는 함수
+  stopListening, // 음성 인식을 중지하는 함수
+  questions, // 질문 리스트
+  answer, // 사용자가 제공한 답변
+  faceExpressionData, // 사용자의 표정 데이터를 저장하는 변수
+  handleSubmitAnswer, // 답변 제출을 처리하는 함수
   handleStartSurvey,
   userInfo,
   userList,
@@ -32,17 +31,21 @@ export default function TwoParticipantsVideo({
   userNameMap,
   setModalOpen,
   setEvaluationModal,
+  questionCount,
+  recognitionRef,
+  setTranscript, // 음성 인식된 텍스트를 설정하는 함수
 }) {
-  const [faceExpression, setFaceExpression] = useState("neutral");
-  const [isRecording, setIsRecording] = useState(false);
+  const [faceExpression, setFaceExpression] = useState("neutral"); // 표정 상태를 관리하는 상태 변수
+  const [isRecording, setIsRecording] = useState(false); // 녹음 상태를 관리하는 상태 변수
 
   useEffect(() => {
     // console.log("remoteTracks 재확인: ", remoteTracks);
   }, [remoteTracks]); // remoteTracks가 변경될 때마다 로그 출력
 
   useEffect(() => {
-    startRecording(); // 방에 들어오자마자 녹화 시작
-    setIsRecording(true);
+    startRecording(); // 컴포넌트가 마운트되면 즉시 녹음을 시작
+    console.log("녹음 시작");
+    setIsRecording(true); // 녹음 상태를 true로 설정
   }, []);
 
   const faceEmotionIcon = {
@@ -60,24 +63,29 @@ export default function TwoParticipantsVideo({
   const urlCheck = url.substring(url.length - 3);
 
   const handleButtonClick = async () => {
+    console.log("녹음 버튼 클릭");
     if (isRecording) {
+      console.log("녹음 중지");
       stopRecording(); // 녹음 중지
-      setIsRecording(false);
+      setIsRecording(false); // 녹음 상태를 false로 설정
+      stopListening(); // 음성 인식 중지
       try {
-        const score = await pronunciationEvaluation(base64String);
+        console.log(answer);
+        await pronunciationEvaluation(base64String); // 녹음된 데이터를 발음 평가
         handleSubmitAnswer(
           questions[questionCount],
           answer,
           faceExpressionData,
-          score
+          pronunciationScore // 발음 평가 점수를 포함하여 답변 제출
         );
-        // 이정준
-        // handleNextQuestion()
+        setTranscript(""); // STT로 변환된 텍스트를 초기화
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {
+        console.log("평가 완료");
         startRecording(); // 평가가 끝나면 다시 녹음 시작
-        setIsRecording(true);
+        setIsRecording(true); // 녹음 상태를 true로 설정
+        startListening(); // 음성 인식 재시작
       }
     }
   };
@@ -92,13 +100,13 @@ export default function TwoParticipantsVideo({
   const styles = `
   @keyframes lightBlueBlink {
     0% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
     50% {
-      box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 30px rgba(135, 206, 235, 0.8);
+      box-shadow: 0 0 20px rgba(135, 206, 270, 1.0), 0 0 30px rgba(135, 206, 270, 1.0);
     }
     100% {
-      box-shadow: 0 0 10px rgba(135, 206, 235, 0.5), 0 0 20px rgba(135, 206, 235, 0.5);
+      box-shadow: 0 0 10px rgba(135, 206, 270, 0.7), 0 0 20px rgba(135, 206, 270, 0.7);
     }
   }
 
@@ -153,11 +161,15 @@ export default function TwoParticipantsVideo({
           </button> */}
           <button
             className={`p-3 rounded-2xl w-[55px] h-[55px] flex justify-center items-center ${
-              isRecording ? "bg-green-500" : "bg-green-700"
-            } hover:bg-green-700`}
-            // onClick={() => handleSubmitAnswer(questions[0], answer, faceExpressionData)}
+              Number(currentTurnId) === Number(userInfo.userId)
+                ? isRecording
+                  ? "bg-green-500 hover:bg-green-700"
+                  : "bg-green-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
             onClick={handleButtonClick}
             title="이 버튼을 클릭하면 답변이 제출됩니다."
+            disabled={Number(currentTurnId) !== Number(userInfo.userId)}
           >
             {/* <svg
               xmlns="http://www.w3.org/2000/svg"
