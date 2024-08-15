@@ -611,6 +611,7 @@ export default function PT() {
         text: "2분동안 상호평가가 진행됩니다.",
         icon: "info",
         confirmButtonText: "확인",
+        confirmButtonColor: "#3085d6"
       }).then((result) => {
         if (result.isConfirmed && (userList[userTurn] != userInfo.userId)) {
           setModalOpen();
@@ -635,6 +636,8 @@ export default function PT() {
         title: "면접이 종료되었습니다.",
         text: "면접이 모두 종료되었습니다. 수고하셨습니다.",
         icon: "success",
+        confirmButtonText: "확인",
+        confirmButtonColor: "#3085d6"
       }).then((result) => {
         if (result.isConfirmed) {
           handleEndInterview();
