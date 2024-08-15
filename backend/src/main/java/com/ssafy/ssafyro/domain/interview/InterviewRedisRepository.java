@@ -40,12 +40,17 @@ public class InterviewRedisRepository {
         String key = INTERVIEW_PREFIX + userId;
 
         InterviewRedis interviewRedis = redisTemplate.opsForList().rightPop(key);
-        
+
         interviewRedis.addScore(evaluationScore);
 
         redisTemplate.opsForList().rightPush(key, interviewRedis);
 
         return userId;
+    }
+
+    public void delete(Long userId) {
+        String key = INTERVIEW_PREFIX + userId;
+        redisTemplate.delete(key);
     }
 
     public void deleteAll() {

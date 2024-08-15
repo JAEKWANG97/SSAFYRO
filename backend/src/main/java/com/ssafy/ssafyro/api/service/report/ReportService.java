@@ -88,6 +88,8 @@ public class ReportService {
         Report report = createReportBy(request, interviewInfos);
         reportRepository.save(report);
 
+        interviewRedisRepository.delete(request.userId());
+
         interviewResultRepository.saveAll(
                 interviewInfos.generateInterviewResults(aiResponseGenerator, report)
         );
