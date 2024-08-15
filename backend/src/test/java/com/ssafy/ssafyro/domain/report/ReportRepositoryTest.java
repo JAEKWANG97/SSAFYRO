@@ -56,7 +56,7 @@ class ReportRepositoryTest extends IntegrationTestSupport {
         reportRepository.saveAll(reports);
 
         //when
-        Page<Report> result = reportRepository.findAllByUser(user, Pageable.ofSize(5));
+        Page<Report> result = reportRepository.findAllByUserOrderByCreatedDateDesc(user, Pageable.ofSize(5));
 
         //then
         assertThat(result.getContent()).hasSize(3)

@@ -58,7 +58,7 @@ public class ReportService {
         User user = getUser(userId);
 
         return ReportsResponse.of(
-                reportRepository.findAllByUser(user, pageable).getContent()
+                reportRepository.findAllByUserOrderByCreatedDateDesc(user, pageable).getContent()
         );
     }
 
