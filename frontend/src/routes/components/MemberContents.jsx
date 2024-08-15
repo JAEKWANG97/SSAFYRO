@@ -15,14 +15,14 @@ export default function MemberContents() {
   const roomTypes = ["PERSONALITY", "PRESENTATION"];
   const [personScore, setPersonScore] = useState(null);
   const [ptScore, setPtScore] = useState(null);
-  const userType = useUserStore((state) => state.userInfo.type);
-  const { newUserInfo, setUserInfo } = useUserStore();
+  const [userType, setUserType] = useState(null);
 
   useEffect(() => {
-    if (userType === null) {
-      console.log("sd");
+    getUserInfo().then((data) => setUserType(data.type));
+    if (getUserInfo().type === null) {
+      console.log("전공자 비전공자 선택");
       Swal.fire({
-        title: "전공자 / 비전공자 선택",
+        title: "전공자 / 비공자 선택",
         text: "당신의 전공을 선택하세요",
         icon: "question",
         showCancelButton: false, // 기본 취소 버튼을 사용하지 않음
@@ -49,8 +49,7 @@ export default function MemberContents() {
             }).then(async () => {
               await initUserType("MAJOR");
               const userInfoData = await getUserInfo();
-              setNewUserInfo(userInfoData);
-              console.log(userInfoData);
+              setUserType(userInfoData.type);
             });
           });
 
@@ -59,16 +58,17 @@ export default function MemberContents() {
               title: "비전공자를 선택하셨습니다!",
               icon: "success",
               confirmButtonText: "확인",
-            }).then(async() => {
+            }).then(async () => {
               await initUserType("NON_MAJOR");
               const userInfoData = await getUserInfo();
-              setNewUserInfo(userInfoData);
+              setUserType(userInfoData.type);
               console.log(userInfoData);
             });
           });
         },
       });
     }
+
     const fetchData = () => {
       const requests = roomTypes.map((type) =>
         axios.get(APIURL, {
@@ -99,7 +99,7 @@ export default function MemberContents() {
   }, [Token]);
 
   const userInfo = useAuthStore((state) => state.userInfo);
-
+  console.log(userInfo);
   const handleProfileClick = () => {
     if (userInfo && userInfo.userId) {
       navigate("/account/profile", { state: { userId: userInfo.userId } });
