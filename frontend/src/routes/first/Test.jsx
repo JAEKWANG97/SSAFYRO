@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
-import FirstdNav from './components/FirstNav';
-import Ismajor from './../../components/Ismajor';
-import useFirstStore from '../../stores/FirstStore';
-import axios from 'axios';
-import Pagination from '@mui/material/Pagination';
-import PaginationItem from '@mui/material/PaginationItem';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import TestTable from '../../components/TestTable';
+import { useState, useEffect } from "react";
+import FirstdNav from "./components/FirstNav";
+import Ismajor from "./../../components/Ismajor";
+import useFirstStore from "../../stores/FirstStore";
+import axios from "axios";
+import Pagination from "@mui/material/Pagination";
+import PaginationItem from "@mui/material/PaginationItem";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import TestTable from "../../components/TestTable";
 
 export default function Test() {
   const [allProblems, setAllProblems] = useState([]);
   const [filteredProblems, setFilteredProblems] = useState([]);
-  const { getIconById, saved, toggleSave, selected, setSelected } = useFirstStore();
-  const APIURL = 'https://i11c201.p.ssafy.io:8443/api/v1/';
-  const Token = localStorage.getItem('Token');
+  const { getIconById, saved, toggleSave, selected, setSelected } =
+    useFirstStore();
+  const APIURL = "https://i11c201.p.ssafy.io:8443/api/v1/";
+  const Token = localStorage.getItem("Token");
   const [page, setPage] = useState(1);
   const [size] = useState(5);
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     axios
@@ -38,12 +39,18 @@ export default function Test() {
 
   useEffect(() => {
     let filteredData = [];
-    if (selected === 'major') {
-      const d3Problems = allProblems.filter((item) => item.difficulty === 'D3').slice(0, 25);
-      const d4Problems = allProblems.filter((item) => item.difficulty === 'D4').slice(0, 25);
+    if (selected === "major") {
+      const d3Problems = allProblems
+        .filter((item) => item.difficulty === "D3")
+        .slice(0, 25);
+      const d4Problems = allProblems
+        .filter((item) => item.difficulty === "D4")
+        .slice(0, 25);
       filteredData = [...d3Problems, ...d4Problems];
     } else {
-      filteredData = allProblems.filter((item) => item.difficulty === 'D1' || item.difficulty === 'D2');
+      filteredData = allProblems.filter(
+        (item) => item.difficulty === "D1" || item.difficulty === "D2"
+      );
     }
     setFilteredProblems(filteredData);
     setPage(1);
@@ -57,7 +64,7 @@ export default function Test() {
 
   const sortData = (order) => {
     const sortedData = [...filteredProblems].sort((a, b) => {
-      if (order === 'asc') {
+      if (order === "asc") {
         return a.difficulty.localeCompare(b.difficulty);
       } else {
         return b.difficulty.localeCompare(a.difficulty);
@@ -67,7 +74,7 @@ export default function Test() {
   };
 
   const toggleSortOrder = () => {
-    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newOrder);
     sortData(newOrder);
   };
@@ -92,13 +99,19 @@ export default function Test() {
           handleSortOrder={toggleSortOrder}
           sortOrder={sortOrder}
         />
-        <nav aria-label="Page navigation example" className="flex justify-center mt-4">
+        <nav
+          aria-label="Page navigation example"
+          className="flex justify-center mt-4"
+        >
           <Pagination
             count={Math.ceil(filteredProblems.length / size)}
             page={page}
             onChange={handlePageChange}
             renderItem={(item) => (
-              <PaginationItem components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} />
+              <PaginationItem
+                components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                {...item}
+              />
             )}
           />
         </nav>
