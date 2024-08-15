@@ -361,8 +361,8 @@ export default function WaitRoom() {
         <div className="w-full h-[85vh] mx-auto mt-6 p-6 rounded-xl bg-white shadow-2xl">
           <div className="flex justify-between items-center mb-2">
             <div className="flex">
-              <img src={interviewIcon} alt="" className="h-10 w-10"/>
-              <span className=" text-indigo-300 text-2xl font-extrabold px-4 pt-2 pb-1 rounded dark:text-indigo-300">
+              {/* <img src={interviewIcon} alt="" className="h-10 w-10"/> */}
+              <span className=" border-2 border-indigo-300 text-indigo-300 text-2xl font-extrabold px-4 pt-2 pb-1 rounded dark:text-indigo-300">
                 {waitRoom.type === "PRESENTATION" ? "PT" : "인성"}
               </span>
             </div>

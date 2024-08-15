@@ -21,6 +21,7 @@ export default function TwoParticipantsVideo({
   startListening,
   stopListening,
   questions,
+  questionCount,
   answer,
   faceExpressionData,
   handleSubmitAnswer,
@@ -30,6 +31,8 @@ export default function TwoParticipantsVideo({
   userTurn,
   userNameMap,
   setModalOpen,
+  // 이정준
+  // handleNextQuestion
 }) {
   const [faceExpression, setFaceExpression] = useState("neutral");
   const [isRecording, setIsRecording] = useState(false);
@@ -64,11 +67,13 @@ export default function TwoParticipantsVideo({
       try {
         const score = await pronunciationEvaluation(base64String);
         handleSubmitAnswer(
-          questions[0],
+          questions[questionCount],
           answer,
           faceExpressionData,
           pronunciationScore
         );
+        // 이정준
+        // handleNextQuestion()
       } catch (error) {
         console.error("Error during pronunciation evaluation: ", error);
       } finally {

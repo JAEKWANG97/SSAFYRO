@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SecondNav from "../components/SecondNav.jsx";
 import Filter from "../components/Filter.jsx";
-import personalityIcon from "../../../../public/main/personalityIcon.png";
+import personalityIcon from "../../../../public/main/personalityIcon2.png";
 import presentationIcon from "../../../../public/main/presentationIcon.png";
 import axios from "axios";
 import "./styles.css";
@@ -148,7 +148,7 @@ export default function Interview() {
                   PT면접 빠른 시작
                 </button>
                 <button
-                  className="shadow rounded p-4 flex items-center justify-center text-white bg-[#97DEFF] hover:bg-[#7CC6E7] opacity-[50%]"
+                  className="shadow rounded p-4 flex items-center justify-center text-white bg-red-100 hover:bg-[#7CC6E7]"
                   // style={{ backgroundColor: "rgba(198, 234, 246)" }}
                   onClick={() => handleQuickStart("PERSONALITY")}
                 >
@@ -178,20 +178,21 @@ export default function Interview() {
                       style={{ height: "300px" }}
                     >
                       {/* 머리 부분에 색상 추가 */}
-                      {/* <div
+                      <div
                         className={`${
                           room.type === "PERSONALITY"
                             ? "bg-[#97DEFF] opacity-[50%]"
                             : "bg-violet-200"
                         } h-2 rounded-t`}
-                      ></div> */}
+                      ></div>
 
                       <div className="p-6 flex flex-col flex-grow justify-start">
                         <div className="flex justify-between items-center mb-2">
                           <span
                             className={`${
                               room.type === "PERSONALITY"
-                                ? "bg-[#97DEFF] opacity-[30%] py-2 px-2 rounded-lg"
+                                // ? "bg-[#97DEFF] opacity-[30%] py-2 px-2 rounded-lg"
+                                ? "bg-cyan-100 py-2 px-2 rounded-lg"
                                 : "bg-violet-100 text-violet-700 py-1 px-1 rounded-lg"
                             } text-xs font-medium`}
                           >
