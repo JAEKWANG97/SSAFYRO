@@ -25,7 +25,6 @@ export default function Profile() {
   const [fillActive, setFillActive] = useState("tab1");
   const [interviewInfo, setInterviewInfo] = useState([]); // 면접 정보
   const [essayData, setEssayData] = useState(null);
-  const [sortOrder, setSortOrder] = useState('desc'); // 기본은 최신순으로 정렬
 
   // 초기 데이터 로드
   useEffect(() => {
@@ -54,7 +53,11 @@ export default function Profile() {
             headers: { Authorization: `Bearer ${Token}` },
           })
           .then((res)=>{
+            console.log(res.data.response.reports);
             setInterviewInfo(res.data.response.reports);
+          })
+          .catch((error)=>{
+            console.error(error);
           });
 
           // 에세이 데이터 가져오기
@@ -66,6 +69,8 @@ export default function Profile() {
             setEssayData(res.data.response.content); 
           });
           
+        } else {
+          console.error("No userInfo found in localStorage.");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -93,17 +98,6 @@ export default function Profile() {
       window.scrollTo(0, document.body.scrollHeight);
     }
   }, [fillActive]);
-
-  // 정렬 함수
-  const handleSortOrderChange = (order) => {
-    setSortOrder(order);
-    const sortedData = [...interviewInfo].sort((a, b) => {
-      const dateA = new Date(a.createdDate);
-      const dateB = new Date(b.createdDate);
-      return order === 'asc' ? dateA - dateB : dateB - dateA;
-    });
-    setInterviewInfo(sortedData);
-  };
 
   const handleFillClick = (value) => {
     if (value === fillActive) return;
@@ -180,62 +174,16 @@ export default function Profile() {
               {essayData && <EssayDetail essayData={essayData} />}
             </TETabsPane>
             <TETabsPane show={fillActive === "tab2"}>
-              <TestList/>
+              <TestList />
             </TETabsPane>
             <TETabsPane show={fillActive === "tab3"}>
-
-             
-              <div className="flex justify-end mb-4 pr-5">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="desc"
-                    name="sortOrder"
-                    value="desc"
-                    checked={sortOrder === 'desc'}
-                    onChange={() => handleSortOrderChange('desc')}
-                    className="mr-1"
-                  />
-                  <label htmlFor="desc" className="mr-4 text-gray-600">최신순</label>
-                  <input
-                    type="radio"
-                    id="asc"
-                    name="sortOrder"
-                    value="asc"
-                    checked={sortOrder === 'asc'}
-                    onChange={() => handleSortOrderChange('asc')}
-                    className="mr-1"
-                  />
-                  <label htmlFor="asc" className="text-gray-600">오래된 순</label>
-                </div>
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-4 pl-6">
-                {interviewInfo.map((info, index) => (
-                  <div
-                    key={index}
-                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg "
-                    style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
-                    onClick={() => info.type === "PERSONALITY" ? nav('personality_feedback', { state: { info, activeTab: "tab3" } }) : nav('pt_feedback', { state: { info, activeTab: "tab3" } })}
-                  >
-                    <img 
-                      src={info.type === "PERSONALITY" ? PersonaltyImg : PtImg} 
-                      alt={info.type === "PERSONALITY" ? "Personality Interview" : "PT Interview"} 
-                      className="w-10 h-10 mb-2" 
-                    />
-                    <p className="font-medium text-sm text-center">{info.title}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* 더 좋은 질문 섹션 */}
-              <div className="pl-7 my-5 ">
+              <div className="pl-7">
                 <div 
-                  className="max-w-xl h-[80px] border-2 border-black rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
+                  className="max-w-xl h-[80px] border rounded-xl flex flex-col font-extrabold pl-4 pt-4 relative transition-transform transform hover:scale-105"
                   onClick={() => nav('bestworst_feedback', { state: { activeTab: "tab3" } })}
                 >
                   이 질문들에서 점수를 높일 방법은?
-                  <span className="text-sm font-medium pt-1 text-gray-400">WORST & BEST 질문을 확인해보세요</span>
+                  <span className="text-sm font-medium pt-1">WORST & BEST 질문을 확인해보세요</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -251,6 +199,24 @@ export default function Profile() {
                     />
                   </svg>
                 </div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-4 pl-6">
+                {interviewInfo.map((info, index) => (
+                  <div
+                    key={index}
+                    className="w-[132px] h-[100px] rounded-xl flex flex-col items-center justify-center text-gray-500 transition-shadow hover:shadow-lg"
+                    style={{ backgroundColor: "rgba(240, 240, 240, 0.8)" }}
+                    onClick={() => info.type === "PERSONALITY" ? nav('personality_feedback', { state: { info, activeTab: "tab3" } }) : nav('pt_feedback', { state: { info, activeTab: "tab3" } })}
+                  >
+                    <img 
+                      src={info.type === "PERSONALITY" ? PersonaltyImg : PtImg} 
+                      alt={info.type === "PERSONALITY" ? "Personality Interview" : "PT Interview"} 
+                      className="w-10 h-10 mb-2" 
+                    />
+                    <p className="font-medium text-sm text-center">{info.title}</p>
+                  </div>
+                ))}
               </div>
 
             </TETabsPane>
