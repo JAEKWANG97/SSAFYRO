@@ -37,7 +37,8 @@ dependencies {
     implementation 'com.github.shin285:KOMORAN:3.3.9'
 
     //AI
-    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+//    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+    implementation 'org.springframework.ai:spring-ai-ollama-spring-boot-starter'
 
     //JWT
     implementation 'com.auth0:java-jwt:4.4.0'

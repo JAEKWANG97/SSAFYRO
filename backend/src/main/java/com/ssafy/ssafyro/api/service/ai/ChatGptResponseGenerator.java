@@ -1,15 +1,16 @@
-package com.ssafy.ssafyro.api.service.interview;
+package com.ssafy.ssafyro.api.service.ai;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @RequiredArgsConstructor
-public class ChatGptResponseGenerator {
+public class ChatGptResponseGenerator implements AIResponseGenerator {
 
     private final ChatClient chatClient;
 
+    @Override
     public String generateFeedbackBy(String question, String answer) {
         return chatClient.prompt()
                 .user(createFeedbackPrompt(question, answer))
@@ -17,6 +18,7 @@ public class ChatGptResponseGenerator {
                 .content();
     }
 
+    @Override
     public AiArticle generateArticle() {
         String content = chatClient.prompt()
                 .user(createArticlePrompt())
@@ -26,6 +28,7 @@ public class ChatGptResponseGenerator {
         return getArticle(content);
     }
 
+    @Override
     public String generateNewEssay(String question, String content) {
         return chatClient.prompt()
                 .user(createEssayReviewPrompt(question, content))

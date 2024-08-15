@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/ssafyro-chat").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/llamachat").permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(configurer -> configurer
