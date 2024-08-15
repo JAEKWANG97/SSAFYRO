@@ -96,7 +96,7 @@ export default function Chart() {
   const percentageValues = expressionValues.map(value => (value * 100).toFixed(0));
   const percentageOtherValue = (otherValue * 100).toFixed(0);
   const pieData = {
-    labels: [],
+    labels: [...expressionLabels, 'Other'], 
     datasets: [
       {
         data: [...percentageValues, percentageOtherValue],
@@ -116,6 +116,7 @@ export default function Chart() {
       },
     ],
   };
+  
 
   const barOptions = {
     responsive: true,
@@ -183,14 +184,23 @@ export default function Chart() {
       },
       tooltip: {
         callbacks: {
+          title: function(tooltipItems) {
+            // tooltipItems는 배열이므로, 첫 번째 항목의 라벨을 반환
+            const title = tooltipItems[0].label; // 표현 라벨을 제목으로 설정
+            return title;
+          },
           label: function(tooltipItem) {
+            const label = tooltipItem.label; // 여기서 label을 제대로 가져옵니다
             const value = tooltipItem.raw;
-            return ` ${value}%`; // % 표시 추가
+            return `${label}: ${value}%`; // 이름과 값을 함께 표시
           }
         }
       }
     },
   };
+  
+  
+  
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">

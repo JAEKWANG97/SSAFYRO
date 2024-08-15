@@ -90,14 +90,14 @@ export default function BestWorstQuestion() {
       >
         <div className="relative py-8 mb-12 bg-blue-50 rounded-lg shadow-sm">
           {" "}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="rounded-full p-3">
-              {/* <SparklesIcon className="w-8 h-8 text-white" /> */}
-            </div>
+          <div className="flex items-center justify-center space-x-3 pb-2">
+            <SparklesIcon className="w-6 h-6 text-blue-600" />
+            <h3 className="text-center text-3xl font-bold text-gray-800">
+              탁월한 답변 사례
+            </h3>
+            <SparklesIcon className="w-6 h-6 text-blue-600" />
           </div>
-          <h3 className="text-center text-3xl font-bold mb-3 text-gray-800">
-            탁월한 답변 사례
-          </h3>
+        
           <h4 className="text-center text-lg text-blue-600 font-medium">
             유사 질문에 대한 최고의 답변 Top 5
           </h4>
