@@ -31,16 +31,16 @@ export default function Profile() {
   const [interviewInfo, setInterviewInfo] = useState([]);
   const [essayData, setEssayData] = useState(null);
   const [fillActive, setFillActive] = useState("tab1");
+  const [isLoading, setIsLoading] = useState(true);
 
   // 초기 데이터 로드
   useEffect(() => {
     const fetchData = async () => {
       // 유저 정보 가져오기
-      if (!userInfo) {
-        const userInfoData = await getUserInfo();
-        setUserInfo(userInfoData);
-        console.log(userInfoData);
-      }
+      const userInfoData = await getUserInfo();
+      setUserInfo(userInfoData);
+      console.log(userInfoData);
+      setIsLoading(false);
     };
 
     fetchData();
@@ -49,6 +49,8 @@ export default function Profile() {
     if (!location.state?.activeTab) {
       setFillActive("tab1");
     }
+
+    console.log(isLoading);
   }, [location.state]);
 
   // 탭 상태 관리
@@ -70,6 +72,10 @@ export default function Profile() {
     setFillActive(value);
     nav(location.pathname, { state: { activeTab: value } });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
