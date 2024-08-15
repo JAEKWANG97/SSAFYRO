@@ -137,7 +137,14 @@ export default function PT() {
         }
       );
       console.log("Interview finished successfully");
-
+      
+      // OpenVidu 연결 종료 및 페이지 이동
+      leaveRoom();
+      stop();
+      navigate("/account/profile");
+    } catch (error) {
+      console.error("Error finishing the interview: ", error);
+    } finally {
       // 종료요청을 보낸 후에, Survey에서 평가한 개인 평가 결과를 전송
       totalResult.forEach((result) => {
         axios
@@ -151,13 +158,6 @@ export default function PT() {
           })
           .catch((error) => console.log(error));
       });
-      
-      // OpenVidu 연결 종료 및 페이지 이동
-      leaveRoom();
-      stop();
-      navigate("/account/profile");
-    } catch (error) {
-      console.error("Error finishing the interview: ", error);
     }
   };
 
