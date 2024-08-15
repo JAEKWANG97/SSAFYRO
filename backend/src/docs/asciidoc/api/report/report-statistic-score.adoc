@@ -1,0 +1,12 @@
+[[report-statistic-score]]
+=== 유저의 모든 레포트 총점, 발음 통계 점수
+
+==== HTTP Request
+
+include::{snippets}/reports-statistic-score/query-parameters.adoc[]
+include::{snippets}/reports-statistic-score/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/reports-statistic-score/http-response.adoc[]
+include::{snippets}/reports-statistic-score/response-fields.adoc[]

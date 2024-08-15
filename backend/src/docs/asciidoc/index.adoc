@@ -1,0 +1,86 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= SSAFYRO REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[openVidu-API]]
+== openVidu API
+
+include::api/openvidu/openvidu-token-create.adoc[]
+
+[[room-API]]
+== 면접방-API
+
+include::api/room/get-rooms.adoc[]
+include::api/room/get-room-by-id.adoc[]
+include::api/room/create-room.adoc[]
+include::api/room/enter-room.adoc[]
+include::api/room/exit-room.adoc[]
+include::api/room/fast-enter-room.adoc[]
+
+[[interview-API]]
+== 면접 API
+
+include::api/interview/interview-start.adoc[]
+include::api/interview/interview-article.adoc[]
+include::api/interview/interview-question-answer-save.adoc[]
+include::api/interview/interview-question-answer-evaluation-score-save.adoc[]
+include::api/interview/interview-finish.adoc[]
+
+[[interview-result-API]]
+== 면접 결과 API
+
+include::api/interviewresult/get-best-interview-result.adoc[]
+include::api/interviewresult/get-best-interview-result-by-id.adoc[]
+include::api/interviewresult/get-interview-result.adoc[]
+include::api/interviewresult/get-interview-result-by-user-id.adoc[]
+
+[[report-API]]
+== 면접 레포트 API
+
+include::api/report/reports-list.adoc[]
+include::api/report/report-create.adoc[]
+include::api/report/report-personal-detail.adoc[]
+include::api/report/report-presentation-detail.adoc[]
+include::api/report/report-score-average.adoc[]
+include::api/report/report-statistic-all-score.adoc[]
+include::api/report/report-statistic-score.adoc[]
+include::api/report/report-statistic-expression.adoc[]
+
+[[essay-API]]
+== 에세이 API
+
+include::api/essay/essay-review.adoc[]
+include::api/essay/essay-save.adoc[]
+include::api/essay/get-essay-by-user-id.adoc[]
+
+[[essay-question-API]]
+== 에세이 질문 API
+
+include::api/essayquestion/get-essay-question-by-major-type-and-generation.adoc[]
+
+[[problem-API]]
+== 코딩 테스트 문제 API
+
+include::api/codingtestproblem/get-problems.adoc[]
+include::api/codingtestproblem/get-problem-by-id.adoc[]
+include::api/codingtestproblem/problem-scrap-save.adoc[]
+include::api/codingtestproblem/problem-scrap-delete.adoc[]
+include::api/codingtestproblem/get-scraped-problems-by-user-id.adoc[]
+
+[[it-knowledge-API]]
+== IT 지식 API
+
+include::api/Itknowledge/it-knowledge-detail.adoc[]
+include::api/Itknowledge/it-knowledge-list.adoc[]
+
+[[user-API]]
+== 유저 정보 API
+
+include::api/user/user-info.adoc[]

@@ -1,0 +1,12 @@
+[[problem-scrap-save]]
+=== SW 적성 진단 테스트 문제 스크랩 생성
+
+==== HTTP Request
+
+include::{snippets}/problem-scrap-save/http-request.adoc[]
+include::{snippets}/problem-scrap-save/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/problem-scrap-save/http-response.adoc[]
+include::{snippets}/problem-scrap-save/response-fields.adoc[]
