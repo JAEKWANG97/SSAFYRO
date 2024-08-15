@@ -38,7 +38,15 @@ export const getEssayData = async (userId) => {
 };
 
 export const initUserType = async (type) => {
-   await axios.post(`${APIURL}users/init`,
-     type,
-     getAuthHeader());
-} 
+  console.log(type);
+  await axios.post(
+    `${APIURL}users/init`,
+    { type }, // JSON 형식으로 데이터를 보냄
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        'Content-Type': 'application/json' // Content-Type을 JSON으로 설정
+      }
+    }
+  );
+};

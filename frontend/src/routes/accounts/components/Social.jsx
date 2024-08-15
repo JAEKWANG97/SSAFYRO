@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../../stores/AuthStore";
 import useUserStore from "../../../stores/userStore"; // userStore 임포트
-import { getUserInfo } from '../../../api/profileApi';
+import { getUserInfo } from "../../../api/profileApi";
 import ChoiceType from "../../../components/ChoiceType";
+import Swal from "sweetalert2";
 
 export default function Social() {
   const nav = useNavigate();
@@ -22,19 +23,15 @@ export default function Social() {
         userId: userId,
         userName: nickname,
       };
-      
+
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       setIsLogin(true);
 
       getUserInfo()
         .then(async (res) => {
           setUserInfo(res); // userInfo를 userStore에 저장
+          nav("/"); // 메인 페이지로 이동
           console.log(res)
-          if (res.type === null) {
-          <ChoiceType/>; // 전공자/비전공자 선택 페이지로 이동
-          } else {
-            nav("/"); // 메인 페이지로 이동
-          }
         })
         .catch((error) => {
           console.error("유저 정보를 가져오는 중 오류 발생:", error);
@@ -45,9 +42,5 @@ export default function Social() {
     }
   }, [nav, setIsLogin, setUserInfo]);
 
-  return (
-    <>
-      {/* <h1>로딩중입니다.</h1> */}
-    </>
-  );
+  return <>{/* <h1>로딩중입니다.</h1> */}</>;
 }

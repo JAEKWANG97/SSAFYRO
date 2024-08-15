@@ -10,6 +10,7 @@ if (localStorage.getItem("userInfo")) {
   userInfo = JSON.parse(localStorage.getItem("userInfo"));
   token = localStorage.getItem("Token");
   userId = userInfo.userId;
+  console.log(userId);
 }
 
 export const EssayApi = {
