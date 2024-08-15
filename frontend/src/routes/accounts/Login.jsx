@@ -42,20 +42,9 @@ export default function Login() {
                 구글 계정으로 로그인
               </span>
             }
+            onClick={()=> window.location.href = 'https://i11c201.p.ssafy.io:8443/oauth2/authorization/google'}
           />
-          <Button
-            type="NAVER"
-            text={
-              <span className="inline-flex items-center justify-center">
-                <img
-                  src="/public/login/naver.png"
-                  alt="Naver"
-                  className="w-6 h-6 mr-2"
-                />
-                네이버 계정으로 로그인
-              </span>
-            }
-          />
+
         </div>
       </div>
     </div>
