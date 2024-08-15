@@ -1,5 +1,6 @@
 package com.ssafy.ssafyro.api.service.interview;
 
+import com.ssafy.ssafyro.api.service.ai.AIResponseGenerator;
 import com.ssafy.ssafyro.api.service.interview.request.InterviewStageServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.QnAResultCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.interview.request.ScoreServiceRequest;
@@ -30,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InterviewService {
 
-    private final ChatGptResponseGenerator chatGPTFeedbackFactory;
+    private final AIResponseGenerator aiResponseGenerator;
 
     private final RoomRepository roomRepository;
     private final ArticleRepository articleRepository;
@@ -67,7 +68,7 @@ public class InterviewService {
 
     public ArticleResponse getArticle(String roomId) {
         Article article = articleRepository.save(
-                chatGPTFeedbackFactory.generateArticle().toEntity()
+                aiResponseGenerator.generateArticle().toEntity()
         );
 
         return new ArticleResponse(

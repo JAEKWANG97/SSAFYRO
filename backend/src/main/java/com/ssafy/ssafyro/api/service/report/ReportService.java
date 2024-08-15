@@ -1,6 +1,6 @@
 package com.ssafy.ssafyro.api.service.report;
 
-import com.ssafy.ssafyro.api.service.interview.ChatGptResponseGenerator;
+import com.ssafy.ssafyro.api.service.ai.AIResponseGenerator;
 import com.ssafy.ssafyro.api.service.report.request.ReportCreateServiceRequest;
 import com.ssafy.ssafyro.api.service.report.request.ReportsScoreServiceRequest;
 import com.ssafy.ssafyro.api.service.report.response.ReportCreateResponse;
@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReportService {
 
     private final KoMorAnGenerator koMorAnGenerator;
-    private final ChatGptResponseGenerator chatGptResponseGenerator;
+    private final AIResponseGenerator aiResponseGenerator;
 
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
@@ -89,7 +89,7 @@ public class ReportService {
         reportRepository.save(report);
 
         interviewResultRepository.saveAll(
-                interviewInfos.generateInterviewResults(chatGptResponseGenerator, report)
+                interviewInfos.generateInterviewResults(aiResponseGenerator, report)
         );
 
         interviewResultDocumentRepository.saveAll(

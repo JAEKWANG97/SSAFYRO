@@ -1,4 +1,4 @@
-package com.ssafy.ssafyro.api.service.interview;
+package com.ssafy.ssafyro.api.service.ai;
 
 import com.ssafy.ssafyro.IntegrationTestSupport;
 import org.junit.jupiter.api.Disabled;

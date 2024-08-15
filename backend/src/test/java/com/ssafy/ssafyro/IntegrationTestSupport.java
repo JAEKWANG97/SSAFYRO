@@ -1,9 +1,14 @@
 package com.ssafy.ssafyro;
 
+import com.ssafy.ssafyro.api.service.ai.AIResponseGenerator;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
+
+    @MockBean
+    protected AIResponseGenerator aiResponseGenerator;
 
 //    protected static final String REDIS_IMAGE = "redis:6-alpine";
 //    protected static final String RABBITMQ_IMAGE = "rabbitmq:management";
