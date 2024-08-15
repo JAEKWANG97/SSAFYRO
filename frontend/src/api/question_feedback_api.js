@@ -10,7 +10,9 @@ export const fetchUserQuestionFeedbacks = async (
   sort = "evaluationScore"
 ) => {
   console.log(page, size, sort);
-  console.log(`${BASE_URL}/interview-result/user?page=${page}&size=${size}&sort=${sort}`);
+  console.log(
+    `${BASE_URL}/interview-result/user?page=${page}&size=${size}&sort=${sort}`
+  );
   const response = await axios.get(`${BASE_URL}/interview-result/user`, {
     params: { page, size, sort },
     headers: {
@@ -22,7 +24,12 @@ export const fetchUserQuestionFeedbacks = async (
 
 // 특정 인터뷰 결과 연관 베스트 질문 답변 조회
 // /api/v1/interview-result/{id}/best
-export const fetchBestQuestionFeedbacks = async (id , page, size , sort = "evaluationScore,desc") => {
+export const fetchBestQuestionFeedbacks = async (
+  id,
+  page,
+  size,
+  sort = "evaluationScore,desc"
+) => {
   const response = await axios.get(`${BASE_URL}/interview-result/${id}/best`, {
     params: { page, size, sort },
     headers: {
@@ -47,7 +54,7 @@ export const fetchInterviewResults = async (
     const response = await axios.get(`${BASE_URL}/interview-result`, {
       params: {
         query: query,
-        sort: sort,
+        sort: sort + ",desc",
         page: page,
         size: size,
       },
