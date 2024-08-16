@@ -1,5 +1,5 @@
 
-![image.png](./img/image.png)
+![image.png](./docs/img/image.png)
 # SSAFYRO - SSAFY로 가기 위한 이정표
 
 ---
@@ -45,7 +45,7 @@ OpenVidu(WebRTC)를 사용하여 웹 환경에서 최대 3명까지의 면접 �
 
 ---
 
-![image.png](./img/image3.png)
+![image.png](./docs/img/image3.png)
 
 
 ### Frontend
